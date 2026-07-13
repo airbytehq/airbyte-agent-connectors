@@ -395,7 +395,7 @@ def _extract_schema_metadata(param_schema: dict[str, Any]) -> dict[str, Any]:
 
 def _extract_request_body_config(
     request_body: RequestBody | None, spec_dict: dict[str, Any]
-) -> tuple[list[str], dict[str, Any] | None, dict[str, Any] | None, dict[str, Any], dict[str, Any]]:
+) -> tuple[list[str], dict[str, Any] | None, dict[str, Any] | None, dict[str, Any], dict[str, Any], bool]:
     """Extract request body configuration (GraphQL or standard).
 
     Args:
@@ -403,25 +403,27 @@ def _extract_request_body_config(
         spec_dict: Full OpenAPI spec dict for $ref resolution
 
     Returns:
-        Tuple of (body_fields, request_schema, graphql_body, request_body_defaults,
-        request_body_probe_defaults)
-        - body_fields: List of field names for standard JSON/form bodies
-        - request_schema: Resolved request schema dict (for standard bodies)
+        Tuple of:
+        - body_fields: List of body field names (or ["*"] for additionalProperties)
+        - request_schema: Resolved request schema dict
         - graphql_body: GraphQL body configuration dict (for GraphQL bodies)
         - request_body_defaults: Runtime default values for request body fields
           (consumed by `_build_request_body`)
         - request_body_probe_defaults: Probe-only defaults from
           `x-airbyte-probe-default` (consumed by `_probe_entity` only; never
           flows through `_build_request_body`)
+        - body_is_array: True when the request body schema is ``type: array``
+          (the HTTP body must be a JSON array of objects)
     """
     body_fields: list[str] = []
     request_schema: dict[str, Any] | None = None
     graphql_body: dict[str, Any] | None = None
     request_body_defaults: dict[str, Any] = {}
     request_body_probe_defaults: dict[str, Any] = {}
+    body_is_array: bool = False
 
     if not request_body:
-        return body_fields, request_schema, graphql_body, request_body_defaults, request_body_probe_defaults
+        return body_fields, request_schema, graphql_body, request_body_defaults, request_body_probe_defaults, body_is_array
 
     # Check for GraphQL extension and extract GraphQL body configuration
     if request_body.x_airbyte_body_type:
@@ -431,7 +433,7 @@ def _extract_request_body_config(
         if isinstance(body_type_config, GraphQLBodyConfig):
             # Convert Pydantic model to dict, excluding None values
             graphql_body = body_type_config.model_dump(exclude_none=True, by_alias=False)
-            return body_fields, request_schema, graphql_body, request_body_defaults, request_body_probe_defaults
+            return body_fields, request_schema, graphql_body, request_body_defaults, request_body_probe_defaults, body_is_array
 
     # Parse standard request body
     for content_type_key, media_type in request_body.content.items():
@@ -448,6 +450,24 @@ def _extract_request_body_config(
         # Extract body field names and defaults from resolved schema
         if isinstance(request_schema, dict) and request_schema.get("additionalProperties") is True and "properties" not in request_schema:
             body_fields = ["*"]
+        elif isinstance(request_schema, dict) and request_schema.get("type") == "array":
+            # Array-typed request body: the HTTP body is a JSON array of
+            # objects.  Extract field names from ``items.properties`` so the
+            # SDK can build a single-element array at runtime.
+            body_is_array = True
+            items_schema = request_schema.get("items")
+            if isinstance(items_schema, dict) and "properties" in items_schema:
+                body_fields = list(items_schema["properties"].keys())
+                for field_name, field_schema in items_schema["properties"].items():
+                    if not isinstance(field_schema, dict):
+                        continue
+                    if "default" in field_schema:
+                        request_body_defaults[field_name] = field_schema["default"]
+                    if AIRBYTE_PROBE_DEFAULT in field_schema:
+                        request_body_probe_defaults[field_name] = field_schema[AIRBYTE_PROBE_DEFAULT]
+            else:
+                # Array with no typed items — accept any fields
+                body_fields = ["*"]
         elif isinstance(request_schema, dict) and "properties" in request_schema:
             body_fields = list(request_schema["properties"].keys())
             # Extract default values and probe-only defaults for each property.
@@ -462,7 +482,7 @@ def _extract_request_body_config(
                 if AIRBYTE_PROBE_DEFAULT in field_schema:
                     request_body_probe_defaults[field_name] = field_schema[AIRBYTE_PROBE_DEFAULT]
 
-    return body_fields, request_schema, graphql_body, request_body_defaults, request_body_probe_defaults
+    return body_fields, request_schema, graphql_body, request_body_defaults, request_body_probe_defaults, body_is_array
 
 
 def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel:
@@ -600,6 +620,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 graphql_body,
                 request_body_defaults,
                 request_body_probe_defaults,
+                body_is_array,
             ) = _extract_request_body_config(operation.request_body, spec_dict)
 
             # Guard against name collisions between body-field probe defaults and
@@ -658,6 +679,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 meta_extractor=meta_extractor,
                 description=operation.description or operation.summary,
                 body_fields=body_fields,
+                body_is_array=body_is_array,
                 query_params=query_params,
                 query_params_schema=query_params_schema,
                 deep_object_params=deep_object_params,

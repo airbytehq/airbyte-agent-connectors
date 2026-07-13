@@ -3,7 +3,7 @@
   "class_name": "HubspotConnector",
   "package_name": "airbyte_agent_sdk.connectors.hubspot",
   "install_package": "airbyte-agent-sdk",
-  "yaml_version": "0.1.19",
+  "yaml_version": "0.1.20",
   "api_reference_url": "https://developers.hubspot.com/docs/api/crm/understanding-the-crm",
   "auth_example": "HubspotAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\", access_token=\"...\")",
   "auth_import": ", HubspotAuthConfig",
@@ -67,7 +67,7 @@
   },
   "replication_config": null,
   "custom_description": "HubSpot is a CRM platform that provides tools for marketing, sales, customer service,\nand content management. This connector provides access to contacts, companies, deals,\ntickets, notes, calls, emails, meetings, tasks, and custom objects for customer relationship management and sales analytics.\n",
-  "supported_questions": "- List recent deals\n- List recent tickets\n- List companies in my CRM\n- List contacts in my CRM\n- Create a new contact with email john@example.com and name John Smith\n- Create a new deal called 'Enterprise License' with amount 50000\n- Update the deal stage to 'closedwon' for a specific deal\n- Create a new company called 'Acme Corp' with domain acme.com\n- Create a support ticket with subject 'Login issue' and priority HIGH\n- Update the contact email for a specific contact\n- Add a note to contact 12345 saying 'Discussed pricing options'\n- List recent notes in my CRM\n- Get the details of a specific note\n- Delete a note from HubSpot\n- Log a call with contact 12345 about pricing discussion\n- List recent calls in my CRM\n- Create an email record for outreach to a contact\n- List recent emails in my CRM\n- Schedule a meeting with a contact for next Tuesday\n- List recent meetings in my CRM\n- Create a follow-up task for a deal\n- List tasks in my CRM\n- Show me all deals from Acme Corp this quarter\n- What are the top 5 most valuable deals in my pipeline right now?\n- Search for contacts in the marketing department at HubSpot\n- Give me an overview of my sales team's deals in the last 30 days\n- Identify the most active companies in our CRM this month\n- Compare the number of deals closed by different sales representatives\n- Find all tickets related to a specific product issue and summarize their status",
+  "supported_questions": "- List recent deals\n- List recent tickets\n- List companies in my CRM\n- List contacts in my CRM\n- Create a new contact with email john@example.com and name John Smith\n- Create a new deal called 'Enterprise License' with amount 50000\n- Update the deal stage to 'closedwon' for a specific deal\n- Create a new company called 'Acme Corp' with domain acme.com\n- Create a support ticket with subject 'Login issue' and priority HIGH\n- Update the contact email for a specific contact\n- Associate contact 123 with deal 456\n- Link a contact to a company in HubSpot\n- Set contact 123 as the Primary contact for company 456\n- List all associations for contact 123 to companies\n- Remove an association between a contact and a deal\n- Add a note to contact 12345 saying 'Discussed pricing options'\n- List recent notes in my CRM\n- Get the details of a specific note\n- Delete a note from HubSpot\n- Log a call with contact 12345 about pricing discussion\n- List recent calls in my CRM\n- Create an email record for outreach to a contact\n- List recent emails in my CRM\n- Schedule a meeting with a contact for next Tuesday\n- List recent meetings in my CRM\n- Create a follow-up task for a deal\n- List tasks in my CRM\n- Show me all deals from Acme Corp this quarter\n- What are the top 5 most valuable deals in my pipeline right now?\n- Search for contacts in the marketing department at HubSpot\n- Give me an overview of my sales team's deals in the last 30 days\n- Identify the most active companies in our CRM this month\n- Compare the number of deals closed by different sales representatives\n- Find all tickets related to a specific product issue and summarize their status",
   "unsupported_questions": "- Delete a contact from HubSpot\n- Delete a deal record",
   "first_operation": {
     "method_name": "list_contacts",
@@ -4607,6 +4607,243 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "CRMObject",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "associations": [
+      {
+        "method_name": "list_associations",
+        "http_method": "get",
+        "path": "/crm/v4/objects/{fromObjectType}/{fromObjectId}/associations/{toObjectType}",
+        "entity": "associations",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "fromObjectType",
+            "python_name": "from_object_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Object type of the source record (e.g., contacts, companies, deals, tickets, or a custom object type ID)"
+          },
+          {
+            "name": "fromObjectId",
+            "python_name": "from_object_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the source record to retrieve associations for"
+          },
+          {
+            "name": "toObjectType",
+            "python_name": "to_object_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Object type of the target records to retrieve (e.g., contacts, companies, deals, tickets, or a custom object type ID)"
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Paging cursor token from a previous response for retrieving subsequent pages of results",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 500
+            },
+            "required": false,
+            "description": "Maximum number of results to return per page (default 500, max 500)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AssociationsListParams",
+        "response_type": "AssociationsListResult",
+        "description": "Retrieve all associations between a specific CRM record and a target object type using\nthe v4 associations API. Returns up to 500 associations per call. Use the `after` cursor\nfor pagination when there are more results. For example, retrieve all companies associated\nwith a contact, or all deals associated with a company.\n",
+        "record_extractor": "$",
+        "meta_extractor": {
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "AssociationListResult",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Paging cursor token for retrieving the next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for retrieving the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "associate_labeled_records",
+        "http_method": "put",
+        "path": "/crm/v4/objects/{fromObjectType}/{fromObjectId}/associations/{toObjectType}/{toObjectId}",
+        "entity": "associations",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "associationCategory",
+            "python_name": "association_category",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Category of the association type. Use HUBSPOT_DEFINED for standard HubSpot association\ntypes (e.g., primary company, default contact-to-deal) or USER_DEFINED for custom\nassociation labels created in your HubSpot portal.\n",
+              "enum": [
+                "HUBSPOT_DEFINED",
+                "USER_DEFINED"
+              ]
+            },
+            "required": true,
+            "description": "Category of the association type. Use HUBSPOT_DEFINED for standard HubSpot association\ntypes (e.g., primary company, default contact-to-deal) or USER_DEFINED for custom\nassociation labels created in your HubSpot portal.\n"
+          },
+          {
+            "name": "associationTypeId",
+            "python_name": "association_type_id",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Numeric identifier for the association type. Common IDs include:\n279 = Contact to Company (default), 280 = Company to Contact (default),\n4 = Contact to Deal (default), 3 = Deal to Contact (default),\n341 = Deal to Company (default), 342 = Company to Deal (default),\n1 = Contact to Primary Company, 2 = Company to Primary Contact,\n5 = Deal to Primary Company, 6 = Primary Company to Deal,\n15 = Contact to Ticket (default), 16 = Ticket to Contact (default),\n339 = Ticket to Company (default), 340 = Company to Ticket (default),\n26 = Ticket to Primary Company, 25 = Primary Company to Ticket.\nUse the association definitions API to discover additional type IDs.\n"
+            },
+            "required": true,
+            "description": "Numeric identifier for the association type. Common IDs include:\n279 = Contact to Company (default), 280 = Company to Contact (default),\n4 = Contact to Deal (default), 3 = Deal to Contact (default),\n341 = Deal to Company (default), 342 = Company to Deal (default),\n1 = Contact to Primary Company, 2 = Company to Primary Contact,\n5 = Deal to Primary Company, 6 = Primary Company to Deal,\n15 = Contact to Ticket (default), 16 = Ticket to Contact (default),\n339 = Ticket to Company (default), 340 = Company to Ticket (default),\n26 = Ticket to Primary Company, 25 = Primary Company to Ticket.\nUse the association definitions API to discover additional type IDs.\n"
+          },
+          {
+            "name": "fromObjectType",
+            "python_name": "from_object_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Object type of the source record (e.g., contacts, companies, deals, tickets, or a custom object type ID)"
+          },
+          {
+            "name": "fromObjectId",
+            "python_name": "from_object_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the source record to associate from"
+          },
+          {
+            "name": "toObjectType",
+            "python_name": "to_object_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Object type of the target record (e.g., contacts, companies, deals, tickets, or a custom object type ID)"
+          },
+          {
+            "name": "toObjectId",
+            "python_name": "to_object_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the target record to associate to"
+          }
+        ],
+        "params_type_name": "AssociationsCreateParams",
+        "response_type": "AssociationResult",
+        "description": "Create a labeled association between two CRM records using the v4 associations API.\nLabeled associations carry an association type ID and category that describe the relationship\n(e.g., \"Primary Company\", \"Billing Contact\"). This is idempotent \u2014 calling it again with the same\nIDs and label has no effect. Use the association type ID and category from the HubSpot association\ndefinitions for the relevant object pair. Common association type IDs include:\n- Contact to Company: 279 (HUBSPOT_DEFINED) for default, 1 (HUBSPOT_DEFINED) for Primary\n- Company to Contact: 280 (HUBSPOT_DEFINED) for default, 2 (HUBSPOT_DEFINED) for Primary\n- Contact to Deal: 4 (HUBSPOT_DEFINED) for default\n- Deal to Contact: 3 (HUBSPOT_DEFINED) for default\n- Deal to Company: 341 (HUBSPOT_DEFINED) for default, 5 (HUBSPOT_DEFINED) for Primary\n- Company to Deal: 342 (HUBSPOT_DEFINED) for default, 6 (HUBSPOT_DEFINED) for Primary\n- Contact to Ticket: 15 (HUBSPOT_DEFINED) for default\n- Ticket to Contact: 16 (HUBSPOT_DEFINED) for default\n- Ticket to Company: 339 (HUBSPOT_DEFINED) for default, 26 (HUBSPOT_DEFINED) for Primary\n- Company to Ticket: 340 (HUBSPOT_DEFINED) for default, 25 (HUBSPOT_DEFINED) for Primary\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "AssociationResult",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_associations",
+        "http_method": "delete",
+        "path": "/crm/v4/objects/{fromObjectType}/{fromObjectId}/associations/{toObjectType}/{toObjectId}",
+        "entity": "associations",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "fromObjectType",
+            "python_name": "from_object_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Object type of the source record (e.g., contacts, companies, deals, tickets, or a custom object type ID)"
+          },
+          {
+            "name": "fromObjectId",
+            "python_name": "from_object_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the source record"
+          },
+          {
+            "name": "toObjectType",
+            "python_name": "to_object_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Object type of the target record (e.g., contacts, companies, deals, tickets, or a custom object type ID)"
+          },
+          {
+            "name": "toObjectId",
+            "python_name": "to_object_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the target record"
+          }
+        ],
+        "params_type_name": "AssociationsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Delete all associations between two specific CRM records using the v4 associations API.\nThis removes every association (both default and labeled) between the two specified records.\nThis operation is irreversible \u2014 deleted associations must be recreated manually.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
         "meta_fields": null,
         "is_download": false
       }

@@ -19,8 +19,8 @@ from typing import Any, Literal
 
 class WebsiteOverviewListParamsDaterangesItem(TypedDict):
     """Nested schema for WebsiteOverviewListParams.dateRanges_item"""
-    startDate: NotRequired[str]
-    endDate: NotRequired[str]
+    start_date: NotRequired[str]
+    end_date: NotRequired[str]
 
 class WebsiteOverviewListParamsDimensionsItem(TypedDict):
     """Nested schema for WebsiteOverviewListParams.dimensions_item"""
@@ -32,8 +32,8 @@ class WebsiteOverviewListParamsMetricsItem(TypedDict):
 
 class DailyActiveUsersListParamsDaterangesItem(TypedDict):
     """Nested schema for DailyActiveUsersListParams.dateRanges_item"""
-    startDate: NotRequired[str]
-    endDate: NotRequired[str]
+    start_date: NotRequired[str]
+    end_date: NotRequired[str]
 
 class DailyActiveUsersListParamsDimensionsItem(TypedDict):
     """Nested schema for DailyActiveUsersListParams.dimensions_item"""
@@ -45,8 +45,8 @@ class DailyActiveUsersListParamsMetricsItem(TypedDict):
 
 class WeeklyActiveUsersListParamsDaterangesItem(TypedDict):
     """Nested schema for WeeklyActiveUsersListParams.dateRanges_item"""
-    startDate: NotRequired[str]
-    endDate: NotRequired[str]
+    start_date: NotRequired[str]
+    end_date: NotRequired[str]
 
 class WeeklyActiveUsersListParamsDimensionsItem(TypedDict):
     """Nested schema for WeeklyActiveUsersListParams.dimensions_item"""
@@ -58,8 +58,8 @@ class WeeklyActiveUsersListParamsMetricsItem(TypedDict):
 
 class FourWeeklyActiveUsersListParamsDaterangesItem(TypedDict):
     """Nested schema for FourWeeklyActiveUsersListParams.dateRanges_item"""
-    startDate: NotRequired[str]
-    endDate: NotRequired[str]
+    start_date: NotRequired[str]
+    end_date: NotRequired[str]
 
 class FourWeeklyActiveUsersListParamsDimensionsItem(TypedDict):
     """Nested schema for FourWeeklyActiveUsersListParams.dimensions_item"""
@@ -71,8 +71,8 @@ class FourWeeklyActiveUsersListParamsMetricsItem(TypedDict):
 
 class TrafficSourcesListParamsDaterangesItem(TypedDict):
     """Nested schema for TrafficSourcesListParams.dateRanges_item"""
-    startDate: NotRequired[str]
-    endDate: NotRequired[str]
+    start_date: NotRequired[str]
+    end_date: NotRequired[str]
 
 class TrafficSourcesListParamsDimensionsItem(TypedDict):
     """Nested schema for TrafficSourcesListParams.dimensions_item"""
@@ -84,8 +84,8 @@ class TrafficSourcesListParamsMetricsItem(TypedDict):
 
 class PagesListParamsDaterangesItem(TypedDict):
     """Nested schema for PagesListParams.dateRanges_item"""
-    startDate: NotRequired[str]
-    endDate: NotRequired[str]
+    start_date: NotRequired[str]
+    end_date: NotRequired[str]
 
 class PagesListParamsDimensionsItem(TypedDict):
     """Nested schema for PagesListParams.dimensions_item"""
@@ -97,8 +97,8 @@ class PagesListParamsMetricsItem(TypedDict):
 
 class DevicesListParamsDaterangesItem(TypedDict):
     """Nested schema for DevicesListParams.dateRanges_item"""
-    startDate: NotRequired[str]
-    endDate: NotRequired[str]
+    start_date: NotRequired[str]
+    end_date: NotRequired[str]
 
 class DevicesListParamsDimensionsItem(TypedDict):
     """Nested schema for DevicesListParams.dimensions_item"""
@@ -110,8 +110,8 @@ class DevicesListParamsMetricsItem(TypedDict):
 
 class LocationsListParamsDaterangesItem(TypedDict):
     """Nested schema for LocationsListParams.dateRanges_item"""
-    startDate: NotRequired[str]
-    endDate: NotRequired[str]
+    start_date: NotRequired[str]
+    end_date: NotRequired[str]
 
 class LocationsListParamsDimensionsItem(TypedDict):
     """Nested schema for LocationsListParams.dimensions_item"""

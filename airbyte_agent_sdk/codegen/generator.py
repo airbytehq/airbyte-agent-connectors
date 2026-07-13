@@ -26,7 +26,7 @@ from ..constants import SDK_VERSION
 from ..introspection import get_cached_search_questions
 from ..schema.connector import OpenAPIConnector
 from ..types import Action, AuthType
-from .filters import mdx_escape, to_pascal_case, to_snake_case
+from .filters import mdx_escape, py_str_escape, to_pascal_case, to_snake_case
 from .serializer import PythonCodeSerializer
 
 LIST_ACTIONS = frozenset({Action.LIST, Action.API_SEARCH})
@@ -87,6 +87,7 @@ class ConnectorGenerator:
         self.env.filters["snake_case"] = to_snake_case
         self.env.filters["pascal_case"] = to_pascal_case
         self.env.filters["mdx_escape"] = mdx_escape
+        self.env.filters["py_str_escape"] = py_str_escape
         self.env.filters["pretty_json"] = self._pretty_json
 
         # Initialize nested schemas dict for tracking generated nested TypedDicts
@@ -1254,6 +1255,21 @@ class ConnectorGenerator:
                     elif isinstance(schema, dict) and schema.get("properties"):
                         properties = schema.get("properties")
                         required_fields = set(schema.get("required", []))
+
+                    # Handle array-typed request body: extract fields from items.properties
+                    if properties is None:
+                        items_schema = None
+                        if hasattr(schema, "type") and schema.type == "array" and hasattr(schema, "items") and schema.items:
+                            items_schema = schema.items
+                        elif isinstance(schema, dict) and schema.get("type") == "array":
+                            items_schema = schema.get("items")
+                        if items_schema:
+                            if hasattr(items_schema, "properties") and items_schema.properties:
+                                properties = items_schema.properties
+                                required_fields = set(items_schema.required) if hasattr(items_schema, "required") and items_schema.required else set()
+                            elif isinstance(items_schema, dict) and items_schema.get("properties"):
+                                properties = items_schema.get("properties")
+                                required_fields = set(items_schema.get("required", []))
 
                 if properties:
                     for prop_name, prop_schema in properties.items():

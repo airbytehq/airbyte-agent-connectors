@@ -24,32 +24,32 @@ class CustomersCreateParamsInputAddressesItem(TypedDict):
     city: NotRequired[str]
     province: NotRequired[str]
     zip: NotRequired[str]
-    countryCode: NotRequired[str]
+    country_code: NotRequired[str]
     phone: NotRequired[str]
-    firstName: NotRequired[str]
-    lastName: NotRequired[str]
+    first_name: NotRequired[str]
+    last_name: NotRequired[str]
 
 class CustomersCreateParamsInput(TypedDict):
     """CustomerInput object"""
     email: NotRequired[str]
-    firstName: NotRequired[str]
-    lastName: NotRequired[str]
+    first_name: NotRequired[str]
+    last_name: NotRequired[str]
     phone: NotRequired[str]
     note: NotRequired[str]
     tags: NotRequired[list[str]]
-    taxExempt: NotRequired[bool]
+    tax_exempt: NotRequired[bool]
     addresses: NotRequired[list[CustomersCreateParamsInputAddressesItem]]
 
 class CustomersUpdateParamsInput(TypedDict):
     """CustomerInput object with id"""
     id: str
     email: NotRequired[str]
-    firstName: NotRequired[str]
-    lastName: NotRequired[str]
+    first_name: NotRequired[str]
+    last_name: NotRequired[str]
     phone: NotRequired[str]
     note: NotRequired[str]
     tags: NotRequired[list[str]]
-    taxExempt: NotRequired[bool]
+    tax_exempt: NotRequired[bool]
 
 class CustomersDeleteParamsInput(TypedDict):
     """Nested schema for CustomersDeleteParams.input"""
@@ -58,24 +58,24 @@ class CustomersDeleteParamsInput(TypedDict):
 class ProductsCreateParamsProduct(TypedDict):
     """ProductCreateInput object"""
     title: str
-    descriptionHtml: NotRequired[str]
+    description_html: NotRequired[str]
     vendor: NotRequired[str]
-    productType: NotRequired[str]
+    product_type: NotRequired[str]
     tags: NotRequired[list[str]]
     status: NotRequired[str]
 
 class ProductsCreateParamsMediaItem(TypedDict):
     """Nested schema for ProductsCreateParams.media_item"""
-    originalSource: NotRequired[str]
-    mediaContentType: NotRequired[str]
+    original_source: NotRequired[str]
+    media_content_type: NotRequired[str]
 
 class ProductsUpdateParamsProduct(TypedDict):
     """ProductUpdateInput object"""
     id: str
     title: NotRequired[str]
-    descriptionHtml: NotRequired[str]
+    description_html: NotRequired[str]
     vendor: NotRequired[str]
-    productType: NotRequired[str]
+    product_type: NotRequired[str]
     tags: NotRequired[list[str]]
     status: NotRequired[str]
 
@@ -89,16 +89,16 @@ class ProductVariantsCreateParamsVariantsItemInventoryitem(TypedDict):
 
 class ProductVariantsCreateParamsVariantsItemOptionvaluesItem(TypedDict):
     """Nested schema for ProductVariantsCreateParamsVariantsItem.optionValues_item"""
-    optionName: str
+    option_name: str
     name: str
 
 class ProductVariantsCreateParamsVariantsItem(TypedDict):
     """Nested schema for ProductVariantsCreateParams.variants_item"""
     price: NotRequired[str]
     barcode: NotRequired[str]
-    compareAtPrice: NotRequired[str]
-    inventoryItem: NotRequired[ProductVariantsCreateParamsVariantsItemInventoryitem]
-    optionValues: NotRequired[list[ProductVariantsCreateParamsVariantsItemOptionvaluesItem]]
+    compare_at_price: NotRequired[str]
+    inventory_item: NotRequired[ProductVariantsCreateParamsVariantsItemInventoryitem]
+    option_values: NotRequired[list[ProductVariantsCreateParamsVariantsItemOptionvaluesItem]]
 
 class ProductVariantsUpdateParamsVariantsItemInventoryitem(TypedDict):
     """Inventory-item attributes for the variant. As of Admin API 2024-07+ the SKU is no longer a variant-level field and must be set here (a top-level sku is ignored/rejected by productVariantsBulkUpdate, which silently returns null instead of updating)."""
@@ -109,55 +109,55 @@ class ProductVariantsUpdateParamsVariantsItem(TypedDict):
     id: str
     price: NotRequired[str]
     barcode: NotRequired[str]
-    compareAtPrice: NotRequired[str]
-    inventoryItem: NotRequired[ProductVariantsUpdateParamsVariantsItemInventoryitem]
+    compare_at_price: NotRequired[str]
+    inventory_item: NotRequired[ProductVariantsUpdateParamsVariantsItemInventoryitem]
 
 class OrdersCreateParamsOrderLineitemsItemPricesetShopmoney(TypedDict):
     """Nested schema for OrdersCreateParamsOrderLineitemsItemPriceset.shopMoney"""
     amount: NotRequired[str]
-    currencyCode: NotRequired[str]
+    currency_code: NotRequired[str]
 
 class OrdersCreateParamsOrderLineitemsItemPriceset(TypedDict):
     """Nested schema for OrdersCreateParamsOrderLineitemsItem.priceSet"""
-    shopMoney: NotRequired[OrdersCreateParamsOrderLineitemsItemPricesetShopmoney]
+    shop_money: NotRequired[OrdersCreateParamsOrderLineitemsItemPricesetShopmoney]
 
 class OrdersCreateParamsOrderLineitemsItem(TypedDict):
     """Nested schema for OrdersCreateParamsOrder.lineItems_item"""
-    variantId: NotRequired[str]
+    variant_id: NotRequired[str]
     quantity: NotRequired[int]
     title: NotRequired[str]
-    priceSet: NotRequired[OrdersCreateParamsOrderLineitemsItemPriceset]
+    price_set: NotRequired[OrdersCreateParamsOrderLineitemsItemPriceset]
 
 class OrdersCreateParamsOrderShippingaddress(TypedDict):
     """Nested schema for OrdersCreateParamsOrder.shippingAddress"""
     address1: NotRequired[str]
     city: NotRequired[str]
-    provinceCode: NotRequired[str]
+    province_code: NotRequired[str]
     zip: NotRequired[str]
-    countryCode: NotRequired[str]
-    firstName: NotRequired[str]
-    lastName: NotRequired[str]
+    country_code: NotRequired[str]
+    first_name: NotRequired[str]
+    last_name: NotRequired[str]
 
 class OrdersCreateParamsOrder(TypedDict):
     """OrderCreateOrderInput object"""
-    lineItems: list[OrdersCreateParamsOrderLineitemsItem]
-    customerId: NotRequired[str]
+    line_items: list[OrdersCreateParamsOrderLineitemsItem]
+    customer_id: NotRequired[str]
     email: NotRequired[str]
     note: NotRequired[str]
     tags: NotRequired[list[str]]
-    shippingAddress: NotRequired[OrdersCreateParamsOrderShippingaddress]
+    shipping_address: NotRequired[OrdersCreateParamsOrderShippingaddress]
 
 class OrdersCreateParamsOptions(TypedDict):
     """OrderCreateOptionsInput"""
-    inventoryBehaviour: NotRequired[str]
+    inventory_behaviour: NotRequired[str]
 
 class OrdersUpdateParamsInputShippingaddress(TypedDict):
     """Nested schema for OrdersUpdateParamsInput.shippingAddress"""
     address1: NotRequired[str]
     city: NotRequired[str]
-    provinceCode: NotRequired[str]
+    province_code: NotRequired[str]
     zip: NotRequired[str]
-    countryCode: NotRequired[str]
+    country_code: NotRequired[str]
 
 class OrdersUpdateParamsInput(TypedDict):
     """Nested schema for OrdersUpdateParams.input"""
@@ -165,42 +165,42 @@ class OrdersUpdateParamsInput(TypedDict):
     email: NotRequired[str]
     note: NotRequired[str]
     tags: NotRequired[list[str]]
-    shippingAddress: NotRequired[OrdersUpdateParamsInputShippingaddress]
+    shipping_address: NotRequired[OrdersUpdateParamsInputShippingaddress]
 
 class DraftOrdersCreateParamsInputLineitemsItem(TypedDict):
     """Nested schema for DraftOrdersCreateParamsInput.lineItems_item"""
-    variantId: NotRequired[str]
+    variant_id: NotRequired[str]
     quantity: NotRequired[int]
     title: NotRequired[str]
-    originalUnitPrice: NotRequired[str]
+    original_unit_price: NotRequired[str]
 
 class DraftOrdersCreateParamsInputShippingaddress(TypedDict):
     """Nested schema for DraftOrdersCreateParamsInput.shippingAddress"""
     address1: NotRequired[str]
     city: NotRequired[str]
-    provinceCode: NotRequired[str]
+    province_code: NotRequired[str]
     zip: NotRequired[str]
-    countryCode: NotRequired[str]
+    country_code: NotRequired[str]
 
 class DraftOrdersCreateParamsInput(TypedDict):
     """DraftOrderInput object"""
-    lineItems: NotRequired[list[DraftOrdersCreateParamsInputLineitemsItem]]
-    customerId: NotRequired[str]
+    line_items: NotRequired[list[DraftOrdersCreateParamsInputLineitemsItem]]
+    customer_id: NotRequired[str]
     email: NotRequired[str]
     note: NotRequired[str]
     tags: NotRequired[list[str]]
-    shippingAddress: NotRequired[DraftOrdersCreateParamsInputShippingaddress]
+    shipping_address: NotRequired[DraftOrdersCreateParamsInputShippingaddress]
 
 class DraftOrdersUpdateParamsInputLineitemsItem(TypedDict):
     """Nested schema for DraftOrdersUpdateParamsInput.lineItems_item"""
-    variantId: NotRequired[str]
+    variant_id: NotRequired[str]
     quantity: NotRequired[int]
     title: NotRequired[str]
-    originalUnitPrice: NotRequired[str]
+    original_unit_price: NotRequired[str]
 
 class DraftOrdersUpdateParamsInput(TypedDict):
     """DraftOrderInput object with updated fields"""
-    lineItems: NotRequired[list[DraftOrdersUpdateParamsInputLineitemsItem]]
+    line_items: NotRequired[list[DraftOrdersUpdateParamsInputLineitemsItem]]
     email: NotRequired[str]
     note: NotRequired[str]
     tags: NotRequired[list[str]]
@@ -211,28 +211,28 @@ class DraftOrdersDeleteParamsInput(TypedDict):
 
 class InventorySetCreateParamsInputQuantitiesItem(TypedDict):
     """Nested schema for InventorySetCreateParamsInput.quantities_item"""
-    inventoryItemId: str
-    locationId: str
+    inventory_item_id: str
+    location_id: str
     quantity: int
 
 class InventorySetCreateParamsInput(TypedDict):
     """Nested schema for InventorySetCreateParams.input"""
     name: str
     reason: str
-    referenceDocumentUri: NotRequired[str]
+    reference_document_uri: NotRequired[str]
     quantities: list[InventorySetCreateParamsInputQuantitiesItem]
 
 class InventoryAdjustCreateParamsInputChangesItem(TypedDict):
     """Nested schema for InventoryAdjustCreateParamsInput.changes_item"""
-    inventoryItemId: str
-    locationId: str
+    inventory_item_id: str
+    location_id: str
     delta: int
 
 class InventoryAdjustCreateParamsInput(TypedDict):
     """Nested schema for InventoryAdjustCreateParams.input"""
     name: str
     reason: str
-    referenceDocumentUri: NotRequired[str]
+    reference_document_uri: NotRequired[str]
     changes: list[InventoryAdjustCreateParamsInputChangesItem]
 
 class DiscountCodesCreateParamsBasiccodediscountCustomerselection(TypedDict):
@@ -242,12 +242,12 @@ class DiscountCodesCreateParamsBasiccodediscountCustomerselection(TypedDict):
 class DiscountCodesCreateParamsBasiccodediscountCustomergetsValueDiscountamount(TypedDict):
     """Nested schema for DiscountCodesCreateParamsBasiccodediscountCustomergetsValue.discountAmount"""
     amount: NotRequired[str]
-    appliesOnEachItem: NotRequired[bool]
+    applies_on_each_item: NotRequired[bool]
 
 class DiscountCodesCreateParamsBasiccodediscountCustomergetsValue(TypedDict):
     """The discount value"""
     percentage: NotRequired[float]
-    discountAmount: NotRequired[DiscountCodesCreateParamsBasiccodediscountCustomergetsValueDiscountamount]
+    discount_amount: NotRequired[DiscountCodesCreateParamsBasiccodediscountCustomergetsValueDiscountamount]
 
 class DiscountCodesCreateParamsBasiccodediscountCustomergetsItems(TypedDict):
     """Which items the discount applies to"""
@@ -262,31 +262,31 @@ class DiscountCodesCreateParamsBasiccodediscount(TypedDict):
     """Nested schema for DiscountCodesCreateParams.basicCodeDiscount"""
     title: str
     code: str
-    startsAt: str
-    endsAt: NotRequired[str]
-    usageLimit: NotRequired[int]
-    customerSelection: DiscountCodesCreateParamsBasiccodediscountCustomerselection
-    customerGets: DiscountCodesCreateParamsBasiccodediscountCustomergets
+    starts_at: str
+    ends_at: NotRequired[str]
+    usage_limit: NotRequired[int]
+    customer_selection: DiscountCodesCreateParamsBasiccodediscountCustomerselection
+    customer_gets: DiscountCodesCreateParamsBasiccodediscountCustomergets
 
 class DiscountCodesUpdateParamsBasiccodediscount(TypedDict):
     """Nested schema for DiscountCodesUpdateParams.basicCodeDiscount"""
     title: NotRequired[str]
     code: NotRequired[str]
-    startsAt: NotRequired[str]
-    endsAt: NotRequired[str]
-    usageLimit: NotRequired[int]
+    starts_at: NotRequired[str]
+    ends_at: NotRequired[str]
+    usage_limit: NotRequired[int]
 
 class MetafieldsCreateParamsMetafieldsItem(TypedDict):
     """Nested schema for MetafieldsCreateParams.metafields_item"""
     namespace: str
     key: str
-    type: str
+    type_: str
     value: str
-    ownerId: str
+    owner_id: str
 
 class MetafieldsDeleteParamsMetafieldsItem(TypedDict):
     """Nested schema for MetafieldsDeleteParams.metafields_item"""
-    ownerId: str
+    owner_id: str
     namespace: str
     key: str
 
@@ -298,25 +298,25 @@ class CustomCollectionsCreateParamsInputRulesetRulesItem(TypedDict):
 
 class CustomCollectionsCreateParamsInputRuleset(TypedDict):
     """Rule set for smart collections"""
-    appliedDisjunctively: NotRequired[bool]
+    applied_disjunctively: NotRequired[bool]
     rules: NotRequired[list[CustomCollectionsCreateParamsInputRulesetRulesItem]]
 
 class CustomCollectionsCreateParamsInput(TypedDict):
     """Nested schema for CustomCollectionsCreateParams.input"""
     title: str
-    descriptionHtml: NotRequired[str]
+    description_html: NotRequired[str]
     handle: NotRequired[str]
-    sortOrder: NotRequired[str]
-    templateSuffix: NotRequired[str]
-    ruleSet: NotRequired[CustomCollectionsCreateParamsInputRuleset]
+    sort_order: NotRequired[str]
+    template_suffix: NotRequired[str]
+    rule_set: NotRequired[CustomCollectionsCreateParamsInputRuleset]
 
 class CustomCollectionsUpdateParamsInput(TypedDict):
     """Nested schema for CustomCollectionsUpdateParams.input"""
     id: str
     title: NotRequired[str]
-    descriptionHtml: NotRequired[str]
+    description_html: NotRequired[str]
     handle: NotRequired[str]
-    sortOrder: NotRequired[str]
+    sort_order: NotRequired[str]
 
 class CustomCollectionsDeleteParamsInput(TypedDict):
     """Nested schema for CustomCollectionsDeleteParams.input"""
@@ -327,14 +327,14 @@ class PagesCreateParamsPage(TypedDict):
     title: str
     body: NotRequired[str]
     handle: NotRequired[str]
-    isPublished: NotRequired[bool]
+    is_published: NotRequired[bool]
 
 class PagesUpdateParamsPage(TypedDict):
     """Nested schema for PagesUpdateParams.page"""
     title: NotRequired[str]
     body: NotRequired[str]
     handle: NotRequired[str]
-    isPublished: NotRequired[bool]
+    is_published: NotRequired[bool]
 
 class BlogsCreateParamsBlog(TypedDict):
     """Nested schema for BlogsCreateParams.blog"""
@@ -353,10 +353,10 @@ class ArticlesCreateParamsArticleAuthor(TypedDict):
 class ArticlesCreateParamsArticle(TypedDict):
     """Nested schema for ArticlesCreateParams.article"""
     title: str
-    blogId: str
+    blog_id: str
     body: NotRequired[str]
     handle: NotRequired[str]
-    isPublished: NotRequired[bool]
+    is_published: NotRequired[bool]
     tags: NotRequired[list[str]]
     author: ArticlesCreateParamsArticleAuthor
 
@@ -365,7 +365,7 @@ class ArticlesUpdateParamsArticle(TypedDict):
     title: NotRequired[str]
     body: NotRequired[str]
     handle: NotRequired[str]
-    isPublished: NotRequired[bool]
+    is_published: NotRequired[bool]
     tags: NotRequired[list[str]]
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====

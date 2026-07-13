@@ -68,8 +68,8 @@ class MetricHeader(BaseModel):
     name: str | None = Field(default=None)
     type_: str | None = Field(default=None, alias="type")
 
-class RunReportResponsePropertyquotaTokensperday(BaseModel):
-    """Nested schema for RunReportResponsePropertyquota.tokensPerDay"""
+class RunReportResponsePropertyquotaServererrorsperprojectperhour(BaseModel):
+    """Nested schema for RunReportResponsePropertyquota.serverErrorsPerProjectPerHour"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     consumed: int | None = Field(default=None)
@@ -82,15 +82,8 @@ class RunReportResponsePropertyquotaPotentiallythresholdedrequestsperhour(BaseMo
     consumed: int | None = Field(default=None)
     remaining: int | None = Field(default=None)
 
-class RunReportResponsePropertyquotaConcurrentrequests(BaseModel):
-    """Nested schema for RunReportResponsePropertyquota.concurrentRequests"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    consumed: int | None = Field(default=None)
-    remaining: int | None = Field(default=None)
-
-class RunReportResponsePropertyquotaTokensperprojectperhour(BaseModel):
-    """Nested schema for RunReportResponsePropertyquota.tokensPerProjectPerHour"""
+class RunReportResponsePropertyquotaTokensperday(BaseModel):
+    """Nested schema for RunReportResponsePropertyquota.tokensPerDay"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     consumed: int | None = Field(default=None)
@@ -103,8 +96,15 @@ class RunReportResponsePropertyquotaTokensperhour(BaseModel):
     consumed: int | None = Field(default=None)
     remaining: int | None = Field(default=None)
 
-class RunReportResponsePropertyquotaServererrorsperprojectperhour(BaseModel):
-    """Nested schema for RunReportResponsePropertyquota.serverErrorsPerProjectPerHour"""
+class RunReportResponsePropertyquotaTokensperprojectperhour(BaseModel):
+    """Nested schema for RunReportResponsePropertyquota.tokensPerProjectPerHour"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    consumed: int | None = Field(default=None)
+    remaining: int | None = Field(default=None)
+
+class RunReportResponsePropertyquotaConcurrentrequests(BaseModel):
+    """Nested schema for RunReportResponsePropertyquota.concurrentRequests"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     consumed: int | None = Field(default=None)
@@ -142,12 +142,6 @@ class RunReportResponse(BaseModel):
     property_quota: RunReportResponsePropertyquota | None = Field(default=None, alias="propertyQuota")
     kind: str | None = Field(default=None)
 
-class WebsiteOverviewRequestMetricsItem(BaseModel):
-    """Nested schema for WebsiteOverviewRequest.metrics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-
 class WebsiteOverviewRequestDaterangesItem(BaseModel):
     """Nested schema for WebsiteOverviewRequest.dateRanges_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -156,6 +150,12 @@ class WebsiteOverviewRequestDaterangesItem(BaseModel):
     """Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"""
     end_date: str | None = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
+
+class WebsiteOverviewRequestMetricsItem(BaseModel):
+    """Nested schema for WebsiteOverviewRequest.metrics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None)
 
 class WebsiteOverviewRequestDimensionsItem(BaseModel):
     """Nested schema for WebsiteOverviewRequest.dimensions_item"""
@@ -174,15 +174,6 @@ class WebsiteOverviewRequest(BaseModel):
     return_property_quota: bool | None = Field(default=None, alias="returnPropertyQuota")
     limit: int | None = Field(default=None)
 
-class DailyActiveUsersRequestDaterangesItem(BaseModel):
-    """Nested schema for DailyActiveUsersRequest.dateRanges_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    start_date: str | None = Field(default=None, alias="startDate", description="Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)")
-    """Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"""
-    end_date: str | None = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
-    """End date in YYYY-MM-DD format or relative (e.g., today)"""
-
 class DailyActiveUsersRequestMetricsItem(BaseModel):
     """Nested schema for DailyActiveUsersRequest.metrics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -194,6 +185,15 @@ class DailyActiveUsersRequestDimensionsItem(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     name: str | None = Field(default=None)
+
+class DailyActiveUsersRequestDaterangesItem(BaseModel):
+    """Nested schema for DailyActiveUsersRequest.dateRanges_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    start_date: str | None = Field(default=None, alias="startDate", description="Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)")
+    """Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"""
+    end_date: str | None = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
+    """End date in YYYY-MM-DD format or relative (e.g., today)"""
 
 class DailyActiveUsersRequest(BaseModel):
     """Request body for daily active users report"""
@@ -215,14 +215,14 @@ class WeeklyActiveUsersRequestDaterangesItem(BaseModel):
     end_date: str | None = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
 
-class WeeklyActiveUsersRequestMetricsItem(BaseModel):
-    """Nested schema for WeeklyActiveUsersRequest.metrics_item"""
+class WeeklyActiveUsersRequestDimensionsItem(BaseModel):
+    """Nested schema for WeeklyActiveUsersRequest.dimensions_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     name: str | None = Field(default=None)
 
-class WeeklyActiveUsersRequestDimensionsItem(BaseModel):
-    """Nested schema for WeeklyActiveUsersRequest.dimensions_item"""
+class WeeklyActiveUsersRequestMetricsItem(BaseModel):
+    """Nested schema for WeeklyActiveUsersRequest.metrics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     name: str | None = Field(default=None)
@@ -238,12 +238,6 @@ class WeeklyActiveUsersRequest(BaseModel):
     return_property_quota: bool | None = Field(default=None, alias="returnPropertyQuota")
     limit: int | None = Field(default=None)
 
-class FourWeeklyActiveUsersRequestMetricsItem(BaseModel):
-    """Nested schema for FourWeeklyActiveUsersRequest.metrics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-
 class FourWeeklyActiveUsersRequestDaterangesItem(BaseModel):
     """Nested schema for FourWeeklyActiveUsersRequest.dateRanges_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -255,6 +249,12 @@ class FourWeeklyActiveUsersRequestDaterangesItem(BaseModel):
 
 class FourWeeklyActiveUsersRequestDimensionsItem(BaseModel):
     """Nested schema for FourWeeklyActiveUsersRequest.dimensions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None)
+
+class FourWeeklyActiveUsersRequestMetricsItem(BaseModel):
+    """Nested schema for FourWeeklyActiveUsersRequest.metrics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     name: str | None = Field(default=None)
@@ -366,14 +366,14 @@ class DevicesRequest(BaseModel):
     return_property_quota: bool | None = Field(default=None, alias="returnPropertyQuota")
     limit: int | None = Field(default=None)
 
-class LocationsRequestMetricsItem(BaseModel):
-    """Nested schema for LocationsRequest.metrics_item"""
+class LocationsRequestDimensionsItem(BaseModel):
+    """Nested schema for LocationsRequest.dimensions_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     name: str | None = Field(default=None)
 
-class LocationsRequestDimensionsItem(BaseModel):
-    """Nested schema for LocationsRequest.dimensions_item"""
+class LocationsRequestMetricsItem(BaseModel):
+    """Nested schema for LocationsRequest.metrics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     name: str | None = Field(default=None)

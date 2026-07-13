@@ -19,31 +19,31 @@ from typing import Any, Literal
 
 class CallsExtensiveListParamsFilter(TypedDict):
     """Nested schema for CallsExtensiveListParams.filter"""
-    fromDateTime: NotRequired[str]
-    toDateTime: NotRequired[str]
-    callIds: NotRequired[list[str]]
-    workspaceId: NotRequired[str]
+    from_date_time: NotRequired[str]
+    to_date_time: NotRequired[str]
+    call_ids: NotRequired[list[str]]
+    workspace_id: NotRequired[str]
 
 class CallsExtensiveListParamsContentselectorExposedfieldsCollaboration(TypedDict):
     """Nested schema for CallsExtensiveListParamsContentselectorExposedfields.collaboration"""
-    publicComments: NotRequired[bool]
+    public_comments: NotRequired[bool]
 
 class CallsExtensiveListParamsContentselectorExposedfieldsContent(TypedDict):
     """Nested schema for CallsExtensiveListParamsContentselectorExposedfields.content"""
-    pointsOfInterest: NotRequired[bool]
+    points_of_interest: NotRequired[bool]
     structure: NotRequired[bool]
     topics: NotRequired[bool]
     trackers: NotRequired[bool]
-    trackerOccurrences: NotRequired[bool]
+    tracker_occurrences: NotRequired[bool]
     brief: NotRequired[bool]
     outline: NotRequired[bool]
     highlights: NotRequired[bool]
-    callOutcome: NotRequired[bool]
-    keyPoints: NotRequired[bool]
+    call_outcome: NotRequired[bool]
+    key_points: NotRequired[bool]
 
 class CallsExtensiveListParamsContentselectorExposedfieldsInteraction(TypedDict):
     """Nested schema for CallsExtensiveListParamsContentselectorExposedfields.interaction"""
-    personInteractionStats: NotRequired[bool]
+    person_interaction_stats: NotRequired[bool]
     questions: NotRequired[bool]
     speakers: NotRequired[bool]
     video: NotRequired[bool]
@@ -59,12 +59,12 @@ class CallsExtensiveListParamsContentselectorExposedfields(TypedDict):
 class CallsExtensiveListParamsContentselector(TypedDict):
     """Select which content to include in the response"""
     context: NotRequired[str]
-    contextTiming: NotRequired[list[str]]
-    exposedFields: NotRequired[CallsExtensiveListParamsContentselectorExposedfields]
+    context_timing: NotRequired[list[str]]
+    exposed_fields: NotRequired[CallsExtensiveListParamsContentselectorExposedfields]
 
 class CallAudioDownloadParamsFilter(TypedDict):
     """Nested schema for CallAudioDownloadParams.filter"""
-    callIds: NotRequired[list[str]]
+    call_ids: NotRequired[list[str]]
 
 class CallAudioDownloadParamsContentselectorExposedfields(TypedDict):
     """Nested schema for CallAudioDownloadParamsContentselector.exposedFields"""
@@ -72,11 +72,11 @@ class CallAudioDownloadParamsContentselectorExposedfields(TypedDict):
 
 class CallAudioDownloadParamsContentselector(TypedDict):
     """Nested schema for CallAudioDownloadParams.contentSelector"""
-    exposedFields: NotRequired[CallAudioDownloadParamsContentselectorExposedfields]
+    exposed_fields: NotRequired[CallAudioDownloadParamsContentselectorExposedfields]
 
 class CallVideoDownloadParamsFilter(TypedDict):
     """Nested schema for CallVideoDownloadParams.filter"""
-    callIds: NotRequired[list[str]]
+    call_ids: NotRequired[list[str]]
 
 class CallVideoDownloadParamsContentselectorExposedfields(TypedDict):
     """Nested schema for CallVideoDownloadParamsContentselector.exposedFields"""
@@ -84,40 +84,40 @@ class CallVideoDownloadParamsContentselectorExposedfields(TypedDict):
 
 class CallVideoDownloadParamsContentselector(TypedDict):
     """Nested schema for CallVideoDownloadParams.contentSelector"""
-    exposedFields: NotRequired[CallVideoDownloadParamsContentselectorExposedfields]
+    exposed_fields: NotRequired[CallVideoDownloadParamsContentselectorExposedfields]
 
 class CallTranscriptsListParamsFilter(TypedDict):
     """Nested schema for CallTranscriptsListParams.filter"""
-    fromDateTime: NotRequired[str]
-    toDateTime: NotRequired[str]
-    callIds: NotRequired[list[str]]
+    from_date_time: NotRequired[str]
+    to_date_time: NotRequired[str]
+    call_ids: NotRequired[list[str]]
 
 class StatsActivityAggregateListParamsFilter(TypedDict):
     """Nested schema for StatsActivityAggregateListParams.filter"""
-    fromDate: str
-    toDate: str
-    userIds: NotRequired[list[str]]
+    from_date: str
+    to_date: str
+    user_ids: NotRequired[list[str]]
 
 class StatsActivityDayByDayListParamsFilter(TypedDict):
     """Nested schema for StatsActivityDayByDayListParams.filter"""
-    fromDate: str
-    toDate: str
-    userIds: NotRequired[list[str]]
+    from_date: str
+    to_date: str
+    user_ids: NotRequired[list[str]]
 
 class StatsInteractionListParamsFilter(TypedDict):
     """Nested schema for StatsInteractionListParams.filter"""
-    fromDate: str
-    toDate: str
-    userIds: NotRequired[list[str]]
+    from_date: str
+    to_date: str
+    user_ids: NotRequired[list[str]]
 
 class StatsActivityScorecardsListParamsFilter(TypedDict):
     """Nested schema for StatsActivityScorecardsListParams.filter"""
-    fromDateTime: str
-    toDateTime: str
-    scorecardIds: NotRequired[list[str]]
-    reviewedUserIds: NotRequired[list[str]]
-    reviewerUserIds: NotRequired[list[str]]
-    callIds: NotRequired[list[str]]
+    from_date_time: str
+    to_date_time: str
+    scorecard_ids: NotRequired[list[str]]
+    reviewed_user_ids: NotRequired[list[str]]
+    reviewer_user_ids: NotRequired[list[str]]
+    call_ids: NotRequired[list[str]]
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 

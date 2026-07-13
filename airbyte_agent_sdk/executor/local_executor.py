@@ -1545,15 +1545,15 @@ class LocalExecutor:
         template = env.from_string(file_field)
         return template.render(params)
 
-    def _build_request_body(self, endpoint: EndpointDefinition, params: dict[str, Any]) -> dict[str, Any] | None:
-        """Build request body (GraphQL or standard).
+    def _build_request_body(self, endpoint: EndpointDefinition, params: dict[str, Any]) -> dict[str, Any] | list[dict[str, Any]] | None:
+        """Build request body (GraphQL, standard object, or array).
 
         Args:
             endpoint: Endpoint definition
             params: Parameters from execute() call
 
         Returns:
-            Request body dict or None if no body needed
+            Request body dict, list of dicts (array body), or None if no body needed
         """
         if endpoint.graphql_body:
             # Extract defaults from query_params_schema for GraphQL variable interpolation
@@ -1565,7 +1565,13 @@ class LocalExecutor:
             # Override with user-provided params (filtering out None values)
             user_body = self._extract_body(endpoint.body_fields, params)
             body.update(user_body)
-            return body if body else None
+            if not body:
+                return None
+            if endpoint.body_is_array:
+                # Wrap the constructed dict in a single-element list so the
+                # HTTP client sends a JSON array (e.g. ``[{...}]``).
+                return [body]
+            return body
         elif endpoint.request_body_defaults:
             # If no body_fields but we have defaults, return the defaults
             return dict(endpoint.request_body_defaults)
@@ -1669,7 +1675,7 @@ class LocalExecutor:
             "headers": {"Content-Type": f"multipart/related; boundary={boundary}"},
         }
 
-    def _determine_request_format(self, endpoint: EndpointDefinition, body: dict[str, Any] | None) -> dict[str, Any]:
+    def _determine_request_format(self, endpoint: EndpointDefinition, body: dict[str, Any] | list[dict[str, Any]] | None) -> dict[str, Any]:
         """Determine json/data parameters for HTTP request.
 
         GraphQL always uses JSON, regardless of content_type setting.
@@ -1677,7 +1683,7 @@ class LocalExecutor:
 
         Args:
             endpoint: Endpoint definition
-            body: Request body dict or None
+            body: Request body dict, list of dicts (array body), or None
 
         Returns:
             Dict with 'json' and/or 'data' keys for http_client.request()
@@ -2694,7 +2700,7 @@ class _DownloadOperationHandler:
                                 # malformed JSON instead of silently returning garbage bytes
                                 # as file content.
                                 raise HTTPClientError(
-                                    f"Failed to parse JSON response for download " f"(content-type={file_headers.get('content-type', '')}): {exc}"
+                                    f"Failed to parse JSON response for download (content-type={file_headers.get('content-type', '')}): {exc}"
                                 )
                             if isinstance(payload, dict):
                                 LocalExecutor._apply_response_error_check(self.ctx.executor.model, payload)

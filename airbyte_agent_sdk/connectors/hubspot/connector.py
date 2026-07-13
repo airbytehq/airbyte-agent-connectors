@@ -18,6 +18,9 @@ from airbyte_agent_sdk.introspection import describe_entities, generate_tool_des
 from airbyte_agent_sdk.translation import DEFAULT_MAX_OUTPUT_CHARS, FrameworkName, translate_exceptions
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
+    AssociationsCreateParams,
+    AssociationsDeleteParams,
+    AssociationsListParams,
     CallsCreateParams,
     CallsCreateParamsAssociationsItem,
     CallsCreateParamsProperties,
@@ -141,6 +144,9 @@ from .models import (
     TasksListResult,
     SchemasListResult,
     ObjectsListResult,
+    AssociationsListResult,
+    AssociationListResult,
+    AssociationResult,
     CRMObject,
     Call,
     Company,
@@ -188,8 +194,8 @@ class HubspotConnector:
     """
 
     connector_name = "hubspot"
-    connector_version = "0.1.19"
-    sdk_version = "0.1.283"
+    connector_version = "0.1.20"
+    sdk_version = "0.1.284"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -242,6 +248,9 @@ class HubspotConnector:
         ("schemas", "get"): None,
         ("objects", "list"): True,
         ("objects", "get"): None,
+        ("associations", "list"): True,
+        ("associations", "create"): None,
+        ("associations", "delete"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -296,6 +305,9 @@ class HubspotConnector:
         ('schemas', 'get'): {'object_type': 'objectType'},
         ('objects', 'list'): {'object_type': 'objectType', 'limit': 'limit', 'after': 'after', 'properties': 'properties', 'archived': 'archived', 'associations': 'associations', 'properties_with_history': 'propertiesWithHistory'},
         ('objects', 'get'): {'object_type': 'objectType', 'object_id': 'objectId', 'properties': 'properties', 'archived': 'archived', 'associations': 'associations', 'id_property': 'idProperty', 'properties_with_history': 'propertiesWithHistory'},
+        ('associations', 'list'): {'from_object_type': 'fromObjectType', 'from_object_id': 'fromObjectId', 'to_object_type': 'toObjectType', 'after': 'after', 'limit': 'limit'},
+        ('associations', 'create'): {'association_category': 'associationCategory', 'association_type_id': 'associationTypeId', 'from_object_type': 'fromObjectType', 'from_object_id': 'fromObjectId', 'to_object_type': 'toObjectType', 'to_object_id': 'toObjectId'},
+        ('associations', 'delete'): {'from_object_type': 'fromObjectType', 'from_object_id': 'fromObjectId', 'to_object_type': 'toObjectType', 'to_object_id': 'toObjectId'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -411,6 +423,7 @@ class HubspotConnector:
         self.tasks = TasksQuery(self)
         self.schemas = SchemasQuery(self)
         self.objects = ObjectsQuery(self)
+        self.associations = AssociationsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -1001,6 +1014,42 @@ class HubspotConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "CRMObject": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["associations"],
+        action: Literal["list"],
+        params: "AssociationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "AssociationsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["associations"],
+        action: Literal["create"],
+        params: "AssociationsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "AssociationResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["associations"],
+        action: Literal["delete"],
+        params: "AssociationsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
 
 
     @overload
@@ -3742,6 +3791,165 @@ class ObjectsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("objects", "get", params)
+        return result
+
+
+
+class AssociationsQuery:
+    """
+    Query class for Associations entity operations.
+    """
+
+    def __init__(self, connector: HubspotConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        from_object_type: str,
+        from_object_id: str,
+        to_object_type: str,
+        after: str | None = None,
+        limit: int | None = None,
+        **kwargs
+    ) -> AssociationsListResult:
+        """
+        Retrieve all associations between a specific CRM record and a target object type using
+the v4 associations API. Returns up to 500 associations per call. Use the `after` cursor
+for pagination when there are more results. For example, retrieve all companies associated
+with a contact, or all deals associated with a company.
+
+
+        Args:
+            from_object_type: Object type of the source record (e.g., contacts, companies, deals, tickets, or a custom object type ID)
+            from_object_id: ID of the source record to retrieve associations for
+            to_object_type: Object type of the target records to retrieve (e.g., contacts, companies, deals, tickets, or a custom object type ID)
+            after: Paging cursor token from a previous response for retrieving subsequent pages of results
+            limit: Maximum number of results to return per page (default 500, max 500)
+            **kwargs: Additional parameters
+
+        Returns:
+            AssociationsListResult
+        """
+        params = {k: v for k, v in {
+            "fromObjectType": from_object_type,
+            "fromObjectId": from_object_id,
+            "toObjectType": to_object_type,
+            "after": after,
+            "limit": limit,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("associations", "list", params)
+        # Cast generic envelope to concrete typed result
+        return AssociationsListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def create(
+        self,
+        association_category: str,
+        association_type_id: int,
+        from_object_type: str,
+        from_object_id: str,
+        to_object_type: str,
+        to_object_id: str,
+        **kwargs
+    ) -> AssociationResult:
+        """
+        Create a labeled association between two CRM records using the v4 associations API.
+Labeled associations carry an association type ID and category that describe the relationship
+(e.g., "Primary Company", "Billing Contact"). This is idempotent — calling it again with the same
+IDs and label has no effect. Use the association type ID and category from the HubSpot association
+definitions for the relevant object pair. Common association type IDs include:
+- Contact to Company: 279 (HUBSPOT_DEFINED) for default, 1 (HUBSPOT_DEFINED) for Primary
+- Company to Contact: 280 (HUBSPOT_DEFINED) for default, 2 (HUBSPOT_DEFINED) for Primary
+- Contact to Deal: 4 (HUBSPOT_DEFINED) for default
+- Deal to Contact: 3 (HUBSPOT_DEFINED) for default
+- Deal to Company: 341 (HUBSPOT_DEFINED) for default, 5 (HUBSPOT_DEFINED) for Primary
+- Company to Deal: 342 (HUBSPOT_DEFINED) for default, 6 (HUBSPOT_DEFINED) for Primary
+- Contact to Ticket: 15 (HUBSPOT_DEFINED) for default
+- Ticket to Contact: 16 (HUBSPOT_DEFINED) for default
+- Ticket to Company: 339 (HUBSPOT_DEFINED) for default, 26 (HUBSPOT_DEFINED) for Primary
+- Company to Ticket: 340 (HUBSPOT_DEFINED) for default, 25 (HUBSPOT_DEFINED) for Primary
+
+
+        Args:
+            association_category: Category of the association type. Use HUBSPOT_DEFINED for standard HubSpot association
+types (e.g., primary company, default contact-to-deal) or USER_DEFINED for custom
+association labels created in your HubSpot portal.
+
+            association_type_id: Numeric identifier for the association type. Common IDs include:
+279 = Contact to Company (default), 280 = Company to Contact (default),
+4 = Contact to Deal (default), 3 = Deal to Contact (default),
+341 = Deal to Company (default), 342 = Company to Deal (default),
+1 = Contact to Primary Company, 2 = Company to Primary Contact,
+5 = Deal to Primary Company, 6 = Primary Company to Deal,
+15 = Contact to Ticket (default), 16 = Ticket to Contact (default),
+339 = Ticket to Company (default), 340 = Company to Ticket (default),
+26 = Ticket to Primary Company, 25 = Primary Company to Ticket.
+Use the association definitions API to discover additional type IDs.
+
+            from_object_type: Object type of the source record (e.g., contacts, companies, deals, tickets, or a custom object type ID)
+            from_object_id: ID of the source record to associate from
+            to_object_type: Object type of the target record (e.g., contacts, companies, deals, tickets, or a custom object type ID)
+            to_object_id: ID of the target record to associate to
+            **kwargs: Additional parameters
+
+        Returns:
+            AssociationResult
+        """
+        params = {k: v for k, v in {
+            "associationCategory": association_category,
+            "associationTypeId": association_type_id,
+            "fromObjectType": from_object_type,
+            "fromObjectId": from_object_id,
+            "toObjectType": to_object_type,
+            "toObjectId": to_object_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("associations", "create", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        from_object_type: str,
+        from_object_id: str,
+        to_object_type: str,
+        to_object_id: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Delete all associations between two specific CRM records using the v4 associations API.
+This removes every association (both default and labeled) between the two specified records.
+This operation is irreversible — deleted associations must be recreated manually.
+
+
+        Args:
+            from_object_type: Object type of the source record (e.g., contacts, companies, deals, tickets, or a custom object type ID)
+            from_object_id: ID of the source record
+            to_object_type: Object type of the target record (e.g., contacts, companies, deals, tickets, or a custom object type ID)
+            to_object_id: ID of the target record
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "fromObjectType": from_object_type,
+            "fromObjectId": from_object_id,
+            "toObjectType": to_object_type,
+            "toObjectId": to_object_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("associations", "delete", params)
         return result
 
 

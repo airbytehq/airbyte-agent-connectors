@@ -36,7 +36,7 @@ from uuid import (
 HubspotConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('36c891d9-4bd9-43ac-bad2-10e12756272c'),
     name='hubspot',
-    version='0.1.19',
+    version='0.1.20',
     base_url='https://api.hubapi.com',
     auth=AuthConfig(
         options=[
@@ -7560,6 +7560,355 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                 ),
             ],
         ),
+        EntityDefinition(
+            name='associations',
+            actions=[Action.LIST, Action.CREATE, Action.DELETE],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v4/objects/{fromObjectType}/{fromObjectId}/associations/{toObjectType}',
+                    action=Action.LIST,
+                    description='Retrieve all associations between a specific CRM record and a target object type using\nthe v4 associations API. Returns up to 500 associations per call. Use the `after` cursor\nfor pagination when there are more results. For example, retrieve all companies associated\nwith a contact, or all deals associated with a company.\n',
+                    query_params=['after', 'limit'],
+                    query_params_schema={
+                        'after': {'type': 'string', 'required': False},
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 500,
+                        },
+                    },
+                    path_params=['fromObjectType', 'fromObjectId', 'toObjectType'],
+                    path_params_schema={
+                        'fromObjectType': {'type': 'string', 'required': True},
+                        'fromObjectId': {'type': 'string', 'required': True},
+                        'toObjectType': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of associations for a CRM record',
+                        'properties': {
+                            'results': {
+                                'type': 'array',
+                                'description': 'List of associated objects with their association type details',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'toObjectId': {
+                                            'type': ['string', 'integer'],
+                                            'description': 'ID of the associated target record',
+                                        },
+                                        'associationTypes': {
+                                            'type': 'array',
+                                            'description': 'List of association types linking the two records',
+                                            'items': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'category': {
+                                                        'type': 'string',
+                                                        'description': 'Category of the association (HUBSPOT_DEFINED, USER_DEFINED, or INTEGRATOR_DEFINED)',
+                                                        'enum': ['HUBSPOT_DEFINED', 'USER_DEFINED', 'INTEGRATOR_DEFINED'],
+                                                    },
+                                                    'typeId': {'type': 'integer', 'description': 'Numeric identifier for the association type'},
+                                                    'label': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Human-readable label for the association type (e.g., "Primary Company")',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'description': 'Pagination information for retrieving additional results',
+                                'properties': {
+                                    'next': {
+                                        'type': 'object',
+                                        'description': 'Cursor for the next page of results',
+                                        'properties': {
+                                            'after': {'type': 'string', 'description': 'Paging cursor token for retrieving the next page'},
+                                            'link': {'type': 'string', 'description': 'URL for retrieving the next page of results'},
+                                        },
+                                        'context': {
+                                            'type': 'object',
+                                            'description': 'Additional error context',
+                                            'additionalProperties': True,
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'associations',
+                    },
+                    meta_extractor={'next_cursor': '$.paging.next.after', 'next_link': '$.paging.next.link'},
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='PUT',
+                    path='/crm/v4/objects/{fromObjectType}/{fromObjectId}/associations/{toObjectType}/{toObjectId}',
+                    action=Action.CREATE,
+                    description='Create a labeled association between two CRM records using the v4 associations API.\nLabeled associations carry an association type ID and category that describe the relationship\n(e.g., "Primary Company", "Billing Contact"). This is idempotent — calling it again with the same\nIDs and label has no effect. Use the association type ID and category from the HubSpot association\ndefinitions for the relevant object pair. Common association type IDs include:\n- Contact to Company: 279 (HUBSPOT_DEFINED) for default, 1 (HUBSPOT_DEFINED) for Primary\n- Company to Contact: 280 (HUBSPOT_DEFINED) for default, 2 (HUBSPOT_DEFINED) for Primary\n- Contact to Deal: 4 (HUBSPOT_DEFINED) for default\n- Deal to Contact: 3 (HUBSPOT_DEFINED) for default\n- Deal to Company: 341 (HUBSPOT_DEFINED) for default, 5 (HUBSPOT_DEFINED) for Primary\n- Company to Deal: 342 (HUBSPOT_DEFINED) for default, 6 (HUBSPOT_DEFINED) for Primary\n- Contact to Ticket: 15 (HUBSPOT_DEFINED) for default\n- Ticket to Contact: 16 (HUBSPOT_DEFINED) for default\n- Ticket to Company: 339 (HUBSPOT_DEFINED) for default, 26 (HUBSPOT_DEFINED) for Primary\n- Company to Ticket: 340 (HUBSPOT_DEFINED) for default, 25 (HUBSPOT_DEFINED) for Primary\n',
+                    body_fields=['associationCategory', 'associationTypeId'],
+                    body_is_array=True,
+                    path_params=[
+                        'fromObjectType',
+                        'fromObjectId',
+                        'toObjectType',
+                        'toObjectId',
+                    ],
+                    path_params_schema={
+                        'fromObjectType': {'type': 'string', 'required': True},
+                        'fromObjectId': {'type': 'string', 'required': True},
+                        'toObjectType': {'type': 'string', 'required': True},
+                        'toObjectId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'array',
+                        'description': 'Array of association type specifications. Each item defines a labeled association type\nto apply between the two records. Multiple labels can be set in a single call.\n',
+                        'items': {
+                            'type': 'object',
+                            'required': ['associationCategory', 'associationTypeId'],
+                            'properties': {
+                                'associationCategory': {
+                                    'type': 'string',
+                                    'description': 'Category of the association type. Use HUBSPOT_DEFINED for standard HubSpot association\ntypes (e.g., primary company, default contact-to-deal) or USER_DEFINED for custom\nassociation labels created in your HubSpot portal.\n',
+                                    'enum': ['HUBSPOT_DEFINED', 'USER_DEFINED'],
+                                },
+                                'associationTypeId': {'type': 'integer', 'description': 'Numeric identifier for the association type. Common IDs include:\n279 = Contact to Company (default), 280 = Company to Contact (default),\n4 = Contact to Deal (default), 3 = Deal to Contact (default),\n341 = Deal to Company (default), 342 = Company to Deal (default),\n1 = Contact to Primary Company, 2 = Company to Primary Contact,\n5 = Deal to Primary Company, 6 = Primary Company to Deal,\n15 = Contact to Ticket (default), 16 = Ticket to Contact (default),\n339 = Ticket to Company (default), 340 = Company to Ticket (default),\n26 = Ticket to Primary Company, 25 = Primary Company to Ticket.\nUse the association definitions API to discover additional type IDs.\n'},
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Result of creating an association between two CRM records',
+                        'properties': {
+                            'status': {'type': 'string', 'description': 'Status of the association operation (e.g., COMPLETE)'},
+                            'results': {
+                                'type': 'array',
+                                'description': 'List of created associations',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'from': {
+                                            'type': 'object',
+                                            'description': 'The source record of the association',
+                                            'properties': {
+                                                'id': {'type': 'string', 'description': 'ID of the source record'},
+                                            },
+                                        },
+                                        'to': {
+                                            'type': 'object',
+                                            'description': 'The target record of the association',
+                                            'properties': {
+                                                'id': {'type': 'string', 'description': 'ID of the target record'},
+                                            },
+                                        },
+                                        'associationSpec': {
+                                            'type': 'object',
+                                            'description': 'Details about the association type',
+                                            'properties': {
+                                                'associationCategory': {
+                                                    'type': 'string',
+                                                    'description': 'Category of the association (HUBSPOT_DEFINED or USER_DEFINED)',
+                                                    'enum': ['HUBSPOT_DEFINED', 'USER_DEFINED'],
+                                                },
+                                                'associationTypeId': {'type': 'integer', 'description': 'Numeric ID of the association type'},
+                                            },
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                            'startedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Timestamp when the operation started',
+                            },
+                            'completedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Timestamp when the operation completed',
+                            },
+                            'requestedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the operation was requested',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'associations',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'CRM record associations linking contacts, companies, deals, and tickets',
+                            'when_to_use': 'Linking or relating two CRM records, such as associating a contact with a company or a deal with a contact',
+                            'trigger_phrases': [
+                                'associate',
+                                'link records',
+                                'connect contact to company',
+                                'relate deal to contact',
+                                'association',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': ['Associate a contact with a deal', 'Link a company to a ticket'],
+                            'search_strategy': 'Specify the from and to object types and record IDs',
+                        },
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/crm/v4/objects/{fromObjectType}/{fromObjectId}/associations/{toObjectType}/{toObjectId}',
+                    action=Action.DELETE,
+                    description='Delete all associations between two specific CRM records using the v4 associations API.\nThis removes every association (both default and labeled) between the two specified records.\nThis operation is irreversible — deleted associations must be recreated manually.\n',
+                    path_params=[
+                        'fromObjectType',
+                        'fromObjectId',
+                        'toObjectType',
+                        'toObjectId',
+                    ],
+                    path_params_schema={
+                        'fromObjectType': {'type': 'string', 'required': True},
+                        'fromObjectId': {'type': 'string', 'required': True},
+                        'toObjectType': {'type': 'string', 'required': True},
+                        'toObjectId': {'type': 'string', 'required': True},
+                    },
+                    no_content_response=True,
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Result of creating an association between two CRM records',
+                'properties': {
+                    'status': {'type': 'string', 'description': 'Status of the association operation (e.g., COMPLETE)'},
+                    'results': {
+                        'type': 'array',
+                        'description': 'List of created associations',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'from': {
+                                    'type': 'object',
+                                    'description': 'The source record of the association',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'ID of the source record'},
+                                    },
+                                },
+                                'to': {
+                                    'type': 'object',
+                                    'description': 'The target record of the association',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'ID of the target record'},
+                                    },
+                                },
+                                'associationSpec': {
+                                    'type': 'object',
+                                    'description': 'Details about the association type',
+                                    'properties': {
+                                        'associationCategory': {
+                                            'type': 'string',
+                                            'description': 'Category of the association (HUBSPOT_DEFINED or USER_DEFINED)',
+                                            'enum': ['HUBSPOT_DEFINED', 'USER_DEFINED'],
+                                        },
+                                        'associationTypeId': {'type': 'integer', 'description': 'Numeric ID of the association type'},
+                                    },
+                                },
+                            },
+                            'additionalProperties': True,
+                        },
+                    },
+                    'startedAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Timestamp when the operation started',
+                    },
+                    'completedAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Timestamp when the operation completed',
+                    },
+                    'requestedAt': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Timestamp when the operation was requested',
+                    },
+                },
+                'x-airbyte-entity-name': 'associations',
+                'x-airbyte-ai-hints': {
+                    'summary': 'CRM record associations linking contacts, companies, deals, and tickets',
+                    'when_to_use': 'Linking or relating two CRM records, such as associating a contact with a company or a deal with a contact',
+                    'trigger_phrases': [
+                        'associate',
+                        'link records',
+                        'connect contact to company',
+                        'relate deal to contact',
+                        'association',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['Associate a contact with a deal', 'Link a company to a ticket'],
+                    'search_strategy': 'Specify the from and to object types and record IDs',
+                },
+            },
+            ai_hints={
+                'summary': 'CRM record associations linking contacts, companies, deals, and tickets',
+                'when_to_use': 'Linking or relating two CRM records, such as associating a contact with a company or a deal with a contact',
+                'trigger_phrases': [
+                    'associate',
+                    'link records',
+                    'connect contact to company',
+                    'relate deal to contact',
+                    'association',
+                ],
+                'freshness': 'live',
+                'example_questions': ['Associate a contact with a deal', 'Link a company to a ticket'],
+                'search_strategy': 'Specify the from and to object types and record IDs',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='associations',
+                    target_entity='contacts',
+                    foreign_key='fromObjectId',
+                    cardinality='many_to_one',
+                    description='Associations can link from contacts to other CRM objects',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='associations',
+                    target_entity='companies',
+                    foreign_key='toObjectId',
+                    cardinality='many_to_one',
+                    description='Associations can link to companies from other CRM objects',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='associations',
+                    target_entity='deals',
+                    foreign_key='fromObjectId',
+                    cardinality='many_to_one',
+                    description='Associations can link from deals to other CRM objects',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='associations',
+                    target_entity='tickets',
+                    foreign_key='fromObjectId',
+                    cardinality='many_to_one',
+                    description='Associations can link from tickets to other CRM objects',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='associations',
+                    target_entity='schemas',
+                    foreign_key='fromObjectType',
+                    target_key='fullyQualifiedName',
+                    cardinality='many_to_one',
+                    description='Association source object type resolves to a CRM object schema',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='associations',
+                    target_entity='schemas',
+                    foreign_key='toObjectType',
+                    target_key='fullyQualifiedName',
+                    cardinality='many_to_one',
+                    description='Association target object type resolves to a CRM object schema',
+                ),
+            ],
+        ),
     ],
     context_store=CacheConfig(
         entities=[
@@ -8520,6 +8869,11 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
             "Create a new company called 'Acme Corp' with domain acme.com",
             "Create a support ticket with subject 'Login issue' and priority HIGH",
             'Update the contact email for a specific contact',
+            'Associate contact 123 with deal 456',
+            'Link a contact to a company in HubSpot',
+            'Set contact 123 as the Primary contact for company 456',
+            'List all associations for contact 123 to companies',
+            'Remove an association between a contact and a deal',
             "Add a note to contact 12345 saying 'Discussed pricing options'",
             'List recent notes in my CRM',
             'Get the details of a specific note',

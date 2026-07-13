@@ -250,6 +250,16 @@ class EndpointDefinition(BaseModel):
     action: Action | None = None  # Semantic action (get, list, create, update, delete)
     description: str | None = None
     body_fields: list[str] = Field(default_factory=list)  # For POST/PUT
+    body_is_array: bool = Field(
+        False,
+        description=(
+            "When True the request body is a JSON array of objects rather than a "
+            "single JSON object.  ``body_fields`` still lists the per-item "
+            "property names (extracted from ``items.properties``).  At runtime "
+            "``_build_request_body`` wraps the constructed dict in a one-element "
+            "list before handing it to the HTTP client."
+        ),
+    )
     query_params: list[str] = Field(default_factory=list)  # For GET
     query_params_schema: dict[str, dict[str, Any]] = Field(
         default_factory=dict,
@@ -421,7 +431,6 @@ class ConnectorModel(BaseModel):
     )
     server_variable_defaults: dict[str, str] = Field(
         default_factory=dict,
-        description="Default values for server URL variables from the OpenAPI spec. "
-        "Used as fallbacks when config_values doesn't include a variable.",
+        description="Default values for server URL variables from the OpenAPI spec. Used as fallbacks when config_values doesn't include a variable.",
     )
     response_error_check: ResponseErrorCheck | None = None

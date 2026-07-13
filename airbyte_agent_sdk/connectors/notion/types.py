@@ -46,7 +46,7 @@ class PagesCreateParamsIconIcon(TypedDict):
 
 class PagesCreateParamsIcon(TypedDict):
     """Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     emoji: NotRequired[str]
     external: NotRequired[PagesCreateParamsIconExternal]
     file_upload: NotRequired[PagesCreateParamsIconFileUpload]
@@ -63,7 +63,7 @@ class PagesCreateParamsCoverFileUpload(TypedDict):
 
 class PagesCreateParamsCover(TypedDict):
     """Cover image. Supports external URL or file upload. Set to null to remove."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[PagesCreateParamsCoverExternal]
     file_upload: NotRequired[PagesCreateParamsCoverFileUpload]
 
@@ -86,7 +86,7 @@ class PagesUpdateParamsIconIcon(TypedDict):
 
 class PagesUpdateParamsIcon(TypedDict):
     """Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     emoji: NotRequired[str]
     external: NotRequired[PagesUpdateParamsIconExternal]
     file_upload: NotRequired[PagesUpdateParamsIconFileUpload]
@@ -103,7 +103,7 @@ class PagesUpdateParamsCoverFileUpload(TypedDict):
 
 class PagesUpdateParamsCover(TypedDict):
     """Cover image. Supports external URL or file upload. Set to null to remove."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[PagesUpdateParamsCoverExternal]
     file_upload: NotRequired[PagesUpdateParamsCoverFileUpload]
 
@@ -141,7 +141,7 @@ class BlocksCreateParamsChildrenItemParagraphRichTextItemAnnotations(TypedDict):
 
 class BlocksCreateParamsChildrenItemParagraphRichTextItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemParagraph.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemParagraphRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemParagraphRichTextItemEquation]
@@ -176,7 +176,7 @@ class BlocksCreateParamsChildrenItemHeading1RichTextItemAnnotations(TypedDict):
 
 class BlocksCreateParamsChildrenItemHeading1RichTextItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemHeading1.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemHeading1RichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemHeading1RichTextItemEquation]
@@ -212,7 +212,7 @@ class BlocksCreateParamsChildrenItemHeading2RichTextItemAnnotations(TypedDict):
 
 class BlocksCreateParamsChildrenItemHeading2RichTextItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemHeading2.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemHeading2RichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemHeading2RichTextItemEquation]
@@ -248,7 +248,7 @@ class BlocksCreateParamsChildrenItemHeading3RichTextItemAnnotations(TypedDict):
 
 class BlocksCreateParamsChildrenItemHeading3RichTextItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemHeading3.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemHeading3RichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemHeading3RichTextItemEquation]
@@ -284,7 +284,7 @@ class BlocksCreateParamsChildrenItemBulletedListItemRichTextItemAnnotations(Type
 
 class BlocksCreateParamsChildrenItemBulletedListItemRichTextItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemBulletedListItem.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemBulletedListItemRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemBulletedListItemRichTextItemEquation]
@@ -319,7 +319,7 @@ class BlocksCreateParamsChildrenItemNumberedListItemRichTextItemAnnotations(Type
 
 class BlocksCreateParamsChildrenItemNumberedListItemRichTextItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemNumberedListItem.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemNumberedListItemRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemNumberedListItemRichTextItemEquation]
@@ -354,7 +354,7 @@ class BlocksCreateParamsChildrenItemToDoRichTextItemAnnotations(TypedDict):
 
 class BlocksCreateParamsChildrenItemToDoRichTextItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemToDo.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemToDoRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemToDoRichTextItemEquation]
@@ -390,7 +390,7 @@ class BlocksCreateParamsChildrenItemToggleRichTextItemAnnotations(TypedDict):
 
 class BlocksCreateParamsChildrenItemToggleRichTextItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemToggle.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemToggleRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemToggleRichTextItemEquation]
@@ -425,7 +425,7 @@ class BlocksCreateParamsChildrenItemCodeRichTextItemAnnotations(TypedDict):
 
 class BlocksCreateParamsChildrenItemCodeRichTextItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemCode.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemCodeRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemCodeRichTextItemEquation]
@@ -460,7 +460,7 @@ class BlocksCreateParamsChildrenItemQuoteRichTextItemAnnotations(TypedDict):
 
 class BlocksCreateParamsChildrenItemQuoteRichTextItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemQuote.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemQuoteRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemQuoteRichTextItemEquation]
@@ -495,7 +495,7 @@ class BlocksCreateParamsChildrenItemCalloutRichTextItemAnnotations(TypedDict):
 
 class BlocksCreateParamsChildrenItemCalloutRichTextItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemCallout.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemCalloutRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemCalloutRichTextItemEquation]
@@ -531,7 +531,7 @@ class BlocksCreateParamsChildrenItemBookmarkCaptionItemAnnotations(TypedDict):
 
 class BlocksCreateParamsChildrenItemBookmarkCaptionItem(TypedDict):
     """Nested schema for BlocksCreateParamsChildrenItemBookmark.caption_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksCreateParamsChildrenItemBookmarkCaptionItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksCreateParamsChildrenItemBookmarkCaptionItemEquation]
@@ -564,7 +564,7 @@ class BlocksCreateParamsChildrenItemImageFileUpload(TypedDict):
 
 class BlocksCreateParamsChildrenItemImage(TypedDict):
     """Media file. Use external URL or file upload."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[BlocksCreateParamsChildrenItemImageExternal]
     file_upload: NotRequired[BlocksCreateParamsChildrenItemImageFileUpload]
 
@@ -578,7 +578,7 @@ class BlocksCreateParamsChildrenItemVideoFileUpload(TypedDict):
 
 class BlocksCreateParamsChildrenItemVideo(TypedDict):
     """Media file. Use external URL or file upload."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[BlocksCreateParamsChildrenItemVideoExternal]
     file_upload: NotRequired[BlocksCreateParamsChildrenItemVideoFileUpload]
 
@@ -592,7 +592,7 @@ class BlocksCreateParamsChildrenItemFileFileUpload(TypedDict):
 
 class BlocksCreateParamsChildrenItemFile(TypedDict):
     """Media file. Use external URL or file upload."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[BlocksCreateParamsChildrenItemFileExternal]
     file_upload: NotRequired[BlocksCreateParamsChildrenItemFileFileUpload]
 
@@ -606,7 +606,7 @@ class BlocksCreateParamsChildrenItemPdfFileUpload(TypedDict):
 
 class BlocksCreateParamsChildrenItemPdf(TypedDict):
     """Media file. Use external URL or file upload."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[BlocksCreateParamsChildrenItemPdfExternal]
     file_upload: NotRequired[BlocksCreateParamsChildrenItemPdfFileUpload]
 
@@ -620,13 +620,13 @@ class BlocksCreateParamsChildrenItemAudioFileUpload(TypedDict):
 
 class BlocksCreateParamsChildrenItemAudio(TypedDict):
     """Media file. Use external URL or file upload."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[BlocksCreateParamsChildrenItemAudioExternal]
     file_upload: NotRequired[BlocksCreateParamsChildrenItemAudioFileUpload]
 
 class BlocksCreateParamsChildrenItem(TypedDict):
     """A block object. Set type to the block kind and include matching content."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     paragraph: NotRequired[BlocksCreateParamsChildrenItemParagraph]
     heading_1: NotRequired[BlocksCreateParamsChildrenItemHeading1]
     heading_2: NotRequired[BlocksCreateParamsChildrenItemHeading2]
@@ -673,7 +673,7 @@ class BlocksUpdateParamsParagraphRichTextItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsParagraphRichTextItem(TypedDict):
     """Nested schema for BlocksUpdateParamsParagraph.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsParagraphRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsParagraphRichTextItemEquation]
@@ -708,7 +708,7 @@ class BlocksUpdateParamsHeading1RichTextItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsHeading1RichTextItem(TypedDict):
     """Nested schema for BlocksUpdateParamsHeading1.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsHeading1RichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsHeading1RichTextItemEquation]
@@ -744,7 +744,7 @@ class BlocksUpdateParamsHeading2RichTextItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsHeading2RichTextItem(TypedDict):
     """Nested schema for BlocksUpdateParamsHeading2.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsHeading2RichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsHeading2RichTextItemEquation]
@@ -780,7 +780,7 @@ class BlocksUpdateParamsHeading3RichTextItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsHeading3RichTextItem(TypedDict):
     """Nested schema for BlocksUpdateParamsHeading3.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsHeading3RichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsHeading3RichTextItemEquation]
@@ -816,7 +816,7 @@ class BlocksUpdateParamsBulletedListItemRichTextItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsBulletedListItemRichTextItem(TypedDict):
     """Nested schema for BlocksUpdateParamsBulletedListItem.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsBulletedListItemRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsBulletedListItemRichTextItemEquation]
@@ -851,7 +851,7 @@ class BlocksUpdateParamsNumberedListItemRichTextItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsNumberedListItemRichTextItem(TypedDict):
     """Nested schema for BlocksUpdateParamsNumberedListItem.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsNumberedListItemRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsNumberedListItemRichTextItemEquation]
@@ -886,7 +886,7 @@ class BlocksUpdateParamsToDoRichTextItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsToDoRichTextItem(TypedDict):
     """Nested schema for BlocksUpdateParamsToDo.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsToDoRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsToDoRichTextItemEquation]
@@ -922,7 +922,7 @@ class BlocksUpdateParamsToggleRichTextItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsToggleRichTextItem(TypedDict):
     """Nested schema for BlocksUpdateParamsToggle.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsToggleRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsToggleRichTextItemEquation]
@@ -957,7 +957,7 @@ class BlocksUpdateParamsCodeRichTextItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsCodeRichTextItem(TypedDict):
     """Nested schema for BlocksUpdateParamsCode.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsCodeRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsCodeRichTextItemEquation]
@@ -987,7 +987,7 @@ class BlocksUpdateParamsCodeCaptionItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsCodeCaptionItem(TypedDict):
     """Nested schema for BlocksUpdateParamsCode.caption_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsCodeCaptionItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsCodeCaptionItemEquation]
@@ -1023,7 +1023,7 @@ class BlocksUpdateParamsQuoteRichTextItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsQuoteRichTextItem(TypedDict):
     """Nested schema for BlocksUpdateParamsQuote.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsQuoteRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsQuoteRichTextItemEquation]
@@ -1058,7 +1058,7 @@ class BlocksUpdateParamsCalloutRichTextItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsCalloutRichTextItem(TypedDict):
     """Nested schema for BlocksUpdateParamsCallout.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsCalloutRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsCalloutRichTextItemEquation]
@@ -1094,7 +1094,7 @@ class BlocksUpdateParamsBookmarkCaptionItemAnnotations(TypedDict):
 
 class BlocksUpdateParamsBookmarkCaptionItem(TypedDict):
     """Nested schema for BlocksUpdateParamsBookmark.caption_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[BlocksUpdateParamsBookmarkCaptionItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[BlocksUpdateParamsBookmarkCaptionItemEquation]
@@ -1123,7 +1123,7 @@ class BlocksUpdateParamsImageFileUpload(TypedDict):
 
 class BlocksUpdateParamsImage(TypedDict):
     """Media file. Use external URL or file upload."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[BlocksUpdateParamsImageExternal]
     file_upload: NotRequired[BlocksUpdateParamsImageFileUpload]
 
@@ -1137,7 +1137,7 @@ class BlocksUpdateParamsVideoFileUpload(TypedDict):
 
 class BlocksUpdateParamsVideo(TypedDict):
     """Media file. Use external URL or file upload."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[BlocksUpdateParamsVideoExternal]
     file_upload: NotRequired[BlocksUpdateParamsVideoFileUpload]
 
@@ -1151,7 +1151,7 @@ class BlocksUpdateParamsFileFileUpload(TypedDict):
 
 class BlocksUpdateParamsFile(TypedDict):
     """Media file. Use external URL or file upload."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[BlocksUpdateParamsFileExternal]
     file_upload: NotRequired[BlocksUpdateParamsFileFileUpload]
 
@@ -1165,7 +1165,7 @@ class BlocksUpdateParamsPdfFileUpload(TypedDict):
 
 class BlocksUpdateParamsPdf(TypedDict):
     """Media file. Use external URL or file upload."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[BlocksUpdateParamsPdfExternal]
     file_upload: NotRequired[BlocksUpdateParamsPdfFileUpload]
 
@@ -1179,7 +1179,7 @@ class BlocksUpdateParamsAudioFileUpload(TypedDict):
 
 class BlocksUpdateParamsAudio(TypedDict):
     """Media file. Use external URL or file upload."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[BlocksUpdateParamsAudioExternal]
     file_upload: NotRequired[BlocksUpdateParamsAudioFileUpload]
 
@@ -1212,7 +1212,7 @@ class CommentsCreateParamsRichTextItemAnnotations(TypedDict):
 
 class CommentsCreateParamsRichTextItem(TypedDict):
     """Nested schema for CommentsCreateParams.rich_text_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[CommentsCreateParamsRichTextItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[CommentsCreateParamsRichTextItemEquation]
@@ -1242,7 +1242,7 @@ class DataSourcesUpdateParamsTitleItemAnnotations(TypedDict):
 
 class DataSourcesUpdateParamsTitleItem(TypedDict):
     """Nested schema for DataSourcesUpdateParams.title_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[DataSourcesUpdateParamsTitleItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[DataSourcesUpdateParamsTitleItemEquation]
@@ -1272,7 +1272,7 @@ class DataSourcesUpdateParamsDescriptionItemAnnotations(TypedDict):
 
 class DataSourcesUpdateParamsDescriptionItem(TypedDict):
     """Nested schema for DataSourcesUpdateParams.description_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[DataSourcesUpdateParamsDescriptionItemText]
     mention: NotRequired[dict[str, Any]]
     equation: NotRequired[DataSourcesUpdateParamsDescriptionItemEquation]
@@ -1297,7 +1297,7 @@ class DataSourcesUpdateParamsIconIcon(TypedDict):
 
 class DataSourcesUpdateParamsIcon(TypedDict):
     """Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     emoji: NotRequired[str]
     external: NotRequired[DataSourcesUpdateParamsIconExternal]
     file_upload: NotRequired[DataSourcesUpdateParamsIconFileUpload]
@@ -1314,7 +1314,7 @@ class DataSourcesUpdateParamsCoverFileUpload(TypedDict):
 
 class DataSourcesUpdateParamsCover(TypedDict):
     """Cover image. Supports external URL or file upload. Set to null to remove."""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     external: NotRequired[DataSourcesUpdateParamsCoverExternal]
     file_upload: NotRequired[DataSourcesUpdateParamsCoverFileUpload]
 

@@ -65,9 +65,9 @@ class {{ schema.name }}(TypedDict):
 {% if schema.fields %}
 {% for field in schema.fields %}
 {%- if field.required %}
-    {{ field.name }}: {{ field.type }}
+    {{ field.python_name }}: {{ field.type }}
 {% else %}
-    {{ field.name }}: NotRequired[{{ field.type }}]
+    {{ field.python_name }}: NotRequired[{{ field.type }}]
 {% endif %}
 {%- endfor %}
 {%- else %}

@@ -19,37 +19,37 @@ from typing import Any, Literal
 
 class CampaignsUpdateParamsOperationsItemUpdate(TypedDict):
     """Campaign fields to update"""
-    resourceName: str
+    resource_name: str
     name: NotRequired[str]
     status: NotRequired[str]
 
 class CampaignsUpdateParamsOperationsItem(TypedDict):
     """Nested schema for CampaignsUpdateParams.operations_item"""
-    updateMask: NotRequired[str]
+    update_mask: NotRequired[str]
     update: NotRequired[CampaignsUpdateParamsOperationsItemUpdate]
 
 class AdGroupsUpdateParamsOperationsItemUpdate(TypedDict):
     """Ad group fields to update"""
-    resourceName: str
+    resource_name: str
     name: NotRequired[str]
     status: NotRequired[str]
-    cpcBidMicros: NotRequired[str]
+    cpc_bid_micros: NotRequired[str]
 
 class AdGroupsUpdateParamsOperationsItem(TypedDict):
     """Nested schema for AdGroupsUpdateParams.operations_item"""
-    updateMask: NotRequired[str]
+    update_mask: NotRequired[str]
     update: NotRequired[AdGroupsUpdateParamsOperationsItemUpdate]
 
 class LabelsCreateParamsOperationsItemCreateTextlabel(TypedDict):
     """Text label styling"""
-    backgroundColor: NotRequired[str]
+    background_color: NotRequired[str]
     description: NotRequired[str]
 
 class LabelsCreateParamsOperationsItemCreate(TypedDict):
     """Label to create"""
     name: str
     description: NotRequired[str]
-    textLabel: NotRequired[LabelsCreateParamsOperationsItemCreateTextlabel]
+    text_label: NotRequired[LabelsCreateParamsOperationsItemCreateTextlabel]
 
 class LabelsCreateParamsOperationsItem(TypedDict):
     """Nested schema for LabelsCreateParams.operations_item"""
@@ -66,7 +66,7 @@ class CampaignLabelsCreateParamsOperationsItem(TypedDict):
 
 class AdGroupLabelsCreateParamsOperationsItemCreate(TypedDict):
     """Ad group label association to create"""
-    adGroup: str
+    ad_group: str
     label: str
 
 class AdGroupLabelsCreateParamsOperationsItem(TypedDict):

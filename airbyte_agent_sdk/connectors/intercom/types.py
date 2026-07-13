@@ -19,7 +19,7 @@ from typing import Any, Literal
 
 class ConversationsCreateParamsFrom(TypedDict):
     """The contact (user or lead) initiating the conversation"""
-    type: str
+    type_: str
     id: str
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====

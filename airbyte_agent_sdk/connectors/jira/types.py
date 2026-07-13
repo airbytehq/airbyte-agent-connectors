@@ -29,17 +29,17 @@ class IssuesCreateParamsFieldsIssuetype(TypedDict):
 
 class IssuesCreateParamsFieldsDescriptionContentItemContentItem(TypedDict):
     """Nested schema for IssuesCreateParamsFieldsDescriptionContentItem.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[str]
 
 class IssuesCreateParamsFieldsDescriptionContentItem(TypedDict):
     """Nested schema for IssuesCreateParamsFieldsDescription.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     content: NotRequired[list[IssuesCreateParamsFieldsDescriptionContentItemContentItem]]
 
 class IssuesCreateParamsFieldsDescription(TypedDict):
     """Issue description in Atlassian Document Format (ADF)"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     version: NotRequired[int]
     content: NotRequired[list[IssuesCreateParamsFieldsDescriptionContentItem]]
 
@@ -50,7 +50,7 @@ class IssuesCreateParamsFieldsPriority(TypedDict):
 
 class IssuesCreateParamsFieldsAssignee(TypedDict):
     """The user to assign the issue to"""
-    accountId: NotRequired[str]
+    account_id: NotRequired[str]
 
 class IssuesCreateParamsFieldsParent(TypedDict):
     """Parent issue for subtasks"""
@@ -69,17 +69,17 @@ class IssuesCreateParamsFields(TypedDict):
 
 class IssuesUpdateParamsFieldsDescriptionContentItemContentItem(TypedDict):
     """Nested schema for IssuesUpdateParamsFieldsDescriptionContentItem.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[str]
 
 class IssuesUpdateParamsFieldsDescriptionContentItem(TypedDict):
     """Nested schema for IssuesUpdateParamsFieldsDescription.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     content: NotRequired[list[IssuesUpdateParamsFieldsDescriptionContentItemContentItem]]
 
 class IssuesUpdateParamsFieldsDescription(TypedDict):
     """Issue description in Atlassian Document Format (ADF)"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     version: NotRequired[int]
     content: NotRequired[list[IssuesUpdateParamsFieldsDescriptionContentItem]]
 
@@ -90,7 +90,7 @@ class IssuesUpdateParamsFieldsPriority(TypedDict):
 
 class IssuesUpdateParamsFieldsAssignee(TypedDict):
     """The user to assign the issue to"""
-    accountId: NotRequired[str]
+    account_id: NotRequired[str]
 
 class IssuesUpdateParamsFields(TypedDict):
     """The issue fields to update"""
@@ -106,45 +106,45 @@ class IssuesUpdateParamsTransition(TypedDict):
 
 class IssueCommentsCreateParamsBodyContentItemContentItem(TypedDict):
     """Nested schema for IssueCommentsCreateParamsBodyContentItem.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[str]
 
 class IssueCommentsCreateParamsBodyContentItem(TypedDict):
     """Nested schema for IssueCommentsCreateParamsBody.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     content: NotRequired[list[IssueCommentsCreateParamsBodyContentItemContentItem]]
 
 class IssueCommentsCreateParamsBody(TypedDict):
     """Comment content in Atlassian Document Format (ADF)"""
-    type: str
+    type_: str
     version: int
     content: list[IssueCommentsCreateParamsBodyContentItem]
 
 class IssueCommentsCreateParamsVisibility(TypedDict):
     """Restrict comment visibility to a group or role"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     value: NotRequired[str]
     identifier: NotRequired[str]
 
 class IssueCommentsUpdateParamsBodyContentItemContentItem(TypedDict):
     """Nested schema for IssueCommentsUpdateParamsBodyContentItem.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[str]
 
 class IssueCommentsUpdateParamsBodyContentItem(TypedDict):
     """Nested schema for IssueCommentsUpdateParamsBody.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     content: NotRequired[list[IssueCommentsUpdateParamsBodyContentItemContentItem]]
 
 class IssueCommentsUpdateParamsBody(TypedDict):
     """Updated comment content in Atlassian Document Format (ADF)"""
-    type: str
+    type_: str
     version: int
     content: list[IssueCommentsUpdateParamsBodyContentItem]
 
 class IssueCommentsUpdateParamsVisibility(TypedDict):
     """Restrict comment visibility to a group or role"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     value: NotRequired[str]
     identifier: NotRequired[str]
 
@@ -154,23 +154,23 @@ class IssueTransitionsCreateParamsTransition(TypedDict):
 
 class IssueWorklogsCreateParamsCommentContentItemContentItem(TypedDict):
     """Nested schema for IssueWorklogsCreateParamsCommentContentItem.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[str]
 
 class IssueWorklogsCreateParamsCommentContentItem(TypedDict):
     """Nested schema for IssueWorklogsCreateParamsComment.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     content: NotRequired[list[IssueWorklogsCreateParamsCommentContentItemContentItem]]
 
 class IssueWorklogsCreateParamsComment(TypedDict):
     """A comment about the work done in Atlassian Document Format (ADF)"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     version: NotRequired[int]
     content: NotRequired[list[IssueWorklogsCreateParamsCommentContentItem]]
 
 class IssueWorklogsCreateParamsVisibility(TypedDict):
     """Restrict worklog visibility to a group or role"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     value: NotRequired[str]
     identifier: NotRequired[str]
 
@@ -193,17 +193,17 @@ class IssueLinksCreateParamsOutwardissue(TypedDict):
 
 class IssueLinksCreateParamsCommentBodyContentItemContentItem(TypedDict):
     """Nested schema for IssueLinksCreateParamsCommentBodyContentItem.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     text: NotRequired[str]
 
 class IssueLinksCreateParamsCommentBodyContentItem(TypedDict):
     """Nested schema for IssueLinksCreateParamsCommentBody.content_item"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     content: NotRequired[list[IssueLinksCreateParamsCommentBodyContentItemContentItem]]
 
 class IssueLinksCreateParamsCommentBody(TypedDict):
     """Nested schema for IssueLinksCreateParamsComment.body"""
-    type: NotRequired[str]
+    type_: NotRequired[str]
     version: NotRequired[int]
     content: NotRequired[list[IssueLinksCreateParamsCommentBodyContentItem]]
 

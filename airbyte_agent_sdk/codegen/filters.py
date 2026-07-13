@@ -30,6 +30,19 @@ def to_pascal_case(value: str) -> str:
     return "".join(word.capitalize() for word in words)
 
 
+def py_str_escape(value: str) -> str:
+    """Escape a string for embedding inside a double-quoted Python string literal.
+
+    Descriptions sourced from a connector spec may contain characters that are
+    invalid inside a `"..."` literal (most commonly a double quote), which would
+    otherwise produce syntactically invalid generated code. Backslashes are
+    escaped first so pre-existing escapes are preserved.
+    """
+    if not isinstance(value, str):
+        return value
+    return value.replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")
+
+
 def mdx_escape(value: str) -> str:
     """Escape special characters for MDX compatibility.
 

@@ -44,7 +44,7 @@ class ContactsUpdateParamsProperties(TypedDict):
 class ContactsApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
     """Nested schema for ContactsApiSearchParamsFiltergroupsItem.filters_item"""
     operator: NotRequired[str]
-    propertyName: NotRequired[str]
+    property_name: NotRequired[str]
     value: NotRequired[str]
     values: NotRequired[list[str]]
 
@@ -54,7 +54,7 @@ class ContactsApiSearchParamsFiltergroupsItem(TypedDict):
 
 class ContactsApiSearchParamsSortsItem(TypedDict):
     """Nested schema for ContactsApiSearchParams.sorts_item"""
-    propertyName: NotRequired[str]
+    property_name: NotRequired[str]
     direction: NotRequired[str]
 
 class CompaniesCreateParamsProperties(TypedDict):
@@ -94,7 +94,7 @@ class CompaniesUpdateParamsProperties(TypedDict):
 class CompaniesApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
     """Nested schema for CompaniesApiSearchParamsFiltergroupsItem.filters_item"""
     operator: NotRequired[str]
-    propertyName: NotRequired[str]
+    property_name: NotRequired[str]
     value: NotRequired[str]
     values: NotRequired[list[str]]
 
@@ -104,7 +104,7 @@ class CompaniesApiSearchParamsFiltergroupsItem(TypedDict):
 
 class CompaniesApiSearchParamsSortsItem(TypedDict):
     """Nested schema for CompaniesApiSearchParams.sorts_item"""
-    propertyName: NotRequired[str]
+    property_name: NotRequired[str]
     direction: NotRequired[str]
 
 class DealsCreateParamsProperties(TypedDict):
@@ -132,7 +132,7 @@ class DealsUpdateParamsProperties(TypedDict):
 class DealsApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
     """Nested schema for DealsApiSearchParamsFiltergroupsItem.filters_item"""
     operator: NotRequired[str]
-    propertyName: NotRequired[str]
+    property_name: NotRequired[str]
     value: NotRequired[str]
     values: NotRequired[list[str]]
 
@@ -142,7 +142,7 @@ class DealsApiSearchParamsFiltergroupsItem(TypedDict):
 
 class DealsApiSearchParamsSortsItem(TypedDict):
     """Nested schema for DealsApiSearchParams.sorts_item"""
-    propertyName: NotRequired[str]
+    property_name: NotRequired[str]
     direction: NotRequired[str]
 
 class TicketsCreateParamsProperties(TypedDict):
@@ -168,7 +168,7 @@ class TicketsUpdateParamsProperties(TypedDict):
 class TicketsApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
     """Nested schema for TicketsApiSearchParamsFiltergroupsItem.filters_item"""
     operator: NotRequired[str]
-    propertyName: NotRequired[str]
+    property_name: NotRequired[str]
     value: NotRequired[str]
     values: NotRequired[list[str]]
 
@@ -178,7 +178,7 @@ class TicketsApiSearchParamsFiltergroupsItem(TypedDict):
 
 class TicketsApiSearchParamsSortsItem(TypedDict):
     """Nested schema for TicketsApiSearchParams.sorts_item"""
-    propertyName: NotRequired[str]
+    property_name: NotRequired[str]
     direction: NotRequired[str]
 
 class NotesCreateParamsProperties(TypedDict):
@@ -193,8 +193,8 @@ class NotesCreateParamsAssociationsItemTo(TypedDict):
 
 class NotesCreateParamsAssociationsItemTypesItem(TypedDict):
     """Nested schema for NotesCreateParamsAssociationsItem.types_item"""
-    associationCategory: NotRequired[str]
-    associationTypeId: NotRequired[int]
+    association_category: NotRequired[str]
+    association_type_id: NotRequired[int]
 
 class NotesCreateParamsAssociationsItem(TypedDict):
     """Nested schema for NotesCreateParams.associations_item"""
@@ -226,8 +226,8 @@ class CallsCreateParamsAssociationsItemTo(TypedDict):
 
 class CallsCreateParamsAssociationsItemTypesItem(TypedDict):
     """Nested schema for CallsCreateParamsAssociationsItem.types_item"""
-    associationCategory: NotRequired[str]
-    associationTypeId: NotRequired[int]
+    association_category: NotRequired[str]
+    association_type_id: NotRequired[int]
 
 class CallsCreateParamsAssociationsItem(TypedDict):
     """Nested schema for CallsCreateParams.associations_item"""
@@ -265,8 +265,8 @@ class EmailsCreateParamsAssociationsItemTo(TypedDict):
 
 class EmailsCreateParamsAssociationsItemTypesItem(TypedDict):
     """Nested schema for EmailsCreateParamsAssociationsItem.types_item"""
-    associationCategory: NotRequired[str]
-    associationTypeId: NotRequired[int]
+    association_category: NotRequired[str]
+    association_type_id: NotRequired[int]
 
 class EmailsCreateParamsAssociationsItem(TypedDict):
     """Nested schema for EmailsCreateParams.associations_item"""
@@ -301,8 +301,8 @@ class MeetingsCreateParamsAssociationsItemTo(TypedDict):
 
 class MeetingsCreateParamsAssociationsItemTypesItem(TypedDict):
     """Nested schema for MeetingsCreateParamsAssociationsItem.types_item"""
-    associationCategory: NotRequired[str]
-    associationTypeId: NotRequired[int]
+    association_category: NotRequired[str]
+    association_type_id: NotRequired[int]
 
 class MeetingsCreateParamsAssociationsItem(TypedDict):
     """Nested schema for MeetingsCreateParams.associations_item"""
@@ -338,8 +338,8 @@ class TasksCreateParamsAssociationsItemTo(TypedDict):
 
 class TasksCreateParamsAssociationsItemTypesItem(TypedDict):
     """Nested schema for TasksCreateParamsAssociationsItem.types_item"""
-    associationCategory: NotRequired[str]
-    associationTypeId: NotRequired[int]
+    association_category: NotRequired[str]
+    association_type_id: NotRequired[int]
 
 class TasksCreateParamsAssociationsItem(TypedDict):
     """Nested schema for TasksCreateParams.associations_item"""
@@ -690,6 +690,30 @@ class ObjectsGetParams(TypedDict):
     associations: NotRequired[str]
     id_property: NotRequired[str]
     properties_with_history: NotRequired[str]
+
+class AssociationsListParams(TypedDict):
+    """Parameters for associations.list operation"""
+    from_object_type: str
+    from_object_id: str
+    to_object_type: str
+    after: NotRequired[str]
+    limit: NotRequired[int]
+
+class AssociationsCreateParams(TypedDict):
+    """Parameters for associations.create operation"""
+    association_category: str
+    association_type_id: int
+    from_object_type: str
+    from_object_id: str
+    to_object_type: str
+    to_object_id: str
+
+class AssociationsDeleteParams(TypedDict):
+    """Parameters for associations.delete operation"""
+    from_object_type: str
+    from_object_id: str
+    to_object_type: str
+    to_object_id: str
 
 # ===== SEARCH TYPES =====
 

@@ -33,7 +33,7 @@ class TicketsCreateParamsTicket(TypedDict):
     subject: str
     description: NotRequired[str]
     comment: NotRequired[TicketsCreateParamsTicketComment]
-    type: NotRequired[str]
+    type_: NotRequired[str]
     priority: NotRequired[str]
     status: NotRequired[str]
     requester_id: NotRequired[int]
@@ -62,7 +62,7 @@ class TicketsUpdateParamsTicket(TypedDict):
     """The ticket fields to update"""
     subject: NotRequired[str]
     comment: NotRequired[TicketsUpdateParamsTicketComment]
-    type: NotRequired[str]
+    type_: NotRequired[str]
     priority: NotRequired[str]
     status: NotRequired[str]
     assignee_id: NotRequired[int]

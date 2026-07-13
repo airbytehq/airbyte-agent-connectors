@@ -19,23 +19,23 @@ from typing import Any, Literal
 
 class LabelsCreateParamsColor(TypedDict):
     """The color to assign to the label"""
-    textColor: NotRequired[str]
-    backgroundColor: NotRequired[str]
+    text_color: NotRequired[str]
+    background_color: NotRequired[str]
 
 class LabelsUpdateParamsColor(TypedDict):
     """The color to assign to the label"""
-    textColor: NotRequired[str]
-    backgroundColor: NotRequired[str]
+    text_color: NotRequired[str]
+    background_color: NotRequired[str]
 
 class DraftsCreateParamsMessage(TypedDict):
     """The draft message content encoded in Gmail raw message format"""
     raw: str
-    threadId: NotRequired[str]
+    thread_id: NotRequired[str]
 
 class DraftsUpdateParamsMessage(TypedDict):
     """The draft message content encoded in Gmail raw message format"""
     raw: str
-    threadId: NotRequired[str]
+    thread_id: NotRequired[str]
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 

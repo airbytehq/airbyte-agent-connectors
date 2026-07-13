@@ -143,15 +143,15 @@ class {{ schema.name }}(BaseModel):
 {% set python_name = field.python_name | default(field.name | snake_case) %}
 {% set alias = python_name != field.name %}
 {% if field.required and alias %}
-    {{ python_name }}: {{ field.type }} = Field(alias="{{ field.name }}"{% if field.description %}, description="{{ field.description }}"{% endif %})
+    {{ python_name }}: {{ field.type }} = Field(alias="{{ field.name }}"{% if field.description %}, description="{{ field.description | py_str_escape }}"{% endif %})
 {% elif field.required and field.description %}
-    {{ python_name }}: {{ field.type }} = Field(description="{{ field.description }}")
+    {{ python_name }}: {{ field.type }} = Field(description="{{ field.description | py_str_escape }}")
 {% elif field.required %}
     {{ python_name }}: {{ field.type }}
 {% elif alias %}
-    {{ python_name }}: {{ field.type }} | None = Field(default=None, alias="{{ field.name }}"{% if field.description %}, description="{{ field.description }}"{% endif %})
+    {{ python_name }}: {{ field.type }} | None = Field(default=None, alias="{{ field.name }}"{% if field.description %}, description="{{ field.description | py_str_escape }}"{% endif %})
 {% else %}
-    {{ python_name }}: {{ field.type }} | None = Field(default=None{% if field.description %}, description="{{ field.description }}"{% endif %})
+    {{ python_name }}: {{ field.type }} | None = Field(default=None{% if field.description %}, description="{{ field.description | py_str_escape }}"{% endif %})
 {% endif %}
 {% if field.description %}
     """{{ field.description }}"""
@@ -175,9 +175,9 @@ class {{ envelope.name }}Meta(BaseModel):
 {% for field in envelope.meta_fields %}
 {% set python_name = field.python_name | default(field.name | snake_case) %}
 {% if python_name != field.name %}
-    {{ python_name }}: {{ field.type }} | None = Field(default=None, alias="{{ field.name }}"{% if field.description %}, description="{{ field.description }}"{% endif %})
+    {{ python_name }}: {{ field.type }} | None = Field(default=None, alias="{{ field.name }}"{% if field.description %}, description="{{ field.description | py_str_escape }}"{% endif %})
 {% else %}
-    {{ python_name }}: {{ field.type }} | None = Field(default=None{% if field.description %}, description="{{ field.description }}"{% endif %})
+    {{ python_name }}: {{ field.type }} | None = Field(default=None{% if field.description %}, description="{{ field.description | py_str_escape }}"{% endif %})
 {% endif %}
 {% if field.description %}
     """{{ field.description }}"""
