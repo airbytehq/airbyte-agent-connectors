@@ -81,8 +81,8 @@ class SentryConnector:
     """
 
     connector_name = "sentry"
-    connector_version = "1.0.4"
-    sdk_version = "0.1.285"
+    connector_version = "1.0.5"
+    sdk_version = "0.1.286"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -100,7 +100,7 @@ class SentryConnector:
     # Map of (entity, action) -> {python_param_name: api_param_name}
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
-        ('projects', 'list'): {'cursor': 'cursor'},
+        ('projects', 'list'): {'organization_slug': 'organization_slug', 'cursor': 'cursor'},
         ('projects', 'get'): {'organization_slug': 'organization_slug', 'project_slug': 'project_slug'},
         ('issues', 'list'): {'organization_slug': 'organization_slug', 'project_slug': 'project_slug', 'query': 'query', 'stats_period': 'statsPeriod', 'cursor': 'cursor'},
         ('issues', 'get'): {'organization_slug': 'organization_slug', 'issue_id': 'issue_id'},
@@ -645,13 +645,15 @@ class ProjectsQuery:
 
     async def list(
         self,
+        organization_slug: str,
         cursor: str | None = None,
         **kwargs
     ) -> ProjectsListResult:
         """
-        Return a list of projects available to the authenticated user.
+        Return a list of projects the authenticated user has access to within the given organization. Requires the token to have the `org:read` scope. Note: unlike the deprecated `/projects/` endpoint, this only returns projects belonging to the configured organization and omits the `avatar`, `color`, `isInternal`, `isPublic`, `organization`, and `status` fields (use the project_detail action to retrieve those).
 
         Args:
+            organization_slug: The slug of the organization to list projects for.
             cursor: Pagination cursor for next page of results.
             **kwargs: Additional parameters
 
@@ -659,6 +661,7 @@ class ProjectsQuery:
             ProjectsListResult
         """
         params = {k: v for k, v in {
+            "organization_slug": organization_slug,
             "cursor": cursor,
             **kwargs
         }.items() if v is not None}

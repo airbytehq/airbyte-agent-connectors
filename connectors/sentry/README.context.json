@@ -3,7 +3,7 @@
   "class_name": "SentryConnector",
   "package_name": "airbyte_agent_sdk.connectors.sentry",
   "install_package": "airbyte-agent-sdk",
-  "yaml_version": "1.0.4",
+  "yaml_version": "1.0.5",
   "api_reference_url": "https://docs.sentry.io/api/",
   "auth_example": "SentryAuthConfig(auth_token=\"...\")",
   "auth_import": ", SentryAuthConfig",
@@ -59,10 +59,20 @@
   "first_operation": {
     "method_name": "projects__list",
     "http_method": "get",
-    "path": "/projects/",
+    "path": "/organizations/{organization_slug}/projects/",
     "entity": "projects",
     "action": "list",
     "parameters": [
+      {
+        "name": "organization_slug",
+        "python_name": "organization_slug",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": true,
+        "description": "The slug of the organization to list projects for."
+      },
       {
         "name": "cursor",
         "python_name": "cursor",
@@ -77,7 +87,7 @@
     ],
     "params_type_name": "ProjectsListParams",
     "response_type": "ProjectsListResult",
-    "description": "Return a list of projects available to the authenticated user.",
+    "description": "Return a list of projects the authenticated user has access to within the given organization. Requires the token to have the `org:read` scope. Note: unlike the deprecated `/projects/` endpoint, this only returns projects belonging to the configured organization and omits the `avatar`, `color`, `isInternal`, `isPublic`, `organization`, and `status` fields (use the project_detail action to retrieve those).",
     "record_extractor": "$",
     "meta_extractor": {
       "next": "@link.next"
@@ -102,10 +112,20 @@
       {
         "method_name": "projects__list",
         "http_method": "get",
-        "path": "/projects/",
+        "path": "/organizations/{organization_slug}/projects/",
         "entity": "projects",
         "action": "list",
         "parameters": [
+          {
+            "name": "organization_slug",
+            "python_name": "organization_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the organization to list projects for."
+          },
           {
             "name": "cursor",
             "python_name": "cursor",
@@ -120,7 +140,7 @@
         ],
         "params_type_name": "ProjectsListParams",
         "response_type": "ProjectsListResult",
-        "description": "Return a list of projects available to the authenticated user.",
+        "description": "Return a list of projects the authenticated user has access to within the given organization. Requires the token to have the `org:read` scope. Note: unlike the deprecated `/projects/` endpoint, this only returns projects belonging to the configured organization and omits the `avatar`, `color`, `isInternal`, `isPublic`, `organization`, and `status` fields (use the project_detail action to retrieve those).",
         "record_extractor": "$",
         "meta_extractor": {
           "next": "@link.next"

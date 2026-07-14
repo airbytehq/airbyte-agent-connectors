@@ -21,6 +21,7 @@ from typing import Any, Literal
 
 class ProjectsListParams(TypedDict):
     """Parameters for projects.list operation"""
+    organization_slug: str
     cursor: NotRequired[str]
 
 class ProjectsGetParams(TypedDict):

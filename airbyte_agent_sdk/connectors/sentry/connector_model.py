@@ -40,7 +40,7 @@ from uuid import (
 SentryConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('cdaf146a-9b75-49fd-9dd2-9d64a0bb4781'),
     name='sentry',
-    version='1.0.4',
+    version='1.0.5',
     base_url='https://{hostname}/api/0',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -67,12 +67,16 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
-                    path='/projects/',
+                    path='/organizations/{organization_slug}/projects/',
                     action=Action.LIST,
-                    description='Return a list of projects available to the authenticated user.',
+                    description='Return a list of projects the authenticated user has access to within the given organization. Requires the token to have the `org:read` scope. Note: unlike the deprecated `/projects/` endpoint, this only returns projects belonging to the configured organization and omits the `avatar`, `color`, `isInternal`, `isPublic`, `organization`, and `status` fields (use the project_detail action to retrieve those).',
                     query_params=['cursor'],
                     query_params_schema={
                         'cursor': {'type': 'string', 'required': False},
+                    },
+                    path_params=['organization_slug'],
+                    path_params_schema={
+                        'organization_slug': {'type': 'string', 'required': True},
                     },
                     response_schema={
                         'type': 'array',
@@ -248,7 +252,7 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
                                 },
                                 'organization': {
                                     'type': ['object', 'null'],
-                                    'description': 'Organization this project belongs to.',
+                                    'description': 'Organization this project belongs to. Not returned by the organization-scoped list endpoint; available via project_detail.',
                                     'properties': {
                                         'id': {
                                             'type': ['string', 'null'],
@@ -260,6 +264,70 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['string', 'null'],
                                         },
                                     },
+                                },
+                                'team': {
+                                    'type': ['object', 'null'],
+                                    'description': 'Primary team that owns this project.',
+                                    'properties': {
+                                        'id': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'name': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'slug': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                },
+                                'teams': {
+                                    'type': ['array', 'null'],
+                                    'description': 'Teams that have access to this project.',
+                                    'items': {
+                                        'type': ['object', 'null'],
+                                        'properties': {
+                                            'id': {
+                                                'type': ['string', 'null'],
+                                            },
+                                            'name': {
+                                                'type': ['string', 'null'],
+                                            },
+                                            'slug': {
+                                                'type': ['string', 'null'],
+                                            },
+                                        },
+                                    },
+                                },
+                                'environments': {
+                                    'type': ['array', 'null'],
+                                    'items': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'description': 'Environments configured for this project.',
+                                },
+                                'platforms': {
+                                    'type': ['array', 'null'],
+                                    'items': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'description': 'Platforms detected for this project.',
+                                },
+                                'hasUserReports': {
+                                    'type': ['boolean', 'null'],
+                                    'description': 'Whether the project has user reports.',
+                                },
+                                'latestRelease': {
+                                    'type': ['object', 'null'],
+                                    'description': 'The most recent release for this project.',
+                                    'properties': {
+                                        'version': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                },
+                                'latestDeploys': {
+                                    'type': ['object', 'null'],
+                                    'description': 'The most recent deploys for this project, keyed by environment.',
                                 },
                             },
                             'x-airbyte-entity-name': 'projects',
@@ -862,7 +930,7 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     'organization': {
                         'type': ['object', 'null'],
-                        'description': 'Organization this project belongs to.',
+                        'description': 'Organization this project belongs to. Not returned by the organization-scoped list endpoint; available via project_detail.',
                         'properties': {
                             'id': {
                                 'type': ['string', 'null'],
@@ -874,6 +942,70 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
                                 'type': ['string', 'null'],
                             },
                         },
+                    },
+                    'team': {
+                        'type': ['object', 'null'],
+                        'description': 'Primary team that owns this project.',
+                        'properties': {
+                            'id': {
+                                'type': ['string', 'null'],
+                            },
+                            'name': {
+                                'type': ['string', 'null'],
+                            },
+                            'slug': {
+                                'type': ['string', 'null'],
+                            },
+                        },
+                    },
+                    'teams': {
+                        'type': ['array', 'null'],
+                        'description': 'Teams that have access to this project.',
+                        'items': {
+                            'type': ['object', 'null'],
+                            'properties': {
+                                'id': {
+                                    'type': ['string', 'null'],
+                                },
+                                'name': {
+                                    'type': ['string', 'null'],
+                                },
+                                'slug': {
+                                    'type': ['string', 'null'],
+                                },
+                            },
+                        },
+                    },
+                    'environments': {
+                        'type': ['array', 'null'],
+                        'items': {
+                            'type': ['string', 'null'],
+                        },
+                        'description': 'Environments configured for this project.',
+                    },
+                    'platforms': {
+                        'type': ['array', 'null'],
+                        'items': {
+                            'type': ['string', 'null'],
+                        },
+                        'description': 'Platforms detected for this project.',
+                    },
+                    'hasUserReports': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether the project has user reports.',
+                    },
+                    'latestRelease': {
+                        'type': ['object', 'null'],
+                        'description': 'The most recent release for this project.',
+                        'properties': {
+                            'version': {
+                                'type': ['string', 'null'],
+                            },
+                        },
+                    },
+                    'latestDeploys': {
+                        'type': ['object', 'null'],
+                        'description': 'The most recent deploys for this project, keyed by environment.',
                     },
                 },
                 'x-airbyte-entity-name': 'projects',
@@ -3502,6 +3634,15 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Show details for a Sentry project'],
                 'search_strategy': 'Retrieve by project slug',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='project_detail',
+                    target_entity='projects',
+                    foreign_key='project_slug',
+                    target_key='slug',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
     context_store=CacheConfig(

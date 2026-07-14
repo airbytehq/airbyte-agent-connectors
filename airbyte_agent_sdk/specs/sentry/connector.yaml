@@ -2,7 +2,7 @@ openapi: 3.1.0
 
 info:
   title: Sentry API Connector
-  version: 1.0.4
+  version: 1.0.5
   description: >-
     Connector for the Sentry error monitoring and performance tracking API.
     Provides access to projects, issues, events, and releases within your
@@ -10,8 +10,8 @@ info:
     about error tracking data, project configurations, and software releases.
   x-airbyte-connector-name: sentry
   x-airbyte-connector-definition-id: cdaf146a-9b75-49fd-9dd2-9d64a0bb4781
-  x-airbyte-replication-version: "0.9.26"
-  x-airbyte-replication-compatibility: ">=0.9.26, <1.0.0"
+  x-airbyte-replication-version: "1.0.1"
+  x-airbyte-replication-compatibility: ">=1.0.1, <2.0.0"
   x-airbyte-external-documentation-urls:
   - type: api_reference
     title: Sentry API Documentation
@@ -45,6 +45,11 @@ info:
     target_key: slug
     cardinality: many_to_one
   - source_entity: events
+    target_entity: projects
+    foreign_key: project_slug
+    target_key: slug
+    cardinality: many_to_one
+  - source_entity: project_detail
     target_entity: projects
     foreign_key: project_slug
     target_key: slug
@@ -497,10 +502,16 @@ security:
 - sentryAuth: []
 
 paths:
-  /projects/:
+  /organizations/{organization_slug}/projects/:
     get:
       summary: List projects
-      description: Return a list of projects available to the authenticated user.
+      description: >-
+        Return a list of projects the authenticated user has access to within
+        the given organization. Requires the token to have the `org:read` scope.
+        Note: unlike the deprecated `/projects/` endpoint, this only returns
+        projects belonging to the configured organization and omits the
+        `avatar`, `color`, `isInternal`, `isPublic`, `organization`, and
+        `status` fields (use the project_detail action to retrieve those).
       operationId: Projects_List
       x-airbyte-entity: projects
       x-airbyte-action: list
@@ -508,6 +519,12 @@ paths:
       x-airbyte-meta-extractor:
         next: "@link.next"
       parameters:
+      - name: organization_slug
+        in: path
+        required: true
+        description: The slug of the organization to list projects for.
+        schema:
+          type: string
       - name: cursor
         in: query
         description: Pagination cursor for next page of results.
@@ -1111,7 +1128,9 @@ components:
           type:
           - object
           - "null"
-          description: Organization this project belongs to.
+          description: >-
+            Organization this project belongs to. Not returned by the
+            organization-scoped list endpoint; available via project_detail.
           properties:
             id:
               type:
@@ -1125,6 +1144,84 @@ components:
               type:
               - string
               - "null"
+        team:
+          type:
+          - object
+          - "null"
+          description: Primary team that owns this project.
+          properties:
+            id:
+              type:
+              - string
+              - "null"
+            name:
+              type:
+              - string
+              - "null"
+            slug:
+              type:
+              - string
+              - "null"
+        teams:
+          type:
+          - array
+          - "null"
+          description: Teams that have access to this project.
+          items:
+            type:
+            - object
+            - "null"
+            properties:
+              id:
+                type:
+                - string
+                - "null"
+              name:
+                type:
+                - string
+                - "null"
+              slug:
+                type:
+                - string
+                - "null"
+        environments:
+          type:
+          - array
+          - "null"
+          items:
+            type:
+            - string
+            - "null"
+          description: Environments configured for this project.
+        platforms:
+          type:
+          - array
+          - "null"
+          items:
+            type:
+            - string
+            - "null"
+          description: Platforms detected for this project.
+        hasUserReports:
+          type:
+          - boolean
+          - "null"
+          description: Whether the project has user reports.
+        latestRelease:
+          type:
+          - object
+          - "null"
+          description: The most recent release for this project.
+          properties:
+            version:
+              type:
+              - string
+              - "null"
+        latestDeploys:
+          type:
+          - object
+          - "null"
+          description: The most recent deploys for this project, keyed by environment.
 
     ProjectDetail:
       type: object
