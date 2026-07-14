@@ -177,7 +177,7 @@ class AsanaConnector:
 
     connector_name = "asana"
     connector_version = "0.1.21"
-    sdk_version = "0.1.284"
+    sdk_version = "0.1.285"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -2692,6 +2692,48 @@ metadata to get the download_url, then downloads the file from that URL.
         result = await self._connector.execute("attachments", "download", params)
         return result
 
+
+    async def download_text(
+        self,
+        attachment_gid: str,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the file content of an attachment. This operation first retrieves the attachment
+metadata to get the download_url, then downloads the file from that URL.
+ and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+            "attachment_gid": attachment_gid,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("attachments", "download", params)
+
+    async def download_base64(
+        self,
+        attachment_gid: str,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the file content of an attachment. This operation first retrieves the attachment
+metadata to get the download_url, then downloads the file from that URL.
+ and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+            "attachment_gid": attachment_gid,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("attachments", "download", params)
 
     async def download_local(
         self,

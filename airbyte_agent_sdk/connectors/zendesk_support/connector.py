@@ -230,7 +230,7 @@ class ZendeskSupportConnector:
 
     connector_name = "zendesk-support"
     connector_version = "0.1.20"
-    sdk_version = "0.1.284"
+    sdk_version = "0.1.285"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -2403,6 +2403,44 @@ class AttachmentsQuery:
         return result
 
 
+    async def download_text(
+        self,
+        attachment_id: str,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the file content of a ticket attachment and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+            "attachment_id": attachment_id,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("attachments", "download", params)
+
+    async def download_base64(
+        self,
+        attachment_id: str,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the file content of a ticket attachment and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+            "attachment_id": attachment_id,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("attachments", "download", params)
+
     async def download_local(
         self,
         attachment_id: str,
@@ -4457,6 +4495,48 @@ class ArticleAttachmentsQuery:
         result = await self._connector.execute("article_attachments", "download", params)
         return result
 
+
+    async def download_text(
+        self,
+        article_id: str,
+        attachment_id: str,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the file content of a specific attachment and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+            "article_id": article_id,
+            "attachment_id": attachment_id,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("article_attachments", "download", params)
+
+    async def download_base64(
+        self,
+        article_id: str,
+        attachment_id: str,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the file content of a specific attachment and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+            "article_id": article_id,
+            "attachment_id": attachment_id,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("article_attachments", "download", params)
 
     async def download_local(
         self,

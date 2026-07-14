@@ -660,6 +660,62 @@ class {{ entity_class_name }}Query:
 
 {% if op.action == 'download' %}
 
+    async def {{ op.action }}_text(
+        self,
+{% for param in op.parameters -%}
+{%- if param.required and param.python_name != 'id' %}
+        {{ param.python_name }}: {{ param.type }},
+{% endif -%}
+{%- endfor -%}
+{%- for param in op.parameters -%}
+{%- if not param.required or param.python_name == 'id' %}
+        {{ param.python_name }}: {{ param.type }} | None = None,
+{% endif -%}
+{%- endfor %}
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        {{ op.description }} and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+{% for param in op.parameters %}
+            "{{ param.name }}": {{ param.python_name }},
+{% endfor %}
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("{{ op.entity }}", "{{ op.action }}", params)
+
+    async def {{ op.action }}_base64(
+        self,
+{% for param in op.parameters -%}
+{%- if param.required and param.python_name != 'id' %}
+        {{ param.python_name }}: {{ param.type }},
+{% endif -%}
+{%- endfor -%}
+{%- for param in op.parameters -%}
+{%- if not param.required or param.python_name == 'id' %}
+        {{ param.python_name }}: {{ param.type }} | None = None,
+{% endif -%}
+{%- endfor %}
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        {{ op.description }} and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+{% for param in op.parameters %}
+            "{{ param.name }}": {{ param.python_name }},
+{% endfor %}
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("{{ op.entity }}", "{{ op.action }}", params)
+
     async def {{ op.action }}_local(
         self,
 {% for param in op.parameters -%}

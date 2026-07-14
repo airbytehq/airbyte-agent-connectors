@@ -121,6 +121,7 @@ from .constants import SDK_VERSION
 from .errors import AirbyteError, ConnectorAmbiguityError, ConnectorNotFoundError, UnknownConnectorError
 from .executor import (
     ActionNotSupportedError,
+    DownloadChunkResult,
     EntityNotFoundError,
     ExecutionConfig,
     ExecutionResult,
@@ -161,6 +162,7 @@ __all__ = [
     "AutomationInfo",
     "ExecutionConfig",
     "ExecutionResult",
+    "DownloadChunkResult",
     # Configuration types
     "AirbyteAuthConfig",
     # Executor exceptions

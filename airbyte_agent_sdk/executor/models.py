@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
-from typing import Any, Protocol, runtime_checkable
+from typing import Any, Literal, Protocol, runtime_checkable
 
 from airbyte_agent_sdk.constants import INTENT_MAX_LENGTH
 from airbyte_agent_sdk.errors import AirbyteError
@@ -76,6 +76,30 @@ class StandardExecuteResult:
 
 
 @dataclass
+class DownloadChunkResult:
+    """JSON-safe result for a bounded download byte range."""
+
+    content: str
+    encoding: Literal["utf-8", "base64"]
+    bytes_returned: int
+    range_requested: str
+    next_range_header: str | None
+    has_more: bool
+    content_type: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "content": self.content,
+            "encoding": self.encoding,
+            "bytes_returned": self.bytes_returned,
+            "range_requested": self.range_requested,
+            "next_range_header": self.next_range_header,
+            "has_more": self.has_more,
+            "content_type": self.content_type,
+        }
+
+
+@dataclass
 class ExecutionResult:
     """Result of a connector execution.
 
@@ -86,7 +110,8 @@ class ExecutionResult:
         success: True if execution completed successfully, False if it failed
         data: Response data from the execution
             - dict[str, Any] for standard operations (GET, LIST, CREATE, etc.)
-            - AsyncIterator[bytes] for download operations (streaming file content)
+            - AsyncIterator[bytes] for streaming download operations
+            - dict[str, Any] for structured download chunks
         error: Error message if success=False, None otherwise
         meta: Optional metadata extracted from response (e.g., pagination info)
 

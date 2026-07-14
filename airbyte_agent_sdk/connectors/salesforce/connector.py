@@ -191,7 +191,7 @@ class SalesforceConnector:
 
     connector_name = "salesforce"
     connector_version = "1.2.0"
-    sdk_version = "0.1.284"
+    sdk_version = "0.1.285"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -4770,6 +4770,52 @@ Obtain this ID from the list or get action.
         return result
 
 
+    async def download_text(
+        self,
+        id: str | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the binary file content of a content version.
+First use the list or get action to retrieve the ContentVersion ID and file metadata (size, type, etc.),
+then use this action to download the actual file content.
+The response is the raw binary file data.
+ and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("content_versions", "download", params)
+
+    async def download_base64(
+        self,
+        id: str | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the binary file content of a content version.
+First use the list or get action to retrieve the ContentVersion ID and file metadata (size, type, etc.),
+then use this action to download the actual file content.
+The response is the raw binary file data.
+ and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("content_versions", "download", params)
+
     async def download_local(
         self,
         path: str,
@@ -4916,6 +4962,52 @@ Obtain this ID from the list or get action.
         result = await self._connector.execute("attachments", "download", params)
         return result
 
+
+    async def download_text(
+        self,
+        id: str | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the binary file content of an attachment (legacy).
+First use the list or get action to retrieve the Attachment ID and file metadata,
+then use this action to download the actual file content.
+Note: Attachments are a legacy feature; consider using ContentVersion for new implementations.
+ and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("attachments", "download", params)
+
+    async def download_base64(
+        self,
+        id: str | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the binary file content of an attachment (legacy).
+First use the list or get action to retrieve the Attachment ID and file metadata,
+then use this action to download the actual file content.
+Note: Attachments are a legacy feature; consider using ContentVersion for new implementations.
+ and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("attachments", "download", params)
 
     async def download_local(
         self,

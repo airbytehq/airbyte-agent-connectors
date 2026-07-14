@@ -4,6 +4,7 @@ from .hosted_executor import HostedExecutor
 from .local_executor import LocalExecutor
 from .models import (
     ActionNotSupportedError,
+    DownloadChunkResult,
     EntityNotFoundError,
     ExecutionConfig,
     ExecutionResult,
@@ -17,6 +18,7 @@ __all__ = [
     # Config and Result types
     "ExecutionConfig",
     "ExecutionResult",
+    "DownloadChunkResult",
     # Protocol
     "ExecutorProtocol",
     # Executors

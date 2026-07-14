@@ -128,7 +128,7 @@ class GongConnector:
 
     connector_name = "gong"
     connector_version = "0.1.24"
-    sdk_version = "0.1.284"
+    sdk_version = "0.1.285"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -1243,6 +1243,54 @@ Downloads the audio media file for a call. Temporarily, the request body must be
         return result
 
 
+    async def download_text(
+        self,
+        filter: CallAudioDownloadParamsFilter | None = None,
+        content_selector: CallAudioDownloadParamsContentselector | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        ALWAYS configure the request with the exposedFields: {"media": true}. If you don't the call won't work.
+Downloads the audio media file for a call. Temporarily, the request body must be configured with:
+{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
+ and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+            "filter": filter,
+            "contentSelector": content_selector,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("call_audio", "download", params)
+
+    async def download_base64(
+        self,
+        filter: CallAudioDownloadParamsFilter | None = None,
+        content_selector: CallAudioDownloadParamsContentselector | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        ALWAYS configure the request with the exposedFields: {"media": true}. If you don't the call won't work.
+Downloads the audio media file for a call. Temporarily, the request body must be configured with:
+{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
+ and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+            "filter": filter,
+            "contentSelector": content_selector,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("call_audio", "download", params)
+
     async def download_local(
         self,
         path: str,
@@ -1321,6 +1369,54 @@ Downloads the video media file for a call. Temporarily, the request body must be
         result = await self._connector.execute("call_video", "download", params)
         return result
 
+
+    async def download_text(
+        self,
+        filter: CallVideoDownloadParamsFilter | None = None,
+        content_selector: CallVideoDownloadParamsContentselector | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        ALWAYS configure the request with the exposedFields: {"media": true}. If you don't the call won't work.
+Downloads the video media file for a call. Temporarily, the request body must be configured with:
+{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
+ and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+            "filter": filter,
+            "contentSelector": content_selector,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("call_video", "download", params)
+
+    async def download_base64(
+        self,
+        filter: CallVideoDownloadParamsFilter | None = None,
+        content_selector: CallVideoDownloadParamsContentselector | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        ALWAYS configure the request with the exposedFields: {"media": true}. If you don't the call won't work.
+Downloads the video media file for a call. Temporarily, the request body must be configured with:
+{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
+ and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+            "filter": filter,
+            "contentSelector": content_selector,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("call_video", "download", params)
 
     async def download_local(
         self,

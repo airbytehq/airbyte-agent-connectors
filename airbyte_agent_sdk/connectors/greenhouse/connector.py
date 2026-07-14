@@ -123,7 +123,7 @@ class GreenhouseConnector:
 
     connector_name = "greenhouse"
     connector_version = "0.1.8"
-    sdk_version = "0.1.284"
+    sdk_version = "0.1.285"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -2192,6 +2192,54 @@ Files should be downloaded immediately after retrieval.
         return result
 
 
+    async def download_text(
+        self,
+        attachment_index: str,
+        id: str | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads an attachment (resume, cover letter, etc.) for an application by index.
+The attachment URL is a temporary signed AWS S3 URL that expires within 7 days.
+Files should be downloaded immediately after retrieval.
+ and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "attachment_index": attachment_index,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("application_attachment", "download", params)
+
+    async def download_base64(
+        self,
+        attachment_index: str,
+        id: str | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads an attachment (resume, cover letter, etc.) for an application by index.
+The attachment URL is a temporary signed AWS S3 URL that expires within 7 days.
+Files should be downloaded immediately after retrieval.
+ and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "attachment_index": attachment_index,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("application_attachment", "download", params)
+
     async def download_local(
         self,
         attachment_index: str,
@@ -2270,6 +2318,54 @@ Files should be downloaded immediately after retrieval.
         result = await self._connector.execute("candidate_attachment", "download", params)
         return result
 
+
+    async def download_text(
+        self,
+        attachment_index: str,
+        id: str | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads an attachment (resume, cover letter, etc.) for a candidate by index.
+The attachment URL is a temporary signed AWS S3 URL that expires within 7 days.
+Files should be downloaded immediately after retrieval.
+ and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "attachment_index": attachment_index,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("candidate_attachment", "download", params)
+
+    async def download_base64(
+        self,
+        attachment_index: str,
+        id: str | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads an attachment (resume, cover letter, etc.) for a candidate by index.
+The attachment URL is a temporary signed AWS S3 URL that expires within 7 days.
+Files should be downloaded immediately after retrieval.
+ and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "attachment_index": attachment_index,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("candidate_attachment", "download", params)
 
     async def download_local(
         self,

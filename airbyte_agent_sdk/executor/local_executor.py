@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import codecs
 import inspect
 import json as json_module
 import logging
@@ -11,7 +12,7 @@ import os
 import re
 import time
 import uuid
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Awaitable
 from datetime import UTC, datetime, timedelta
 from typing import Any, Protocol, overload
 from urllib.parse import quote
@@ -47,6 +48,7 @@ from airbyte_agent_sdk.utils import find_matching_auth_options
 
 from .models import (
     ActionNotSupportedError,
+    DownloadChunkResult,
     EntityNotFoundError,
     ExecutionConfig,
     ExecutionResult,
@@ -67,6 +69,196 @@ CHECK_STATUS_SKIPPED = "skipped"
 CHECK_STATUS_FAILED = "failed"
 _UNRESOLVED_SCOPING_VALUE = object()
 _SCOPING_DECLINED = object()
+_AIRBYTE_RESPONSE_TYPE_PARAM = "_airbyte_response_type"
+_AIRBYTE_RESPONSE_FORMAT_PARAM = "_airbyte_response_format"
+_AIRBYTE_RESPONSE_TYPE_STREAM = "stream"
+_AIRBYTE_RESPONSE_TYPE_JSON = "json"
+_AIRBYTE_RESPONSE_FORMAT_TEXT = "text"
+_AIRBYTE_RESPONSE_FORMAT_BASE64 = "base64"
+_DEFAULT_DOWNLOAD_JSON_BASE64_RANGE_HEADER = "bytes=0-49151"
+_DEFAULT_DOWNLOAD_JSON_TEXT_RANGE_HEADER = "bytes=0-15359"
+_MAX_DOWNLOAD_JSON_BYTES = 65_536
+_RANGE_HEADER_RE = re.compile(r"^bytes=(\d+)-(\d*)$")
+_CONTENT_RANGE_RE = re.compile(r"^bytes\s+(\d+)-(\d+)/(\d+|\*)$")
+
+
+def _strip_airbyte_response_params(params: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in params.items() if not str(key).startswith("_airbyte_response_")}
+
+
+def _download_json_requested(params: dict[str, Any]) -> bool:
+    response_type = params.get(_AIRBYTE_RESPONSE_TYPE_PARAM)
+    if response_type is None or response_type == _AIRBYTE_RESPONSE_TYPE_STREAM:
+        return False
+    if response_type == _AIRBYTE_RESPONSE_TYPE_JSON:
+        return True
+    raise InvalidParameterError(f"{_AIRBYTE_RESPONSE_TYPE_PARAM} must be '{_AIRBYTE_RESPONSE_TYPE_STREAM}' or '{_AIRBYTE_RESPONSE_TYPE_JSON}'.")
+
+
+def _download_json_format(params: dict[str, Any]) -> str:
+    response_format = params.get(_AIRBYTE_RESPONSE_FORMAT_PARAM, _AIRBYTE_RESPONSE_FORMAT_BASE64)
+    if response_format in {_AIRBYTE_RESPONSE_FORMAT_TEXT, _AIRBYTE_RESPONSE_FORMAT_BASE64}:
+        return str(response_format)
+    raise InvalidParameterError(f"{_AIRBYTE_RESPONSE_FORMAT_PARAM} must be '{_AIRBYTE_RESPONSE_FORMAT_TEXT}' or '{_AIRBYTE_RESPONSE_FORMAT_BASE64}'.")
+
+
+def _parse_bounded_range_header(range_header: str) -> tuple[int, int]:
+    match = _RANGE_HEADER_RE.match(range_header)
+    if match is None:
+        raise InvalidParameterError(f"range_header must use byte range format like 'bytes=0-49151', got {range_header!r}.")
+
+    start = int(match.group(1))
+    raw_end = match.group(2)
+    if raw_end == "":
+        raise InvalidParameterError("Structured download JSON responses require a bounded range_header like 'bytes=0-49151'.")
+
+    end = int(raw_end)
+    if end < start:
+        raise InvalidParameterError(f"range_header end must be greater than or equal to start, got {range_header!r}.")
+    if end - start + 1 > _MAX_DOWNLOAD_JSON_BYTES:
+        raise InvalidParameterError(f"Structured download JSON responses are capped at {_MAX_DOWNLOAD_JSON_BYTES} bytes per call.")
+    return start, end
+
+
+def _parse_content_range_header(content_range: str | None) -> tuple[int, int, int | None] | None:
+    if not content_range:
+        return None
+
+    match = _CONTENT_RANGE_RE.match(content_range.strip())
+    if match is None:
+        return None
+
+    total = None if match.group(3) == "*" else int(match.group(3))
+    return int(match.group(1)), int(match.group(2)), total
+
+
+def _get_header(headers: dict[str, str] | None, name: str) -> str | None:
+    if not headers:
+        return None
+    name_lower = name.lower()
+    for key, value in headers.items():
+        if key.lower() == name_lower:
+            return value
+    return None
+
+
+def _response_status_code(download_iterator: AsyncIterator[bytes]) -> int | None:
+    status_code = getattr(download_iterator, "response_status_code", None)
+    return status_code if isinstance(status_code, int) else None
+
+
+def _response_headers(download_iterator: AsyncIterator[bytes]) -> dict[str, str]:
+    headers = getattr(download_iterator, "response_headers", None)
+    return headers if isinstance(headers, dict) else {}
+
+
+async def _read_stream_body(response: Any) -> bytes:
+    chunks: list[bytes] = []
+    async for chunk in response.aiter_bytes():
+        chunks.append(chunk)
+    return b"".join(chunks)
+
+
+async def _materialize_download_json(
+    download_iterator: AsyncIterator[bytes],
+    *,
+    response_format: str,
+    range_header: str,
+) -> dict[str, Any]:
+    start, end = _parse_bounded_range_header(range_header)
+    requested_length = end - start + 1
+    read_limit = requested_length
+    skip_remaining = 0
+    collected = 0
+    chunks: list[bytes] = []
+    metadata_captured = False
+    range_ignored = False
+    content_range_total: int | None = None
+
+    def capture_response_metadata() -> None:
+        nonlocal content_range_total, metadata_captured, range_ignored, read_limit, skip_remaining
+        if metadata_captured:
+            return
+        metadata_captured = True
+
+        headers = _response_headers(download_iterator)
+        content_range = _parse_content_range_header(_get_header(headers, "content-range"))
+        if content_range is not None:
+            content_range_total = content_range[2]
+
+        status_code = _response_status_code(download_iterator)
+        range_ignored = status_code == 200 and content_range is None
+        if range_ignored:
+            skip_remaining = start
+
+    try:
+        async for chunk in download_iterator:
+            if not chunk:
+                continue
+            capture_response_metadata()
+            if skip_remaining:
+                if len(chunk) <= skip_remaining:
+                    skip_remaining -= len(chunk)
+                    continue
+                chunk = chunk[skip_remaining:]
+                skip_remaining = 0
+            remaining = read_limit - collected
+            if remaining <= 0:
+                break
+            if len(chunk) > remaining:
+                chunks.append(chunk[:remaining])
+                collected += remaining
+                break
+            chunks.append(chunk)
+            collected += len(chunk)
+            if collected == read_limit:
+                break
+    finally:
+        aclose = getattr(download_iterator, "aclose", None)
+        if aclose is not None:
+            await aclose()
+
+    capture_response_metadata()
+    body_with_extra = b"".join(chunks)
+    body = body_with_extra[:requested_length]
+    bytes_returned = len(body)
+    if response_format == _AIRBYTE_RESPONSE_FORMAT_TEXT:
+        try:
+            decoder = codecs.getincrementaldecoder("utf-8")()
+            content = decoder.decode(body, final=False)
+            trailing_bytes = decoder.getstate()[0]
+        except UnicodeDecodeError as exc:
+            raise InvalidParameterError(
+                "Downloaded bytes are not valid UTF-8. Use _airbyte_response_format='base64' for binary files, "
+                "or export the file as a text MIME type before requesting text."
+            ) from exc
+        if trailing_bytes:
+            bytes_returned -= len(trailing_bytes)
+            if bytes_returned == 0:
+                raise InvalidParameterError("range_header is too small to include a complete UTF-8 character.")
+        encoding = "utf-8"
+    else:
+        content = base64.b64encode(body).decode("ascii")
+        encoding = "base64"
+
+    next_start = start + bytes_returned
+    if content_range_total is not None:
+        has_more = next_start < content_range_total
+    elif range_ignored:
+        has_more = False
+    else:
+        has_more = len(body) == requested_length and requested_length > 0
+    next_end = next_start + requested_length - 1
+    result = DownloadChunkResult(
+        content=content,
+        encoding=encoding,
+        bytes_returned=bytes_returned,
+        range_requested=range_header,
+        next_range_header=f"bytes={next_start}-{next_end}" if has_more else None,
+        has_more=has_more,
+        content_type=None,
+    )
+    return result.to_dict()
 
 
 class ParamResolutionError(Exception):
@@ -177,12 +369,12 @@ class _OperationHandler(Protocol):
         """Check if this handler can handle the given action."""
         ...
 
-    async def execute_operation(
+    def execute_operation(
         self,
         entity: str,
         action: Action,
         params: dict[str, Any],
-    ) -> StandardExecuteResult | AsyncIterator[bytes]:
+    ) -> Awaitable[StandardExecuteResult] | AsyncIterator[bytes]:
         """Execute the operation and return result.
 
         Returns:
@@ -210,6 +402,31 @@ class _BufferedAsyncResponse:
             return
         for i in range(0, len(self._body), chunk_size):
             yield self._body[i : i + chunk_size]
+
+
+class _DownloadResponseStream:
+    """Async byte stream that exposes response metadata to structured downloads."""
+
+    def __init__(self, handler: _DownloadOperationHandler, entity: str, action: Action, params: dict[str, Any]) -> None:
+        self._handler = handler
+        self._entity = entity
+        self._action = action
+        self._params = params
+        self._iterator: AsyncIterator[bytes] | None = None
+        self.response_headers: dict[str, str] = {}
+        self.response_status_code: int | None = None
+        self.range_header: str | None = None
+
+    def __aiter__(self) -> AsyncIterator[bytes]:
+        self._iterator = self._handler._iter_download(self._entity, self._action, self._params, self)
+        return self._iterator
+
+    async def aclose(self) -> None:
+        if self._iterator is None:
+            return
+        aclose = getattr(self._iterator, "aclose", None)
+        if aclose is not None:
+            await aclose()
 
 
 class LocalExecutor:
@@ -646,6 +863,20 @@ class LocalExecutor:
             # Convert config to internal format
             action = Action(config.action) if isinstance(config.action, str) else config.action
             params = self._merge_scoping_defaults(config.params or {})
+            download_json_requested = action == Action.DOWNLOAD and _download_json_requested(params)
+            download_json_format = _download_json_format(params) if download_json_requested else None
+            if action == Action.DOWNLOAD:
+                operation_params = _strip_airbyte_response_params(params)
+                if download_json_requested and not operation_params.get("range_header"):
+                    operation_params["range_header"] = (
+                        _DEFAULT_DOWNLOAD_JSON_TEXT_RANGE_HEADER
+                        if download_json_format == _AIRBYTE_RESPONSE_FORMAT_TEXT
+                        else _DEFAULT_DOWNLOAD_JSON_BASE64_RANGE_HEADER
+                    )
+                if download_json_requested:
+                    _parse_bounded_range_header(str(operation_params.get("range_header")))
+            else:
+                operation_params = params
 
             # Dispatch to handler (handlers handle telemetry internally)
             handler = next((h for h in self._operation_handlers if h.can_handle(action)), None)
@@ -653,10 +884,21 @@ class LocalExecutor:
                 raise ExecutorError(f"No handler registered for action '{action.value}'.")
 
             # Execute handler
-            result = handler.execute_operation(config.entity, action, params)
+            result = handler.execute_operation(config.entity, action, operation_params)
 
-            # Check if it's an async generator (download) or awaitable (standard)
-            if inspect.isasyncgen(result):
+            # Check if it's an async byte stream (download) or awaitable (standard)
+            if inspect.isasyncgen(result) or hasattr(result, "__aiter__"):
+                if download_json_requested:
+                    return ExecutionResult(
+                        success=True,
+                        data=await _materialize_download_json(
+                            result,
+                            response_format=download_json_format or _AIRBYTE_RESPONSE_FORMAT_BASE64,
+                            range_header=str(operation_params["range_header"]),
+                        ),
+                        error=None,
+                        meta=None,
+                    )
                 # Download operation: return generator directly
                 return ExecutionResult(
                     success=True,
@@ -2579,7 +2821,17 @@ class _DownloadOperationHandler:
         """Check if this handler can handle the given action."""
         return action == Action.DOWNLOAD
 
-    async def execute_operation(self, entity: str, action: Action, params: dict[str, Any]) -> AsyncIterator[bytes]:
+    def execute_operation(self, entity: str, action: Action, params: dict[str, Any]) -> AsyncIterator[bytes]:
+        """Return a lazy download stream for one-step or two-step downloads."""
+        return _DownloadResponseStream(self, entity, action, params)
+
+    async def _iter_download(
+        self,
+        entity: str,
+        action: Action,
+        params: dict[str, Any],
+        stream: _DownloadResponseStream,
+    ) -> AsyncIterator[bytes]:
         """Execute download operation (one-step or two-step) with full telemetry."""
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.local")
 
@@ -2665,12 +2917,13 @@ class _DownloadOperationHandler:
                     )
 
                     # Step 3: Stream file from extracted URL
-                    file_response, _ = await self.ctx.http_client.request(
+                    file_response, file_headers = await self.ctx.http_client.request(
                         method="GET",
                         path=file_url,
                         headers=headers,
                         stream=True,
                     )
+                    file_status_code = getattr(file_response, "status_code", None)
                 else:
                     # One-step direct download: stream file directly from endpoint
                     file_response, file_headers = await self.ctx.http_client.request(
@@ -2680,6 +2933,7 @@ class _DownloadOperationHandler:
                         headers=headers,
                         stream=True,
                     )
+                    file_status_code = getattr(file_response, "status_code", None)
 
                     # Apply x-airbyte-response-error-check to one-step download
                     # responses. Only buffer the body when the connector declares
@@ -2689,10 +2943,10 @@ class _DownloadOperationHandler:
                     # Partial Content whose body is a byte range of the file, not
                     # a full envelope, so skip the check for those.
                     error_check = self.ctx.executor.model.response_error_check
-                    if error_check is not None and range_header is None:
+                    if error_check is not None and (range_header is None or file_status_code != 206):
                         content_type = file_headers.get("content-type", "").lower()
                         if "json" in content_type:
-                            body_bytes = await file_response.aread()
+                            body_bytes = await _read_stream_body(file_response)
                             try:
                                 payload = json_module.loads(body_bytes) if body_bytes else None
                             except ValueError as exc:
@@ -2710,8 +2964,13 @@ class _DownloadOperationHandler:
                             # return, no missed telemetry.
                             file_response = _BufferedAsyncResponse(body_bytes, file_headers)
 
+                file_headers = file_headers or getattr(file_response, "headers", {}) or {}
+                stream.response_headers = {str(key).lower(): str(value) for key, value in file_headers.items()}
+                stream.response_status_code = file_status_code if isinstance(file_status_code, int) else None
+                stream.range_header = str(range_header) if range_header is not None else None
+
                 # Assume success once we start streaming
-                status_code = 200
+                status_code = stream.response_status_code or 200
 
                 # Mark span as successful
                 span.set_attribute("connector.success", True)

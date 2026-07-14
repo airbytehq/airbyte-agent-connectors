@@ -82,7 +82,7 @@ class GoogleDriveConnector:
 
     connector_name = "google-drive"
     connector_version = "0.2.5"
-    sdk_version = "0.1.284"
+    sdk_version = "0.1.285"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -1050,6 +1050,62 @@ use the export action instead.
         return result
 
 
+    async def download_text(
+        self,
+        file_id: str,
+        alt: str,
+        acknowledge_abuse: bool | None = None,
+        supports_all_drives: bool | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the binary content of a file. This works for non-Google Workspace files
+(PDFs, images, zip files, etc.). For Google Docs, Sheets, Slides, or Drawings,
+use the export action instead.
+ and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+            "fileId": file_id,
+            "alt": alt,
+            "acknowledgeAbuse": acknowledge_abuse,
+            "supportsAllDrives": supports_all_drives,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("files", "download", params)
+
+    async def download_base64(
+        self,
+        file_id: str,
+        alt: str,
+        acknowledge_abuse: bool | None = None,
+        supports_all_drives: bool | None = None,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Downloads the binary content of a file. This works for non-Google Workspace files
+(PDFs, images, zip files, etc.). For Google Docs, Sheets, Slides, or Drawings,
+use the export action instead.
+ and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+            "fileId": file_id,
+            "alt": alt,
+            "acknowledgeAbuse": acknowledge_abuse,
+            "supportsAllDrives": supports_all_drives,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("files", "download", params)
+
     async def download_local(
         self,
         file_id: str,
@@ -1205,6 +1261,66 @@ Note: Export has a 10MB limit. For larger files, use the Drive UI.
         result = await self._connector.execute("files_export", "download", params)
         return result
 
+
+    async def download_text(
+        self,
+        file_id: str,
+        mime_type: str,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Exports a Google Workspace file (Docs, Sheets, Slides, Drawings) to a specified format.
+Common export formats:
+- application/pdf (all types)
+- text/plain (Docs)
+- text/csv (Sheets)
+- application/vnd.openxmlformats-officedocument.wordprocessingml.document (Docs to .docx)
+- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (Sheets to .xlsx)
+- application/vnd.openxmlformats-officedocument.presentationml.presentation (Slides to .pptx)
+Note: Export has a 10MB limit. For larger files, use the Drive UI.
+ and return a JSON-safe UTF-8 text chunk.
+        """
+        params = {k: v for k, v in {
+            "fileId": file_id,
+            "mimeType": mime_type,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "text",
+        }.items() if v is not None}
+
+        return await self._connector.execute("files_export", "download", params)
+
+    async def download_base64(
+        self,
+        file_id: str,
+        mime_type: str,
+        range_header: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Exports a Google Workspace file (Docs, Sheets, Slides, Drawings) to a specified format.
+Common export formats:
+- application/pdf (all types)
+- text/plain (Docs)
+- text/csv (Sheets)
+- application/vnd.openxmlformats-officedocument.wordprocessingml.document (Docs to .docx)
+- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (Sheets to .xlsx)
+- application/vnd.openxmlformats-officedocument.presentationml.presentation (Slides to .pptx)
+Note: Export has a 10MB limit. For larger files, use the Drive UI.
+ and return a JSON-safe base64 chunk.
+        """
+        params = {k: v for k, v in {
+            "fileId": file_id,
+            "mimeType": mime_type,
+            "range_header": range_header,
+            **kwargs,
+            "_airbyte_response_type": "json",
+            "_airbyte_response_format": "base64",
+        }.items() if v is not None}
+
+        return await self._connector.execute("files_export", "download", params)
 
     async def download_local(
         self,

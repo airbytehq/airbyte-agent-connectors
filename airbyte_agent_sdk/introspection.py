@@ -84,10 +84,16 @@ EXECUTE_INSTRUCTIONS = (
     "  - get: Returns entity directly (no envelope)\n"
     "  To paginate: pass cursor=<last_cursor> while has_more is true"
     "\n\n"
-    "ACTIONS: list, get, api_search, context_store_search, create, update. "
+    "ACTIONS: list, get, api_search, context_store_search, create, update, download. "
     "Use `context_store_search` as the DEFAULT — it supports filtering, sorting, and pagination. "
     "Only use `list` when: (a) you need today's data (search index may lag hours), or "
     "(b) context_store_search returned no results and you suspect indexing delay."
+    "\n\n"
+    "HOW TO USE DOWNLOAD:\n"
+    "- By default, download returns a stream for API/SDK clients.\n"
+    '- To request JSON chunks, pass params={"_airbyte_response_type": "json", "_airbyte_response_format": "text"}.\n'
+    '- Use params.range_header like "bytes=0-49151" for the bounded chunk range.\n'
+    '- Use "_airbyte_response_format": "base64" for binary files.\n'
     "\n\n"
     "HOW TO USE CONTEXT_STORE_SEARCH:\n"
     "action='context_store_search' uses params.query with filter, sort, and limit.\n"
