@@ -21,7 +21,16 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -2613,12 +2622,12 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
                         path='/drive/v3/files/{fileId}',
                     ),
                     action=Action.DOWNLOAD,
-                    description='Downloads the binary content of a file. This works for non-Google Workspace files\n(PDFs, images, zip files, etc.). For Google Docs, Sheets, Slides, or Drawings,\nuse the export action instead.\n',
+                    description="Downloads the raw binary content of a file (PDF, image, zip, uploaded .docx/.xlsx, etc.).\nThe Drive `alt=media` query parameter is applied automatically by this action, so you\nnormally do NOT need to pass `alt` -- the response is the file's bytes. (Without\n`alt=media` Drive returns file metadata JSON instead of content, so it is forced here.)\nThis only works for binary files: for Google Workspace files (Docs, Sheets, Slides,\nDrawings) use the `files_export` action with a `mimeType` instead -- downloading them\ndirectly returns 403.\n",
                     query_params=['alt', 'acknowledgeAbuse', 'supportsAllDrives'],
                     query_params_schema={
                         'alt': {
                             'type': 'string',
-                            'required': True,
+                            'required': False,
                             'default': 'media',
                             'enum': ['media'],
                         },
@@ -3741,7 +3750,7 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
                     method='GET',
                     path='/drive/v3/files/{fileId}/export',
                     action=Action.DOWNLOAD,
-                    description='Exports a Google Workspace file (Docs, Sheets, Slides, Drawings) to a specified format.\nCommon export formats:\n- application/pdf (all types)\n- text/plain (Docs)\n- text/csv (Sheets)\n- application/vnd.openxmlformats-officedocument.wordprocessingml.document (Docs to .docx)\n- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (Sheets to .xlsx)\n- application/vnd.openxmlformats-officedocument.presentationml.presentation (Slides to .pptx)\nNote: Export has a 10MB limit. For larger files, use the Drive UI.\n',
+                    description="Exports a Google-NATIVE Workspace file (Docs, Sheets, Slides, Drawings --\nmimeType `application/vnd.google-apps.*`) to a specified format. Use this ONLY for\nthose native types: exporting a binary file (PDF, image, uploaded .docx/.xlsx) returns\n403 `fileNotExportable` -- for those use the `files` `download` action instead. If unsure\nof a file's type, check its `mimeType` with `files.get` first.\nCommon export formats:\n- application/pdf (all types)\n- text/plain (Docs)\n- text/csv (Sheets)\n- application/vnd.openxmlformats-officedocument.wordprocessingml.document (Docs to .docx)\n- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (Sheets to .xlsx)\n- application/vnd.openxmlformats-officedocument.presentationml.presentation (Slides to .pptx)\nNote: Export has a 10MB limit. For larger files, use the Drive UI.\n",
                     query_params=['mimeType'],
                     query_params_schema={
                         'mimeType': {'type': 'string', 'required': True},
@@ -7233,6 +7242,142 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='files',
+                suggested=True,
+                x_airbyte_name='files',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier of the file in Google Drive.',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp of the last modification to the file.',
+                    ),
+                    CacheFieldConfig(
+                        name='file_name',
+                        type=['null', 'string'],
+                        description='Name of the file.',
+                    ),
+                    CacheFieldConfig(
+                        name='file_path',
+                        type=['null', 'string'],
+                        description='Full path of the file within the synced Drive folder.',
+                    ),
+                    CacheFieldConfig(
+                        name='mime_type',
+                        type=['null', 'string'],
+                        description='MIME type of the file.',
+                    ),
+                    CacheFieldConfig(
+                        name='content',
+                        type=['null', 'string'],
+                        description='Extracted text content of the file.',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='document',
+                            samples=[
+                                SemanticSample(
+                                    name='chunk',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='file_name',
+                                    path='/file_name',
+                                ),
+                                SemanticMetadataField(
+                                    name='file_path',
+                                    path='/file_path',
+                                ),
+                                SemanticMetadataField(
+                                    name='mime_type',
+                                    path='/mime_type',
+                                ),
+                            ],
+                        ),
+                    ),
+                ],
+            ),
+        ],
+        kind='FILES',
+    ),
+    search_field_paths={
+        'files': [
+            'id',
+            'updated_at',
+            'file_name',
+            'file_path',
+            'mime_type',
+            'content',
+        ],
+    },
+    semantic_search_fields={
+        'files': {
+            'content': SemanticSearchConfig(
+                content_type='document',
+                samples=[
+                    SemanticSample(
+                        name='chunk',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='file_name',
+                        path='/file_name',
+                    ),
+                    SemanticMetadataField(
+                        name='file_path',
+                        path='/file_path',
+                    ),
+                    SemanticMetadataField(
+                        name='mime_type',
+                        path='/mime_type',
+                    ),
+                ],
+            ),
+        },
+    },
     example_questions=ExampleQuestions(
         direct=[
             'List all files in my Google Drive',

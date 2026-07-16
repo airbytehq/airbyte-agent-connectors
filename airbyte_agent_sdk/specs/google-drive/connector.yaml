@@ -15,7 +15,6 @@ info:
   x-airbyte-connector-definition-id: 9f8dda77-1048-4368-815b-269bf54ee9b8
   x-airbyte-replication-version: "0.5.21"
   x-airbyte-replication-compatibility: ">=0.5.21, <1.0.0"
-  x-airbyte-skip-context-store: "File-based connector, no structured streams for caching"
   x-airbyte-example-questions:
     direct:
       - "List all files in my Google Drive"
@@ -72,6 +71,61 @@ info:
     replication_config_key_mapping:
       folder_url: folder_url
       streams: streams
+    replication_config_constants:
+      delivery_method:
+        delivery_type: use_file_transfer
+        preserve_directory_structure: true
+  x-airbyte-context-store:
+    kind: FILES
+    entities:
+      - entity: files
+        x-airbyte-name: files
+        suggested: true
+        fields:
+          - name: id
+            type:
+              - "null"
+              - string
+            description: Unique identifier of the file in Google Drive.
+          - name: updated_at
+            type:
+              - "null"
+              - string
+            description: Timestamp of the last modification to the file.
+          - name: file_name
+            type:
+              - "null"
+              - string
+            description: Name of the file.
+          - name: file_path
+            type:
+              - "null"
+              - string
+            description: Full path of the file within the synced Drive folder.
+          - name: mime_type
+            type:
+              - "null"
+              - string
+            description: MIME type of the file.
+          - name: content
+            type:
+              - "null"
+              - string
+            description: Extracted text content of the file.
+            x-airbyte-semantic-search:
+              content_type: document
+              samples:
+                - name: chunk
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: chunk }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding: { model: text-embedding-3-small }
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: file_name, path: "/file_name", type: string }
+                - { name: file_path, path: "/file_path", type: string }
+                - { name: mime_type, path: "/mime_type", type: string }
   x-airbyte-entity-relationships:
     - source_entity: permissions
       target_entity: files
@@ -407,9 +461,13 @@ paths:
     get:
       summary: Download file content
       description: |
-        Downloads the binary content of a file. This works for non-Google Workspace files
-        (PDFs, images, zip files, etc.). For Google Docs, Sheets, Slides, or Drawings,
-        use the export action instead.
+        Downloads the raw binary content of a file (PDF, image, zip, uploaded .docx/.xlsx, etc.).
+        The Drive `alt=media` query parameter is applied automatically by this action, so you
+        normally do NOT need to pass `alt` -- the response is the file's bytes. (Without
+        `alt=media` Drive returns file metadata JSON instead of content, so it is forced here.)
+        This only works for binary files: for Google Workspace files (Docs, Sheets, Slides,
+        Drawings) use the `files_export` action with a `mimeType` instead -- downloading them
+        directly returns 403.
       operationId: downloadFile
       x-airbyte-entity: files
       x-airbyte-action: download
@@ -424,8 +482,8 @@ paths:
             type: string
         - name: alt
           in: query
-          required: true
-          description: Must be set to 'media' to download file content
+          required: false
+          description: Applied automatically as 'media' by this action; you do not need to set it.
           schema:
             type: string
             enum:
@@ -463,7 +521,11 @@ paths:
     get:
       summary: Export Google Workspace file
       description: |
-        Exports a Google Workspace file (Docs, Sheets, Slides, Drawings) to a specified format.
+        Exports a Google-NATIVE Workspace file (Docs, Sheets, Slides, Drawings --
+        mimeType `application/vnd.google-apps.*`) to a specified format. Use this ONLY for
+        those native types: exporting a binary file (PDF, image, uploaded .docx/.xlsx) returns
+        403 `fileNotExportable` -- for those use the `files` `download` action instead. If unsure
+        of a file's type, check its `mimeType` with `files.get` first.
         Common export formats:
         - application/pdf (all types)
         - text/plain (Docs)

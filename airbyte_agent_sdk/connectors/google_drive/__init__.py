@@ -8,6 +8,10 @@ from .connector import GoogleDriveConnector
 from .models import (
     GoogleDriveAuthConfig,
     GoogleDriveReplicationConfig,
+    AirbyteSearchMeta,
+    AirbyteSearchResult,
+    FilesSearchData,
+    FilesSearchResult,
 )
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
@@ -16,4 +20,8 @@ __all__ = [
     "AirbyteAuthConfig",
     "GoogleDriveAuthConfig",
     "GoogleDriveReplicationConfig",
+    "AirbyteSearchMeta",
+    "AirbyteSearchResult",
+    "FilesSearchData",
+    "FilesSearchResult",
 ]

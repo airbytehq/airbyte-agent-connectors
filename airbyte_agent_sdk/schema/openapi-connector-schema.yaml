@@ -258,6 +258,15 @@ $defs:
           $ref: '#/$defs/CacheEntityConfig'
         title: Entities
         type: array
+      kind:
+        default: DATA
+        description: Context-store kind. DATA (default) is the structured-records
+          pipeline; FILES routes replication through the raw-file-transfer destination.
+        enum:
+        - DATA
+        - FILES
+        title: Kind
+        type: string
       disable_compaction:
         default: false
         description: When true, Athena compaction (OPTIMIZE + VACUUM) is skipped for
@@ -1676,8 +1685,11 @@ $defs:
           - type: integer
           - type: number
           - type: boolean
+          - additionalProperties: true
+            type: object
         description: System-set constant values injected into the Airbyte source config;
-          never shown in the user-facing form
+          never shown in the user-facing form. Object values are injected as-is for
+          nested config blocks (e.g. delivery_method).
         title: Replication Config Constants
         type: object
     title: ReplicationConfig
@@ -2498,6 +2510,7 @@ $defs:
         - adf
         - markdown
         - plaintext
+        - document
         title: Content Type
         type: string
       samples:

@@ -673,8 +673,8 @@
               ],
               "default": "media"
             },
-            "required": true,
-            "description": "Must be set to 'media' to download file content",
+            "required": false,
+            "description": "Applied automatically as 'media' by this action; you do not need to set it.",
             "is_deep_object": false
           },
           {
@@ -712,7 +712,7 @@
         ],
         "params_type_name": "FilesDownloadParams",
         "response_type": "AsyncIterator[bytes]",
-        "description": "Downloads the binary content of a file. This works for non-Google Workspace files\n(PDFs, images, zip files, etc.). For Google Docs, Sheets, Slides, or Drawings,\nuse the export action instead.\n",
+        "description": "Downloads the raw binary content of a file (PDF, image, zip, uploaded .docx/.xlsx, etc.).\nThe Drive `alt=media` query parameter is applied automatically by this action, so you\nnormally do NOT need to pass `alt` -- the response is the file's bytes. (Without\n`alt=media` Drive returns file metadata JSON instead of content, so it is forced here.)\nThis only works for binary files: for Google Workspace files (Docs, Sheets, Slides,\nDrawings) use the `files_export` action with a `mimeType` instead -- downloading them\ndirectly returns 403.\n",
         "record_extractor": "$",
         "meta_extractor": null,
         "needs_envelope": null,
@@ -879,7 +879,7 @@
         ],
         "params_type_name": "FilesExportDownloadParams",
         "response_type": "AsyncIterator[bytes]",
-        "description": "Exports a Google Workspace file (Docs, Sheets, Slides, Drawings) to a specified format.\nCommon export formats:\n- application/pdf (all types)\n- text/plain (Docs)\n- text/csv (Sheets)\n- application/vnd.openxmlformats-officedocument.wordprocessingml.document (Docs to .docx)\n- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (Sheets to .xlsx)\n- application/vnd.openxmlformats-officedocument.presentationml.presentation (Slides to .pptx)\nNote: Export has a 10MB limit. For larger files, use the Drive UI.\n",
+        "description": "Exports a Google-NATIVE Workspace file (Docs, Sheets, Slides, Drawings --\nmimeType `application/vnd.google-apps.*`) to a specified format. Use this ONLY for\nthose native types: exporting a binary file (PDF, image, uploaded .docx/.xlsx) returns\n403 `fileNotExportable` -- for those use the `files` `download` action instead. If unsure\nof a file's type, check its `mimeType` with `files.get` first.\nCommon export formats:\n- application/pdf (all types)\n- text/plain (Docs)\n- text/csv (Sheets)\n- application/vnd.openxmlformats-officedocument.wordprocessingml.document (Docs to .docx)\n- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (Sheets to .xlsx)\n- application/vnd.openxmlformats-officedocument.presentationml.presentation (Slides to .pptx)\nNote: Export has a 10MB limit. For larger files, use the Drive UI.\n",
         "record_extractor": "$",
         "meta_extractor": null,
         "needs_envelope": null,
@@ -1827,5 +1827,75 @@
       }
     ]
   },
-  "search_schemas": {}
+  "search_schemas": {
+    "files": {
+      "entity": "files",
+      "data_type_name": "FilesSearchData",
+      "filter_type_name": "FilesSearchFilter",
+      "in_filter_type_name": "FilesInFilter",
+      "any_value_filter_type_name": "FilesAnyValueFilter",
+      "string_filter_type_name": "FilesStringFilter",
+      "sort_filter_type_name": "FilesSortFilter",
+      "result_type_name": "FilesSearchResult",
+      "query_type_name": "FilesSearchQuery",
+      "condition_prefix": "Files",
+      "condition_type_name": "FilesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Unique identifier of the file in Google Drive."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp of the last modification to the file."
+        },
+        {
+          "name": "file_name",
+          "python_name": "file_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Name of the file."
+        },
+        {
+          "name": "file_path",
+          "python_name": "file_path",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Full path of the file within the synced Drive folder."
+        },
+        {
+          "name": "mime_type",
+          "python_name": "mime_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "MIME type of the file."
+        },
+        {
+          "name": "content",
+          "python_name": "content",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Extracted text content of the file."
+        }
+      ]
+    }
+  }
 }

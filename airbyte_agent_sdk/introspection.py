@@ -79,6 +79,9 @@ WRITE_ACTION_FAILURE_GUIDANCE = (
 # into both paths so the overlapping knowledge stays in sync.
 EXECUTE_INSTRUCTIONS = (
     "HOW TO CALL THE EXECUTE TOOL:\n"
+    "PARAMETER NAMES ARE CASE-SENSITIVE: copy each `params` key EXACTLY as written in the action's "
+    "signature (this connector uses camelCase, e.g. `fileId`, `mimeType`). Do NOT snake_case them — "
+    "`file_id` is wrong and will fail with a missing-parameter error.\n"
     "RESPONSE STRUCTURE:\n"
     "  - list/api_search: {data: [...], meta: {has_more: bool}}\n"
     "  - get: Returns entity directly (no envelope)\n"
@@ -130,7 +133,13 @@ _SEMANTIC_SEARCH_GENERIC_GUIDANCE = (
     "  `dedup` controls entity deduplication: `max` (default) returns only the single best-scoring chunk per parent "
     "record (one hit per source entity); `none` disables that collapse so multiple chunks from the same record may "
     "appear, still ranked by similarity and capped by `limit`. Use `none` when you need more than one passage per "
-    "record, and raise `limit` if the top `limit` chunks are not enough."
+    "record, and raise `limit` if the top `limit` chunks are not enough.\n"
+    "  `prompt` is the only required input. `field` is optional — when the connector indexes a single semantic "
+    "field it is selected automatically, so pass it only to choose among multiple indexed fields. `fields` "
+    "(result projection), `limit`, and `context_size` are all optional too.\n"
+    "  `fields` narrows the returned hit to an allowlist -- use the entity field names shown above (NOT direct-API "
+    "names). If you will act on a hit afterward (e.g. download a file), keep the fields that call needs -- for file "
+    "entities that means `mime_type` and `file_name`, which tell you how to fetch the file."
 )
 
 
@@ -212,7 +221,7 @@ def build_semantic_search_note(
         )
 
     return (
-        "- context_store_search(semantic={field, prompt, filter?, context_size?, dedup?}, fields?, limit?)\n"
+        "- context_store_search(semantic={prompt, field?, filter?, context_size?, dedup?}, fields?, limit?)\n"
         f"  ALPHA — subject to change. Semantic (similarity) search over the '{field_name}' field of {entity_label}.\n"
         f"  Embeds `prompt` and returns relevance-ranked hits shaped as {{entity, metadata}}:{entity_clause} "
         f"`metadata` has the similarity `score`, the matched `context` text{attribution_clause}.\n"

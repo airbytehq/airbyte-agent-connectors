@@ -303,7 +303,7 @@ class SemanticSearchConfig(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
-    content_type: Literal["json", "html", "xhtml_storage", "adf", "markdown", "plaintext"] = Field(
+    content_type: Literal["json", "html", "xhtml_storage", "adf", "markdown", "plaintext", "document"] = Field(
         description="How to decode the raw field value before sampling.",
     )
     samples: list[SemanticSample]
@@ -648,10 +648,11 @@ class ReplicationConfig(BaseModel):
         alias="replication_config_key_mapping",
         description="Mapping from replication_config field names to source_config field names",
     )
-    replication_config_constants: dict[str, str | int | float | bool] = Field(
+    replication_config_constants: dict[str, str | int | float | bool | dict[str, Any]] = Field(
         default_factory=dict,
         alias="replication_config_constants",
-        description="System-set constant values injected into the Airbyte source config; never shown in the user-facing form",
+        description="System-set constant values injected into the Airbyte source config; never shown in the user-facing form. "
+        "Object values are injected as-is for nested config blocks (e.g. delivery_method).",
     )
 
     def resolved_constants(self) -> dict[str, Any]:
@@ -707,6 +708,11 @@ class CacheConfig(ExtensionAwareModel):
     """
 
     entities: list[CacheEntityConfig]
+    kind: Literal["DATA", "FILES"] = Field(
+        default="DATA",
+        description="Context-store kind. DATA (default) is the structured-records pipeline; "
+        "FILES routes replication through the raw-file-transfer destination.",
+    )
     disable_compaction: bool = Field(
         default=False,
         alias="disable_compaction",

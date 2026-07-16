@@ -1528,6 +1528,8 @@ class LocalExecutor:
         allowed_params: list[str],
         params: dict[str, Any],
         query_params_schema: dict[str, dict[str, Any]] | None = None,
+        *,
+        apply_schema_defaults: bool = False,
     ) -> dict[str, Any]:
         """Extract query parameters from params, applying config injection.
 
@@ -1535,6 +1537,10 @@ class LocalExecutor:
             allowed_params: List of allowed query parameter names
             params: All parameters
             query_params_schema: Schema for query params including config_inject
+            apply_schema_defaults: When True, fill in a param's OpenAPI ``default`` when the
+                caller omitted it (mirrors header-default behavior). Off by default to preserve
+                existing query behavior; the download handler enables it so semantically-required
+                constants like Google Drive's ``alt=media`` are always sent.
 
         Returns:
             Dictionary of query parameters
@@ -1558,6 +1564,8 @@ class LocalExecutor:
                                     result[param_name] = mapped
                             else:
                                 result[param_name] = source_value
+                    elif apply_schema_defaults and schema.get("default") is not None:
+                        result[param_name] = schema["default"]
         return result
 
     def _extract_body(self, allowed_fields: list[str], params: dict[str, Any]) -> dict[str, Any]:
@@ -2867,7 +2875,12 @@ class _DownloadOperationHandler:
                 # Common setup for both download modes
                 actual_path = operation.path_override.path if operation.path_override else operation.path
                 path = self.ctx.build_path(actual_path, params)
-                query_params = self.ctx.extract_query_params(operation.query_params, params, operation.query_params_schema)
+                # Apply schema defaults for downloads so semantically-required constants (e.g. Google
+                # Drive's alt=media) are sent even when the caller omits them; without alt=media Drive
+                # returns file metadata JSON instead of the file bytes.
+                query_params = self.ctx.extract_query_params(
+                    operation.query_params, params, operation.query_params_schema, apply_schema_defaults=True
+                )
 
                 # Serialize deepObject parameters to bracket notation
                 if operation.deep_object_params:
