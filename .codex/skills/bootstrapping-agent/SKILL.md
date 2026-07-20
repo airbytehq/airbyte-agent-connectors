@@ -1,6 +1,6 @@
 ---
 name: bootstrapping-agent
-description: Wires up an Airbyte connector for use in a PydanticAI or Claude SDK agent. Generates auth config, connector initialization, and tool_utils-decorated tool function. Use when adding a connector to an agent or setting up a new agent with a connector.
+description: Wires up an Airbyte connector for use in a PydanticAI or Claude SDK agent, or any other framework via agent_tool. Generates auth config, connector initialization, and tool_utils- or agent_tool-decorated tool functions. Use when adding a connector to an agent or setting up a new agent with a connector.
 ---
 
 # Bootstrapping an Agent with an Airbyte Connector
@@ -63,6 +63,26 @@ async def stripe_execute(...):
 `tool_utils` automatically translates retryable errors to the framework's retry signal (`ModelRetry` for pydantic-ai). The example above continues to work unchanged — translation happens inside `tool_utils` with no extra decorator needed.
 
 Reference demo: `connector-sdk/examples/demo_agent.py` (mocked, no credentials needed: `--mock`).
+
+## Unsupported Frameworks (agent_tool)
+
+For frameworks without a native `tool_utils` strategy (anything other than pydantic-ai, LangChain, OpenAI Agents, FastMCP), use `agent_tool` — the progressive-docs sibling of `tool_utils`. Decorate **three** functions; the role is inferred from each signature (`(entity, action, ...)` → execute, `(section, ...)` → docs, `()` → inspect; extra params allowed, ambiguous signatures must pass the role explicitly, e.g. `agent_tool("execute")`):
+
+```python
+@StripeConnector.agent_tool(inspect_tool="stripe_inspect", docs_tool="stripe_read_docs")
+async def stripe_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
+
+@StripeConnector.agent_tool()
+async def stripe_inspect():
+    return await connector.inspect_connector()
+
+@StripeConnector.agent_tool()
+async def stripe_read_docs(section: str | None = None):
+    return await connector.read_skill_docs(section)
+```
+
+Register all three with the target framework. The execute docstring steers the model through inspect → docs outline → docs section → execute instead of embedding the full entity/action reference. Failures raise `AirbyteToolError` (`from airbyte_agent_sdk import AirbyteToolError`) by default — no framework auto-detection; pass `framework="..."` to target a supported framework's retry signal instead. The optional `inspect_tool=`/`docs_tool=` kwargs put the exact registered sibling-tool names into the execute docstring; omit them for generic phrasing.
 
 ## Verify the Setup
 
