@@ -26,7 +26,9 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Literal
 
-FrameworkName = Literal["pydantic_ai", "langchain", "openai_agents", "mcp"]
+from ..errors import AirbyteToolError
+
+FrameworkName = Literal["pydantic_ai", "langchain", "openai_agents", "mcp", "none"]
 
 
 # ---------------------------------------------------------------------------
@@ -88,6 +90,8 @@ def _preexisting_signal_class(framework: FrameworkName) -> type[BaseException] |
         return _try_import_langchain_tool_exception()
     if framework == "mcp":
         return _try_import_mcp_tool_error()
+    if framework == "none":
+        return AirbyteToolError
     # openai_agents has no pre-existing signal — it's catch-and-return-string.
     return None
 
@@ -107,7 +111,7 @@ def _format_message(error: Exception) -> str:
 
 def _missing_framework_runtime_error(framework: FrameworkName, module_name: str) -> RuntimeError:
     return RuntimeError(
-        f"framework={framework!r} requested but {module_name} is not installed; " f"choose from: pydantic_ai, langchain, openai_agents, mcp"
+        f"framework={framework!r} requested but {module_name} is not installed; " f"choose from: pydantic_ai, langchain, openai_agents, mcp, none"
     )
 
 
@@ -158,11 +162,20 @@ def _mcp_translate(error: Exception, message: str | None = None) -> _Translation
     return _Raise(ToolError(formatted))
 
 
+def _none_translate(error: Exception, message: str | None = None) -> _TranslationSignal:
+    # Framework-neutral strategy: no framework import, no probe. Failures
+    # surface as the SDK's own AirbyteToolError so callers on unsupported
+    # frameworks (or raw API loops) get a deterministic, catchable signal.
+    formatted = message if message is not None else _format_message(error)
+    return _Raise(AirbyteToolError(formatted))
+
+
 _STRATEGIES: dict[FrameworkName, Callable[..., _TranslationSignal]] = {
     "pydantic_ai": _pydantic_ai_translate,
     "langchain": _langchain_translate,
     "openai_agents": _openai_agents_translate,
     "mcp": _mcp_translate,
+    "none": _none_translate,
 }
 
 

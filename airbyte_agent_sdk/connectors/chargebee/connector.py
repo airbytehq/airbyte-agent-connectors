@@ -15,6 +15,7 @@ from pydantic import BaseModel
 
 from .connector_model import ChargebeeConnectorModel
 from airbyte_agent_sdk.introspection import describe_entities, generate_tool_description
+from airbyte_agent_sdk.tools import UNSET, AgentToolRole, SkillDocsAccessor, Unset, build_agent_tool_decorator
 from airbyte_agent_sdk.translation import DEFAULT_MAX_OUTPUT_CHARS, FrameworkName, translate_exceptions
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
@@ -136,7 +137,7 @@ class ChargebeeConnector:
 
     connector_name = "chargebee"
     connector_version = "1.0.2"
-    sdk_version = "0.1.287"
+    sdk_version = "0.1.288"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -805,6 +806,131 @@ class ChargebeeConnector:
         if func is not None:
             return decorate(func)
         return decorate
+
+    @classmethod
+    def agent_tool(
+        cls,
+        role: AgentToolRole | None = None,
+        *,
+        inspect_tool: str | None = None,
+        docs_tool: str | None = None,
+        max_output_chars: int | None | Unset = UNSET,
+        framework: FrameworkName = "none",
+        internal_retries: int = 0,
+        should_internal_retry: Callable[[Exception, tuple[Any, ...], dict[str, Any]], bool] | None = None,
+        exhausted_runtime_failure_message: Callable[[Exception, tuple[Any, ...], dict[str, Any]], str | None] | None = None,
+    ) -> Callable[[_F], _F]:
+        """
+        Framework-agnostic decorator for user-written connector tool functions.
+
+        The progressive-docs sibling of tool_utils: instead of baking the full
+        entity/action reference into the docstring, it instructs the agent to
+        call this connector's inspect and docs tools before executing. Tool
+        failures raise :class:`airbyte_agent_sdk.AirbyteToolError` by default
+        (``framework="none"``, no auto-detection) — pass ``framework=...`` to
+        translate to a supported framework's signal instead.
+
+        Decorate three functions per connector — execute, inspect and docs.
+        The role is inferred from each function's signature (extra parameters
+        are allowed); a signature matching more than one role, a generic
+        ``(*args, **kwargs)`` wrapper, or a callable whose signature cannot
+        be read must pass the role explicitly:
+
+        - ``(entity, action, ...)`` -> ``"execute"``
+        - ``(section, ...)``        -> ``"read_skill_docs"``
+        - ``()``                    -> ``"inspect_connector"``
+
+        Usage:
+            connector = ChargebeeConnector(...)
+
+            @ChargebeeConnector.agent_tool()
+            async def execute(entity: str, action: str, params: dict | None = None):
+                return await connector.execute(entity=entity, action=action, params=params or {})
+
+            @ChargebeeConnector.agent_tool()
+            async def inspect_connector():
+                return await connector.inspect_connector()
+
+            @ChargebeeConnector.agent_tool()
+            async def read_skill_docs(section: str | None = None):
+                return await connector.read_skill_docs(section)
+
+        Args:
+            role: ``"execute" | "inspect_connector" | "read_skill_docs"``.
+                None (default) infers the role from the decorated function's
+                signature; an explicit role validates the canonical
+                parameters are present (functions accepting ``**kwargs``, or
+                callables whose signature cannot be read, pass validation).
+            inspect_tool: Exact registered name of the sibling inspect tool,
+                woven into the execute docstring for tighter steering.
+                Defaults to generic phrasing.
+            docs_tool: Exact registered name of the sibling docs tool (see
+                inspect_tool).
+            max_output_chars: Max serialized output size before failing.
+                Defaults per role: execute -> DEFAULT_MAX_OUTPUT_CHARS, docs
+                tools -> None.
+            framework: Translation target for tool failures. Defaults to
+                ``"none"`` (raise AirbyteToolError); never auto-detects.
+            internal_retries: How many transient runtime failures (429/5xx,
+                network, timeout) to retry silently before surfacing.
+                Forwarded to
+                :func:`airbyte_agent_sdk.translation.translate_exceptions`.
+            should_internal_retry: Optional predicate ``(error, args, kwargs)
+                -> bool`` further restricting which retryable errors are safe
+                for this specific tool. Forwarded to
+                :func:`airbyte_agent_sdk.translation.translate_exceptions`.
+            exhausted_runtime_failure_message: Optional callback ``(error,
+                args, kwargs) -> str | None`` invoked after internal retries
+                are exhausted or skipped. Forwarded to
+                :func:`airbyte_agent_sdk.translation.translate_exceptions`.
+        """
+        return build_agent_tool_decorator(  # type: ignore[return-value]
+            ChargebeeConnectorModel,
+            role=role,
+            inspect_tool=inspect_tool,
+            docs_tool=docs_tool,
+            max_output_chars=max_output_chars,
+            framework=framework,
+            internal_retries=internal_retries,
+            should_internal_retry=should_internal_retry,
+            exhausted_runtime_failure_message=exhausted_runtime_failure_message,
+        )
+
+    def _skill_docs(self) -> SkillDocsAccessor:
+        accessor: SkillDocsAccessor | None = getattr(self, "_skill_docs_accessor", None)
+        if accessor is None:
+            accessor = SkillDocsAccessor(self)
+            self._skill_docs_accessor = accessor
+        return accessor
+
+    async def inspect_connector(self) -> dict[str, Any]:
+        """
+        Inspect this connector's hosted metadata/readiness and resolve its docs skill id.
+
+        Call this before read_skill_docs in the normal hosted flow. For
+        local/offline connectors this returns a local-mode payload with a
+        warning instead of a hosted inspection.
+
+        Example:
+            info = await connector.inspect_connector()
+            print(info["docs_skill_id"])
+        """
+        return await self._skill_docs().inspect()
+
+    async def read_skill_docs(self, section: str | None = None) -> str:
+        """
+        Read this connector's usage docs, rendered to text.
+
+        Omit section for the outline and general guidance; pass an exact
+        section id from the outline for full details. For local/offline
+        connectors the full generated docs are returned and section is
+        ignored.
+
+        Example:
+            outline = await connector.read_skill_docs()
+            details = await connector.read_skill_docs(section="entity:contacts")
+        """
+        return await self._skill_docs().read(section)
 
     def list_entities(self) -> list[dict[str, Any]]:
         """

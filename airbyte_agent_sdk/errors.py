@@ -27,6 +27,8 @@ class AirbyteError(Exception):
     * ``ExecutorError`` and subclasses (``EntityNotFoundError``,
       ``ActionNotSupportedError``, ``MissingParameterError``,
       ``InvalidParameterError``) raised by the local executor.
+    * ``AirbyteToolError`` raised by the framework-neutral
+      (``framework="none"``) tool-error translation strategy.
 
     Not caught by ``AirbyteError``:
 
@@ -42,6 +44,16 @@ class AirbyteError(Exception):
     If you use the hosted path or a generated typed connector, catch
     ``AirbyteError`` together with ``httpx.HTTPError`` (and optionally
     ``RuntimeError``) to cover the full failure surface.
+    """
+
+
+class AirbyteToolError(AirbyteError):
+    """Tool failure surfaced by the framework-neutral translation strategy.
+
+    Raised by ``translate_exceptions(framework="none")`` (and decorators
+    composing it) in place of a framework-specific retry signal. The message
+    carries the formatted underlying failure; ``__cause__`` preserves the
+    original exception.
     """
 
 

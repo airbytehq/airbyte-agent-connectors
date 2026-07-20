@@ -21,7 +21,8 @@ Full documentation is available at [docs.airbyte.com/ai-agents/about/](https://d
 The SDK ships a hosted tool builder and two decorators for turning connector calls into LLM tools with retry-aware exception translation, output-size guards, and framework-specific error signalling.
 
 - **`build_connector_tools(connector, framework="...")`** — preferred for hosted connector agents. Returns `inspect_connector`, `read_skill_docs`, and `execute` callables bound to one connector. Hosted connectors, or local connectors passed an explicit `docs_provider`, use outline-only guidance and tell the agent to inspect/read docs before execution; local/offline connectors without a docs provider keep generated YAML-derived rich docs. Pass `use_progressive_docs=False` to make `tools.as_list()` expose only `execute` with the legacy rich description.
-- **`@<Connector>.tool_utils`** — preferred for typed connectors. Auto-detects the installed framework (pydantic-ai, LangChain, OpenAI Agents, or FastMCP) and composes [`translate_exceptions`](https://airbytehq.github.io/airbyte-embedded/airbyte_agent_sdk/translation.html) under the hood. Pass `framework="..."` to override auto-detection. Forwards `update_docstring`, `max_output_chars`, `framework`, `internal_retries`, `should_internal_retry`, and `exhausted_runtime_failure_message`.
+- **`@<Connector>.agent_tool(...)`** — preferred when you write your own tool functions, especially on frameworks the SDK does not natively support. The progressive-docs sibling of `tool_utils`: decorate three functions (execute, inspect, docs) and the execute docstring steers the agent through the inspect → docs → execute flow instead of embedding the full entity/action reference. Tool failures raise `AirbyteToolError` by default (`framework="none"`, no auto-detection); pass `framework="..."` to target a supported framework's signal.
+- **`@<Connector>.tool_utils`** — preferred for typed connectors on supported frameworks. Auto-detects the installed framework (pydantic-ai, LangChain, OpenAI Agents, or FastMCP; falls back to `framework="none"` with a warning when none is installed) and composes [`translate_exceptions`](https://airbytehq.github.io/airbyte-embedded/airbyte_agent_sdk/translation.html) under the hood. Pass `framework="..."` to override auto-detection. Forwards `update_docstring`, `max_output_chars`, `framework`, `internal_retries`, `should_internal_retry`, and `exhausted_runtime_failure_message`.
 - **`@translate_exceptions`** — same translation behaviour for any callable that is not a generated `Connector` (custom helpers, eval harnesses, ad-hoc tools).
 
 The builder and decorators preserve async callables, `__name__`, and `__doc__`. Transient runtime failures (429/5xx, network, timeout) can be retried silently via `internal_retries=N`. Output exceeding `max_output_chars` (default 100 KB) is converted to the framework's retry signal so the LLM can narrow the query.
@@ -56,6 +57,44 @@ To opt out of the progressive inspect/docs flow:
 tools = build_connector_tools(stripe, framework="pydantic_ai", use_progressive_docs=False)
 agent = Agent("openai:gpt-4o", tools=tools.as_list())  # exposes execute only
 ```
+
+### Unsupported frameworks — `agent_tool`
+
+For frameworks without a native strategy (or any harness that consumes plain
+callables), write the three tool functions yourself and decorate each with
+`agent_tool`. The role is inferred from the signature — `(entity, action, ...)`
+is execute, `(section, ...)` is docs, `()` is inspect — or pass it explicitly
+(`agent_tool("execute")`). Extra parameters are allowed.
+
+```python
+from airbyte_agent_sdk import AirbyteToolError
+from airbyte_agent_sdk.connectors.stripe import StripeConnector
+from airbyte_agent_sdk.types import AirbyteAuthConfig
+
+stripe = StripeConnector(auth_config=AirbyteAuthConfig(...))
+
+@StripeConnector.agent_tool(inspect_tool="stripe_inspect", docs_tool="stripe_read_docs")
+async def stripe_execute(entity: str, action: str, params: dict | None = None):
+    result = await stripe.execute(entity, action, params or {})
+    return result.data if hasattr(result, "data") else result
+
+@StripeConnector.agent_tool()
+async def stripe_inspect():
+    return await stripe.inspect_connector()
+
+@StripeConnector.agent_tool()
+async def stripe_read_docs(section: str | None = None):
+    return await stripe.read_skill_docs(section)
+
+# Register the three callables with your framework of choice. Failures raise
+# AirbyteToolError — catch it in your tool-dispatch loop and feed the message
+# back to the model.
+```
+
+The optional `inspect_tool=`/`docs_tool=` kwargs weave the exact registered
+sibling-tool names into the execute docstring for tighter steering; omitting
+them uses generic phrasing. On a supported framework, pass `framework="..."`
+to raise that framework's retry signal instead of `AirbyteToolError`.
 
 ### pydantic-ai
 

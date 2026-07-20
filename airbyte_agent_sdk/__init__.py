@@ -118,7 +118,7 @@ from __future__ import annotations
 from .config import configure
 from .connect import connect
 from .constants import SDK_VERSION
-from .errors import AirbyteError, ConnectorAmbiguityError, ConnectorNotFoundError, UnknownConnectorError
+from .errors import AirbyteError, AirbyteToolError, ConnectorAmbiguityError, ConnectorNotFoundError, UnknownConnectorError
 from .executor import (
     ActionNotSupportedError,
     DownloadChunkResult,
@@ -141,7 +141,7 @@ from .http.exceptions import (
     TimeoutError,
 )
 from .registry import list_connectors
-from .tools import ConnectorDocsProvider, ConnectorTools, build_connector_tools
+from .tools import ConnectorDocsProvider, ConnectorTools, SkillDocsAccessor, build_connector_tools
 from .translation import DEFAULT_MAX_OUTPUT_CHARS, translate_exceptions
 from .types import AirbyteAuthConfig
 from .utils import save_download
@@ -167,6 +167,7 @@ __all__ = [
     "AirbyteAuthConfig",
     # Executor exceptions
     "AirbyteError",
+    "AirbyteToolError",
     "ExecutorError",
     "EntityNotFoundError",
     "ActionNotSupportedError",
@@ -189,6 +190,7 @@ __all__ = [
     "configure",
     "ConnectorDocsProvider",
     "ConnectorTools",
+    "SkillDocsAccessor",
     "build_connector_tools",
     # Tool exception translation
     "translate_exceptions",

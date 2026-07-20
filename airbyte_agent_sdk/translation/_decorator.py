@@ -72,7 +72,9 @@ def _reset_cached_logfire_for_tests() -> None:
 def _detect_framework() -> FrameworkName:
     """Return the first installed framework in `_AUTO_DETECT_ORDER`.
 
-    Caches the result on a module-level singleton; tests use
+    Falls back to the framework-neutral `"none"` strategy (failures raise
+    `AirbyteToolError`) when no supported framework is installed. Caches the
+    result on a module-level singleton; tests use
     `_reset_cached_framework_for_tests()` to clear between cases.
     """
     global _CACHED_FRAMEWORK
@@ -89,11 +91,16 @@ def _detect_framework() -> FrameworkName:
         _CACHED_FRAMEWORK = framework_name
         return framework_name
 
-    raise RuntimeError(
-        "translate_exceptions could not auto-detect an installed framework. "
-        "Pass framework='pydantic_ai' | 'langchain' | 'openai_agents' | 'mcp' explicitly, "
-        "or install one of: pydantic_ai, langchain_core, agents (openai-agents), mcp."
+    # Warn rather than stay silent: for a user who *expects* a framework, this
+    # fallback would otherwise mask a broken install as changed error behavior.
+    logger.warning(
+        "translate_exceptions could not auto-detect an installed framework "
+        "(tried: pydantic_ai, langchain_core, agents, mcp); falling back to "
+        "framework='none' — tool failures will raise AirbyteToolError. "
+        "Pass framework=... explicitly to silence this warning."
     )
+    _CACHED_FRAMEWORK = "none"
+    return "none"
 
 
 def _emit_retry_telemetry(*, tool_name: str, attempt: int, max_attempts: int, error_type: str) -> None:
@@ -135,7 +142,7 @@ def _emit_retry_telemetry(*, tool_name: str, attempt: int, max_attempts: int, er
 def _resolve_strategy(framework: FrameworkName | None) -> tuple[FrameworkName, Callable[..., _TranslationSignal]]:
     resolved: FrameworkName = framework if framework is not None else _detect_framework()
     if resolved not in _STRATEGIES:
-        raise ValueError(f"Unknown framework={resolved!r}; choose from: pydantic_ai, langchain, openai_agents, mcp")
+        raise ValueError(f"Unknown framework={resolved!r}; choose from: pydantic_ai, langchain, openai_agents, mcp, none")
     return resolved, _STRATEGIES[resolved]
 
 
@@ -178,8 +185,10 @@ def translate_exceptions(
         func: The function to wrap (when used without arguments, e.g.
             `@translate_exceptions`).
         framework: One of `"pydantic_ai" | "langchain" | "openai_agents" |
-            "mcp"`. Defaults to None → auto-detect by attempting each
-            framework's canonical import in order. Explicit always wins.
+            "mcp" | "none"`. Defaults to None → auto-detect by attempting each
+            framework's canonical import in order, falling back to `"none"`
+            (failures raise `AirbyteToolError`) when nothing is installed.
+            Explicit always wins.
         max_output_chars: Maximum serialized output size (`json.dumps`,
             `default=str`). Excess raises the framework's signal asking the
             LLM to narrow the query. Set to `None` or `0` to disable.

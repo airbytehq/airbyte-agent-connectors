@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import inspect
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -23,13 +24,28 @@ ToolCallable = Callable[..., Awaitable[Any]]
 
 _LOCAL_DOCS_SKILL_ID = "local-connector-docs"
 
-_PROGRESSIVE_EXECUTE_DESCRIPTION_PREFIX = [
-    "Execute a connector operation.",
-    "Before your first execute call, call inspect_connector(), then read_skill_docs(), then "
-    "read_skill_docs(section=<exact section id>) for the entity/action you plan to execute.",
-    "Do not guess entity, action, or parameter names. Exact names, params, fields, relationships, and examples live in read_skill_docs.",
-    "Use entity and action names exactly as documented by the schema and docs.",
-]
+
+def _progressive_execute_prefix(inspect_ref: str, docs_ref: str, section_ref: str, docs_home: str) -> list[str]:
+    return [
+        "Execute a connector operation.",
+        f"Before your first execute call, call {inspect_ref}, then {docs_ref}, then {section_ref} for the entity/action you plan to execute.",
+        f"Do not guess entity, action, or parameter names. Exact names, params, fields, relationships, and examples live in {docs_home}.",
+        "Use entity and action names exactly as documented by the schema and docs.",
+    ]
+
+
+def _progressive_size_guidance(supports_field_shaping: bool) -> str:
+    if supports_field_shaping:
+        return "For collection responses, keep outputs small with select_fields or exclude_fields, filters, and small limits."
+    return "For collection responses, keep outputs small with filters and small limits."
+
+
+_PROGRESSIVE_EXECUTE_DESCRIPTION_PREFIX = _progressive_execute_prefix(
+    "inspect_connector()",
+    "read_skill_docs()",
+    "read_skill_docs(section=<exact section id>)",
+    "read_skill_docs",
+)
 _PROGRESSIVE_EXECUTE_DESCRIPTION_SUFFIX = [
     "If output is too large, refine the query instead of repeating the same broad call.",
     WRITE_ACTION_FAILURE_GUIDANCE,
@@ -45,6 +61,71 @@ class ConnectorDocsProvider(Protocol):
     async def inspect_connector(self) -> dict[str, Any]: ...
 
     async def read_skill_docs(self, id: str, section: str | None = None) -> dict[str, Any]: ...
+
+
+class SkillDocsAccessor:
+    """Stateful access to one connector's skill docs.
+
+    Owns the ``docs_skill_id`` cache: populated after the first successful
+    :meth:`inspect`, re-inspected only when missing, never populated on
+    failure. Cache lifetime is the accessor instance — `build_connector_tools`
+    shares one across its tool closures; generated typed connectors hold one
+    per connector instance.
+    """
+
+    def __init__(self, connector: Any, *, docs_provider: ConnectorDocsProvider | None = None) -> None:
+        self._connector = connector
+        self._provider: ConnectorDocsProvider | None = docs_provider if docs_provider is not None else _hosted_executor_for(connector)
+        self._docs_skill_id: str | None = None
+        self._inspect_lock = asyncio.Lock()
+
+    @property
+    def provider(self) -> ConnectorDocsProvider | None:
+        return self._provider
+
+    async def inspect(self) -> dict[str, Any]:
+        """Inspect the connector's hosted metadata and resolve its docs skill id.
+
+        Local/offline connectors (no docs provider) get a local-mode payload
+        with a warning instead of a hosted inspection.
+        """
+        if self._provider is None:
+            self._docs_skill_id = _LOCAL_DOCS_SKILL_ID
+            model = _connector_model_for(self._connector)
+            return {
+                "mode": "local",
+                "docs_skill_id": self._docs_skill_id,
+                "name": getattr(model, "name", None),
+                "warnings": ["Hosted connector inspection is unavailable for local/offline connectors."],
+            }
+        result = await self._provider.inspect_connector()
+        raw_docs_skill_id = result.get("docs_skill_id")
+        if not isinstance(raw_docs_skill_id, str) or not raw_docs_skill_id:
+            raise ValueError("inspect_connector response did not include docs_skill_id.")
+        self._docs_skill_id = raw_docs_skill_id
+        return result
+
+    async def read(self, section: str | None = None) -> str:
+        """Read the connector's usage docs, rendered to text.
+
+        Omit ``section`` for the outline and general guidance; pass an exact
+        section id for full details. Local/offline connectors return the full
+        generated docs and ignore ``section``.
+        """
+        if self._provider is None:
+            docs_text = _legacy_execute_description(self._connector)
+            if section is None:
+                return docs_text
+            return f"Section-specific docs are unavailable for local/offline connectors; full generated docs follow.\n{docs_text}"
+        if self._docs_skill_id is None:
+            # Concurrent first reads share one inspect round trip.
+            async with self._inspect_lock:
+                if self._docs_skill_id is None:
+                    await self.inspect()
+        if self._docs_skill_id is None:
+            raise ValueError("Connector docs_skill_id could not be resolved.")
+        docs = await self._provider.read_skill_docs(id=self._docs_skill_id, section=section)
+        return render_skill_docs(docs)
 
 
 @dataclass(frozen=True)
@@ -97,10 +178,9 @@ def _execute_description(connector: Any, *, use_progressive_docs: bool, docs_pro
 
 
 def _progressive_execute_description_base(connector: Any) -> str:
-    if _supports_response_shaping_kwarg(connector, "select_fields") or _supports_response_shaping_kwarg(connector, "exclude_fields"):
-        size_guidance = "For collection responses, keep outputs small with select_fields or exclude_fields, filters, and small limits."
-    else:
-        size_guidance = "For collection responses, keep outputs small with filters and small limits."
+    size_guidance = _progressive_size_guidance(
+        _supports_response_shaping_kwarg(connector, "select_fields") or _supports_response_shaping_kwarg(connector, "exclude_fields")
+    )
     return "\n".join([*_PROGRESSIVE_EXECUTE_DESCRIPTION_PREFIX, size_guidance, *_PROGRESSIVE_EXECUTE_DESCRIPTION_SUFFIX])
 
 
@@ -142,7 +222,10 @@ def _endpoint_for_action(entity: Any, action: Any) -> Any | None:
 
 
 def _entity_action_signatures(connector: Any) -> str:
-    model = _connector_model_for(connector)
+    return _entity_action_signatures_for_model(_connector_model_for(connector))
+
+
+def _entity_action_signatures_for_model(model: Any) -> str:
     entities = getattr(model, "entities", []) if model is not None else []
     lines: list[str] = []
     for entity in entities:
@@ -250,40 +333,14 @@ def build_connector_tools(
     connectors keep the generated YAML-derived rich docs as their fallback.
     """
     hosted_executor = _hosted_executor_for(connector)
-    active_docs_provider = docs_provider or hosted_executor
-    docs_skill_id: str | None = None
+    accessor = SkillDocsAccessor(connector, docs_provider=docs_provider)
+    active_docs_provider = accessor.provider
 
     async def inspect_connector() -> dict[str, Any]:
-        nonlocal docs_skill_id
-        if active_docs_provider is None:
-            docs_skill_id = _LOCAL_DOCS_SKILL_ID
-            model = _connector_model_for(connector)
-            return {
-                "mode": "local",
-                "docs_skill_id": docs_skill_id,
-                "name": getattr(model, "name", None),
-                "warnings": ["Hosted connector inspection is unavailable for local/offline connectors."],
-            }
-        result = await active_docs_provider.inspect_connector()
-        raw_docs_skill_id = result.get("docs_skill_id")
-        if not isinstance(raw_docs_skill_id, str) or not raw_docs_skill_id:
-            raise ValueError("inspect_connector response did not include docs_skill_id.")
-        docs_skill_id = raw_docs_skill_id
-        return result
+        return await accessor.inspect()
 
     async def read_skill_docs(section: str | None = None) -> str:
-        nonlocal docs_skill_id
-        if active_docs_provider is None:
-            docs_text = _legacy_execute_description(connector)
-            if section is None:
-                return docs_text
-            return f"Section-specific docs are unavailable for local/offline connectors; full generated docs follow.\n{docs_text}"
-        if docs_skill_id is None:
-            await inspect_connector()
-        if docs_skill_id is None:
-            raise ValueError("Connector docs_skill_id could not be resolved.")
-        docs = await active_docs_provider.read_skill_docs(id=docs_skill_id, section=section)
-        return render_skill_docs(docs)
+        return await accessor.read(section)
 
     async def execute(
         entity: str,
@@ -360,3 +417,186 @@ def build_connector_tools(
         execute=cast(ToolCallable, execute_wrap(execute)),
         use_progressive_docs=use_progressive_docs,
     )
+
+
+# ---------------------------------------------------------------------------
+# agent_tool — framework-agnostic decorator for user-written tool functions
+# ---------------------------------------------------------------------------
+
+AgentToolRole = Literal["execute", "inspect_connector", "read_skill_docs"]
+
+_AGENT_TOOL_CANONICAL_PARAMS: dict[AgentToolRole, frozenset[str]] = {
+    "execute": frozenset({"entity", "action"}),
+    "read_skill_docs": frozenset({"section"}),
+    "inspect_connector": frozenset(),
+}
+
+_AGENT_TOOL_INSPECT_DESCRIPTION = (
+    "Inspect this connector's hosted metadata/readiness and resolve its docs skill id. "
+    "Call this before reading the connector docs in the normal hosted flow. "
+    "For local/offline connectors this returns a local-mode payload with a warning."
+)
+
+_AGENT_TOOL_DOCS_DESCRIPTION = (
+    "Read this connector's usage docs. Omit section for the outline and general guidance; "
+    "pass an exact section id from the outline for full details before executing. "
+    "For local/offline connectors the full generated docs are returned and section is ignored."
+)
+
+
+class Unset:
+    """Sentinel type marking 'argument not provided' (distinct from None)."""
+
+    def __repr__(self) -> str:
+        return "UNSET"
+
+
+UNSET = Unset()
+
+
+@dataclass(frozen=True)
+class _AgentToolSignatureInfo:
+    """Named (non-self/cls) parameters and whether *args/**kwargs are accepted."""
+
+    param_names: frozenset[str]
+    has_var_params: bool
+
+
+def _agent_tool_signature_info(func: Callable[..., Any]) -> _AgentToolSignatureInfo | None:
+    """Read the decorated function's signature; None when it cannot be read."""
+    try:
+        signature = inspect.signature(func)
+    except (TypeError, ValueError):
+        return None
+    names: set[str] = set()
+    has_var_params = False
+    for name, parameter in signature.parameters.items():
+        if name in ("self", "cls"):
+            continue
+        if parameter.kind in (inspect.Parameter.VAR_KEYWORD, inspect.Parameter.VAR_POSITIONAL):
+            has_var_params = True
+            continue
+        names.add(name)
+    return _AgentToolSignatureInfo(param_names=frozenset(names), has_var_params=has_var_params)
+
+
+def _infer_agent_tool_role(func: Callable[..., Any], info: _AgentToolSignatureInfo | None) -> AgentToolRole:
+    if info is None:
+        raise ValueError(
+            f"agent_tool could not read the signature of {getattr(func, '__name__', func)!r}; "
+            "pass the role explicitly, e.g. agent_tool('execute')."
+        )
+    names = info.param_names
+    matches: list[AgentToolRole] = []
+    if _AGENT_TOOL_CANONICAL_PARAMS["execute"] <= names:
+        matches.append("execute")
+    if "section" in names:
+        matches.append("read_skill_docs")
+    if not names and not info.has_var_params:
+        matches.append("inspect_connector")
+    if len(matches) != 1:
+        detail = "matches more than one role" if matches else "matches no role"
+        raise ValueError(
+            f"agent_tool could not infer the tool role from {func.__name__}'s signature ({detail}): "
+            "expected (entity, action, ...) for execute, (section, ...) for read_skill_docs, "
+            "or no parameters for inspect_connector. Pass the role explicitly, e.g. agent_tool('execute')."
+        )
+    return matches[0]
+
+
+def _validate_agent_tool_role(func: Callable[..., Any], role: AgentToolRole, info: _AgentToolSignatureInfo | None) -> None:
+    if info is None or info.has_var_params:
+        # Explicit role is the escape hatch: trust the caller when the
+        # signature cannot be read, and let *args/**kwargs stand in for
+        # the canonical parameters.
+        return
+    missing = _AGENT_TOOL_CANONICAL_PARAMS[role] - info.param_names
+    if missing:
+        formatted = ", ".join(sorted(missing))
+        raise ValueError(f"agent_tool role {role!r} requires parameter(s) {formatted} on {func.__name__}; extra parameters are allowed.")
+
+
+def _agent_tool_execute_description(model: Any, info: _AgentToolSignatureInfo | None, *, inspect_tool: str | None, docs_tool: str | None) -> str:
+    inspect_ref = f"{inspect_tool}()" if inspect_tool else "this connector's inspect tool"
+    docs_ref = f"{docs_tool}()" if docs_tool else "this connector's docs tool"
+    section_ref = f"{docs_tool}(section=<exact section id>)" if docs_tool else "the docs tool with section=<exact section id>"
+    docs_home = docs_tool if docs_tool else "the docs tool"
+    supports_field_shaping = info is not None and bool(info.param_names & {"select_fields", "exclude_fields"})
+    lines = [
+        *_progressive_execute_prefix(inspect_ref, docs_ref, section_ref, docs_home),
+        _progressive_size_guidance(supports_field_shaping),
+        *_PROGRESSIVE_EXECUTE_DESCRIPTION_SUFFIX,
+    ]
+    description = "\n".join(lines)
+    signatures = _entity_action_signatures_for_model(model)
+    if signatures:
+        return f"{description}\nValid entity/action signatures:\n{signatures}"
+    return description
+
+
+def build_agent_tool_decorator(
+    model: Any,
+    *,
+    role: AgentToolRole | None = None,
+    inspect_tool: str | None = None,
+    docs_tool: str | None = None,
+    max_output_chars: int | None | Unset = UNSET,
+    framework: FrameworkName = "none",
+    internal_retries: int = 0,
+    should_internal_retry: Callable[[Exception, tuple[Any, ...], dict[str, Any]], bool] | None = None,
+    exhausted_runtime_failure_message: Callable[[Exception, tuple[Any, ...], dict[str, Any]], str | None] | None = None,
+) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    """Build the `agent_tool` decorator bound to one connector model.
+
+    Backs the generated ``@<Connector>.agent_tool(...)`` classmethod, which
+    documents the user-facing contract. Always uses progressive skill docs:
+    the execute docstring points the agent at the connector's inspect and
+    docs tools instead of embedding the full entity/action reference.
+    """
+    if callable(role):
+        raise TypeError(
+            "agent_tool requires parentheses: use @Connector.agent_tool() or @Connector.agent_tool('execute'), not @Connector.agent_tool."
+        )
+    if role is not None and role not in _AGENT_TOOL_CANONICAL_PARAMS:
+        raise ValueError(f"Unknown agent_tool role {role!r}; choose from: execute, inspect_connector, read_skill_docs.")
+
+    def decorate(func: Callable[..., Any]) -> Callable[..., Any]:
+        info = _agent_tool_signature_info(func)
+        if role is None:
+            resolved_role = _infer_agent_tool_role(func, info)
+        else:
+            _validate_agent_tool_role(func, role, info)
+            resolved_role = role
+
+        if resolved_role != "execute" and (inspect_tool is not None or docs_tool is not None):
+            raise ValueError(
+                f"agent_tool arguments inspect_tool/docs_tool only apply to the execute role, "
+                f"but {getattr(func, '__name__', func)!r} resolved to role {resolved_role!r}."
+            )
+
+        if resolved_role == "execute":
+            description = _agent_tool_execute_description(model, info, inspect_tool=inspect_tool, docs_tool=docs_tool)
+            role_default_output_chars: int | None = DEFAULT_MAX_OUTPUT_CHARS
+        elif resolved_role == "read_skill_docs":
+            description = _AGENT_TOOL_DOCS_DESCRIPTION
+            role_default_output_chars = None
+        else:
+            description = _AGENT_TOOL_INSPECT_DESCRIPTION
+            role_default_output_chars = None
+
+        resolved_output_chars = role_default_output_chars if isinstance(max_output_chars, Unset) else max_output_chars
+
+        original_doc = (func.__doc__ or "").strip()
+        full_doc = f"{original_doc}\n{description}" if original_doc else description
+
+        wrapped = translate_exceptions(
+            framework=framework,
+            max_output_chars=resolved_output_chars,
+            internal_retries=internal_retries,
+            should_internal_retry=should_internal_retry,
+            exhausted_runtime_failure_message=exhausted_runtime_failure_message,
+        )(func)
+        wrapped.__doc__ = full_doc
+        return wrapped
+
+    return decorate
