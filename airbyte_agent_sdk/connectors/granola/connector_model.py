@@ -24,6 +24,12 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     CacheFieldProperty,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -659,6 +665,40 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
                         name='summary_markdown',
                         type=['null', 'string'],
                         description='Markdown formatted summary of the note.',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='markdown',
+                            samples=[
+                                SemanticSample(
+                                    name='summary_paragraph',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='regex',
+                                        unit_label='summary_paragraph',
+                                        split_pattern='\\n\\s*\\n',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='title',
+                                    path='/title',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='attendees',
@@ -742,6 +782,41 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
                                 type=['null', 'string'],
                             ),
                         },
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='json',
+                            samples=[
+                                SemanticSample(
+                                    name='transcript_segment',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='element',
+                                        unit_label='transcript_segment',
+                                        sample_path='[]',
+                                        text_path='text',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='title',
+                                    path='/title',
+                                ),
+                            ],
+                        ),
                     ),
                 ],
             ),
@@ -785,6 +860,79 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
             'transcript[].start_time',
             'transcript[].end_time',
         ],
+    },
+    semantic_search_fields={
+        'notes': {
+            'summary_markdown': SemanticSearchConfig(
+                content_type='markdown',
+                samples=[
+                    SemanticSample(
+                        name='summary_paragraph',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='regex',
+                            unit_label='summary_paragraph',
+                            split_pattern='\\n\\s*\\n',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='title',
+                        path='/title',
+                    ),
+                ],
+            ),
+            'transcript': SemanticSearchConfig(
+                content_type='json',
+                samples=[
+                    SemanticSample(
+                        name='transcript_segment',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='element',
+                            unit_label='transcript_segment',
+                            sample_path='[]',
+                            text_path='text',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='title',
+                        path='/title',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[

@@ -84,6 +84,18 @@ info:
               - 'null'
               - string
             description: Markdown formatted summary of the note.
+            x-airbyte-semantic-search:
+              content_type: markdown
+              samples:
+                - name: summary_paragraph
+                  windowed: true
+                  sampling: { sample_type: regex, unit_label: summary_paragraph, split_pattern: '\n\s*\n' }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding: { model: text-embedding-3-small }
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: title, path: "/title", type: string }
           - name: attendees
             type:
               - 'null'
@@ -178,6 +190,18 @@ info:
                 type:
                   - 'null'
                   - string
+            x-airbyte-semantic-search:
+              content_type: json
+              samples:
+                - name: transcript_segment
+                  windowed: true
+                  sampling: { sample_type: element, unit_label: transcript_segment, sample_path: "[]", text_path: "text" }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding: { model: text-embedding-3-small }
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: title, path: "/title", type: string }
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Granola API Documentation

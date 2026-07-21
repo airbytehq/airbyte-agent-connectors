@@ -112,7 +112,7 @@ class AshbyConnector:
 
     connector_name = "ashby"
     connector_version = "0.1.4"
-    sdk_version = "0.1.288"
+    sdk_version = "0.1.289"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
