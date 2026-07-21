@@ -948,6 +948,7 @@
   "search_schemas": {
     "bounces": {
       "entity": "bounces",
+      "kind": "DATA",
       "data_type_name": "BouncesSearchData",
       "filter_type_name": "BouncesSearchFilter",
       "in_filter_type_name": "BouncesInFilter",
@@ -966,7 +967,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unix timestamp when the bounce occurred"
+          "description": "Unix timestamp when the bounce occurred",
+          "semantic": false
         },
         {
           "name": "email",
@@ -975,7 +977,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The email address that bounced"
+          "description": "The email address that bounced",
+          "semantic": false
         },
         {
           "name": "reason",
@@ -984,7 +987,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The reason for the bounce"
+          "description": "The reason for the bounce",
+          "semantic": false
         },
         {
           "name": "status",
@@ -993,12 +997,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The enhanced status code for the bounce"
+          "description": "The enhanced status code for the bounce",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "blocks": {
       "entity": "blocks",
+      "kind": "DATA",
       "data_type_name": "BlocksSearchData",
       "filter_type_name": "BlocksSearchFilter",
       "in_filter_type_name": "BlocksInFilter",
@@ -1017,7 +1027,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unix timestamp when the block occurred"
+          "description": "Unix timestamp when the block occurred",
+          "semantic": false
         },
         {
           "name": "email",
@@ -1026,7 +1037,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The blocked email address"
+          "description": "The blocked email address",
+          "semantic": false
         },
         {
           "name": "reason",
@@ -1035,7 +1047,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The reason for the block"
+          "description": "The reason for the block",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1044,12 +1057,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The status code for the block"
+          "description": "The status code for the block",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "campaigns": {
       "entity": "campaigns",
+      "kind": "DATA",
       "data_type_name": "CampaignsSearchData",
       "filter_type_name": "CampaignsSearchFilter",
       "in_filter_type_name": "CampaignsInFilter",
@@ -1068,7 +1087,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Channels for this campaign"
+          "description": "Channels for this campaign",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1077,7 +1097,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the campaign was created"
+          "description": "When the campaign was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1086,7 +1107,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique campaign identifier"
+          "description": "Unique campaign identifier",
+          "semantic": false
         },
         {
           "name": "is_abtest",
@@ -1095,7 +1117,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this campaign is an A/B test"
+          "description": "Whether this campaign is an A/B test",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1104,7 +1127,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign name"
+          "description": "Campaign name",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1113,7 +1137,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign status"
+          "description": "Campaign status",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1122,12 +1147,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the campaign was last updated"
+          "description": "When the campaign was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "contacts": {
       "entity": "contacts",
+      "kind": "DATA",
       "data_type_name": "ContactsSearchData",
       "filter_type_name": "ContactsSearchFilter",
       "in_filter_type_name": "ContactsInFilter",
@@ -1146,7 +1177,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Address line 1"
+          "description": "Address line 1",
+          "semantic": false
         },
         {
           "name": "address_line_2",
@@ -1155,7 +1187,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Address line 2"
+          "description": "Address line 2",
+          "semantic": false
         },
         {
           "name": "alternate_emails",
@@ -1164,7 +1197,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Alternate email addresses"
+          "description": "Alternate email addresses",
+          "semantic": false
         },
         {
           "name": "city",
@@ -1173,7 +1207,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "City"
+          "description": "City",
+          "semantic": false
         },
         {
           "name": "contact_id",
@@ -1182,7 +1217,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique contact identifier used by Airbyte"
+          "description": "Unique contact identifier used by Airbyte",
+          "semantic": false
         },
         {
           "name": "country",
@@ -1191,7 +1227,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Country"
+          "description": "Country",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1200,7 +1237,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the contact was created"
+          "description": "When the contact was created",
+          "semantic": false
         },
         {
           "name": "custom_fields",
@@ -1209,7 +1247,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Custom field values"
+          "description": "Custom field values",
+          "semantic": false
         },
         {
           "name": "email",
@@ -1218,7 +1257,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Contact email address"
+          "description": "Contact email address",
+          "semantic": false
         },
         {
           "name": "facebook",
@@ -1227,7 +1267,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Facebook ID"
+          "description": "Facebook ID",
+          "semantic": false
         },
         {
           "name": "first_name",
@@ -1236,7 +1277,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Contact first name"
+          "description": "Contact first name",
+          "semantic": false
         },
         {
           "name": "last_name",
@@ -1245,7 +1287,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Contact last name"
+          "description": "Contact last name",
+          "semantic": false
         },
         {
           "name": "line",
@@ -1254,7 +1297,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "LINE ID"
+          "description": "LINE ID",
+          "semantic": false
         },
         {
           "name": "list_ids",
@@ -1263,7 +1307,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "IDs of lists the contact belongs to"
+          "description": "IDs of lists the contact belongs to",
+          "semantic": false
         },
         {
           "name": "phone_number",
@@ -1272,7 +1317,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Phone number"
+          "description": "Phone number",
+          "semantic": false
         },
         {
           "name": "postal_code",
@@ -1281,7 +1327,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Postal code"
+          "description": "Postal code",
+          "semantic": false
         },
         {
           "name": "state_province_region",
@@ -1290,7 +1337,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "State, province, or region"
+          "description": "State, province, or region",
+          "semantic": false
         },
         {
           "name": "unique_name",
@@ -1299,7 +1347,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique name for the contact"
+          "description": "Unique name for the contact",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1308,7 +1357,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the contact was last updated"
+          "description": "When the contact was last updated",
+          "semantic": false
         },
         {
           "name": "whatsapp",
@@ -1317,12 +1367,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "WhatsApp number"
+          "description": "WhatsApp number",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "global_suppressions": {
       "entity": "global_suppressions",
+      "kind": "DATA",
       "data_type_name": "GlobalSuppressionsSearchData",
       "filter_type_name": "GlobalSuppressionsSearchFilter",
       "in_filter_type_name": "GlobalSuppressionsInFilter",
@@ -1341,7 +1397,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unix timestamp when the global suppression was created"
+          "description": "Unix timestamp when the global suppression was created",
+          "semantic": false
         },
         {
           "name": "email",
@@ -1350,12 +1407,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The globally suppressed email address"
+          "description": "The globally suppressed email address",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "invalid_emails": {
       "entity": "invalid_emails",
+      "kind": "DATA",
       "data_type_name": "InvalidEmailsSearchData",
       "filter_type_name": "InvalidEmailsSearchFilter",
       "in_filter_type_name": "InvalidEmailsInFilter",
@@ -1374,7 +1437,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unix timestamp when the invalid email was recorded"
+          "description": "Unix timestamp when the invalid email was recorded",
+          "semantic": false
         },
         {
           "name": "email",
@@ -1383,7 +1447,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The invalid email address"
+          "description": "The invalid email address",
+          "semantic": false
         },
         {
           "name": "reason",
@@ -1392,12 +1457,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The reason the email is invalid"
+          "description": "The reason the email is invalid",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "lists": {
       "entity": "lists",
+      "kind": "DATA",
       "data_type_name": "ListsSearchData",
       "filter_type_name": "ListsSearchFilter",
       "in_filter_type_name": "ListsInFilter",
@@ -1416,7 +1487,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Metadata about the list resource"
+          "description": "Metadata about the list resource",
+          "semantic": false
         },
         {
           "name": "contact_count",
@@ -1425,7 +1497,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of contacts in the list"
+          "description": "Number of contacts in the list",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1434,7 +1507,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique list identifier"
+          "description": "Unique list identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1443,12 +1517,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the list"
+          "description": "Name of the list",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "segments": {
       "entity": "segments",
+      "kind": "DATA",
       "data_type_name": "SegmentsSearchData",
       "filter_type_name": "SegmentsSearchFilter",
       "in_filter_type_name": "SegmentsInFilter",
@@ -1467,7 +1547,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of contacts in the segment"
+          "description": "Number of contacts in the segment",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1476,7 +1557,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the segment was created"
+          "description": "When the segment was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1485,7 +1567,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique segment identifier"
+          "description": "Unique segment identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1494,7 +1577,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Segment name"
+          "description": "Segment name",
+          "semantic": false
         },
         {
           "name": "next_sample_update",
@@ -1503,7 +1587,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the next sample update will occur"
+          "description": "When the next sample update will occur",
+          "semantic": false
         },
         {
           "name": "parent_list_ids",
@@ -1512,7 +1597,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "IDs of parent lists"
+          "description": "IDs of parent lists",
+          "semantic": false
         },
         {
           "name": "query_version",
@@ -1521,7 +1607,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Query version used"
+          "description": "Query version used",
+          "semantic": false
         },
         {
           "name": "sample_updated_at",
@@ -1530,7 +1617,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the sample was last updated"
+          "description": "When the sample was last updated",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1539,7 +1627,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Segment status details"
+          "description": "Segment status details",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1548,12 +1637,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the segment was last updated"
+          "description": "When the segment was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "singlesend_stats": {
       "entity": "singlesend_stats",
+      "kind": "DATA",
       "data_type_name": "SinglesendStatsSearchData",
       "filter_type_name": "SinglesendStatsSearchFilter",
       "in_filter_type_name": "SinglesendStatsInFilter",
@@ -1572,7 +1667,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The A/B test phase"
+          "description": "The A/B test phase",
+          "semantic": false
         },
         {
           "name": "ab_variation",
@@ -1581,7 +1677,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The A/B test variation"
+          "description": "The A/B test variation",
+          "semantic": false
         },
         {
           "name": "aggregation",
@@ -1590,7 +1687,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The aggregation type"
+          "description": "The aggregation type",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1599,7 +1697,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The single send ID"
+          "description": "The single send ID",
+          "semantic": false
         },
         {
           "name": "stats",
@@ -1608,12 +1707,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Email statistics for the single send"
+          "description": "Email statistics for the single send",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "singlesends": {
       "entity": "singlesends",
+      "kind": "DATA",
       "data_type_name": "SinglesendsSearchData",
       "filter_type_name": "SinglesendsSearchFilter",
       "in_filter_type_name": "SinglesendsInFilter",
@@ -1632,7 +1737,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Categories associated with this single send"
+          "description": "Categories associated with this single send",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1641,7 +1747,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the single send was created"
+          "description": "When the single send was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1650,7 +1757,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique single send identifier"
+          "description": "Unique single send identifier",
+          "semantic": false
         },
         {
           "name": "is_abtest",
@@ -1659,7 +1767,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this is an A/B test"
+          "description": "Whether this is an A/B test",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1668,7 +1777,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Single send name"
+          "description": "Single send name",
+          "semantic": false
         },
         {
           "name": "send_at",
@@ -1677,7 +1787,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Scheduled send time"
+          "description": "Scheduled send time",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1686,7 +1797,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current status: draft, scheduled, or triggered"
+          "description": "Current status: draft, scheduled, or triggered",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1695,12 +1807,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the single send was last updated"
+          "description": "When the single send was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "suppression_group_members": {
       "entity": "suppression_group_members",
+      "kind": "DATA",
       "data_type_name": "SuppressionGroupMembersSearchData",
       "filter_type_name": "SuppressionGroupMembersSearchFilter",
       "in_filter_type_name": "SuppressionGroupMembersInFilter",
@@ -1719,7 +1837,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unix timestamp when the suppression was created"
+          "description": "Unix timestamp when the suppression was created",
+          "semantic": false
         },
         {
           "name": "email",
@@ -1728,7 +1847,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The suppressed email address"
+          "description": "The suppressed email address",
+          "semantic": false
         },
         {
           "name": "group_id",
@@ -1737,7 +1857,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "ID of the suppression group"
+          "description": "ID of the suppression group",
+          "semantic": false
         },
         {
           "name": "group_name",
@@ -1746,12 +1867,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the suppression group"
+          "description": "Name of the suppression group",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "suppression_groups": {
       "entity": "suppression_groups",
+      "kind": "DATA",
       "data_type_name": "SuppressionGroupsSearchData",
       "filter_type_name": "SuppressionGroupsSearchFilter",
       "in_filter_type_name": "SuppressionGroupsInFilter",
@@ -1770,7 +1897,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description of the suppression group"
+          "description": "Description of the suppression group",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1779,7 +1907,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique suppression group identifier"
+          "description": "Unique suppression group identifier",
+          "semantic": false
         },
         {
           "name": "is_default",
@@ -1788,7 +1917,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this is the default suppression group"
+          "description": "Whether this is the default suppression group",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1797,7 +1927,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Suppression group name"
+          "description": "Suppression group name",
+          "semantic": false
         },
         {
           "name": "unsubscribes",
@@ -1806,12 +1937,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of unsubscribes in this group"
+          "description": "Number of unsubscribes in this group",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "templates": {
       "entity": "templates",
+      "kind": "DATA",
       "data_type_name": "TemplatesSearchData",
       "filter_type_name": "TemplatesSearchFilter",
       "in_filter_type_name": "TemplatesInFilter",
@@ -1830,7 +1967,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Template generation (legacy or dynamic)"
+          "description": "Template generation (legacy or dynamic)",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1839,7 +1977,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique template identifier"
+          "description": "Unique template identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1848,7 +1987,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Template name"
+          "description": "Template name",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1857,7 +1997,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the template was last updated"
+          "description": "When the template was last updated",
+          "semantic": false
         },
         {
           "name": "versions",
@@ -1866,9 +2007,14 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Template versions"
+          "description": "Template versions",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

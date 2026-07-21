@@ -1407,6 +1407,7 @@
   "search_schemas": {
     "clients": {
       "entity": "clients",
+      "kind": "DATA",
       "data_type_name": "ClientsSearchData",
       "filter_type_name": "ClientsSearchFilter",
       "in_filter_type_name": "ClientsInFilter",
@@ -1425,7 +1426,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The client's postal address"
+          "description": "The client's postal address",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1434,7 +1436,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the client record was created"
+          "description": "When the client record was created",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -1443,7 +1446,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The currency used by the client"
+          "description": "The currency used by the client",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1452,7 +1456,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the client"
+          "description": "Unique identifier for the client",
+          "semantic": false
         },
         {
           "name": "is_active",
@@ -1461,7 +1466,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the client is active"
+          "description": "Whether the client is active",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1470,7 +1476,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The client's name"
+          "description": "The client's name",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1479,12 +1486,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the client record was last updated"
+          "description": "When the client record was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "company": {
       "entity": "company",
+      "kind": "DATA",
       "data_type_name": "CompanySearchData",
       "filter_type_name": "CompanySearchFilter",
       "in_filter_type_name": "CompanyInFilter",
@@ -1503,7 +1516,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The base URI"
+          "description": "The base URI",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -1512,7 +1526,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Currency used by the company"
+          "description": "Currency used by the company",
+          "semantic": false
         },
         {
           "name": "full_domain",
@@ -1521,7 +1536,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The full domain name"
+          "description": "The full domain name",
+          "semantic": false
         },
         {
           "name": "is_active",
@@ -1530,7 +1546,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the company is active"
+          "description": "Whether the company is active",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1539,7 +1556,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the company"
+          "description": "The name of the company",
+          "semantic": false
         },
         {
           "name": "plan_type",
@@ -1548,7 +1566,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The plan type"
+          "description": "The plan type",
+          "semantic": false
         },
         {
           "name": "weekly_capacity",
@@ -1557,12 +1576,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Weekly capacity in seconds"
+          "description": "Weekly capacity in seconds",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "contacts": {
       "entity": "contacts",
+      "kind": "DATA",
       "data_type_name": "ContactsSearchData",
       "filter_type_name": "ContactsSearchFilter",
       "in_filter_type_name": "ContactsInFilter",
@@ -1581,7 +1606,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Client associated with the contact"
+          "description": "Client associated with the contact",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1590,7 +1616,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "email",
@@ -1599,7 +1626,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email address"
+          "description": "Email address",
+          "semantic": false
         },
         {
           "name": "first_name",
@@ -1608,7 +1636,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "First name"
+          "description": "First name",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1617,7 +1646,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "last_name",
@@ -1626,7 +1656,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last name"
+          "description": "Last name",
+          "semantic": false
         },
         {
           "name": "title",
@@ -1635,7 +1666,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Job title"
+          "description": "Job title",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1644,12 +1676,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "estimate_item_categories": {
       "entity": "estimate_item_categories",
+      "kind": "DATA",
       "data_type_name": "EstimateItemCategoriesSearchData",
       "filter_type_name": "EstimateItemCategoriesSearchFilter",
       "in_filter_type_name": "EstimateItemCategoriesInFilter",
@@ -1668,7 +1706,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1677,7 +1716,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1686,7 +1726,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Category name"
+          "description": "Category name",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1695,12 +1736,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "estimates": {
       "entity": "estimates",
+      "kind": "DATA",
       "data_type_name": "EstimatesSearchData",
       "filter_type_name": "EstimatesSearchFilter",
       "in_filter_type_name": "EstimatesInFilter",
@@ -1719,7 +1766,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Total amount"
+          "description": "Total amount",
+          "semantic": false
         },
         {
           "name": "client",
@@ -1728,7 +1776,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Client details"
+          "description": "Client details",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1737,7 +1786,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -1746,7 +1796,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Currency"
+          "description": "Currency",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1755,7 +1806,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "issue_date",
@@ -1764,7 +1816,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Issue date"
+          "description": "Issue date",
+          "semantic": false
         },
         {
           "name": "number",
@@ -1773,7 +1826,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Estimate number"
+          "description": "Estimate number",
+          "semantic": false
         },
         {
           "name": "state",
@@ -1782,7 +1836,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current state"
+          "description": "Current state",
+          "semantic": false
         },
         {
           "name": "subject",
@@ -1791,7 +1846,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Subject"
+          "description": "Subject",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1800,12 +1856,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "expense_categories": {
       "entity": "expense_categories",
+      "kind": "DATA",
       "data_type_name": "ExpenseCategoriesSearchData",
       "filter_type_name": "ExpenseCategoriesSearchFilter",
       "in_filter_type_name": "ExpenseCategoriesInFilter",
@@ -1824,7 +1886,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1833,7 +1896,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "is_active",
@@ -1842,7 +1906,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether active"
+          "description": "Whether active",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1851,7 +1916,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Category name"
+          "description": "Category name",
+          "semantic": false
         },
         {
           "name": "unit_name",
@@ -1860,7 +1926,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unit name"
+          "description": "Unit name",
+          "semantic": false
         },
         {
           "name": "unit_price",
@@ -1869,7 +1936,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Unit price"
+          "description": "Unit price",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1878,12 +1946,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "expenses": {
       "entity": "expenses",
+      "kind": "DATA",
       "data_type_name": "ExpensesSearchData",
       "filter_type_name": "ExpensesSearchFilter",
       "in_filter_type_name": "ExpensesInFilter",
@@ -1902,7 +1976,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether billable"
+          "description": "Whether billable",
+          "semantic": false
         },
         {
           "name": "client",
@@ -1911,7 +1986,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Associated client"
+          "description": "Associated client",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1920,7 +1996,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "expense_category",
@@ -1929,7 +2006,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Expense category"
+          "description": "Expense category",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1938,7 +2016,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "is_billed",
@@ -1947,7 +2026,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether billed"
+          "description": "Whether billed",
+          "semantic": false
         },
         {
           "name": "notes",
@@ -1956,7 +2036,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Notes"
+          "description": "Notes",
+          "semantic": false
         },
         {
           "name": "project",
@@ -1965,7 +2046,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Associated project"
+          "description": "Associated project",
+          "semantic": false
         },
         {
           "name": "spent_date",
@@ -1974,7 +2056,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date spent"
+          "description": "Date spent",
+          "semantic": false
         },
         {
           "name": "total_cost",
@@ -1983,7 +2066,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Total cost"
+          "description": "Total cost",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1992,7 +2076,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         },
         {
           "name": "user",
@@ -2001,12 +2086,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Associated user"
+          "description": "Associated user",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "invoice_item_categories": {
       "entity": "invoice_item_categories",
+      "kind": "DATA",
       "data_type_name": "InvoiceItemCategoriesSearchData",
       "filter_type_name": "InvoiceItemCategoriesSearchFilter",
       "in_filter_type_name": "InvoiceItemCategoriesInFilter",
@@ -2025,7 +2116,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2034,7 +2126,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2043,7 +2136,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Category name"
+          "description": "Category name",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2052,7 +2146,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         },
         {
           "name": "use_as_expense",
@@ -2061,7 +2156,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether used as expense type"
+          "description": "Whether used as expense type",
+          "semantic": false
         },
         {
           "name": "use_as_service",
@@ -2070,12 +2166,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether used as service type"
+          "description": "Whether used as service type",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "invoices": {
       "entity": "invoices",
+      "kind": "DATA",
       "data_type_name": "InvoicesSearchData",
       "filter_type_name": "InvoicesSearchFilter",
       "in_filter_type_name": "InvoicesInFilter",
@@ -2094,7 +2196,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Total amount"
+          "description": "Total amount",
+          "semantic": false
         },
         {
           "name": "client",
@@ -2103,7 +2206,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Client details"
+          "description": "Client details",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -2112,7 +2216,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -2121,7 +2226,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Currency"
+          "description": "Currency",
+          "semantic": false
         },
         {
           "name": "due_amount",
@@ -2130,7 +2236,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Amount due"
+          "description": "Amount due",
+          "semantic": false
         },
         {
           "name": "due_date",
@@ -2139,7 +2246,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Due date"
+          "description": "Due date",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2148,7 +2256,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "issue_date",
@@ -2157,7 +2266,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Issue date"
+          "description": "Issue date",
+          "semantic": false
         },
         {
           "name": "number",
@@ -2166,7 +2276,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Invoice number"
+          "description": "Invoice number",
+          "semantic": false
         },
         {
           "name": "state",
@@ -2175,7 +2286,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current state"
+          "description": "Current state",
+          "semantic": false
         },
         {
           "name": "subject",
@@ -2184,7 +2296,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Subject"
+          "description": "Subject",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2193,12 +2306,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "projects": {
       "entity": "projects",
+      "kind": "DATA",
       "data_type_name": "ProjectsSearchData",
       "filter_type_name": "ProjectsSearchFilter",
       "in_filter_type_name": "ProjectsInFilter",
@@ -2217,7 +2336,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Budget amount"
+          "description": "Budget amount",
+          "semantic": false
         },
         {
           "name": "client",
@@ -2226,7 +2346,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Client details"
+          "description": "Client details",
+          "semantic": false
         },
         {
           "name": "code",
@@ -2235,7 +2356,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Project code"
+          "description": "Project code",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -2244,7 +2366,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "hourly_rate",
@@ -2253,7 +2376,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Hourly rate"
+          "description": "Hourly rate",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2262,7 +2386,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "is_active",
@@ -2271,7 +2396,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether active"
+          "description": "Whether active",
+          "semantic": false
         },
         {
           "name": "is_billable",
@@ -2280,7 +2406,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether billable"
+          "description": "Whether billable",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2289,7 +2416,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Project name"
+          "description": "Project name",
+          "semantic": false
         },
         {
           "name": "starts_on",
@@ -2298,7 +2426,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date"
+          "description": "Start date",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2307,12 +2436,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "roles": {
       "entity": "roles",
+      "kind": "DATA",
       "data_type_name": "RolesSearchData",
       "filter_type_name": "RolesSearchFilter",
       "in_filter_type_name": "RolesInFilter",
@@ -2331,7 +2466,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2340,7 +2476,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2349,7 +2486,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Role name"
+          "description": "Role name",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2358,7 +2496,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         },
         {
           "name": "user_ids",
@@ -2367,12 +2506,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "User IDs with this role"
+          "description": "User IDs with this role",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "task_assignments": {
       "entity": "task_assignments",
+      "kind": "DATA",
       "data_type_name": "TaskAssignmentsSearchData",
       "filter_type_name": "TaskAssignmentsSearchFilter",
       "in_filter_type_name": "TaskAssignmentsInFilter",
@@ -2391,7 +2536,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether billable"
+          "description": "Whether billable",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -2400,7 +2546,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "hourly_rate",
@@ -2409,7 +2556,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Hourly rate"
+          "description": "Hourly rate",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2418,7 +2566,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "is_active",
@@ -2427,7 +2576,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether active"
+          "description": "Whether active",
+          "semantic": false
         },
         {
           "name": "project",
@@ -2436,7 +2586,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Associated project"
+          "description": "Associated project",
+          "semantic": false
         },
         {
           "name": "task",
@@ -2445,7 +2596,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Associated task"
+          "description": "Associated task",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2454,12 +2606,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "tasks": {
       "entity": "tasks",
+      "kind": "DATA",
       "data_type_name": "TasksSearchData",
       "filter_type_name": "TasksSearchFilter",
       "in_filter_type_name": "TasksInFilter",
@@ -2478,7 +2636,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether billable by default"
+          "description": "Whether billable by default",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -2487,7 +2646,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "default_hourly_rate",
@@ -2496,7 +2656,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Default hourly rate"
+          "description": "Default hourly rate",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2505,7 +2666,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "is_active",
@@ -2514,7 +2676,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether active"
+          "description": "Whether active",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2523,7 +2686,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Task name"
+          "description": "Task name",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2532,12 +2696,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "time_entries": {
       "entity": "time_entries",
+      "kind": "DATA",
       "data_type_name": "TimeEntriesSearchData",
       "filter_type_name": "TimeEntriesSearchFilter",
       "in_filter_type_name": "TimeEntriesInFilter",
@@ -2556,7 +2726,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether billable"
+          "description": "Whether billable",
+          "semantic": false
         },
         {
           "name": "client",
@@ -2565,7 +2736,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Associated client"
+          "description": "Associated client",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -2574,7 +2746,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "hours",
@@ -2583,7 +2756,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Hours logged"
+          "description": "Hours logged",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2592,7 +2766,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "is_billed",
@@ -2601,7 +2776,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether billed"
+          "description": "Whether billed",
+          "semantic": false
         },
         {
           "name": "notes",
@@ -2610,7 +2786,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Notes"
+          "description": "Notes",
+          "semantic": false
         },
         {
           "name": "project",
@@ -2619,7 +2796,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Associated project"
+          "description": "Associated project",
+          "semantic": false
         },
         {
           "name": "spent_date",
@@ -2628,7 +2806,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date time was spent"
+          "description": "Date time was spent",
+          "semantic": false
         },
         {
           "name": "task",
@@ -2637,7 +2816,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Associated task"
+          "description": "Associated task",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2646,7 +2826,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         },
         {
           "name": "user",
@@ -2655,12 +2836,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Associated user"
+          "description": "Associated user",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "time_projects": {
       "entity": "time_projects",
+      "kind": "DATA",
       "data_type_name": "TimeProjectsSearchData",
       "filter_type_name": "TimeProjectsSearchFilter",
       "in_filter_type_name": "TimeProjectsInFilter",
@@ -2679,7 +2866,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Total billable amount"
+          "description": "Total billable amount",
+          "semantic": false
         },
         {
           "name": "billable_hours",
@@ -2688,7 +2876,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Number of billable hours"
+          "description": "Number of billable hours",
+          "semantic": false
         },
         {
           "name": "client_id",
@@ -2697,7 +2886,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Client identifier"
+          "description": "Client identifier",
+          "semantic": false
         },
         {
           "name": "client_name",
@@ -2706,7 +2896,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Client name"
+          "description": "Client name",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -2715,7 +2906,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Currency code"
+          "description": "Currency code",
+          "semantic": false
         },
         {
           "name": "project_id",
@@ -2724,7 +2916,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Project identifier"
+          "description": "Project identifier",
+          "semantic": false
         },
         {
           "name": "project_name",
@@ -2733,7 +2926,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Project name"
+          "description": "Project name",
+          "semantic": false
         },
         {
           "name": "total_hours",
@@ -2742,12 +2936,18 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Total hours spent"
+          "description": "Total hours spent",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "time_tasks": {
       "entity": "time_tasks",
+      "kind": "DATA",
       "data_type_name": "TimeTasksSearchData",
       "filter_type_name": "TimeTasksSearchFilter",
       "in_filter_type_name": "TimeTasksInFilter",
@@ -2766,7 +2966,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Total billable amount"
+          "description": "Total billable amount",
+          "semantic": false
         },
         {
           "name": "billable_hours",
@@ -2775,7 +2976,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Number of billable hours"
+          "description": "Number of billable hours",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -2784,7 +2986,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Currency code"
+          "description": "Currency code",
+          "semantic": false
         },
         {
           "name": "task_id",
@@ -2793,7 +2996,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Task identifier"
+          "description": "Task identifier",
+          "semantic": false
         },
         {
           "name": "task_name",
@@ -2802,7 +3006,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Task name"
+          "description": "Task name",
+          "semantic": false
         },
         {
           "name": "total_hours",
@@ -2811,12 +3016,18 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Total hours spent"
+          "description": "Total hours spent",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "user_assignments": {
       "entity": "user_assignments",
+      "kind": "DATA",
       "data_type_name": "UserAssignmentsSearchData",
       "filter_type_name": "UserAssignmentsSearchFilter",
       "in_filter_type_name": "UserAssignmentsInFilter",
@@ -2835,7 +3046,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Budget"
+          "description": "Budget",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -2844,7 +3056,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "hourly_rate",
@@ -2853,7 +3066,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Hourly rate"
+          "description": "Hourly rate",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2862,7 +3076,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "is_active",
@@ -2871,7 +3086,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether active"
+          "description": "Whether active",
+          "semantic": false
         },
         {
           "name": "is_project_manager",
@@ -2880,7 +3096,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether project manager"
+          "description": "Whether project manager",
+          "semantic": false
         },
         {
           "name": "project",
@@ -2889,7 +3106,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Associated project"
+          "description": "Associated project",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2898,7 +3116,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         },
         {
           "name": "user",
@@ -2907,12 +3126,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Associated user"
+          "description": "Associated user",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "users": {
       "entity": "users",
+      "kind": "DATA",
       "data_type_name": "UsersSearchData",
       "filter_type_name": "UsersSearchFilter",
       "in_filter_type_name": "UsersInFilter",
@@ -2931,7 +3156,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Avatar URL"
+          "description": "Avatar URL",
+          "semantic": false
         },
         {
           "name": "cost_rate",
@@ -2940,7 +3166,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Cost rate"
+          "description": "Cost rate",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -2949,7 +3176,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When created"
+          "description": "When created",
+          "semantic": false
         },
         {
           "name": "default_hourly_rate",
@@ -2958,7 +3186,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Default hourly rate"
+          "description": "Default hourly rate",
+          "semantic": false
         },
         {
           "name": "email",
@@ -2967,7 +3196,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email address"
+          "description": "Email address",
+          "semantic": false
         },
         {
           "name": "first_name",
@@ -2976,7 +3206,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "First name"
+          "description": "First name",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2985,7 +3216,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "is_active",
@@ -2994,7 +3226,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether active"
+          "description": "Whether active",
+          "semantic": false
         },
         {
           "name": "is_contractor",
@@ -3003,7 +3236,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether contractor"
+          "description": "Whether contractor",
+          "semantic": false
         },
         {
           "name": "last_name",
@@ -3012,7 +3246,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last name"
+          "description": "Last name",
+          "semantic": false
         },
         {
           "name": "roles",
@@ -3021,7 +3256,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Assigned roles"
+          "description": "Assigned roles",
+          "semantic": false
         },
         {
           "name": "telephone",
@@ -3030,7 +3266,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Phone number"
+          "description": "Phone number",
+          "semantic": false
         },
         {
           "name": "timezone",
@@ -3039,7 +3276,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timezone"
+          "description": "Timezone",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -3048,7 +3286,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When last updated"
+          "description": "When last updated",
+          "semantic": false
         },
         {
           "name": "weekly_capacity",
@@ -3057,9 +3296,14 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Weekly capacity in seconds"
+          "description": "Weekly capacity in seconds",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

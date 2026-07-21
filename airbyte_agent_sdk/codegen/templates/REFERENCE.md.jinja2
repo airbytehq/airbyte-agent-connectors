@@ -10,7 +10,7 @@ The {{ connector_name|title }} connector supports the following entities and act
 | Entity | Actions |
 |--------|---------|
 {% for entity, operations in entities_grouped.items() %}
-| {{ entity.replace('_', ' ')|title }} | {% for op in operations %}[{{ format_action(op.action) }}](#{{ anchor(entity, op.action) }}){{ ", " if not loop.last else "" }}{% endfor %}{% if entity in search_schemas %}, [{{ format_action("context_store_search") }}](#{{ anchor(entity, 'context_store_search') }}){% endif %} |
+| {{ entity.replace('_', ' ')|title }} | {% for op in operations %}[{{ format_action(op.action) }}](#{{ anchor(entity, op.action) }}){{ ", " if not loop.last else "" }}{% endfor %}{% if entity in search_schemas %}, [{{ format_action("context_store_search") }}](#{{ anchor(entity, 'context_store_search') }}){% endif %}{% if entity in search_schemas and search_schemas[entity].semantic_fields %}, [Semantic Search](#{{ anchor(entity, 'semantic_search') }}){% endif %} |
 {% endfor %}
 
 {% for entity, operations in entities_grouped.items() %}
@@ -167,5 +167,99 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
+{% if search_schema.semantic_fields %}
+{%- set semantic_field = search_schema.semantic_fields[0] %}
+### {{ entity.replace('_', ' ')|title }} Semantic Search
+
+{% if search_schema.kind == "FILES" %}Search the text content of your {{ entity.replace('_', ' ') }} by meaning rather than by exact keywords. Airbyte extracts each file's text, embeds a natural-language `prompt`, and returns the most similar passages of file content, ranked by relevance, each carrying its source-file attribution (such as name and path). Pass a `semantic` object to `context_store_search` instead of `query`. Only available in hosted mode.
+{% else %}Search {{ entity.replace('_', ' ') }} records by meaning rather than by exact or fuzzy field values. Semantic search embeds a natural-language `prompt` and returns the most similar passages, ranked by relevance. Pass a `semantic` object to `context_store_search` instead of `query`. Only available in hosted mode.
+{% endif %}
+
+#### CLI
+
+```bash
+airbyte-agent connectors execute --json '{
+  "workspace": "<your_workspace_name>",
+  "name": "{{ connector_name }}",
+  "entity": "{{ entity }}",
+  "action": "context_store_search",
+  "params": {
+    "semantic": {"field": "{{ semantic_field.name }}", "prompt": "<your natural-language query>"}
+  }
+}'
+```
+
+#### Python SDK
+
+Semantic search is passed through the generic `execute` method — the typed `{{ entity }}.context_store_search` helper only accepts `query`.
+
+```python
+await {{ connector_instance_name }}.execute(
+    "{{ entity }}",
+    "context_store_search",
+    {"semantic": {"field": "{{ semantic_field.name }}", "prompt": "<your natural-language query>"}},
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "{{ entity }}",
+    "action": "context_store_search",
+    "params": {
+        "semantic": {"field": "{{ semantic_field.name }}", "prompt": "<your natural-language query>"}
+    }
+}'
+```
+
+#### Semantic Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `semantic.field` | `string` | Yes | Field to search semantically. Mutually exclusive with `query`. |
+| `semantic.prompt` | `string` | Yes | Natural-language query that is embedded and compared against stored passages. |
+| `semantic.filter` | `object` | No | Filter conditions (same shape/operators as `query.filter`). `sort` is not supported — results are ranked by similarity. |
+| `semantic.context_size` | `integer` | No | Characters of surrounding context to return per hit, up to the field's configured window. Omit to return the full configured window. |
+| `semantic.dedup` | `string` | No | `max` (default) returns the single best-scoring passage per record; `none` returns multiple passages per record, still ranked by similarity and capped by `limit`. |
+| `fields` | `array` | No | Field paths to include in results (dot notation for nested fields). Applied to each hit's `entity`. |
+| `limit` | `integer` | No | Maximum results to return (default 10, maximum 100). |
+
+#### Semantically Searchable Fields
+
+| Field Name | Max Context (chars) | Description |
+|------------|---------------------|-------------|
+{% for field in search_schema.semantic_fields %}
+| `{{ field.name }}` | {{ field.context_max_chars }} | {{ field.description | mdx_escape }} |
+{% endfor %}
+{% if search_schema.enrichment_outputs %}
+
+Each result is also enriched with the following related fields (returned only; not filterable): {% for name in search_schema.enrichment_outputs %}`{{ name }}`{{ ", " if not loop.last else "" }}{% endfor %}.
+{% endif %}
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `data` | `array` | List of matching passages |
+| `data[].entity` | `object` | The matched source {{ "file" if search_schema.kind == "FILES" else "record" }} |
+{% for field in search_schema.semantic_entity_fields %}| `data[].entity.{{ field.name }}` | `{{ field.type }}` | Source {{ "file" if search_schema.kind == "FILES" else "record" }} field |
+{% endfor %}| `data[].metadata` | `object` | Match metadata |
+| `data[].metadata.score` | `number` | Similarity score |
+| `data[].metadata.context` | `string` | The matched passage text |
+{% for field in search_schema.semantic_metadata_fields %}| `data[].metadata.{{ field.name }}` | `{{ field.type }}` | Per-unit attribution for the matched passage |
+{% endfor %}{% for name in search_schema.enrichment_outputs %}| `data[].metadata.{{ name }}` | `string` | Enriched from a related entity at read time (returned only; not filterable) |
+{% endfor %}| `meta` | `object` | Pagination metadata |
+| `meta.has_more` | `boolean` | Whether additional pages are available |
+| `meta.cursor` | `string \| null` | Cursor for next page of results |
+| `meta.took_ms` | `number \| null` | Query execution time in milliseconds |
+
+</details>
+
+{% endif %}
 {% endif %}
 {% endfor %}

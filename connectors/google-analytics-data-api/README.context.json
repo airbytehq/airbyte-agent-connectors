@@ -1552,6 +1552,7 @@
   "search_schemas": {
     "website_overview": {
       "entity": "website_overview",
+      "kind": "DATA",
       "data_type_name": "WebsiteOverviewSearchData",
       "filter_type_name": "WebsiteOverviewSearchFilter",
       "in_filter_type_name": "WebsiteOverviewInFilter",
@@ -1570,7 +1571,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average duration of sessions in seconds"
+          "description": "Average duration of sessions in seconds",
+          "semantic": false
         },
         {
           "name": "bounceRate",
@@ -1579,7 +1581,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Percentage of sessions that were single-page with no interaction"
+          "description": "Percentage of sessions that were single-page with no interaction",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1588,7 +1591,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the report row in YYYYMMDD format"
+          "description": "Date of the report row in YYYYMMDD format",
+          "semantic": false
         },
         {
           "name": "endDate",
@@ -1597,7 +1601,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of the reporting period"
+          "description": "End date of the reporting period",
+          "semantic": false
         },
         {
           "name": "newUsers",
@@ -1606,7 +1611,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of first-time users"
+          "description": "Number of first-time users",
+          "semantic": false
         },
         {
           "name": "property_id",
@@ -1615,7 +1621,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GA4 property ID"
+          "description": "GA4 property ID",
+          "semantic": false
         },
         {
           "name": "screenPageViews",
@@ -1624,7 +1631,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of screen or page views"
+          "description": "Total number of screen or page views",
+          "semantic": false
         },
         {
           "name": "screenPageViewsPerSession",
@@ -1633,7 +1641,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average page views per session"
+          "description": "Average page views per session",
+          "semantic": false
         },
         {
           "name": "sessions",
@@ -1642,7 +1651,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of sessions"
+          "description": "Total number of sessions",
+          "semantic": false
         },
         {
           "name": "sessionsPerUser",
@@ -1651,7 +1661,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average number of sessions per user"
+          "description": "Average number of sessions per user",
+          "semantic": false
         },
         {
           "name": "startDate",
@@ -1660,7 +1671,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of the reporting period"
+          "description": "Start date of the reporting period",
+          "semantic": false
         },
         {
           "name": "totalUsers",
@@ -1669,12 +1681,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of unique users"
+          "description": "Total number of unique users",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "daily_active_users": {
       "entity": "daily_active_users",
+      "kind": "DATA",
       "data_type_name": "DailyActiveUsersSearchData",
       "filter_type_name": "DailyActiveUsersSearchFilter",
       "in_filter_type_name": "DailyActiveUsersInFilter",
@@ -1693,7 +1711,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of distinct users active in the last 1 day"
+          "description": "Number of distinct users active in the last 1 day",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1702,7 +1721,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the report row in YYYYMMDD format"
+          "description": "Date of the report row in YYYYMMDD format",
+          "semantic": false
         },
         {
           "name": "endDate",
@@ -1711,7 +1731,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of the reporting period"
+          "description": "End date of the reporting period",
+          "semantic": false
         },
         {
           "name": "property_id",
@@ -1720,7 +1741,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GA4 property ID"
+          "description": "GA4 property ID",
+          "semantic": false
         },
         {
           "name": "startDate",
@@ -1729,12 +1751,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of the reporting period"
+          "description": "Start date of the reporting period",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "weekly_active_users": {
       "entity": "weekly_active_users",
+      "kind": "DATA",
       "data_type_name": "WeeklyActiveUsersSearchData",
       "filter_type_name": "WeeklyActiveUsersSearchFilter",
       "in_filter_type_name": "WeeklyActiveUsersInFilter",
@@ -1753,7 +1781,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of distinct users active in the last 7 days"
+          "description": "Number of distinct users active in the last 7 days",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1762,7 +1791,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the report row in YYYYMMDD format"
+          "description": "Date of the report row in YYYYMMDD format",
+          "semantic": false
         },
         {
           "name": "endDate",
@@ -1771,7 +1801,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of the reporting period"
+          "description": "End date of the reporting period",
+          "semantic": false
         },
         {
           "name": "property_id",
@@ -1780,7 +1811,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GA4 property ID"
+          "description": "GA4 property ID",
+          "semantic": false
         },
         {
           "name": "startDate",
@@ -1789,12 +1821,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of the reporting period"
+          "description": "Start date of the reporting period",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "four_weekly_active_users": {
       "entity": "four_weekly_active_users",
+      "kind": "DATA",
       "data_type_name": "FourWeeklyActiveUsersSearchData",
       "filter_type_name": "FourWeeklyActiveUsersSearchFilter",
       "in_filter_type_name": "FourWeeklyActiveUsersInFilter",
@@ -1813,7 +1851,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of distinct users active in the last 28 days"
+          "description": "Number of distinct users active in the last 28 days",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1822,7 +1861,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the report row in YYYYMMDD format"
+          "description": "Date of the report row in YYYYMMDD format",
+          "semantic": false
         },
         {
           "name": "endDate",
@@ -1831,7 +1871,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of the reporting period"
+          "description": "End date of the reporting period",
+          "semantic": false
         },
         {
           "name": "property_id",
@@ -1840,7 +1881,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GA4 property ID"
+          "description": "GA4 property ID",
+          "semantic": false
         },
         {
           "name": "startDate",
@@ -1849,12 +1891,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of the reporting period"
+          "description": "Start date of the reporting period",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "traffic_sources": {
       "entity": "traffic_sources",
+      "kind": "DATA",
       "data_type_name": "TrafficSourcesSearchData",
       "filter_type_name": "TrafficSourcesSearchFilter",
       "in_filter_type_name": "TrafficSourcesInFilter",
@@ -1873,7 +1921,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average duration of sessions in seconds"
+          "description": "Average duration of sessions in seconds",
+          "semantic": false
         },
         {
           "name": "bounceRate",
@@ -1882,7 +1931,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Percentage of sessions that were single-page with no interaction"
+          "description": "Percentage of sessions that were single-page with no interaction",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1891,7 +1941,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the report row in YYYYMMDD format"
+          "description": "Date of the report row in YYYYMMDD format",
+          "semantic": false
         },
         {
           "name": "endDate",
@@ -1900,7 +1951,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of the reporting period"
+          "description": "End date of the reporting period",
+          "semantic": false
         },
         {
           "name": "newUsers",
@@ -1909,7 +1961,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of first-time users"
+          "description": "Number of first-time users",
+          "semantic": false
         },
         {
           "name": "property_id",
@@ -1918,7 +1971,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GA4 property ID"
+          "description": "GA4 property ID",
+          "semantic": false
         },
         {
           "name": "screenPageViews",
@@ -1927,7 +1981,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of screen or page views"
+          "description": "Total number of screen or page views",
+          "semantic": false
         },
         {
           "name": "screenPageViewsPerSession",
@@ -1936,7 +1991,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average page views per session"
+          "description": "Average page views per session",
+          "semantic": false
         },
         {
           "name": "sessionMedium",
@@ -1945,7 +2001,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The medium of the traffic source (e.g., organic, cpc, referral)"
+          "description": "The medium of the traffic source (e.g., organic, cpc, referral)",
+          "semantic": false
         },
         {
           "name": "sessionSource",
@@ -1954,7 +2011,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The source of the traffic (e.g., google, direct)"
+          "description": "The source of the traffic (e.g., google, direct)",
+          "semantic": false
         },
         {
           "name": "sessions",
@@ -1963,7 +2021,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of sessions"
+          "description": "Total number of sessions",
+          "semantic": false
         },
         {
           "name": "sessionsPerUser",
@@ -1972,7 +2031,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average number of sessions per user"
+          "description": "Average number of sessions per user",
+          "semantic": false
         },
         {
           "name": "startDate",
@@ -1981,7 +2041,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of the reporting period"
+          "description": "Start date of the reporting period",
+          "semantic": false
         },
         {
           "name": "totalUsers",
@@ -1990,12 +2051,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of unique users"
+          "description": "Total number of unique users",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "pages": {
       "entity": "pages",
+      "kind": "DATA",
       "data_type_name": "PagesSearchData",
       "filter_type_name": "PagesSearchFilter",
       "in_filter_type_name": "PagesInFilter",
@@ -2014,7 +2081,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Percentage of sessions that were single-page with no interaction"
+          "description": "Percentage of sessions that were single-page with no interaction",
+          "semantic": false
         },
         {
           "name": "date",
@@ -2023,7 +2091,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the report row in YYYYMMDD format"
+          "description": "Date of the report row in YYYYMMDD format",
+          "semantic": false
         },
         {
           "name": "endDate",
@@ -2032,7 +2101,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of the reporting period"
+          "description": "End date of the reporting period",
+          "semantic": false
         },
         {
           "name": "hostName",
@@ -2041,7 +2111,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The hostname of the page"
+          "description": "The hostname of the page",
+          "semantic": false
         },
         {
           "name": "pagePathPlusQueryString",
@@ -2050,7 +2121,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The page path and query string"
+          "description": "The page path and query string",
+          "semantic": false
         },
         {
           "name": "property_id",
@@ -2059,7 +2131,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GA4 property ID"
+          "description": "GA4 property ID",
+          "semantic": false
         },
         {
           "name": "screenPageViews",
@@ -2068,7 +2141,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of screen or page views"
+          "description": "Total number of screen or page views",
+          "semantic": false
         },
         {
           "name": "startDate",
@@ -2077,12 +2151,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of the reporting period"
+          "description": "Start date of the reporting period",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "devices": {
       "entity": "devices",
+      "kind": "DATA",
       "data_type_name": "DevicesSearchData",
       "filter_type_name": "DevicesSearchFilter",
       "in_filter_type_name": "DevicesInFilter",
@@ -2101,7 +2181,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average duration of sessions in seconds"
+          "description": "Average duration of sessions in seconds",
+          "semantic": false
         },
         {
           "name": "bounceRate",
@@ -2110,7 +2191,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Percentage of sessions that were single-page with no interaction"
+          "description": "Percentage of sessions that were single-page with no interaction",
+          "semantic": false
         },
         {
           "name": "browser",
@@ -2119,7 +2201,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The web browser used (e.g., Chrome, Safari, Firefox)"
+          "description": "The web browser used (e.g., Chrome, Safari, Firefox)",
+          "semantic": false
         },
         {
           "name": "date",
@@ -2128,7 +2211,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the report row in YYYYMMDD format"
+          "description": "Date of the report row in YYYYMMDD format",
+          "semantic": false
         },
         {
           "name": "deviceCategory",
@@ -2137,7 +2221,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The device category (desktop, mobile, tablet)"
+          "description": "The device category (desktop, mobile, tablet)",
+          "semantic": false
         },
         {
           "name": "endDate",
@@ -2146,7 +2231,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of the reporting period"
+          "description": "End date of the reporting period",
+          "semantic": false
         },
         {
           "name": "newUsers",
@@ -2155,7 +2241,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of first-time users"
+          "description": "Number of first-time users",
+          "semantic": false
         },
         {
           "name": "operatingSystem",
@@ -2164,7 +2251,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The operating system used (e.g., Windows, iOS, Android)"
+          "description": "The operating system used (e.g., Windows, iOS, Android)",
+          "semantic": false
         },
         {
           "name": "property_id",
@@ -2173,7 +2261,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GA4 property ID"
+          "description": "GA4 property ID",
+          "semantic": false
         },
         {
           "name": "screenPageViews",
@@ -2182,7 +2271,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of screen or page views"
+          "description": "Total number of screen or page views",
+          "semantic": false
         },
         {
           "name": "screenPageViewsPerSession",
@@ -2191,7 +2281,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average page views per session"
+          "description": "Average page views per session",
+          "semantic": false
         },
         {
           "name": "sessions",
@@ -2200,7 +2291,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of sessions"
+          "description": "Total number of sessions",
+          "semantic": false
         },
         {
           "name": "sessionsPerUser",
@@ -2209,7 +2301,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average number of sessions per user"
+          "description": "Average number of sessions per user",
+          "semantic": false
         },
         {
           "name": "startDate",
@@ -2218,7 +2311,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of the reporting period"
+          "description": "Start date of the reporting period",
+          "semantic": false
         },
         {
           "name": "totalUsers",
@@ -2227,12 +2321,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of unique users"
+          "description": "Total number of unique users",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "locations": {
       "entity": "locations",
+      "kind": "DATA",
       "data_type_name": "LocationsSearchData",
       "filter_type_name": "LocationsSearchFilter",
       "in_filter_type_name": "LocationsInFilter",
@@ -2251,7 +2351,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average duration of sessions in seconds"
+          "description": "Average duration of sessions in seconds",
+          "semantic": false
         },
         {
           "name": "bounceRate",
@@ -2260,7 +2361,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Percentage of sessions that were single-page with no interaction"
+          "description": "Percentage of sessions that were single-page with no interaction",
+          "semantic": false
         },
         {
           "name": "city",
@@ -2269,7 +2371,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The city of the user"
+          "description": "The city of the user",
+          "semantic": false
         },
         {
           "name": "country",
@@ -2278,7 +2381,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The country of the user"
+          "description": "The country of the user",
+          "semantic": false
         },
         {
           "name": "date",
@@ -2287,7 +2391,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the report row in YYYYMMDD format"
+          "description": "Date of the report row in YYYYMMDD format",
+          "semantic": false
         },
         {
           "name": "endDate",
@@ -2296,7 +2401,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of the reporting period"
+          "description": "End date of the reporting period",
+          "semantic": false
         },
         {
           "name": "newUsers",
@@ -2305,7 +2411,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of first-time users"
+          "description": "Number of first-time users",
+          "semantic": false
         },
         {
           "name": "property_id",
@@ -2314,7 +2421,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GA4 property ID"
+          "description": "GA4 property ID",
+          "semantic": false
         },
         {
           "name": "region",
@@ -2323,7 +2431,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The region (state/province) of the user"
+          "description": "The region (state/province) of the user",
+          "semantic": false
         },
         {
           "name": "screenPageViews",
@@ -2332,7 +2441,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of screen or page views"
+          "description": "Total number of screen or page views",
+          "semantic": false
         },
         {
           "name": "screenPageViewsPerSession",
@@ -2341,7 +2451,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average page views per session"
+          "description": "Average page views per session",
+          "semantic": false
         },
         {
           "name": "sessions",
@@ -2350,7 +2461,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of sessions"
+          "description": "Total number of sessions",
+          "semantic": false
         },
         {
           "name": "sessionsPerUser",
@@ -2359,7 +2471,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average number of sessions per user"
+          "description": "Average number of sessions per user",
+          "semantic": false
         },
         {
           "name": "startDate",
@@ -2368,7 +2481,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of the reporting period"
+          "description": "Start date of the reporting period",
+          "semantic": false
         },
         {
           "name": "totalUsers",
@@ -2377,9 +2491,14 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total number of unique users"
+          "description": "Total number of unique users",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

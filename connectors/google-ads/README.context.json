@@ -1016,6 +1016,7 @@
   "search_schemas": {
     "accounts": {
       "entity": "accounts",
+      "kind": "DATA",
       "data_type_name": "AccountsSearchData",
       "filter_type_name": "AccountsSearchFilter",
       "in_filter_type_name": "AccountsInFilter",
@@ -1034,7 +1035,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether auto-tagging is enabled for the account"
+          "description": "Whether auto-tagging is enabled for the account",
+          "semantic": false
         },
         {
           "name": "customer.call_reporting_setting.call_conversion_action",
@@ -1043,7 +1045,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Call conversion action resource name"
+          "description": "Call conversion action resource name",
+          "semantic": false
         },
         {
           "name": "customer.call_reporting_setting.call_conversion_reporting_enabled",
@@ -1052,7 +1055,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether call conversion reporting is enabled"
+          "description": "Whether call conversion reporting is enabled",
+          "semantic": false
         },
         {
           "name": "customer.call_reporting_setting.call_reporting_enabled",
@@ -1061,7 +1065,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether call reporting is enabled"
+          "description": "Whether call reporting is enabled",
+          "semantic": false
         },
         {
           "name": "customer.conversion_tracking_setting.conversion_tracking_id",
@@ -1070,7 +1075,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Conversion tracking ID"
+          "description": "Conversion tracking ID",
+          "semantic": false
         },
         {
           "name": "customer.conversion_tracking_setting.cross_account_conversion_tracking_id",
@@ -1079,7 +1085,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Cross-account conversion tracking ID"
+          "description": "Cross-account conversion tracking ID",
+          "semantic": false
         },
         {
           "name": "customer.currency_code",
@@ -1088,7 +1095,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Currency code for the account (e.g., USD)"
+          "description": "Currency code for the account (e.g., USD)",
+          "semantic": false
         },
         {
           "name": "customer.descriptive_name",
@@ -1097,7 +1105,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Descriptive name of the customer account"
+          "description": "Descriptive name of the customer account",
+          "semantic": false
         },
         {
           "name": "customer.final_url_suffix",
@@ -1106,7 +1115,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL suffix appended to final URLs"
+          "description": "URL suffix appended to final URLs",
+          "semantic": false
         },
         {
           "name": "customer.has_partners_badge",
@@ -1115,7 +1125,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the account has a Google Partners badge"
+          "description": "Whether the account has a Google Partners badge",
+          "semantic": false
         },
         {
           "name": "customer.id",
@@ -1124,7 +1135,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique customer account ID"
+          "description": "Unique customer account ID",
+          "semantic": false
         },
         {
           "name": "customer.manager",
@@ -1133,7 +1145,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this is a manager (MCC) account"
+          "description": "Whether this is a manager (MCC) account",
+          "semantic": false
         },
         {
           "name": "customer.optimization_score",
@@ -1142,7 +1155,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Optimization score for the account (0.0 to 1.0)"
+          "description": "Optimization score for the account (0.0 to 1.0)",
+          "semantic": false
         },
         {
           "name": "customer.optimization_score_weight",
@@ -1151,7 +1165,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Weight of the optimization score"
+          "description": "Weight of the optimization score",
+          "semantic": false
         },
         {
           "name": "customer.pay_per_conversion_eligibility_failure_reasons",
@@ -1160,7 +1175,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Reasons why pay-per-conversion is not eligible"
+          "description": "Reasons why pay-per-conversion is not eligible",
+          "semantic": false
         },
         {
           "name": "customer.remarketing_setting.google_global_site_tag",
@@ -1169,7 +1185,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Google global site tag snippet"
+          "description": "Google global site tag snippet",
+          "semantic": false
         },
         {
           "name": "customer.resource_name",
@@ -1178,7 +1195,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Resource name of the customer"
+          "description": "Resource name of the customer",
+          "semantic": false
         },
         {
           "name": "customer.test_account",
@@ -1187,7 +1205,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this is a test account"
+          "description": "Whether this is a test account",
+          "semantic": false
         },
         {
           "name": "customer.time_zone",
@@ -1196,7 +1215,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Time zone of the account"
+          "description": "Time zone of the account",
+          "semantic": false
         },
         {
           "name": "customer.tracking_url_template",
@@ -1205,7 +1225,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tracking URL template for the account"
+          "description": "Tracking URL template for the account",
+          "semantic": false
         },
         {
           "name": "segments.date",
@@ -1214,12 +1235,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date segment for the report row"
+          "description": "Date segment for the report row",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "campaigns": {
       "entity": "campaigns",
+      "kind": "DATA",
       "data_type_name": "CampaignsSearchData",
       "filter_type_name": "CampaignsSearchFilter",
       "in_filter_type_name": "CampaignsInFilter",
@@ -1238,7 +1265,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Campaign ID"
+          "description": "Campaign ID",
+          "semantic": false
         },
         {
           "name": "campaign.name",
@@ -1247,7 +1275,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign name"
+          "description": "Campaign name",
+          "semantic": false
         },
         {
           "name": "campaign.status",
@@ -1256,7 +1285,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign status (ENABLED, PAUSED, REMOVED)"
+          "description": "Campaign status (ENABLED, PAUSED, REMOVED)",
+          "semantic": false
         },
         {
           "name": "campaign.advertising_channel_type",
@@ -1265,7 +1295,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Advertising channel type (SEARCH, DISPLAY, etc.)"
+          "description": "Advertising channel type (SEARCH, DISPLAY, etc.)",
+          "semantic": false
         },
         {
           "name": "campaign.advertising_channel_sub_type",
@@ -1274,7 +1305,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Advertising channel sub-type"
+          "description": "Advertising channel sub-type",
+          "semantic": false
         },
         {
           "name": "campaign.bidding_strategy",
@@ -1283,7 +1315,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Bidding strategy resource name"
+          "description": "Bidding strategy resource name",
+          "semantic": false
         },
         {
           "name": "campaign.bidding_strategy_type",
@@ -1292,7 +1325,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Bidding strategy type"
+          "description": "Bidding strategy type",
+          "semantic": false
         },
         {
           "name": "campaign.campaign_budget",
@@ -1301,7 +1335,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign budget resource name"
+          "description": "Campaign budget resource name",
+          "semantic": false
         },
         {
           "name": "campaign_budget.amount_micros",
@@ -1310,7 +1345,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Campaign budget amount in micros"
+          "description": "Campaign budget amount in micros",
+          "semantic": false
         },
         {
           "name": "campaign.start_date_time",
@@ -1319,7 +1355,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign start date"
+          "description": "Campaign start date",
+          "semantic": false
         },
         {
           "name": "campaign.end_date_time",
@@ -1328,7 +1365,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign end date"
+          "description": "Campaign end date",
+          "semantic": false
         },
         {
           "name": "campaign.serving_status",
@@ -1337,7 +1375,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign serving status"
+          "description": "Campaign serving status",
+          "semantic": false
         },
         {
           "name": "campaign.resource_name",
@@ -1346,7 +1385,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Resource name of the campaign"
+          "description": "Resource name of the campaign",
+          "semantic": false
         },
         {
           "name": "campaign.labels",
@@ -1355,7 +1395,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Labels applied to the campaign"
+          "description": "Labels applied to the campaign",
+          "semantic": false
         },
         {
           "name": "campaign.network_settings.target_google_search",
@@ -1364,7 +1405,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether targeting Google Search"
+          "description": "Whether targeting Google Search",
+          "semantic": false
         },
         {
           "name": "campaign.network_settings.target_search_network",
@@ -1373,7 +1415,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether targeting search network"
+          "description": "Whether targeting search network",
+          "semantic": false
         },
         {
           "name": "campaign.network_settings.target_content_network",
@@ -1382,7 +1425,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether targeting content network"
+          "description": "Whether targeting content network",
+          "semantic": false
         },
         {
           "name": "campaign.network_settings.target_partner_search_network",
@@ -1391,7 +1435,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether targeting partner search network"
+          "description": "Whether targeting partner search network",
+          "semantic": false
         },
         {
           "name": "metrics.clicks",
@@ -1400,7 +1445,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of clicks"
+          "description": "Number of clicks",
+          "semantic": false
         },
         {
           "name": "metrics.ctr",
@@ -1409,7 +1455,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Click-through rate"
+          "description": "Click-through rate",
+          "semantic": false
         },
         {
           "name": "metrics.conversions",
@@ -1418,7 +1465,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Number of conversions"
+          "description": "Number of conversions",
+          "semantic": false
         },
         {
           "name": "metrics.conversions_value",
@@ -1427,7 +1475,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Total conversions value"
+          "description": "Total conversions value",
+          "semantic": false
         },
         {
           "name": "metrics.cost_micros",
@@ -1436,7 +1485,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Cost in micros"
+          "description": "Cost in micros",
+          "semantic": false
         },
         {
           "name": "metrics.impressions",
@@ -1445,7 +1495,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of impressions"
+          "description": "Number of impressions",
+          "semantic": false
         },
         {
           "name": "metrics.average_cpc",
@@ -1454,7 +1505,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average cost per click"
+          "description": "Average cost per click",
+          "semantic": false
         },
         {
           "name": "metrics.average_cpm",
@@ -1463,7 +1515,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Average cost per thousand impressions"
+          "description": "Average cost per thousand impressions",
+          "semantic": false
         },
         {
           "name": "metrics.interactions",
@@ -1472,7 +1525,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of interactions"
+          "description": "Number of interactions",
+          "semantic": false
         },
         {
           "name": "segments.date",
@@ -1481,7 +1535,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date segment for the report row"
+          "description": "Date segment for the report row",
+          "semantic": false
         },
         {
           "name": "segments.hour",
@@ -1490,7 +1545,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Hour segment"
+          "description": "Hour segment",
+          "semantic": false
         },
         {
           "name": "segments.ad_network_type",
@@ -1499,12 +1555,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad network type segment"
+          "description": "Ad network type segment",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "ad_groups": {
       "entity": "ad_groups",
+      "kind": "DATA",
       "data_type_name": "AdGroupsSearchData",
       "filter_type_name": "AdGroupsSearchFilter",
       "in_filter_type_name": "AdGroupsInFilter",
@@ -1523,7 +1585,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Parent campaign ID"
+          "description": "Parent campaign ID",
+          "semantic": false
         },
         {
           "name": "ad_group.id",
@@ -1532,7 +1595,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Ad group ID"
+          "description": "Ad group ID",
+          "semantic": false
         },
         {
           "name": "ad_group.name",
@@ -1541,7 +1605,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad group name"
+          "description": "Ad group name",
+          "semantic": false
         },
         {
           "name": "ad_group.status",
@@ -1550,7 +1615,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad group status (ENABLED, PAUSED, REMOVED)"
+          "description": "Ad group status (ENABLED, PAUSED, REMOVED)",
+          "semantic": false
         },
         {
           "name": "ad_group.type",
@@ -1559,7 +1625,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad group type"
+          "description": "Ad group type",
+          "semantic": false
         },
         {
           "name": "ad_group.ad_rotation_mode",
@@ -1568,7 +1635,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad rotation mode"
+          "description": "Ad rotation mode",
+          "semantic": false
         },
         {
           "name": "ad_group.base_ad_group",
@@ -1577,7 +1645,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Base ad group resource name"
+          "description": "Base ad group resource name",
+          "semantic": false
         },
         {
           "name": "ad_group.campaign",
@@ -1586,7 +1655,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Parent campaign resource name"
+          "description": "Parent campaign resource name",
+          "semantic": false
         },
         {
           "name": "ad_group.cpc_bid_micros",
@@ -1595,7 +1665,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "CPC bid in micros"
+          "description": "CPC bid in micros",
+          "semantic": false
         },
         {
           "name": "ad_group.cpm_bid_micros",
@@ -1604,7 +1675,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "CPM bid in micros"
+          "description": "CPM bid in micros",
+          "semantic": false
         },
         {
           "name": "ad_group.cpv_bid_micros",
@@ -1613,7 +1685,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "CPV bid in micros"
+          "description": "CPV bid in micros",
+          "semantic": false
         },
         {
           "name": "ad_group.effective_target_cpa_micros",
@@ -1622,7 +1695,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Effective target CPA in micros"
+          "description": "Effective target CPA in micros",
+          "semantic": false
         },
         {
           "name": "ad_group.effective_target_cpa_source",
@@ -1631,7 +1705,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Source of the effective target CPA"
+          "description": "Source of the effective target CPA",
+          "semantic": false
         },
         {
           "name": "ad_group.effective_target_roas",
@@ -1640,7 +1715,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Effective target ROAS"
+          "description": "Effective target ROAS",
+          "semantic": false
         },
         {
           "name": "ad_group.effective_target_roas_source",
@@ -1649,7 +1725,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Source of the effective target ROAS"
+          "description": "Source of the effective target ROAS",
+          "semantic": false
         },
         {
           "name": "ad_group.labels",
@@ -1658,7 +1735,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Labels applied to the ad group"
+          "description": "Labels applied to the ad group",
+          "semantic": false
         },
         {
           "name": "ad_group.resource_name",
@@ -1667,7 +1745,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Resource name of the ad group"
+          "description": "Resource name of the ad group",
+          "semantic": false
         },
         {
           "name": "ad_group.target_cpa_micros",
@@ -1676,7 +1755,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Target CPA in micros"
+          "description": "Target CPA in micros",
+          "semantic": false
         },
         {
           "name": "ad_group.target_roas",
@@ -1685,7 +1765,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Target ROAS"
+          "description": "Target ROAS",
+          "semantic": false
         },
         {
           "name": "ad_group.tracking_url_template",
@@ -1694,7 +1775,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tracking URL template"
+          "description": "Tracking URL template",
+          "semantic": false
         },
         {
           "name": "metrics.cost_micros",
@@ -1703,7 +1785,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Cost in micros"
+          "description": "Cost in micros",
+          "semantic": false
         },
         {
           "name": "segments.date",
@@ -1712,12 +1795,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date segment for the report row"
+          "description": "Date segment for the report row",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "ad_group_ads": {
       "entity": "ad_group_ads",
+      "kind": "DATA",
       "data_type_name": "AdGroupAdsSearchData",
       "filter_type_name": "AdGroupAdsSearchFilter",
       "in_filter_type_name": "AdGroupAdsInFilter",
@@ -1736,7 +1825,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Parent ad group ID"
+          "description": "Parent ad group ID",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.ad.id",
@@ -1745,7 +1835,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Ad ID"
+          "description": "Ad ID",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.ad.name",
@@ -1754,7 +1845,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad name"
+          "description": "Ad name",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.ad.type",
@@ -1763,7 +1855,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad type"
+          "description": "Ad type",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.status",
@@ -1772,7 +1865,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad group ad status (ENABLED, PAUSED, REMOVED)"
+          "description": "Ad group ad status (ENABLED, PAUSED, REMOVED)",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.ad_strength",
@@ -1781,7 +1875,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad strength rating"
+          "description": "Ad strength rating",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.ad.display_url",
@@ -1790,7 +1885,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Display URL of the ad"
+          "description": "Display URL of the ad",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.ad.final_urls",
@@ -1799,7 +1895,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Final URLs for the ad"
+          "description": "Final URLs for the ad",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.ad.final_mobile_urls",
@@ -1808,7 +1905,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Final mobile URLs for the ad"
+          "description": "Final mobile URLs for the ad",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.ad.final_url_suffix",
@@ -1817,7 +1915,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Final URL suffix"
+          "description": "Final URL suffix",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.ad.tracking_url_template",
@@ -1826,7 +1925,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tracking URL template"
+          "description": "Tracking URL template",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.ad.resource_name",
@@ -1835,7 +1935,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Resource name of the ad"
+          "description": "Resource name of the ad",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.ad_group",
@@ -1844,7 +1945,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad group resource name"
+          "description": "Ad group resource name",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.resource_name",
@@ -1853,7 +1955,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Resource name of the ad group ad"
+          "description": "Resource name of the ad group ad",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.labels",
@@ -1862,7 +1965,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Labels applied to the ad group ad"
+          "description": "Labels applied to the ad group ad",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.policy_summary.approval_status",
@@ -1871,7 +1975,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Policy approval status"
+          "description": "Policy approval status",
+          "semantic": false
         },
         {
           "name": "ad_group_ad.policy_summary.review_status",
@@ -1880,7 +1985,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Policy review status"
+          "description": "Policy review status",
+          "semantic": false
         },
         {
           "name": "segments.date",
@@ -1889,12 +1995,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date segment for the report row"
+          "description": "Date segment for the report row",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "campaign_labels": {
       "entity": "campaign_labels",
+      "kind": "DATA",
       "data_type_name": "CampaignLabelsSearchData",
       "filter_type_name": "CampaignLabelsSearchFilter",
       "in_filter_type_name": "CampaignLabelsInFilter",
@@ -1913,7 +2025,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Campaign ID"
+          "description": "Campaign ID",
+          "semantic": false
         },
         {
           "name": "campaign_label.resource_name",
@@ -1922,7 +2035,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Resource name of the campaign label"
+          "description": "Resource name of the campaign label",
+          "semantic": false
         },
         {
           "name": "label.id",
@@ -1931,7 +2045,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Label ID"
+          "description": "Label ID",
+          "semantic": false
         },
         {
           "name": "label.name",
@@ -1940,7 +2055,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Label name"
+          "description": "Label name",
+          "semantic": false
         },
         {
           "name": "label.resource_name",
@@ -1949,12 +2065,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Resource name of the label"
+          "description": "Resource name of the label",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "ad_group_labels": {
       "entity": "ad_group_labels",
+      "kind": "DATA",
       "data_type_name": "AdGroupLabelsSearchData",
       "filter_type_name": "AdGroupLabelsSearchFilter",
       "in_filter_type_name": "AdGroupLabelsInFilter",
@@ -1973,7 +2095,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Ad group ID"
+          "description": "Ad group ID",
+          "semantic": false
         },
         {
           "name": "ad_group_label.resource_name",
@@ -1982,7 +2105,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Resource name of the ad group label"
+          "description": "Resource name of the ad group label",
+          "semantic": false
         },
         {
           "name": "label.id",
@@ -1991,7 +2115,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Label ID"
+          "description": "Label ID",
+          "semantic": false
         },
         {
           "name": "label.name",
@@ -2000,7 +2125,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Label name"
+          "description": "Label name",
+          "semantic": false
         },
         {
           "name": "label.resource_name",
@@ -2009,12 +2135,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Resource name of the label"
+          "description": "Resource name of the label",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "ad_group_ad_labels": {
       "entity": "ad_group_ad_labels",
+      "kind": "DATA",
       "data_type_name": "AdGroupAdLabelsSearchData",
       "filter_type_name": "AdGroupAdLabelsSearchFilter",
       "in_filter_type_name": "AdGroupAdLabelsInFilter",
@@ -2033,7 +2165,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Ad ID"
+          "description": "Ad ID",
+          "semantic": false
         },
         {
           "name": "ad_group_ad_label.resource_name",
@@ -2042,7 +2175,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Resource name of the ad group ad label"
+          "description": "Resource name of the ad group ad label",
+          "semantic": false
         },
         {
           "name": "label.id",
@@ -2051,7 +2185,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Label ID"
+          "description": "Label ID",
+          "semantic": false
         },
         {
           "name": "label.name",
@@ -2060,7 +2195,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Label name"
+          "description": "Label name",
+          "semantic": false
         },
         {
           "name": "label.resource_name",
@@ -2069,9 +2205,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Resource name of the label"
+          "description": "Resource name of the label",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

@@ -1090,6 +1090,7 @@ class ConnectorGenerator:
             return {}
 
         search_schemas = {}
+        context_store_kind = self.spec.info.x_airbyte_context_store.kind
         for entity_config in self.spec.info.x_airbyte_context_store.entities:
             entity_name = entity_config.entity
 
@@ -1098,6 +1099,9 @@ class ConnectorGenerator:
                 continue
 
             fields = []
+            semantic_fields = []
+            semantic_entity_fields: list[dict] = []
+            semantic_metadata_fields: list[dict] = []
             for field in entity_config.fields:
                 # Reuse existing type conversion by constructing schema dict
                 # This handles type: "string" and type: ["null", "string"] formats
@@ -1112,6 +1116,7 @@ class ConnectorGenerator:
                 example_value_json = self._schema_to_example_value({"type": base_type}, field.name, base_indent=8)
                 json_example_value = self._schema_to_json_example_value({"type": base_type}, field.name)
 
+                semantic = field.x_airbyte_semantic_search
                 fields.append(
                     {
                         "name": field.name,
@@ -1121,12 +1126,32 @@ class ConnectorGenerator:
                         "example_value_json": example_value_json,
                         "json_example_value": json_example_value,
                         "description": field.description,
+                        "semantic": semantic is not None,
                     }
                 )
+                if semantic is not None:
+                    semantic_fields.append(
+                        {
+                            "name": field.name,
+                            "description": field.description,
+                            "context_max_chars": semantic.windowing.context_max_chars,
+                            "content_type": semantic.content_type,
+                        }
+                    )
+                    # A leading '/' on the metadata path resolves from the record root
+                    # (returned under `entity`); any other path is per-unit attribution
+                    # (returned under `metadata`).
+                    for meta in semantic.metadata:
+                        target = semantic_entity_fields if meta.path.startswith("/") else semantic_metadata_fields
+                        if not any(existing["name"] == meta.name for existing in target):
+                            target.append({"name": meta.name, "type": meta.type})
+
+            enrichment_outputs = [projection.name for enrichment in (entity_config.x_airbyte_enrichment or []) for projection in enrichment.project]
 
             entity_pascal = to_pascal_case(entity_name)
             search_schemas[entity_name] = {
                 "entity": entity_name,
+                "kind": context_store_kind,
                 "data_type_name": f"{entity_pascal}SearchData",
                 "filter_type_name": f"{entity_pascal}SearchFilter",
                 "in_filter_type_name": f"{entity_pascal}InFilter",
@@ -1138,6 +1163,10 @@ class ConnectorGenerator:
                 "condition_prefix": entity_pascal,
                 "condition_type_name": f"{entity_pascal}Condition",
                 "fields": fields,
+                "semantic_fields": semantic_fields,
+                "semantic_entity_fields": semantic_entity_fields,
+                "semantic_metadata_fields": semantic_metadata_fields,
+                "enrichment_outputs": enrichment_outputs,
             }
 
         return search_schemas

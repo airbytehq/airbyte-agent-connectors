@@ -5388,6 +5388,7 @@
   "search_schemas": {
     "accounts": {
       "entity": "accounts",
+      "kind": "DATA",
       "data_type_name": "AccountsSearchData",
       "filter_type_name": "AccountsSearchFilter",
       "in_filter_type_name": "AccountsInFilter",
@@ -5406,7 +5407,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the account record"
+          "description": "Unique identifier for the account record",
+          "semantic": false
         },
         {
           "name": "Name",
@@ -5415,7 +5417,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the account or company"
+          "description": "Name of the account or company",
+          "semantic": false
         },
         {
           "name": "AccountSource",
@@ -5424,7 +5427,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Source of the account record (e.g., Web, Referral)"
+          "description": "Source of the account record (e.g., Web, Referral)",
+          "semantic": false
         },
         {
           "name": "BillingAddress",
@@ -5433,7 +5437,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Complete billing address as a compound field"
+          "description": "Complete billing address as a compound field",
+          "semantic": false
         },
         {
           "name": "BillingCity",
@@ -5442,7 +5447,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "City portion of the billing address"
+          "description": "City portion of the billing address",
+          "semantic": false
         },
         {
           "name": "BillingCountry",
@@ -5451,7 +5457,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Country portion of the billing address"
+          "description": "Country portion of the billing address",
+          "semantic": false
         },
         {
           "name": "BillingPostalCode",
@@ -5460,7 +5467,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Postal code portion of the billing address"
+          "description": "Postal code portion of the billing address",
+          "semantic": false
         },
         {
           "name": "BillingState",
@@ -5469,7 +5477,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "State or province portion of the billing address"
+          "description": "State or province portion of the billing address",
+          "semantic": false
         },
         {
           "name": "BillingStreet",
@@ -5478,7 +5487,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Street address portion of the billing address"
+          "description": "Street address portion of the billing address",
+          "semantic": false
         },
         {
           "name": "CreatedById",
@@ -5487,7 +5497,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created this account"
+          "description": "ID of the user who created this account",
+          "semantic": false
         },
         {
           "name": "CreatedDate",
@@ -5496,7 +5507,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the account was created"
+          "description": "Date and time when the account was created",
+          "semantic": false
         },
         {
           "name": "Description",
@@ -5505,7 +5517,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Text description of the account"
+          "description": "Text description of the account",
+          "semantic": false
         },
         {
           "name": "Industry",
@@ -5514,7 +5527,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Primary business industry of the account"
+          "description": "Primary business industry of the account",
+          "semantic": false
         },
         {
           "name": "IsDeleted",
@@ -5523,7 +5537,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the account has been moved to the Recycle Bin"
+          "description": "Whether the account has been moved to the Recycle Bin",
+          "semantic": false
         },
         {
           "name": "LastActivityDate",
@@ -5532,7 +5547,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the last activity associated with this account"
+          "description": "Date of the last activity associated with this account",
+          "semantic": false
         },
         {
           "name": "LastModifiedById",
@@ -5541,7 +5557,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who last modified this account"
+          "description": "ID of the user who last modified this account",
+          "semantic": false
         },
         {
           "name": "LastModifiedDate",
@@ -5550,7 +5567,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the account was last modified"
+          "description": "Date and time when the account was last modified",
+          "semantic": false
         },
         {
           "name": "NumberOfEmployees",
@@ -5559,7 +5577,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of employees at the account"
+          "description": "Number of employees at the account",
+          "semantic": false
         },
         {
           "name": "OwnerId",
@@ -5568,7 +5587,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who owns this account"
+          "description": "ID of the user who owns this account",
+          "semantic": false
         },
         {
           "name": "ParentId",
@@ -5577,7 +5597,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the parent account, if this is a subsidiary"
+          "description": "ID of the parent account, if this is a subsidiary",
+          "semantic": false
         },
         {
           "name": "Phone",
@@ -5586,7 +5607,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Primary phone number for the account"
+          "description": "Primary phone number for the account",
+          "semantic": false
         },
         {
           "name": "ShippingAddress",
@@ -5595,7 +5617,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Complete shipping address as a compound field"
+          "description": "Complete shipping address as a compound field",
+          "semantic": false
         },
         {
           "name": "ShippingCity",
@@ -5604,7 +5627,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "City portion of the shipping address"
+          "description": "City portion of the shipping address",
+          "semantic": false
         },
         {
           "name": "ShippingCountry",
@@ -5613,7 +5637,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Country portion of the shipping address"
+          "description": "Country portion of the shipping address",
+          "semantic": false
         },
         {
           "name": "ShippingPostalCode",
@@ -5622,7 +5647,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Postal code portion of the shipping address"
+          "description": "Postal code portion of the shipping address",
+          "semantic": false
         },
         {
           "name": "ShippingState",
@@ -5631,7 +5657,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "State or province portion of the shipping address"
+          "description": "State or province portion of the shipping address",
+          "semantic": false
         },
         {
           "name": "ShippingStreet",
@@ -5640,7 +5667,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Street address portion of the shipping address"
+          "description": "Street address portion of the shipping address",
+          "semantic": false
         },
         {
           "name": "Type",
@@ -5649,7 +5677,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of account (e.g., Customer, Partner, Competitor)"
+          "description": "Type of account (e.g., Customer, Partner, Competitor)",
+          "semantic": false
         },
         {
           "name": "Website",
@@ -5658,7 +5687,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Website URL for the account"
+          "description": "Website URL for the account",
+          "semantic": false
         },
         {
           "name": "SystemModstamp",
@@ -5667,12 +5697,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "System timestamp when the record was last modified"
+          "description": "System timestamp when the record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "contacts": {
       "entity": "contacts",
+      "kind": "DATA",
       "data_type_name": "ContactsSearchData",
       "filter_type_name": "ContactsSearchFilter",
       "in_filter_type_name": "ContactsInFilter",
@@ -5691,7 +5727,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the contact record"
+          "description": "Unique identifier for the contact record",
+          "semantic": false
         },
         {
           "name": "AccountId",
@@ -5700,7 +5737,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the account this contact is associated with"
+          "description": "ID of the account this contact is associated with",
+          "semantic": false
         },
         {
           "name": "CreatedById",
@@ -5709,7 +5747,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created this contact"
+          "description": "ID of the user who created this contact",
+          "semantic": false
         },
         {
           "name": "CreatedDate",
@@ -5718,7 +5757,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the contact was created"
+          "description": "Date and time when the contact was created",
+          "semantic": false
         },
         {
           "name": "Department",
@@ -5727,7 +5767,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Department within the account where the contact works"
+          "description": "Department within the account where the contact works",
+          "semantic": false
         },
         {
           "name": "Email",
@@ -5736,7 +5777,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email address of the contact"
+          "description": "Email address of the contact",
+          "semantic": false
         },
         {
           "name": "FirstName",
@@ -5745,7 +5787,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "First name of the contact"
+          "description": "First name of the contact",
+          "semantic": false
         },
         {
           "name": "IsDeleted",
@@ -5754,7 +5797,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the contact has been moved to the Recycle Bin"
+          "description": "Whether the contact has been moved to the Recycle Bin",
+          "semantic": false
         },
         {
           "name": "LastActivityDate",
@@ -5763,7 +5807,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the last activity associated with this contact"
+          "description": "Date of the last activity associated with this contact",
+          "semantic": false
         },
         {
           "name": "LastModifiedById",
@@ -5772,7 +5817,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who last modified this contact"
+          "description": "ID of the user who last modified this contact",
+          "semantic": false
         },
         {
           "name": "LastModifiedDate",
@@ -5781,7 +5827,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the contact was last modified"
+          "description": "Date and time when the contact was last modified",
+          "semantic": false
         },
         {
           "name": "LastName",
@@ -5790,7 +5837,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last name of the contact"
+          "description": "Last name of the contact",
+          "semantic": false
         },
         {
           "name": "LeadSource",
@@ -5799,7 +5847,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Source from which this contact originated"
+          "description": "Source from which this contact originated",
+          "semantic": false
         },
         {
           "name": "MailingAddress",
@@ -5808,7 +5857,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Complete mailing address as a compound field"
+          "description": "Complete mailing address as a compound field",
+          "semantic": false
         },
         {
           "name": "MailingCity",
@@ -5817,7 +5867,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "City portion of the mailing address"
+          "description": "City portion of the mailing address",
+          "semantic": false
         },
         {
           "name": "MailingCountry",
@@ -5826,7 +5877,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Country portion of the mailing address"
+          "description": "Country portion of the mailing address",
+          "semantic": false
         },
         {
           "name": "MailingPostalCode",
@@ -5835,7 +5887,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Postal code portion of the mailing address"
+          "description": "Postal code portion of the mailing address",
+          "semantic": false
         },
         {
           "name": "MailingState",
@@ -5844,7 +5897,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "State or province portion of the mailing address"
+          "description": "State or province portion of the mailing address",
+          "semantic": false
         },
         {
           "name": "MailingStreet",
@@ -5853,7 +5907,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Street address portion of the mailing address"
+          "description": "Street address portion of the mailing address",
+          "semantic": false
         },
         {
           "name": "MobilePhone",
@@ -5862,7 +5917,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Mobile phone number of the contact"
+          "description": "Mobile phone number of the contact",
+          "semantic": false
         },
         {
           "name": "Name",
@@ -5871,7 +5927,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Full name of the contact (read-only, concatenation of first and last name)"
+          "description": "Full name of the contact (read-only, concatenation of first and last name)",
+          "semantic": false
         },
         {
           "name": "OwnerId",
@@ -5880,7 +5937,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who owns this contact"
+          "description": "ID of the user who owns this contact",
+          "semantic": false
         },
         {
           "name": "Phone",
@@ -5889,7 +5947,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Business phone number of the contact"
+          "description": "Business phone number of the contact",
+          "semantic": false
         },
         {
           "name": "ReportsToId",
@@ -5898,7 +5957,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the contact this contact reports to"
+          "description": "ID of the contact this contact reports to",
+          "semantic": false
         },
         {
           "name": "Title",
@@ -5907,7 +5967,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Job title of the contact"
+          "description": "Job title of the contact",
+          "semantic": false
         },
         {
           "name": "SystemModstamp",
@@ -5916,12 +5977,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "System timestamp when the record was last modified"
+          "description": "System timestamp when the record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "leads": {
       "entity": "leads",
+      "kind": "DATA",
       "data_type_name": "LeadsSearchData",
       "filter_type_name": "LeadsSearchFilter",
       "in_filter_type_name": "LeadsInFilter",
@@ -5940,7 +6007,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the lead record"
+          "description": "Unique identifier for the lead record",
+          "semantic": false
         },
         {
           "name": "Address",
@@ -5949,7 +6017,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Complete address as a compound field"
+          "description": "Complete address as a compound field",
+          "semantic": false
         },
         {
           "name": "City",
@@ -5958,7 +6027,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "City portion of the address"
+          "description": "City portion of the address",
+          "semantic": false
         },
         {
           "name": "Company",
@@ -5967,7 +6037,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Company or organization the lead works for"
+          "description": "Company or organization the lead works for",
+          "semantic": false
         },
         {
           "name": "ConvertedAccountId",
@@ -5976,7 +6047,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the account created when lead was converted"
+          "description": "ID of the account created when lead was converted",
+          "semantic": false
         },
         {
           "name": "ConvertedContactId",
@@ -5985,7 +6057,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the contact created when lead was converted"
+          "description": "ID of the contact created when lead was converted",
+          "semantic": false
         },
         {
           "name": "ConvertedDate",
@@ -5994,7 +6067,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date when the lead was converted"
+          "description": "Date when the lead was converted",
+          "semantic": false
         },
         {
           "name": "ConvertedOpportunityId",
@@ -6003,7 +6077,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the opportunity created when lead was converted"
+          "description": "ID of the opportunity created when lead was converted",
+          "semantic": false
         },
         {
           "name": "Country",
@@ -6012,7 +6087,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Country portion of the address"
+          "description": "Country portion of the address",
+          "semantic": false
         },
         {
           "name": "CreatedById",
@@ -6021,7 +6097,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created this lead"
+          "description": "ID of the user who created this lead",
+          "semantic": false
         },
         {
           "name": "CreatedDate",
@@ -6030,7 +6107,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the lead was created"
+          "description": "Date and time when the lead was created",
+          "semantic": false
         },
         {
           "name": "Email",
@@ -6039,7 +6117,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email address of the lead"
+          "description": "Email address of the lead",
+          "semantic": false
         },
         {
           "name": "FirstName",
@@ -6048,7 +6127,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "First name of the lead"
+          "description": "First name of the lead",
+          "semantic": false
         },
         {
           "name": "Industry",
@@ -6057,7 +6137,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Industry the lead's company operates in"
+          "description": "Industry the lead's company operates in",
+          "semantic": false
         },
         {
           "name": "IsConverted",
@@ -6066,7 +6147,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the lead has been converted to an account, contact, and opportunity"
+          "description": "Whether the lead has been converted to an account, contact, and opportunity",
+          "semantic": false
         },
         {
           "name": "IsDeleted",
@@ -6075,7 +6157,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the lead has been moved to the Recycle Bin"
+          "description": "Whether the lead has been moved to the Recycle Bin",
+          "semantic": false
         },
         {
           "name": "LastActivityDate",
@@ -6084,7 +6167,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the last activity associated with this lead"
+          "description": "Date of the last activity associated with this lead",
+          "semantic": false
         },
         {
           "name": "LastModifiedById",
@@ -6093,7 +6177,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who last modified this lead"
+          "description": "ID of the user who last modified this lead",
+          "semantic": false
         },
         {
           "name": "LastModifiedDate",
@@ -6102,7 +6187,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the lead was last modified"
+          "description": "Date and time when the lead was last modified",
+          "semantic": false
         },
         {
           "name": "LastName",
@@ -6111,7 +6197,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last name of the lead"
+          "description": "Last name of the lead",
+          "semantic": false
         },
         {
           "name": "LeadSource",
@@ -6120,7 +6207,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Source from which this lead originated"
+          "description": "Source from which this lead originated",
+          "semantic": false
         },
         {
           "name": "MobilePhone",
@@ -6129,7 +6217,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Mobile phone number of the lead"
+          "description": "Mobile phone number of the lead",
+          "semantic": false
         },
         {
           "name": "Name",
@@ -6138,7 +6227,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Full name of the lead (read-only, concatenation of first and last name)"
+          "description": "Full name of the lead (read-only, concatenation of first and last name)",
+          "semantic": false
         },
         {
           "name": "NumberOfEmployees",
@@ -6147,7 +6237,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of employees at the lead's company"
+          "description": "Number of employees at the lead's company",
+          "semantic": false
         },
         {
           "name": "OwnerId",
@@ -6156,7 +6247,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who owns this lead"
+          "description": "ID of the user who owns this lead",
+          "semantic": false
         },
         {
           "name": "Phone",
@@ -6165,7 +6257,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Phone number of the lead"
+          "description": "Phone number of the lead",
+          "semantic": false
         },
         {
           "name": "PostalCode",
@@ -6174,7 +6267,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Postal code portion of the address"
+          "description": "Postal code portion of the address",
+          "semantic": false
         },
         {
           "name": "Rating",
@@ -6183,7 +6277,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Rating of the lead (e.g., Hot, Warm, Cold)"
+          "description": "Rating of the lead (e.g., Hot, Warm, Cold)",
+          "semantic": false
         },
         {
           "name": "State",
@@ -6192,7 +6287,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "State or province portion of the address"
+          "description": "State or province portion of the address",
+          "semantic": false
         },
         {
           "name": "Status",
@@ -6201,7 +6297,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current status of the lead in the sales process"
+          "description": "Current status of the lead in the sales process",
+          "semantic": false
         },
         {
           "name": "Street",
@@ -6210,7 +6307,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Street address portion of the address"
+          "description": "Street address portion of the address",
+          "semantic": false
         },
         {
           "name": "Title",
@@ -6219,7 +6317,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Job title of the lead"
+          "description": "Job title of the lead",
+          "semantic": false
         },
         {
           "name": "Website",
@@ -6228,7 +6327,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Website URL for the lead's company"
+          "description": "Website URL for the lead's company",
+          "semantic": false
         },
         {
           "name": "SystemModstamp",
@@ -6237,12 +6337,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "System timestamp when the record was last modified"
+          "description": "System timestamp when the record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "opportunities": {
       "entity": "opportunities",
+      "kind": "DATA",
       "data_type_name": "OpportunitiesSearchData",
       "filter_type_name": "OpportunitiesSearchFilter",
       "in_filter_type_name": "OpportunitiesInFilter",
@@ -6261,7 +6367,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the opportunity record"
+          "description": "Unique identifier for the opportunity record",
+          "semantic": false
         },
         {
           "name": "AccountId",
@@ -6270,7 +6377,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the account associated with this opportunity"
+          "description": "ID of the account associated with this opportunity",
+          "semantic": false
         },
         {
           "name": "Amount",
@@ -6279,7 +6387,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Estimated total sale amount"
+          "description": "Estimated total sale amount",
+          "semantic": false
         },
         {
           "name": "CampaignId",
@@ -6288,7 +6397,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the campaign that generated this opportunity"
+          "description": "ID of the campaign that generated this opportunity",
+          "semantic": false
         },
         {
           "name": "CloseDate",
@@ -6297,7 +6407,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Expected close date for the opportunity"
+          "description": "Expected close date for the opportunity",
+          "semantic": false
         },
         {
           "name": "ContactId",
@@ -6306,7 +6417,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the primary contact for this opportunity"
+          "description": "ID of the primary contact for this opportunity",
+          "semantic": false
         },
         {
           "name": "CreatedById",
@@ -6315,7 +6427,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created this opportunity"
+          "description": "ID of the user who created this opportunity",
+          "semantic": false
         },
         {
           "name": "CreatedDate",
@@ -6324,7 +6437,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the opportunity was created"
+          "description": "Date and time when the opportunity was created",
+          "semantic": false
         },
         {
           "name": "Description",
@@ -6333,7 +6447,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Text description of the opportunity"
+          "description": "Text description of the opportunity",
+          "semantic": false
         },
         {
           "name": "ExpectedRevenue",
@@ -6342,7 +6457,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Expected revenue based on amount and probability"
+          "description": "Expected revenue based on amount and probability",
+          "semantic": false
         },
         {
           "name": "ForecastCategory",
@@ -6351,7 +6467,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Forecast category for this opportunity"
+          "description": "Forecast category for this opportunity",
+          "semantic": false
         },
         {
           "name": "ForecastCategoryName",
@@ -6360,7 +6477,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the forecast category"
+          "description": "Name of the forecast category",
+          "semantic": false
         },
         {
           "name": "IsClosed",
@@ -6369,7 +6487,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the opportunity is closed"
+          "description": "Whether the opportunity is closed",
+          "semantic": false
         },
         {
           "name": "IsDeleted",
@@ -6378,7 +6497,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the opportunity has been moved to the Recycle Bin"
+          "description": "Whether the opportunity has been moved to the Recycle Bin",
+          "semantic": false
         },
         {
           "name": "IsWon",
@@ -6387,7 +6507,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the opportunity was won"
+          "description": "Whether the opportunity was won",
+          "semantic": false
         },
         {
           "name": "LastActivityDate",
@@ -6396,7 +6517,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date of the last activity associated with this opportunity"
+          "description": "Date of the last activity associated with this opportunity",
+          "semantic": false
         },
         {
           "name": "LastModifiedById",
@@ -6405,7 +6527,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who last modified this opportunity"
+          "description": "ID of the user who last modified this opportunity",
+          "semantic": false
         },
         {
           "name": "LastModifiedDate",
@@ -6414,7 +6537,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the opportunity was last modified"
+          "description": "Date and time when the opportunity was last modified",
+          "semantic": false
         },
         {
           "name": "LeadSource",
@@ -6423,7 +6547,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Source from which this opportunity originated"
+          "description": "Source from which this opportunity originated",
+          "semantic": false
         },
         {
           "name": "Name",
@@ -6432,7 +6557,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the opportunity"
+          "description": "Name of the opportunity",
+          "semantic": false
         },
         {
           "name": "NextStep",
@@ -6441,7 +6567,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description of the next step in closing the opportunity"
+          "description": "Description of the next step in closing the opportunity",
+          "semantic": false
         },
         {
           "name": "OwnerId",
@@ -6450,7 +6577,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who owns this opportunity"
+          "description": "ID of the user who owns this opportunity",
+          "semantic": false
         },
         {
           "name": "Probability",
@@ -6459,7 +6587,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Likelihood of closing the opportunity (percentage)"
+          "description": "Likelihood of closing the opportunity (percentage)",
+          "semantic": false
         },
         {
           "name": "StageName",
@@ -6468,7 +6597,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current stage of the opportunity in the sales process"
+          "description": "Current stage of the opportunity in the sales process",
+          "semantic": false
         },
         {
           "name": "Type",
@@ -6477,7 +6607,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of opportunity (e.g., New Business, Existing Business)"
+          "description": "Type of opportunity (e.g., New Business, Existing Business)",
+          "semantic": false
         },
         {
           "name": "SystemModstamp",
@@ -6486,12 +6617,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "System timestamp when the record was last modified"
+          "description": "System timestamp when the record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "tasks": {
       "entity": "tasks",
+      "kind": "DATA",
       "data_type_name": "TasksSearchData",
       "filter_type_name": "TasksSearchFilter",
       "in_filter_type_name": "TasksInFilter",
@@ -6510,7 +6647,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the task record"
+          "description": "Unique identifier for the task record",
+          "semantic": false
         },
         {
           "name": "AccountId",
@@ -6519,7 +6657,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the account associated with this task"
+          "description": "ID of the account associated with this task",
+          "semantic": false
         },
         {
           "name": "ActivityDate",
@@ -6528,7 +6667,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Due date for the task"
+          "description": "Due date for the task",
+          "semantic": false
         },
         {
           "name": "CallDisposition",
@@ -6537,7 +6677,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Result of the call, if this task represents a call"
+          "description": "Result of the call, if this task represents a call",
+          "semantic": false
         },
         {
           "name": "CallDurationInSeconds",
@@ -6546,7 +6687,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Duration of the call in seconds"
+          "description": "Duration of the call in seconds",
+          "semantic": false
         },
         {
           "name": "CallType",
@@ -6555,7 +6697,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of call (Inbound, Outbound, Internal)"
+          "description": "Type of call (Inbound, Outbound, Internal)",
+          "semantic": false
         },
         {
           "name": "CompletedDateTime",
@@ -6564,7 +6707,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the task was completed"
+          "description": "Date and time when the task was completed",
+          "semantic": false
         },
         {
           "name": "CreatedById",
@@ -6573,7 +6717,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created this task"
+          "description": "ID of the user who created this task",
+          "semantic": false
         },
         {
           "name": "CreatedDate",
@@ -6582,7 +6727,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the task was created"
+          "description": "Date and time when the task was created",
+          "semantic": false
         },
         {
           "name": "Description",
@@ -6591,7 +6737,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Text description or notes about the task"
+          "description": "Text description or notes about the task",
+          "semantic": false
         },
         {
           "name": "IsClosed",
@@ -6600,7 +6747,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the task has been completed"
+          "description": "Whether the task has been completed",
+          "semantic": false
         },
         {
           "name": "IsDeleted",
@@ -6609,7 +6757,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the task has been moved to the Recycle Bin"
+          "description": "Whether the task has been moved to the Recycle Bin",
+          "semantic": false
         },
         {
           "name": "IsHighPriority",
@@ -6618,7 +6767,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the task is marked as high priority"
+          "description": "Whether the task is marked as high priority",
+          "semantic": false
         },
         {
           "name": "LastModifiedById",
@@ -6627,7 +6777,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who last modified this task"
+          "description": "ID of the user who last modified this task",
+          "semantic": false
         },
         {
           "name": "LastModifiedDate",
@@ -6636,7 +6787,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the task was last modified"
+          "description": "Date and time when the task was last modified",
+          "semantic": false
         },
         {
           "name": "OwnerId",
@@ -6645,7 +6797,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who owns this task"
+          "description": "ID of the user who owns this task",
+          "semantic": false
         },
         {
           "name": "Priority",
@@ -6654,7 +6807,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Priority level of the task (High, Normal, Low)"
+          "description": "Priority level of the task (High, Normal, Low)",
+          "semantic": false
         },
         {
           "name": "Status",
@@ -6663,7 +6817,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current status of the task"
+          "description": "Current status of the task",
+          "semantic": false
         },
         {
           "name": "Subject",
@@ -6672,7 +6827,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Subject or title of the task"
+          "description": "Subject or title of the task",
+          "semantic": false
         },
         {
           "name": "TaskSubtype",
@@ -6681,7 +6837,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Subtype of the task (e.g., Call, Email, Task)"
+          "description": "Subtype of the task (e.g., Call, Email, Task)",
+          "semantic": false
         },
         {
           "name": "Type",
@@ -6690,7 +6847,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of task"
+          "description": "Type of task",
+          "semantic": false
         },
         {
           "name": "WhatId",
@@ -6699,7 +6857,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the related object (Account, Opportunity, etc.)"
+          "description": "ID of the related object (Account, Opportunity, etc.)",
+          "semantic": false
         },
         {
           "name": "WhoId",
@@ -6708,7 +6867,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the related person (Contact or Lead)"
+          "description": "ID of the related person (Contact or Lead)",
+          "semantic": false
         },
         {
           "name": "SystemModstamp",
@@ -6717,12 +6877,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "System timestamp when the record was last modified"
+          "description": "System timestamp when the record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "users": {
       "entity": "users",
+      "kind": "DATA",
       "data_type_name": "UsersSearchData",
       "filter_type_name": "UsersSearchFilter",
       "in_filter_type_name": "UsersInFilter",
@@ -6741,7 +6907,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the user record"
+          "description": "Unique identifier for the user record",
+          "semantic": false
         },
         {
           "name": "AccountId",
@@ -6750,7 +6917,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the account associated with this user (for portal users)"
+          "description": "ID of the account associated with this user (for portal users)",
+          "semantic": false
         },
         {
           "name": "Alias",
@@ -6759,7 +6927,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Short name used to identify the user in list views and reports"
+          "description": "Short name used to identify the user in list views and reports",
+          "semantic": false
         },
         {
           "name": "City",
@@ -6768,7 +6937,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "City portion of the user's address"
+          "description": "City portion of the user's address",
+          "semantic": false
         },
         {
           "name": "CompanyName",
@@ -6777,7 +6947,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the user's company"
+          "description": "Name of the user's company",
+          "semantic": false
         },
         {
           "name": "ContactId",
@@ -6786,7 +6957,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the contact associated with this user (for portal users)"
+          "description": "ID of the contact associated with this user (for portal users)",
+          "semantic": false
         },
         {
           "name": "Country",
@@ -6795,7 +6967,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Country portion of the user's address"
+          "description": "Country portion of the user's address",
+          "semantic": false
         },
         {
           "name": "CreatedById",
@@ -6804,7 +6977,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created this user record"
+          "description": "ID of the user who created this user record",
+          "semantic": false
         },
         {
           "name": "CreatedDate",
@@ -6813,7 +6987,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the user was created"
+          "description": "Date and time when the user was created",
+          "semantic": false
         },
         {
           "name": "Department",
@@ -6822,7 +6997,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Department within the organization"
+          "description": "Department within the organization",
+          "semantic": false
         },
         {
           "name": "Division",
@@ -6831,7 +7007,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Division within the organization"
+          "description": "Division within the organization",
+          "semantic": false
         },
         {
           "name": "Email",
@@ -6840,7 +7017,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email address of the user"
+          "description": "Email address of the user",
+          "semantic": false
         },
         {
           "name": "EmployeeNumber",
@@ -6849,7 +7027,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Employee number or ID assigned by the organization"
+          "description": "Employee number or ID assigned by the organization",
+          "semantic": false
         },
         {
           "name": "FirstName",
@@ -6858,7 +7037,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "First name of the user"
+          "description": "First name of the user",
+          "semantic": false
         },
         {
           "name": "IsActive",
@@ -6867,7 +7047,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the user is active and can log in"
+          "description": "Whether the user is active and can log in",
+          "semantic": false
         },
         {
           "name": "LastLoginDate",
@@ -6876,7 +7057,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time of the user's most recent login"
+          "description": "Date and time of the user's most recent login",
+          "semantic": false
         },
         {
           "name": "LastModifiedById",
@@ -6885,7 +7067,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who last modified this user record"
+          "description": "ID of the user who last modified this user record",
+          "semantic": false
         },
         {
           "name": "LastModifiedDate",
@@ -6894,7 +7077,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the user was last modified"
+          "description": "Date and time when the user was last modified",
+          "semantic": false
         },
         {
           "name": "LastName",
@@ -6903,7 +7087,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last name of the user"
+          "description": "Last name of the user",
+          "semantic": false
         },
         {
           "name": "ManagerId",
@@ -6912,7 +7097,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user's manager"
+          "description": "ID of the user's manager",
+          "semantic": false
         },
         {
           "name": "MobilePhone",
@@ -6921,7 +7107,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Mobile phone number of the user"
+          "description": "Mobile phone number of the user",
+          "semantic": false
         },
         {
           "name": "Name",
@@ -6930,7 +7117,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Full name of the user"
+          "description": "Full name of the user",
+          "semantic": false
         },
         {
           "name": "Phone",
@@ -6939,7 +7127,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Business phone number of the user"
+          "description": "Business phone number of the user",
+          "semantic": false
         },
         {
           "name": "PostalCode",
@@ -6948,7 +7137,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Postal code portion of the user's address"
+          "description": "Postal code portion of the user's address",
+          "semantic": false
         },
         {
           "name": "ProfileId",
@@ -6957,7 +7147,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user's profile"
+          "description": "ID of the user's profile",
+          "semantic": false
         },
         {
           "name": "State",
@@ -6966,7 +7157,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "State or province portion of the user's address"
+          "description": "State or province portion of the user's address",
+          "semantic": false
         },
         {
           "name": "Street",
@@ -6975,7 +7167,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Street address of the user"
+          "description": "Street address of the user",
+          "semantic": false
         },
         {
           "name": "Title",
@@ -6984,7 +7177,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Job title of the user"
+          "description": "Job title of the user",
+          "semantic": false
         },
         {
           "name": "UserRoleId",
@@ -6993,7 +7187,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user's role in the organization"
+          "description": "ID of the user's role in the organization",
+          "semantic": false
         },
         {
           "name": "UserType",
@@ -7002,7 +7197,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of user license (e.g., Standard, PowerPartner)"
+          "description": "Type of user license (e.g., Standard, PowerPartner)",
+          "semantic": false
         },
         {
           "name": "Username",
@@ -7011,7 +7207,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Username for logging into Salesforce (unique across all orgs)"
+          "description": "Username for logging into Salesforce (unique across all orgs)",
+          "semantic": false
         },
         {
           "name": "SystemModstamp",
@@ -7020,12 +7217,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "System timestamp when the record was last modified"
+          "description": "System timestamp when the record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "opportunity_stages": {
       "entity": "opportunity_stages",
+      "kind": "DATA",
       "data_type_name": "OpportunityStagesSearchData",
       "filter_type_name": "OpportunityStagesSearchFilter",
       "in_filter_type_name": "OpportunityStagesInFilter",
@@ -7044,7 +7247,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the opportunity stage record"
+          "description": "Unique identifier for the opportunity stage record",
+          "semantic": false
         },
         {
           "name": "ApiName",
@@ -7053,7 +7257,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "API name of the stage used in code and integrations"
+          "description": "API name of the stage used in code and integrations",
+          "semantic": false
         },
         {
           "name": "CreatedById",
@@ -7062,7 +7267,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created this stage"
+          "description": "ID of the user who created this stage",
+          "semantic": false
         },
         {
           "name": "CreatedDate",
@@ -7071,7 +7277,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the stage was created"
+          "description": "Date and time when the stage was created",
+          "semantic": false
         },
         {
           "name": "DefaultProbability",
@@ -7080,7 +7287,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Default probability percentage for opportunities at this stage"
+          "description": "Default probability percentage for opportunities at this stage",
+          "semantic": false
         },
         {
           "name": "Description",
@@ -7089,7 +7297,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description of the stage"
+          "description": "Description of the stage",
+          "semantic": false
         },
         {
           "name": "ForecastCategory",
@@ -7098,7 +7307,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Forecast category for opportunities at this stage"
+          "description": "Forecast category for opportunities at this stage",
+          "semantic": false
         },
         {
           "name": "ForecastCategoryName",
@@ -7107,7 +7317,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Display name of the forecast category"
+          "description": "Display name of the forecast category",
+          "semantic": false
         },
         {
           "name": "IsActive",
@@ -7116,7 +7327,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the stage is currently active and can be used"
+          "description": "Whether the stage is currently active and can be used",
+          "semantic": false
         },
         {
           "name": "IsClosed",
@@ -7125,7 +7337,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether opportunities at this stage are considered closed"
+          "description": "Whether opportunities at this stage are considered closed",
+          "semantic": false
         },
         {
           "name": "IsWon",
@@ -7134,7 +7347,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether opportunities at this stage are considered won"
+          "description": "Whether opportunities at this stage are considered won",
+          "semantic": false
         },
         {
           "name": "LastModifiedById",
@@ -7143,7 +7357,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who last modified this stage"
+          "description": "ID of the user who last modified this stage",
+          "semantic": false
         },
         {
           "name": "LastModifiedDate",
@@ -7152,7 +7367,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the stage was last modified"
+          "description": "Date and time when the stage was last modified",
+          "semantic": false
         },
         {
           "name": "MasterLabel",
@@ -7161,7 +7377,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Display label for the stage"
+          "description": "Display label for the stage",
+          "semantic": false
         },
         {
           "name": "SortOrder",
@@ -7170,7 +7387,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Order in which the stage appears in the sales process"
+          "description": "Order in which the stage appears in the sales process",
+          "semantic": false
         },
         {
           "name": "SystemModstamp",
@@ -7179,9 +7397,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "System timestamp when the record was last modified"
+          "description": "System timestamp when the record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

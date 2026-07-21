@@ -1581,6 +1581,7 @@
   "search_schemas": {
     "companies": {
       "entity": "companies",
+      "kind": "DATA",
       "data_type_name": "CompaniesSearchData",
       "filter_type_name": "CompaniesSearchFilter",
       "in_filter_type_name": "CompaniesInFilter",
@@ -1599,7 +1600,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID of the application associated with the company"
+          "description": "The ID of the application associated with the company",
+          "semantic": false
         },
         {
           "name": "company_id",
@@ -1608,7 +1610,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the company"
+          "description": "The unique identifier of the company",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1617,7 +1620,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the company was created"
+          "description": "The date and time when the company was created",
+          "semantic": false
         },
         {
           "name": "custom_attributes",
@@ -1626,7 +1630,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Custom attributes specific to the company"
+          "description": "Custom attributes specific to the company",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1635,7 +1640,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID of the company"
+          "description": "The ID of the company",
+          "semantic": false
         },
         {
           "name": "industry",
@@ -1644,7 +1650,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The industry in which the company operates"
+          "description": "The industry in which the company operates",
+          "semantic": false
         },
         {
           "name": "monthly_spend",
@@ -1653,7 +1660,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The monthly spend of the company"
+          "description": "The monthly spend of the company",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1662,7 +1670,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the company"
+          "description": "The name of the company",
+          "semantic": false
         },
         {
           "name": "plan",
@@ -1671,7 +1680,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details of the company's subscription plan"
+          "description": "Details of the company's subscription plan",
+          "semantic": false
         },
         {
           "name": "remote_created_at",
@@ -1680,7 +1690,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The remote date and time when the company was created"
+          "description": "The remote date and time when the company was created",
+          "semantic": false
         },
         {
           "name": "segments",
@@ -1689,7 +1700,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Segments associated with the company"
+          "description": "Segments associated with the company",
+          "semantic": false
         },
         {
           "name": "session_count",
@@ -1698,7 +1710,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of sessions related to the company"
+          "description": "The number of sessions related to the company",
+          "semantic": false
         },
         {
           "name": "size",
@@ -1707,7 +1720,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The size of the company"
+          "description": "The size of the company",
+          "semantic": false
         },
         {
           "name": "tags",
@@ -1716,7 +1730,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Tags associated with the company"
+          "description": "Tags associated with the company",
+          "semantic": false
         },
         {
           "name": "type",
@@ -1725,7 +1740,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of the company"
+          "description": "The type of the company",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1734,7 +1750,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the company was last updated"
+          "description": "The date and time when the company was last updated",
+          "semantic": false
         },
         {
           "name": "user_count",
@@ -1743,7 +1760,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of users associated with the company"
+          "description": "The number of users associated with the company",
+          "semantic": false
         },
         {
           "name": "website",
@@ -1752,12 +1770,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The website of the company"
+          "description": "The website of the company",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "contacts": {
       "entity": "contacts",
+      "kind": "DATA",
       "data_type_name": "ContactsSearchData",
       "filter_type_name": "ContactsSearchFilter",
       "in_filter_type_name": "ContactsInFilter",
@@ -1776,7 +1800,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the Android app associated with the contact."
+          "description": "The name of the Android app associated with the contact.",
+          "semantic": false
         },
         {
           "name": "android_app_version",
@@ -1785,7 +1810,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The version of the Android app associated with the contact."
+          "description": "The version of the Android app associated with the contact.",
+          "semantic": false
         },
         {
           "name": "android_device",
@@ -1794,7 +1820,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The device used by the contact for Android."
+          "description": "The device used by the contact for Android.",
+          "semantic": false
         },
         {
           "name": "android_last_seen_at",
@@ -1803,7 +1830,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time when the contact was last seen on Android."
+          "description": "The date and time when the contact was last seen on Android.",
+          "semantic": false
         },
         {
           "name": "android_os_version",
@@ -1812,7 +1840,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The operating system version of the Android device."
+          "description": "The operating system version of the Android device.",
+          "semantic": false
         },
         {
           "name": "android_sdk_version",
@@ -1821,7 +1850,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The SDK version of the Android device."
+          "description": "The SDK version of the Android device.",
+          "semantic": false
         },
         {
           "name": "avatar",
@@ -1830,7 +1860,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL pointing to the contact's avatar image."
+          "description": "URL pointing to the contact's avatar image.",
+          "semantic": false
         },
         {
           "name": "browser",
@@ -1839,7 +1870,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The browser used by the contact."
+          "description": "The browser used by the contact.",
+          "semantic": false
         },
         {
           "name": "browser_language",
@@ -1848,7 +1880,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The language preference set in the contact's browser."
+          "description": "The language preference set in the contact's browser.",
+          "semantic": false
         },
         {
           "name": "browser_version",
@@ -1857,7 +1890,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The version of the browser used by the contact."
+          "description": "The version of the browser used by the contact.",
+          "semantic": false
         },
         {
           "name": "companies",
@@ -1866,7 +1900,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Companies associated with the contact."
+          "description": "Companies associated with the contact.",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1875,7 +1910,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the contact was created."
+          "description": "The date and time when the contact was created.",
+          "semantic": false
         },
         {
           "name": "custom_attributes",
@@ -1884,7 +1920,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Custom attributes defined for the contact."
+          "description": "Custom attributes defined for the contact.",
+          "semantic": false
         },
         {
           "name": "email",
@@ -1893,7 +1930,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The email address of the contact."
+          "description": "The email address of the contact.",
+          "semantic": false
         },
         {
           "name": "external_id",
@@ -1902,7 +1940,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "External identifier for the contact."
+          "description": "External identifier for the contact.",
+          "semantic": false
         },
         {
           "name": "has_hard_bounced",
@@ -1911,7 +1950,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the contact has hard bounced."
+          "description": "Flag indicating if the contact has hard bounced.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1920,7 +1960,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the contact."
+          "description": "The unique identifier of the contact.",
+          "semantic": false
         },
         {
           "name": "ios_app_name",
@@ -1929,7 +1970,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the iOS app associated with the contact."
+          "description": "The name of the iOS app associated with the contact.",
+          "semantic": false
         },
         {
           "name": "ios_app_version",
@@ -1938,7 +1980,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The version of the iOS app associated with the contact."
+          "description": "The version of the iOS app associated with the contact.",
+          "semantic": false
         },
         {
           "name": "ios_device",
@@ -1947,7 +1990,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The device used by the contact for iOS."
+          "description": "The device used by the contact for iOS.",
+          "semantic": false
         },
         {
           "name": "ios_last_seen_at",
@@ -1956,7 +2000,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the contact was last seen on iOS."
+          "description": "The date and time when the contact was last seen on iOS.",
+          "semantic": false
         },
         {
           "name": "ios_os_version",
@@ -1965,7 +2010,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The operating system version of the iOS device."
+          "description": "The operating system version of the iOS device.",
+          "semantic": false
         },
         {
           "name": "ios_sdk_version",
@@ -1974,7 +2020,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The SDK version of the iOS device."
+          "description": "The SDK version of the iOS device.",
+          "semantic": false
         },
         {
           "name": "language_override",
@@ -1983,7 +2030,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Language override set for the contact."
+          "description": "Language override set for the contact.",
+          "semantic": false
         },
         {
           "name": "last_contacted_at",
@@ -1992,7 +2040,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the contact was last contacted."
+          "description": "The date and time when the contact was last contacted.",
+          "semantic": false
         },
         {
           "name": "last_email_clicked_at",
@@ -2001,7 +2050,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the contact last clicked an email."
+          "description": "The date and time when the contact last clicked an email.",
+          "semantic": false
         },
         {
           "name": "last_email_opened_at",
@@ -2010,7 +2060,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the contact last opened an email."
+          "description": "The date and time when the contact last opened an email.",
+          "semantic": false
         },
         {
           "name": "last_replied_at",
@@ -2019,7 +2070,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the contact last replied."
+          "description": "The date and time when the contact last replied.",
+          "semantic": false
         },
         {
           "name": "last_seen_at",
@@ -2028,7 +2080,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the contact was last seen overall."
+          "description": "The date and time when the contact was last seen overall.",
+          "semantic": false
         },
         {
           "name": "location",
@@ -2037,7 +2090,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Location details of the contact."
+          "description": "Location details of the contact.",
+          "semantic": false
         },
         {
           "name": "marked_email_as_spam",
@@ -2046,7 +2100,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the contact's email was marked as spam."
+          "description": "Flag indicating if the contact's email was marked as spam.",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2055,7 +2110,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the contact."
+          "description": "The name of the contact.",
+          "semantic": false
         },
         {
           "name": "notes",
@@ -2064,7 +2120,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Notes associated with the contact."
+          "description": "Notes associated with the contact.",
+          "semantic": false
         },
         {
           "name": "opted_in_subscription_types",
@@ -2073,7 +2130,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Subscription types the contact opted into."
+          "description": "Subscription types the contact opted into.",
+          "semantic": false
         },
         {
           "name": "opted_out_subscription_types",
@@ -2082,7 +2140,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Subscription types the contact opted out from."
+          "description": "Subscription types the contact opted out from.",
+          "semantic": false
         },
         {
           "name": "os",
@@ -2091,7 +2150,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Operating system of the contact's device."
+          "description": "Operating system of the contact's device.",
+          "semantic": false
         },
         {
           "name": "owner_id",
@@ -2100,7 +2160,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The unique identifier of the contact's owner."
+          "description": "The unique identifier of the contact's owner.",
+          "semantic": false
         },
         {
           "name": "phone",
@@ -2109,7 +2170,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The phone number of the contact."
+          "description": "The phone number of the contact.",
+          "semantic": false
         },
         {
           "name": "referrer",
@@ -2118,7 +2180,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Referrer information related to the contact."
+          "description": "Referrer information related to the contact.",
+          "semantic": false
         },
         {
           "name": "role",
@@ -2127,7 +2190,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Role or position of the contact."
+          "description": "Role or position of the contact.",
+          "semantic": false
         },
         {
           "name": "signed_up_at",
@@ -2136,7 +2200,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the contact signed up."
+          "description": "The date and time when the contact signed up.",
+          "semantic": false
         },
         {
           "name": "sms_consent",
@@ -2145,7 +2210,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Consent status for SMS communication."
+          "description": "Consent status for SMS communication.",
+          "semantic": false
         },
         {
           "name": "social_profiles",
@@ -2154,7 +2220,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Social profiles associated with the contact."
+          "description": "Social profiles associated with the contact.",
+          "semantic": false
         },
         {
           "name": "tags",
@@ -2163,7 +2230,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Tags associated with the contact."
+          "description": "Tags associated with the contact.",
+          "semantic": false
         },
         {
           "name": "type",
@@ -2172,7 +2240,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of contact."
+          "description": "Type of contact.",
+          "semantic": false
         },
         {
           "name": "unsubscribed_from_emails",
@@ -2181,7 +2250,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the contact unsubscribed from emails."
+          "description": "Flag indicating if the contact unsubscribed from emails.",
+          "semantic": false
         },
         {
           "name": "unsubscribed_from_sms",
@@ -2190,7 +2260,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the contact unsubscribed from SMS."
+          "description": "Flag indicating if the contact unsubscribed from SMS.",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2199,7 +2270,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the contact was last updated."
+          "description": "The date and time when the contact was last updated.",
+          "semantic": false
         },
         {
           "name": "utm_campaign",
@@ -2208,7 +2280,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign data from UTM parameters."
+          "description": "Campaign data from UTM parameters.",
+          "semantic": false
         },
         {
           "name": "utm_content",
@@ -2217,7 +2290,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Content data from UTM parameters."
+          "description": "Content data from UTM parameters.",
+          "semantic": false
         },
         {
           "name": "utm_medium",
@@ -2226,7 +2300,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Medium data from UTM parameters."
+          "description": "Medium data from UTM parameters.",
+          "semantic": false
         },
         {
           "name": "utm_source",
@@ -2235,7 +2310,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Source data from UTM parameters."
+          "description": "Source data from UTM parameters.",
+          "semantic": false
         },
         {
           "name": "utm_term",
@@ -2244,7 +2320,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Term data from UTM parameters."
+          "description": "Term data from UTM parameters.",
+          "semantic": false
         },
         {
           "name": "workspace_id",
@@ -2253,12 +2330,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the workspace associated with the contact."
+          "description": "The unique identifier of the workspace associated with the contact.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "conversations": {
       "entity": "conversations",
+      "kind": "DATA",
       "data_type_name": "ConversationsSearchData",
       "filter_type_name": "ConversationsSearchFilter",
       "in_filter_type_name": "ConversationsInFilter",
@@ -2277,7 +2360,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The ID of the administrator assigned to the conversation"
+          "description": "The ID of the administrator assigned to the conversation",
+          "semantic": false
         },
         {
           "name": "ai_agent",
@@ -2286,7 +2370,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Data related to AI Agent involvement in the conversation"
+          "description": "Data related to AI Agent involvement in the conversation",
+          "semantic": false
         },
         {
           "name": "ai_agent_participated",
@@ -2295,7 +2380,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether AI Agent participated in the conversation"
+          "description": "Indicates whether AI Agent participated in the conversation",
+          "semantic": false
         },
         {
           "name": "assignee",
@@ -2304,7 +2390,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The assigned user responsible for the conversation."
+          "description": "The assigned user responsible for the conversation.",
+          "semantic": false
         },
         {
           "name": "contacts",
@@ -2313,7 +2400,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "List of contacts involved in the conversation."
+          "description": "List of contacts involved in the conversation.",
+          "semantic": false
         },
         {
           "name": "conversation_message",
@@ -2322,7 +2410,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The main message content of the conversation."
+          "description": "The main message content of the conversation.",
+          "semantic": false
         },
         {
           "name": "conversation_rating",
@@ -2331,7 +2420,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Ratings given to the conversation by the customer and teammate."
+          "description": "Ratings given to the conversation by the customer and teammate.",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -2340,7 +2430,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The timestamp when the conversation was created"
+          "description": "The timestamp when the conversation was created",
+          "semantic": false
         },
         {
           "name": "custom_attributes",
@@ -2349,7 +2440,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Custom attributes associated with the conversation"
+          "description": "Custom attributes associated with the conversation",
+          "semantic": false
         },
         {
           "name": "customer_first_reply",
@@ -2358,7 +2450,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Timestamp indicating when the customer first replied."
+          "description": "Timestamp indicating when the customer first replied.",
+          "semantic": false
         },
         {
           "name": "customers",
@@ -2367,7 +2460,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of customers involved in the conversation"
+          "description": "List of customers involved in the conversation",
+          "semantic": false
         },
         {
           "name": "first_contact_reply",
@@ -2376,7 +2470,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Timestamp indicating when the first contact replied."
+          "description": "Timestamp indicating when the first contact replied.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2385,7 +2480,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique ID of the conversation"
+          "description": "The unique ID of the conversation",
+          "semantic": false
         },
         {
           "name": "linked_objects",
@@ -2394,7 +2490,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Linked objects associated with the conversation"
+          "description": "Linked objects associated with the conversation",
+          "semantic": false
         },
         {
           "name": "open",
@@ -2403,7 +2500,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the conversation is open or closed"
+          "description": "Indicates if the conversation is open or closed",
+          "semantic": false
         },
         {
           "name": "priority",
@@ -2412,7 +2510,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The priority level of the conversation"
+          "description": "The priority level of the conversation",
+          "semantic": false
         },
         {
           "name": "read",
@@ -2421,7 +2520,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the conversation has been read"
+          "description": "Indicates if the conversation has been read",
+          "semantic": false
         },
         {
           "name": "redacted",
@@ -2430,7 +2530,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the conversation is redacted"
+          "description": "Indicates if the conversation is redacted",
+          "semantic": false
         },
         {
           "name": "sent_at",
@@ -2439,7 +2540,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The timestamp when the conversation was sent"
+          "description": "The timestamp when the conversation was sent",
+          "semantic": false
         },
         {
           "name": "sla_applied",
@@ -2448,7 +2550,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Service Level Agreement details applied to the conversation."
+          "description": "Service Level Agreement details applied to the conversation.",
+          "semantic": false
         },
         {
           "name": "snoozed_until",
@@ -2457,7 +2560,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp until the conversation is snoozed"
+          "description": "Timestamp until the conversation is snoozed",
+          "semantic": false
         },
         {
           "name": "source",
@@ -2466,7 +2570,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Source details of the conversation."
+          "description": "Source details of the conversation.",
+          "semantic": false
         },
         {
           "name": "state",
@@ -2475,7 +2580,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The state of the conversation (e.g., new, in progress)"
+          "description": "The state of the conversation (e.g., new, in progress)",
+          "semantic": false
         },
         {
           "name": "statistics",
@@ -2484,7 +2590,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Statistics related to the conversation."
+          "description": "Statistics related to the conversation.",
+          "semantic": false
         },
         {
           "name": "tags",
@@ -2493,7 +2600,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Tags applied to the conversation."
+          "description": "Tags applied to the conversation.",
+          "semantic": false
         },
         {
           "name": "team_assignee_id",
@@ -2502,7 +2610,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The ID of the team assigned to the conversation"
+          "description": "The ID of the team assigned to the conversation",
+          "semantic": false
         },
         {
           "name": "teammates",
@@ -2511,7 +2620,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "List of teammates involved in the conversation."
+          "description": "List of teammates involved in the conversation.",
+          "semantic": false
         },
         {
           "name": "title",
@@ -2520,7 +2630,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The title of the conversation"
+          "description": "The title of the conversation",
+          "semantic": false
         },
         {
           "name": "topics",
@@ -2529,7 +2640,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Topics associated with the conversation."
+          "description": "Topics associated with the conversation.",
+          "semantic": false
         },
         {
           "name": "type",
@@ -2538,7 +2650,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of the conversation"
+          "description": "The type of the conversation",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2547,7 +2660,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The timestamp when the conversation was last updated"
+          "description": "The timestamp when the conversation was last updated",
+          "semantic": false
         },
         {
           "name": "user",
@@ -2556,7 +2670,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The user related to the conversation."
+          "description": "The user related to the conversation.",
+          "semantic": false
         },
         {
           "name": "waiting_since",
@@ -2565,12 +2680,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp since waiting for a response"
+          "description": "Timestamp since waiting for a response",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "teams": {
       "entity": "teams",
+      "kind": "DATA",
       "data_type_name": "TeamsSearchData",
       "filter_type_name": "TeamsSearchFilter",
       "in_filter_type_name": "TeamsInFilter",
@@ -2589,7 +2710,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Array of user IDs representing the admins of the team."
+          "description": "Array of user IDs representing the admins of the team.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2598,7 +2720,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the team."
+          "description": "Unique identifier for the team.",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2607,7 +2730,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the team."
+          "description": "Name of the team.",
+          "semantic": false
         },
         {
           "name": "type",
@@ -2616,9 +2740,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of team (e.g., 'internal', 'external')."
+          "description": "Type of team (e.g., 'internal', 'external').",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

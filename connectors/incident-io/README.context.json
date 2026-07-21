@@ -965,6 +965,7 @@
   "search_schemas": {
     "incidents": {
       "entity": "incidents",
+      "kind": "DATA",
       "data_type_name": "IncidentsSearchData",
       "filter_type_name": "IncidentsSearchFilter",
       "in_filter_type_name": "IncidentsInFilter",
@@ -983,7 +984,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the incident was created"
+          "description": "When the incident was created",
+          "semantic": false
         },
         {
           "name": "creator",
@@ -992,7 +994,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The user who created the incident"
+          "description": "The user who created the incident",
+          "semantic": false
         },
         {
           "name": "custom_field_entries",
@@ -1001,7 +1004,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Custom field values for the incident"
+          "description": "Custom field values for the incident",
+          "semantic": false
         },
         {
           "name": "duration_metrics",
@@ -1010,7 +1014,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Duration metrics associated with the incident"
+          "description": "Duration metrics associated with the incident",
+          "semantic": false
         },
         {
           "name": "has_debrief",
@@ -1019,7 +1024,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the incident has had a debrief"
+          "description": "Whether the incident has had a debrief",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1028,7 +1034,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the incident"
+          "description": "Unique identifier for the incident",
+          "semantic": false
         },
         {
           "name": "incident_role_assignments",
@@ -1037,7 +1044,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Role assignments for the incident"
+          "description": "Role assignments for the incident",
+          "semantic": false
         },
         {
           "name": "incident_status",
@@ -1046,7 +1054,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Current status of the incident"
+          "description": "Current status of the incident",
+          "semantic": false
         },
         {
           "name": "incident_timestamp_values",
@@ -1055,7 +1064,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Timestamp values for the incident"
+          "description": "Timestamp values for the incident",
+          "semantic": false
         },
         {
           "name": "incident_type",
@@ -1064,7 +1074,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Type of the incident"
+          "description": "Type of the incident",
+          "semantic": false
         },
         {
           "name": "mode",
@@ -1073,7 +1084,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Mode of the incident: standard, retrospective, test, or tutorial"
+          "description": "Mode of the incident: standard, retrospective, test, or tutorial",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1082,7 +1094,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name/title of the incident"
+          "description": "Name/title of the incident",
+          "semantic": false
         },
         {
           "name": "permalink",
@@ -1091,7 +1104,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Link to the incident in the dashboard"
+          "description": "Link to the incident in the dashboard",
+          "semantic": false
         },
         {
           "name": "reference",
@@ -1100,7 +1114,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Human-readable reference (e.g. INC-123)"
+          "description": "Human-readable reference (e.g. INC-123)",
+          "semantic": false
         },
         {
           "name": "severity",
@@ -1109,7 +1124,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Severity of the incident"
+          "description": "Severity of the incident",
+          "semantic": false
         },
         {
           "name": "slack_channel_id",
@@ -1118,7 +1134,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Slack channel ID for the incident"
+          "description": "Slack channel ID for the incident",
+          "semantic": false
         },
         {
           "name": "slack_channel_name",
@@ -1127,7 +1144,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Slack channel name for the incident"
+          "description": "Slack channel name for the incident",
+          "semantic": false
         },
         {
           "name": "slack_team_id",
@@ -1136,7 +1154,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Slack team/workspace ID"
+          "description": "Slack team/workspace ID",
+          "semantic": false
         },
         {
           "name": "summary",
@@ -1145,7 +1164,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Detailed summary of the incident"
+          "description": "Detailed summary of the incident",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1154,7 +1174,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the incident was last updated"
+          "description": "When the incident was last updated",
+          "semantic": false
         },
         {
           "name": "visibility",
@@ -1163,7 +1184,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Whether the incident is public or private"
+          "description": "Whether the incident is public or private",
+          "semantic": false
         },
         {
           "name": "workload_minutes_late",
@@ -1172,7 +1194,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Minutes of workload classified as late"
+          "description": "Minutes of workload classified as late",
+          "semantic": false
         },
         {
           "name": "workload_minutes_sleeping",
@@ -1181,7 +1204,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Minutes of workload classified as sleeping"
+          "description": "Minutes of workload classified as sleeping",
+          "semantic": false
         },
         {
           "name": "workload_minutes_total",
@@ -1190,7 +1214,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Total workload minutes"
+          "description": "Total workload minutes",
+          "semantic": false
         },
         {
           "name": "workload_minutes_working",
@@ -1199,12 +1224,18 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Minutes of workload classified as working"
+          "description": "Minutes of workload classified as working",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "alerts": {
       "entity": "alerts",
+      "kind": "DATA",
       "data_type_name": "AlertsSearchData",
       "filter_type_name": "AlertsSearchFilter",
       "in_filter_type_name": "AlertsInFilter",
@@ -1223,7 +1254,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the alert source that generated this alert"
+          "description": "ID of the alert source that generated this alert",
+          "semantic": false
         },
         {
           "name": "attributes",
@@ -1232,7 +1264,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Structured alert attributes"
+          "description": "Structured alert attributes",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1241,7 +1274,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the alert was created"
+          "description": "When the alert was created",
+          "semantic": false
         },
         {
           "name": "deduplication_key",
@@ -1250,7 +1284,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deduplication key uniquely referencing this alert"
+          "description": "Deduplication key uniquely referencing this alert",
+          "semantic": false
         },
         {
           "name": "description",
@@ -1259,7 +1294,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description of the alert"
+          "description": "Description of the alert",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1268,7 +1304,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the alert"
+          "description": "Unique identifier for the alert",
+          "semantic": false
         },
         {
           "name": "resolved_at",
@@ -1277,7 +1314,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the alert was resolved"
+          "description": "When the alert was resolved",
+          "semantic": false
         },
         {
           "name": "source_url",
@@ -1286,7 +1324,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Link to the alert in the upstream system"
+          "description": "Link to the alert in the upstream system",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1295,7 +1334,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the alert: firing or resolved"
+          "description": "Status of the alert: firing or resolved",
+          "semantic": false
         },
         {
           "name": "title",
@@ -1304,7 +1344,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Title of the alert"
+          "description": "Title of the alert",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1313,12 +1354,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the alert was last updated"
+          "description": "When the alert was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "users": {
       "entity": "users",
+      "kind": "DATA",
       "data_type_name": "UsersSearchData",
       "filter_type_name": "UsersSearchFilter",
       "in_filter_type_name": "UsersInFilter",
@@ -1337,7 +1384,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Base role assigned to the user"
+          "description": "Base role assigned to the user",
+          "semantic": false
         },
         {
           "name": "custom_roles",
@@ -1346,7 +1394,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Custom roles assigned to the user"
+          "description": "Custom roles assigned to the user",
+          "semantic": false
         },
         {
           "name": "email",
@@ -1355,7 +1404,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email address of the user"
+          "description": "Email address of the user",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1364,7 +1414,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the user"
+          "description": "Unique identifier for the user",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1373,7 +1424,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Full name of the user"
+          "description": "Full name of the user",
+          "semantic": false
         },
         {
           "name": "role",
@@ -1382,7 +1434,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deprecated role field"
+          "description": "Deprecated role field",
+          "semantic": false
         },
         {
           "name": "slack_user_id",
@@ -1391,12 +1444,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Slack user ID"
+          "description": "Slack user ID",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "incident_updates": {
       "entity": "incident_updates",
+      "kind": "DATA",
       "data_type_name": "IncidentUpdatesSearchData",
       "filter_type_name": "IncidentUpdatesSearchFilter",
       "in_filter_type_name": "IncidentUpdatesInFilter",
@@ -1415,7 +1474,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the update was created"
+          "description": "When the update was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1424,7 +1484,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the incident update"
+          "description": "Unique identifier for the incident update",
+          "semantic": false
         },
         {
           "name": "incident_id",
@@ -1433,7 +1494,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the incident this update belongs to"
+          "description": "ID of the incident this update belongs to",
+          "semantic": false
         },
         {
           "name": "message",
@@ -1442,7 +1504,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Update message content"
+          "description": "Update message content",
+          "semantic": false
         },
         {
           "name": "new_incident_status",
@@ -1451,7 +1514,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "New incident status set by this update"
+          "description": "New incident status set by this update",
+          "semantic": false
         },
         {
           "name": "new_severity",
@@ -1460,7 +1524,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "New severity set by this update"
+          "description": "New severity set by this update",
+          "semantic": false
         },
         {
           "name": "updater",
@@ -1469,12 +1534,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Who made this update"
+          "description": "Who made this update",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "incident_roles": {
       "entity": "incident_roles",
+      "kind": "DATA",
       "data_type_name": "IncidentRolesSearchData",
       "filter_type_name": "IncidentRolesSearchFilter",
       "in_filter_type_name": "IncidentRolesInFilter",
@@ -1493,7 +1564,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the role was created"
+          "description": "When the role was created",
+          "semantic": false
         },
         {
           "name": "description",
@@ -1502,7 +1574,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description of the role"
+          "description": "Description of the role",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1511,7 +1584,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the incident role"
+          "description": "Unique identifier for the incident role",
+          "semantic": false
         },
         {
           "name": "instructions",
@@ -1520,7 +1594,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Instructions for the role holder"
+          "description": "Instructions for the role holder",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1529,7 +1604,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the role"
+          "description": "Name of the role",
+          "semantic": false
         },
         {
           "name": "required",
@@ -1538,7 +1614,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this role must be assigned"
+          "description": "Whether this role must be assigned",
+          "semantic": false
         },
         {
           "name": "role_type",
@@ -1547,7 +1624,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of role"
+          "description": "Type of role",
+          "semantic": false
         },
         {
           "name": "shortform",
@@ -1556,7 +1634,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Short form label for the role"
+          "description": "Short form label for the role",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1565,12 +1644,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the role was last updated"
+          "description": "When the role was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "incident_statuses": {
       "entity": "incident_statuses",
+      "kind": "DATA",
       "data_type_name": "IncidentStatusesSearchData",
       "filter_type_name": "IncidentStatusesSearchFilter",
       "in_filter_type_name": "IncidentStatusesInFilter",
@@ -1589,7 +1674,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Category: triage, active, post-incident, closed, etc."
+          "description": "Category: triage, active, post-incident, closed, etc.",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1598,7 +1684,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the status was created"
+          "description": "When the status was created",
+          "semantic": false
         },
         {
           "name": "description",
@@ -1607,7 +1694,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description of the status"
+          "description": "Description of the status",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1616,7 +1704,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the status"
+          "description": "Unique identifier for the status",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1625,7 +1714,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the status"
+          "description": "Name of the status",
+          "semantic": false
         },
         {
           "name": "rank",
@@ -1634,7 +1724,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Rank for ordering"
+          "description": "Rank for ordering",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1643,12 +1734,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the status was last updated"
+          "description": "When the status was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "incident_timestamps": {
       "entity": "incident_timestamps",
+      "kind": "DATA",
       "data_type_name": "IncidentTimestampsSearchData",
       "filter_type_name": "IncidentTimestampsSearchFilter",
       "in_filter_type_name": "IncidentTimestampsInFilter",
@@ -1667,7 +1764,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the timestamp"
+          "description": "Unique identifier for the timestamp",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1676,7 +1774,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the timestamp"
+          "description": "Name of the timestamp",
+          "semantic": false
         },
         {
           "name": "rank",
@@ -1685,12 +1784,18 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Rank for ordering"
+          "description": "Rank for ordering",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "severities": {
       "entity": "severities",
+      "kind": "DATA",
       "data_type_name": "SeveritiesSearchData",
       "filter_type_name": "SeveritiesSearchFilter",
       "in_filter_type_name": "SeveritiesInFilter",
@@ -1709,7 +1814,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the severity was created"
+          "description": "When the severity was created",
+          "semantic": false
         },
         {
           "name": "description",
@@ -1718,7 +1824,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description of the severity"
+          "description": "Description of the severity",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1727,7 +1834,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the severity"
+          "description": "Unique identifier for the severity",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1736,7 +1844,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the severity"
+          "description": "Name of the severity",
+          "semantic": false
         },
         {
           "name": "rank",
@@ -1745,7 +1854,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Rank for ordering"
+          "description": "Rank for ordering",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1754,12 +1864,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the severity was last updated"
+          "description": "When the severity was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "custom_fields": {
       "entity": "custom_fields",
+      "kind": "DATA",
       "data_type_name": "CustomFieldsSearchData",
       "filter_type_name": "CustomFieldsSearchFilter",
       "in_filter_type_name": "CustomFieldsInFilter",
@@ -1778,7 +1894,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the custom field was created"
+          "description": "When the custom field was created",
+          "semantic": false
         },
         {
           "name": "description",
@@ -1787,7 +1904,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description of the custom field"
+          "description": "Description of the custom field",
+          "semantic": false
         },
         {
           "name": "field_type",
@@ -1796,7 +1914,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of field"
+          "description": "Type of field",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1805,7 +1924,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the custom field"
+          "description": "Unique identifier for the custom field",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1814,7 +1934,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the custom field"
+          "description": "Name of the custom field",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1823,12 +1944,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the custom field was last updated"
+          "description": "When the custom field was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "catalog_types": {
       "entity": "catalog_types",
+      "kind": "DATA",
       "data_type_name": "CatalogTypesSearchData",
       "filter_type_name": "CatalogTypesSearchFilter",
       "in_filter_type_name": "CatalogTypesInFilter",
@@ -1847,7 +1974,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Annotations metadata"
+          "description": "Annotations metadata",
+          "semantic": false
         },
         {
           "name": "categories",
@@ -1856,7 +1984,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Categories this type belongs to"
+          "description": "Categories this type belongs to",
+          "semantic": false
         },
         {
           "name": "color",
@@ -1865,7 +1994,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Display color"
+          "description": "Display color",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1874,7 +2004,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the catalog type was created"
+          "description": "When the catalog type was created",
+          "semantic": false
         },
         {
           "name": "description",
@@ -1883,7 +2014,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description of the catalog type"
+          "description": "Description of the catalog type",
+          "semantic": false
         },
         {
           "name": "icon",
@@ -1892,7 +2024,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Display icon"
+          "description": "Display icon",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1901,7 +2034,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the catalog type"
+          "description": "Unique identifier for the catalog type",
+          "semantic": false
         },
         {
           "name": "is_editable",
@@ -1910,7 +2044,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether entries can be edited"
+          "description": "Whether entries can be edited",
+          "semantic": false
         },
         {
           "name": "last_synced_at",
@@ -1919,7 +2054,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the catalog type was last synced"
+          "description": "When the catalog type was last synced",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1928,7 +2064,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the catalog type"
+          "description": "Name of the catalog type",
+          "semantic": false
         },
         {
           "name": "ranked",
@@ -1937,7 +2074,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether entries are ranked"
+          "description": "Whether entries are ranked",
+          "semantic": false
         },
         {
           "name": "registry_type",
@@ -1946,7 +2084,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Registry type if synced from an integration"
+          "description": "Registry type if synced from an integration",
+          "semantic": false
         },
         {
           "name": "required_integrations",
@@ -1955,7 +2094,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Integrations required for this type"
+          "description": "Integrations required for this type",
+          "semantic": false
         },
         {
           "name": "schema",
@@ -1964,7 +2104,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Schema definition for the catalog type"
+          "description": "Schema definition for the catalog type",
+          "semantic": false
         },
         {
           "name": "semantic_type",
@@ -1973,7 +2114,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Semantic type for special behavior"
+          "description": "Semantic type for special behavior",
+          "semantic": false
         },
         {
           "name": "type_name",
@@ -1982,7 +2124,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Programmatic type name"
+          "description": "Programmatic type name",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1991,12 +2134,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the catalog type was last updated"
+          "description": "When the catalog type was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "schedules": {
       "entity": "schedules",
+      "kind": "DATA",
       "data_type_name": "SchedulesSearchData",
       "filter_type_name": "SchedulesSearchFilter",
       "in_filter_type_name": "SchedulesInFilter",
@@ -2015,7 +2164,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Annotations metadata"
+          "description": "Annotations metadata",
+          "semantic": false
         },
         {
           "name": "config",
@@ -2024,7 +2174,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Schedule configuration with rotations"
+          "description": "Schedule configuration with rotations",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -2033,7 +2184,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the schedule was created"
+          "description": "When the schedule was created",
+          "semantic": false
         },
         {
           "name": "current_shifts",
@@ -2042,7 +2194,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Currently active shifts"
+          "description": "Currently active shifts",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2051,7 +2204,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the schedule"
+          "description": "Unique identifier for the schedule",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2060,7 +2214,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the schedule"
+          "description": "Name of the schedule",
+          "semantic": false
         },
         {
           "name": "timezone",
@@ -2069,7 +2224,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timezone for the schedule"
+          "description": "Timezone for the schedule",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2078,12 +2234,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the schedule was last updated"
+          "description": "When the schedule was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "escalations": {
       "entity": "escalations",
+      "kind": "DATA",
       "data_type_name": "EscalationsSearchData",
       "filter_type_name": "EscalationsSearchFilter",
       "in_filter_type_name": "EscalationsInFilter",
@@ -2102,7 +2264,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the escalation was created"
+          "description": "When the escalation was created",
+          "semantic": false
         },
         {
           "name": "creator",
@@ -2111,7 +2274,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The creator of this escalation"
+          "description": "The creator of this escalation",
+          "semantic": false
         },
         {
           "name": "escalation_path_id",
@@ -2120,7 +2284,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the escalation path used"
+          "description": "ID of the escalation path used",
+          "semantic": false
         },
         {
           "name": "events",
@@ -2129,7 +2294,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "History of escalation events"
+          "description": "History of escalation events",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2138,7 +2304,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the escalation"
+          "description": "Unique identifier for the escalation",
+          "semantic": false
         },
         {
           "name": "priority",
@@ -2147,7 +2314,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Priority of the escalation"
+          "description": "Priority of the escalation",
+          "semantic": false
         },
         {
           "name": "related_alerts",
@@ -2156,7 +2324,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Alerts related to this escalation"
+          "description": "Alerts related to this escalation",
+          "semantic": false
         },
         {
           "name": "related_incidents",
@@ -2165,7 +2334,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Incidents related to this escalation"
+          "description": "Incidents related to this escalation",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2174,7 +2344,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status: pending, triggered, acked, resolved, expired, cancelled"
+          "description": "Status: pending, triggered, acked, resolved, expired, cancelled",
+          "semantic": false
         },
         {
           "name": "title",
@@ -2183,7 +2354,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Title of the escalation"
+          "description": "Title of the escalation",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2192,9 +2364,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the escalation was last updated"
+          "description": "When the escalation was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

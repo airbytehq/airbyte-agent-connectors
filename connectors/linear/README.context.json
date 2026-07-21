@@ -1178,6 +1178,7 @@
   "search_schemas": {
     "comments": {
       "entity": "comments",
+      "kind": "DATA",
       "data_type_name": "CommentsSearchData",
       "filter_type_name": "CommentsSearchFilter",
       "in_filter_type_name": "CommentsInFilter",
@@ -1196,7 +1197,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": true
         },
         {
           "name": "bodyData",
@@ -1205,7 +1207,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -1214,7 +1217,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "editedAt",
@@ -1223,7 +1227,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1232,7 +1237,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "issue",
@@ -1241,7 +1247,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "issueId",
@@ -1250,7 +1257,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "parent",
@@ -1259,7 +1267,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "parentCommentId",
@@ -1268,7 +1277,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "resolvingCommentId",
@@ -1277,7 +1287,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "resolvingUserId",
@@ -1286,7 +1297,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -1295,7 +1307,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "url",
@@ -1304,7 +1317,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "user",
@@ -1313,7 +1327,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "userId",
@@ -1322,12 +1337,48 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
+      ],
+      "semantic_fields": [
+        {
+          "name": "body",
+          "description": "",
+          "context_max_chars": 2048,
+          "content_type": "markdown"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "issueId",
+          "type": "string"
+        },
+        {
+          "name": "userId",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "type": "string"
+        }
+      ],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": [
+        "authorName"
       ]
     },
     "issues": {
       "entity": "issues",
+      "kind": "DATA",
       "data_type_name": "IssuesSearchData",
       "filter_type_name": "IssuesSearchFilter",
       "in_filter_type_name": "IssuesInFilter",
@@ -1346,7 +1397,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "addedToProjectAt",
@@ -1355,7 +1407,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "addedToTeamAt",
@@ -1364,7 +1417,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "assignee",
@@ -1373,7 +1427,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "assigneeId",
@@ -1382,7 +1437,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "attachmentIds",
@@ -1391,7 +1447,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "attachments",
@@ -1400,7 +1457,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "branchName",
@@ -1409,7 +1467,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "canceledAt",
@@ -1418,7 +1477,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "completedAt",
@@ -1427,7 +1487,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -1436,7 +1497,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "creator",
@@ -1445,7 +1507,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "creatorId",
@@ -1454,7 +1517,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "customerTicketCount",
@@ -1463,7 +1527,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "cycle",
@@ -1472,7 +1537,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "cycleId",
@@ -1481,7 +1547,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "description",
@@ -1490,7 +1557,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": true
         },
         {
           "name": "descriptionState",
@@ -1499,7 +1567,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "dueDate",
@@ -1508,7 +1577,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "estimate",
@@ -1517,7 +1587,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1526,7 +1597,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "identifier",
@@ -1535,7 +1607,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "integrationSourceType",
@@ -1544,7 +1617,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "labelIds",
@@ -1553,7 +1627,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "labels",
@@ -1562,7 +1637,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "milestoneId",
@@ -1571,7 +1647,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "number",
@@ -1580,7 +1657,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "parent",
@@ -1589,7 +1667,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "parentId",
@@ -1598,7 +1677,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "previousIdentifiers",
@@ -1607,7 +1687,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "priority",
@@ -1616,7 +1697,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "priorityLabel",
@@ -1625,7 +1707,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "prioritySortOrder",
@@ -1634,7 +1717,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "project",
@@ -1643,7 +1727,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "projectId",
@@ -1652,7 +1737,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "projectMilestone",
@@ -1661,7 +1747,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "reactionData",
@@ -1670,7 +1757,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "relationIds",
@@ -1679,7 +1767,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "relations",
@@ -1688,7 +1777,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "slaType",
@@ -1697,7 +1787,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "sortOrder",
@@ -1706,7 +1797,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "sourceCommentId",
@@ -1715,7 +1807,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "startedAt",
@@ -1724,7 +1817,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "state",
@@ -1733,7 +1827,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "stateId",
@@ -1742,7 +1837,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "subIssueSortOrder",
@@ -1751,7 +1847,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "subscriberIds",
@@ -1760,7 +1857,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "subscribers",
@@ -1769,7 +1867,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "team",
@@ -1778,7 +1877,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "teamId",
@@ -1787,7 +1887,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "title",
@@ -1796,7 +1897,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -1805,7 +1907,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "url",
@@ -1814,12 +1917,57 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
+      ],
+      "semantic_fields": [
+        {
+          "name": "description",
+          "description": "",
+          "context_max_chars": 2048,
+          "content_type": "markdown"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "identifier",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "creatorId",
+          "type": "string"
+        },
+        {
+          "name": "assigneeId",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "type": "string"
+        }
+      ],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": [
+        "creatorName",
+        "assigneeName"
       ]
     },
     "projects": {
       "entity": "projects",
+      "kind": "DATA",
       "data_type_name": "ProjectsSearchData",
       "filter_type_name": "ProjectsSearchFilter",
       "in_filter_type_name": "ProjectsInFilter",
@@ -1838,7 +1986,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "color",
@@ -1847,7 +1996,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "completedAt",
@@ -1856,7 +2006,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "completedIssueCountHistory",
@@ -1865,7 +2016,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "completedScopeHistory",
@@ -1874,7 +2026,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "content",
@@ -1883,7 +2036,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "contentState",
@@ -1892,7 +2046,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "convertedFromIssue",
@@ -1901,7 +2056,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "convertedFromIssueId",
@@ -1910,7 +2066,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -1919,7 +2076,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "creator",
@@ -1928,7 +2086,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "creatorId",
@@ -1937,7 +2096,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "description",
@@ -1946,7 +2106,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "health",
@@ -1955,7 +2116,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "healthUpdatedAt",
@@ -1964,7 +2126,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "icon",
@@ -1973,7 +2136,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1982,7 +2146,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "inProgressScopeHistory",
@@ -1991,7 +2156,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "issueCountHistory",
@@ -2000,7 +2166,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "lead",
@@ -2009,7 +2176,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "leadId",
@@ -2018,7 +2186,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2027,7 +2196,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "priority",
@@ -2036,7 +2206,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "prioritySortOrder",
@@ -2045,7 +2216,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "progress",
@@ -2054,7 +2226,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "scope",
@@ -2063,7 +2236,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "scopeHistory",
@@ -2072,7 +2246,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "slugId",
@@ -2081,7 +2256,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "sortOrder",
@@ -2090,7 +2266,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "startDate",
@@ -2099,7 +2276,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "startedAt",
@@ -2108,7 +2286,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2117,7 +2296,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "statusId",
@@ -2126,7 +2306,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "targetDate",
@@ -2135,7 +2316,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "teamIds",
@@ -2144,7 +2326,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "teams",
@@ -2153,7 +2336,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updateRemindersDay",
@@ -2162,7 +2346,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updateRemindersHour",
@@ -2171,7 +2356,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -2180,7 +2366,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "url",
@@ -2189,12 +2376,18 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "teams": {
       "entity": "teams",
+      "kind": "DATA",
       "data_type_name": "TeamsSearchData",
       "filter_type_name": "TeamsSearchFilter",
       "in_filter_type_name": "TeamsInFilter",
@@ -2213,7 +2406,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "activeCycleId",
@@ -2222,7 +2416,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "autoArchivePeriod",
@@ -2231,7 +2426,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "autoClosePeriod",
@@ -2240,7 +2436,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "autoCloseStateId",
@@ -2249,7 +2446,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "color",
@@ -2258,7 +2456,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -2267,7 +2466,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "cycleCalenderUrl",
@@ -2276,7 +2476,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "cycleCooldownTime",
@@ -2285,7 +2486,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "cycleDuration",
@@ -2294,7 +2496,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "cycleIssueAutoAssignCompleted",
@@ -2303,7 +2506,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "cycleIssueAutoAssignStarted",
@@ -2312,7 +2516,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "cycleLockToActive",
@@ -2321,7 +2526,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "cycleStartDay",
@@ -2330,7 +2536,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "cyclesEnabled",
@@ -2339,7 +2546,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "defaultIssueEstimate",
@@ -2348,7 +2556,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "defaultIssueState",
@@ -2357,7 +2566,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "defaultIssueStateId",
@@ -2366,7 +2576,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "groupIssueHistory",
@@ -2375,7 +2586,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "icon",
@@ -2384,7 +2596,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2393,7 +2606,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "inviteHash",
@@ -2402,7 +2616,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "issueCount",
@@ -2411,7 +2626,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "issueEstimationAllowZero",
@@ -2420,7 +2636,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "issueEstimationExtended",
@@ -2429,7 +2646,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "issueEstimationType",
@@ -2438,7 +2656,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "key",
@@ -2447,7 +2666,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "markedAsDuplicateWorkflowState",
@@ -2456,7 +2676,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "markedAsDuplicateWorkflowStateId",
@@ -2465,7 +2686,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2474,7 +2696,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "parentTeamId",
@@ -2483,7 +2706,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "private",
@@ -2492,7 +2716,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "requirePriorityToLeaveTriage",
@@ -2501,7 +2726,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "scimManaged",
@@ -2510,7 +2736,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "setIssueSortOrderOnStateChange",
@@ -2519,7 +2746,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "timezone",
@@ -2528,7 +2756,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "triageEnabled",
@@ -2537,7 +2766,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "triageIssueStateId",
@@ -2546,7 +2776,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "upcomingCycleCount",
@@ -2555,7 +2786,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -2564,12 +2796,18 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "users": {
       "entity": "users",
+      "kind": "DATA",
       "data_type_name": "UsersSearchData",
       "filter_type_name": "UsersSearchFilter",
       "in_filter_type_name": "UsersInFilter",
@@ -2588,7 +2826,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "admin",
@@ -2597,7 +2836,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "avatarBackgroundColor",
@@ -2606,7 +2846,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "avatarUrl",
@@ -2615,7 +2856,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -2624,7 +2866,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "createdIssueCount",
@@ -2633,7 +2876,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "displayName",
@@ -2642,7 +2886,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "email",
@@ -2651,7 +2896,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "guest",
@@ -2660,7 +2906,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2669,7 +2916,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "initials",
@@ -2678,7 +2926,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "inviteHash",
@@ -2687,7 +2936,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "isMe",
@@ -2696,7 +2946,8 @@
           "json_type": "boolean | null",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "lastSeen",
@@ -2705,7 +2956,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2714,7 +2966,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "teamIds",
@@ -2723,7 +2976,8 @@
           "json_type": "array | null",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "teams",
@@ -2732,7 +2986,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "timezone",
@@ -2741,7 +2996,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -2750,7 +3006,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "url",
@@ -2759,12 +3016,18 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "workflow_states": {
       "entity": "workflow_states",
+      "kind": "DATA",
       "data_type_name": "WorkflowStatesSearchData",
       "filter_type_name": "WorkflowStatesSearchFilter",
       "in_filter_type_name": "WorkflowStatesInFilter",
@@ -2783,7 +3046,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -2792,7 +3056,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "description",
@@ -2801,7 +3066,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2810,7 +3076,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "inheritedFromId",
@@ -2819,7 +3086,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2828,7 +3096,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "position",
@@ -2837,7 +3106,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "team",
@@ -2846,7 +3116,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "teamId",
@@ -2855,7 +3126,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "type",
@@ -2864,7 +3136,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -2873,9 +3146,14 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

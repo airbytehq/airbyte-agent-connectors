@@ -913,6 +913,7 @@
   "search_schemas": {
     "profiles": {
       "entity": "profiles",
+      "kind": "DATA",
       "data_type_name": "ProfilesSearchData",
       "filter_type_name": "ProfilesSearchFilter",
       "in_filter_type_name": "ProfilesInFilter",
@@ -931,7 +932,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "countryCode",
@@ -940,7 +942,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "currencyCode",
@@ -949,7 +952,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "dailyBudget",
@@ -958,7 +962,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "profileId",
@@ -967,7 +972,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "timezone",
@@ -976,9 +982,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

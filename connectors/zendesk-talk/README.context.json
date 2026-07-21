@@ -640,6 +640,7 @@
   "search_schemas": {
     "addresses": {
       "entity": "addresses",
+      "kind": "DATA",
       "data_type_name": "AddressesSearchData",
       "filter_type_name": "AddressesSearchFilter",
       "in_filter_type_name": "AddressesInFilter",
@@ -658,7 +659,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "City of the address"
+          "description": "City of the address",
+          "semantic": false
         },
         {
           "name": "country_code",
@@ -667,7 +669,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO country code"
+          "description": "ISO country code",
+          "semantic": false
         },
         {
           "name": "id",
@@ -676,7 +679,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique address identifier"
+          "description": "Unique address identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -685,7 +689,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the address"
+          "description": "Name of the address",
+          "semantic": false
         },
         {
           "name": "provider_reference",
@@ -694,7 +699,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Provider reference of the address"
+          "description": "Provider reference of the address",
+          "semantic": false
         },
         {
           "name": "province",
@@ -703,7 +709,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Province of the address"
+          "description": "Province of the address",
+          "semantic": false
         },
         {
           "name": "state",
@@ -712,7 +719,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "State of the address"
+          "description": "State of the address",
+          "semantic": false
         },
         {
           "name": "street",
@@ -721,7 +729,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Street of the address"
+          "description": "Street of the address",
+          "semantic": false
         },
         {
           "name": "zip",
@@ -730,12 +739,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Zip code of the address"
+          "description": "Zip code of the address",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "agents_activity": {
       "entity": "agents_activity",
+      "kind": "DATA",
       "data_type_name": "AgentsActivitySearchData",
       "filter_type_name": "AgentsActivitySearchFilter",
       "in_filter_type_name": "AgentsActivityInFilter",
@@ -754,7 +769,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Accepted third party conferences"
+          "description": "Accepted third party conferences",
+          "semantic": false
         },
         {
           "name": "accepted_transfers",
@@ -763,7 +779,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total transfers accepted"
+          "description": "Total transfers accepted",
+          "semantic": false
         },
         {
           "name": "agent_id",
@@ -772,7 +789,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Agent ID"
+          "description": "Agent ID",
+          "semantic": false
         },
         {
           "name": "agent_state",
@@ -781,7 +799,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Agent state: online, offline, away, or transfers_only"
+          "description": "Agent state: online, offline, away, or transfers_only",
+          "semantic": false
         },
         {
           "name": "available_time",
@@ -790,7 +809,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total time agent was available to answer calls"
+          "description": "Total time agent was available to answer calls",
+          "semantic": false
         },
         {
           "name": "avatar_url",
@@ -799,7 +819,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL to agent avatar"
+          "description": "URL to agent avatar",
+          "semantic": false
         },
         {
           "name": "average_hold_time",
@@ -808,7 +829,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average hold time per call"
+          "description": "Average hold time per call",
+          "semantic": false
         },
         {
           "name": "average_talk_time",
@@ -817,7 +839,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average talk time per call"
+          "description": "Average talk time per call",
+          "semantic": false
         },
         {
           "name": "average_wrap_up_time",
@@ -826,7 +849,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average wrap-up time per call"
+          "description": "Average wrap-up time per call",
+          "semantic": false
         },
         {
           "name": "away_time",
@@ -835,7 +859,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total time agent was set to away"
+          "description": "Total time agent was set to away",
+          "semantic": false
         },
         {
           "name": "call_status",
@@ -844,7 +869,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Agent call status: on_call, wrap_up, or null"
+          "description": "Agent call status: on_call, wrap_up, or null",
+          "semantic": false
         },
         {
           "name": "calls_accepted",
@@ -853,7 +879,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls accepted"
+          "description": "Total calls accepted",
+          "semantic": false
         },
         {
           "name": "calls_denied",
@@ -862,7 +889,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls denied"
+          "description": "Total calls denied",
+          "semantic": false
         },
         {
           "name": "calls_missed",
@@ -871,7 +899,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls missed"
+          "description": "Total calls missed",
+          "semantic": false
         },
         {
           "name": "calls_put_on_hold",
@@ -880,7 +909,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls placed on hold"
+          "description": "Total calls placed on hold",
+          "semantic": false
         },
         {
           "name": "forwarding_number",
@@ -889,7 +919,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Forwarding number set by the agent"
+          "description": "Forwarding number set by the agent",
+          "semantic": false
         },
         {
           "name": "name",
@@ -898,7 +929,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Agent name"
+          "description": "Agent name",
+          "semantic": false
         },
         {
           "name": "online_time",
@@ -907,7 +939,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total online time"
+          "description": "Total online time",
+          "semantic": false
         },
         {
           "name": "started_third_party_conferences",
@@ -916,7 +949,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Started third party conferences"
+          "description": "Started third party conferences",
+          "semantic": false
         },
         {
           "name": "started_transfers",
@@ -925,7 +959,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total transfers started"
+          "description": "Total transfers started",
+          "semantic": false
         },
         {
           "name": "total_call_duration",
@@ -934,7 +969,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total call duration"
+          "description": "Total call duration",
+          "semantic": false
         },
         {
           "name": "total_hold_time",
@@ -943,7 +979,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total hold time across all calls"
+          "description": "Total hold time across all calls",
+          "semantic": false
         },
         {
           "name": "total_talk_time",
@@ -952,7 +989,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total talk time (excludes hold)"
+          "description": "Total talk time (excludes hold)",
+          "semantic": false
         },
         {
           "name": "total_wrap_up_time",
@@ -961,7 +999,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total wrap-up time"
+          "description": "Total wrap-up time",
+          "semantic": false
         },
         {
           "name": "transfers_only_time",
@@ -970,7 +1009,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total time in transfers-only mode"
+          "description": "Total time in transfers-only mode",
+          "semantic": false
         },
         {
           "name": "via",
@@ -979,12 +1019,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Channel the agent is registered on"
+          "description": "Channel the agent is registered on",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "agents_overview": {
       "entity": "agents_overview",
+      "kind": "DATA",
       "data_type_name": "AgentsOverviewSearchData",
       "filter_type_name": "AgentsOverviewSearchFilter",
       "in_filter_type_name": "AgentsOverviewInFilter",
@@ -1003,7 +1049,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average accepted transfers"
+          "description": "Average accepted transfers",
+          "semantic": false
         },
         {
           "name": "average_available_time",
@@ -1012,7 +1059,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average available time"
+          "description": "Average available time",
+          "semantic": false
         },
         {
           "name": "average_away_time",
@@ -1021,7 +1069,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average away time"
+          "description": "Average away time",
+          "semantic": false
         },
         {
           "name": "average_calls_accepted",
@@ -1030,7 +1079,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average calls accepted"
+          "description": "Average calls accepted",
+          "semantic": false
         },
         {
           "name": "average_calls_denied",
@@ -1039,7 +1089,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average calls denied"
+          "description": "Average calls denied",
+          "semantic": false
         },
         {
           "name": "average_calls_missed",
@@ -1048,7 +1099,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average calls missed"
+          "description": "Average calls missed",
+          "semantic": false
         },
         {
           "name": "average_calls_put_on_hold",
@@ -1057,7 +1109,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average calls put on hold"
+          "description": "Average calls put on hold",
+          "semantic": false
         },
         {
           "name": "average_hold_time",
@@ -1066,7 +1119,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average hold time"
+          "description": "Average hold time",
+          "semantic": false
         },
         {
           "name": "average_online_time",
@@ -1075,7 +1129,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average online time"
+          "description": "Average online time",
+          "semantic": false
         },
         {
           "name": "average_started_transfers",
@@ -1084,7 +1139,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average started transfers"
+          "description": "Average started transfers",
+          "semantic": false
         },
         {
           "name": "average_talk_time",
@@ -1093,7 +1149,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average talk time"
+          "description": "Average talk time",
+          "semantic": false
         },
         {
           "name": "average_transfers_only_time",
@@ -1102,7 +1159,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average transfers-only time"
+          "description": "Average transfers-only time",
+          "semantic": false
         },
         {
           "name": "average_wrap_up_time",
@@ -1111,7 +1169,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average wrap-up time"
+          "description": "Average wrap-up time",
+          "semantic": false
         },
         {
           "name": "current_timestamp",
@@ -1120,7 +1179,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Current timestamp"
+          "description": "Current timestamp",
+          "semantic": false
         },
         {
           "name": "total_accepted_transfers",
@@ -1129,7 +1189,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total accepted transfers"
+          "description": "Total accepted transfers",
+          "semantic": false
         },
         {
           "name": "total_calls_accepted",
@@ -1138,7 +1199,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls accepted"
+          "description": "Total calls accepted",
+          "semantic": false
         },
         {
           "name": "total_calls_denied",
@@ -1147,7 +1209,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls denied"
+          "description": "Total calls denied",
+          "semantic": false
         },
         {
           "name": "total_calls_missed",
@@ -1156,7 +1219,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls missed"
+          "description": "Total calls missed",
+          "semantic": false
         },
         {
           "name": "total_calls_put_on_hold",
@@ -1165,7 +1229,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls put on hold"
+          "description": "Total calls put on hold",
+          "semantic": false
         },
         {
           "name": "total_hold_time",
@@ -1174,7 +1239,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total hold time"
+          "description": "Total hold time",
+          "semantic": false
         },
         {
           "name": "total_started_transfers",
@@ -1183,7 +1249,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total started transfers"
+          "description": "Total started transfers",
+          "semantic": false
         },
         {
           "name": "total_talk_time",
@@ -1192,7 +1259,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total talk time"
+          "description": "Total talk time",
+          "semantic": false
         },
         {
           "name": "total_wrap_up_time",
@@ -1201,12 +1269,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total wrap-up time"
+          "description": "Total wrap-up time",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "greeting_categories": {
       "entity": "greeting_categories",
+      "kind": "DATA",
       "data_type_name": "GreetingCategoriesSearchData",
       "filter_type_name": "GreetingCategoriesSearchFilter",
       "in_filter_type_name": "GreetingCategoriesInFilter",
@@ -1225,7 +1299,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Greeting category ID"
+          "description": "Greeting category ID",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1234,12 +1309,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the greeting category"
+          "description": "Name of the greeting category",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "greetings": {
       "entity": "greetings",
+      "kind": "DATA",
       "data_type_name": "GreetingsSearchData",
       "filter_type_name": "GreetingsSearchFilter",
       "in_filter_type_name": "GreetingsInFilter",
@@ -1258,7 +1339,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the greeting is associated with phone numbers"
+          "description": "Whether the greeting is associated with phone numbers",
+          "semantic": false
         },
         {
           "name": "audio_name",
@@ -1267,7 +1349,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Audio file name"
+          "description": "Audio file name",
+          "semantic": false
         },
         {
           "name": "audio_url",
@@ -1276,7 +1359,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Path to the greeting sound file"
+          "description": "Path to the greeting sound file",
+          "semantic": false
         },
         {
           "name": "category_id",
@@ -1285,7 +1369,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "ID of the greeting category"
+          "description": "ID of the greeting category",
+          "semantic": false
         },
         {
           "name": "default",
@@ -1294,7 +1379,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this is a system default greeting"
+          "description": "Whether this is a system default greeting",
+          "semantic": false
         },
         {
           "name": "default_lang",
@@ -1303,7 +1389,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the greeting has a default language"
+          "description": "Whether the greeting has a default language",
+          "semantic": false
         },
         {
           "name": "has_sub_settings",
@@ -1312,7 +1399,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Sub-settings for categorized greetings"
+          "description": "Sub-settings for categorized greetings",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1321,7 +1409,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Greeting ID"
+          "description": "Greeting ID",
+          "semantic": false
         },
         {
           "name": "ivr_ids",
@@ -1330,7 +1419,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "IDs of IVRs associated with the greeting"
+          "description": "IDs of IVRs associated with the greeting",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1339,7 +1429,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the greeting"
+          "description": "Name of the greeting",
+          "semantic": false
         },
         {
           "name": "pending",
@@ -1348,7 +1439,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the greeting is pending"
+          "description": "Whether the greeting is pending",
+          "semantic": false
         },
         {
           "name": "phone_number_ids",
@@ -1357,7 +1449,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "IDs of phone numbers associated with the greeting"
+          "description": "IDs of phone numbers associated with the greeting",
+          "semantic": false
         },
         {
           "name": "upload_id",
@@ -1366,12 +1459,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Upload ID associated with the greeting"
+          "description": "Upload ID associated with the greeting",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "phone_numbers": {
       "entity": "phone_numbers",
+      "kind": "DATA",
       "data_type_name": "PhoneNumbersSearchData",
       "filter_type_name": "PhoneNumbersSearchFilter",
       "in_filter_type_name": "PhoneNumbersInFilter",
@@ -1390,7 +1489,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "What call recording consent is set to"
+          "description": "What call recording consent is set to",
+          "semantic": false
         },
         {
           "name": "capabilities",
@@ -1399,7 +1499,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Phone number capabilities (sms, mms, voice)"
+          "description": "Phone number capabilities (sms, mms, voice)",
+          "semantic": false
         },
         {
           "name": "categorised_greetings",
@@ -1408,7 +1509,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Greeting category IDs and names"
+          "description": "Greeting category IDs and names",
+          "semantic": false
         },
         {
           "name": "categorised_greetings_with_sub_settings",
@@ -1417,7 +1519,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Greeting categories with associated settings"
+          "description": "Greeting categories with associated settings",
+          "semantic": false
         },
         {
           "name": "country_code",
@@ -1426,7 +1529,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO country code for the number"
+          "description": "ISO country code for the number",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1435,7 +1539,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time the phone number was created"
+          "description": "Date and time the phone number was created",
+          "semantic": false
         },
         {
           "name": "default_greeting_ids",
@@ -1444,7 +1549,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Names of default system greetings"
+          "description": "Names of default system greetings",
+          "semantic": false
         },
         {
           "name": "default_group_id",
@@ -1453,7 +1559,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Default group ID"
+          "description": "Default group ID",
+          "semantic": false
         },
         {
           "name": "display_number",
@@ -1462,7 +1569,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Formatted phone number"
+          "description": "Formatted phone number",
+          "semantic": false
         },
         {
           "name": "external",
@@ -1471,7 +1579,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this is an external caller ID number"
+          "description": "Whether this is an external caller ID number",
+          "semantic": false
         },
         {
           "name": "failover_number",
@@ -1480,7 +1589,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Failover number associated with the phone number"
+          "description": "Failover number associated with the phone number",
+          "semantic": false
         },
         {
           "name": "greeting_ids",
@@ -1489,7 +1599,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Custom greeting IDs associated with the phone number"
+          "description": "Custom greeting IDs associated with the phone number",
+          "semantic": false
         },
         {
           "name": "group_ids",
@@ -1498,7 +1609,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Array of associated group IDs"
+          "description": "Array of associated group IDs",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1507,7 +1619,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique phone number identifier"
+          "description": "Unique phone number identifier",
+          "semantic": false
         },
         {
           "name": "ivr_id",
@@ -1516,7 +1629,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "ID of IVR associated with the phone number"
+          "description": "ID of IVR associated with the phone number",
+          "semantic": false
         },
         {
           "name": "line_type",
@@ -1525,7 +1639,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of line (phone or digital)"
+          "description": "Type of line (phone or digital)",
+          "semantic": false
         },
         {
           "name": "location",
@@ -1534,7 +1649,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Geographical location of the number"
+          "description": "Geographical location of the number",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1543,7 +1659,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Nickname if set, otherwise the display number"
+          "description": "Nickname if set, otherwise the display number",
+          "semantic": false
         },
         {
           "name": "nickname",
@@ -1552,7 +1669,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Nickname of the phone number"
+          "description": "Nickname of the phone number",
+          "semantic": false
         },
         {
           "name": "number",
@@ -1561,7 +1679,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Phone number digits"
+          "description": "Phone number digits",
+          "semantic": false
         },
         {
           "name": "outbound_enabled",
@@ -1570,7 +1689,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether outbound calls are enabled"
+          "description": "Whether outbound calls are enabled",
+          "semantic": false
         },
         {
           "name": "priority",
@@ -1579,7 +1699,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Priority level of the phone number"
+          "description": "Priority level of the phone number",
+          "semantic": false
         },
         {
           "name": "recorded",
@@ -1588,7 +1709,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether calls are recorded"
+          "description": "Whether calls are recorded",
+          "semantic": false
         },
         {
           "name": "schedule_id",
@@ -1597,7 +1719,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "ID of schedule associated with the phone number"
+          "description": "ID of schedule associated with the phone number",
+          "semantic": false
         },
         {
           "name": "sms_enabled",
@@ -1606,7 +1729,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether SMS is enabled"
+          "description": "Whether SMS is enabled",
+          "semantic": false
         },
         {
           "name": "sms_group_id",
@@ -1615,7 +1739,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Group associated with SMS"
+          "description": "Group associated with SMS",
+          "semantic": false
         },
         {
           "name": "token",
@@ -1624,7 +1749,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Generated token unique for the phone number"
+          "description": "Generated token unique for the phone number",
+          "semantic": false
         },
         {
           "name": "toll_free",
@@ -1633,7 +1759,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the number is toll-free"
+          "description": "Whether the number is toll-free",
+          "semantic": false
         },
         {
           "name": "transcription",
@@ -1642,7 +1769,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether voicemail transcription is enabled"
+          "description": "Whether voicemail transcription is enabled",
+          "semantic": false
         },
         {
           "name": "voice_enabled",
@@ -1651,12 +1779,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether voice is enabled"
+          "description": "Whether voice is enabled",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "call_legs": {
       "entity": "call_legs",
+      "kind": "DATA",
       "data_type_name": "CallLegsSearchData",
       "filter_type_name": "CallLegsSearchFilter",
       "in_filter_type_name": "CallLegsInFilter",
@@ -1675,7 +1809,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Agent ID"
+          "description": "Agent ID",
+          "semantic": false
         },
         {
           "name": "available_via",
@@ -1684,7 +1819,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Channel agent was available through"
+          "description": "Channel agent was available through",
+          "semantic": false
         },
         {
           "name": "call_charge",
@@ -1693,7 +1829,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Call charge amount"
+          "description": "Call charge amount",
+          "semantic": false
         },
         {
           "name": "call_id",
@@ -1702,7 +1839,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Associated call ID"
+          "description": "Associated call ID",
+          "semantic": false
         },
         {
           "name": "completion_status",
@@ -1711,7 +1849,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Completion status"
+          "description": "Completion status",
+          "semantic": false
         },
         {
           "name": "conference_from",
@@ -1720,7 +1859,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Conference from time"
+          "description": "Conference from time",
+          "semantic": false
         },
         {
           "name": "conference_time",
@@ -1729,7 +1869,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Conference duration"
+          "description": "Conference duration",
+          "semantic": false
         },
         {
           "name": "conference_to",
@@ -1738,7 +1879,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Conference to time"
+          "description": "Conference to time",
+          "semantic": false
         },
         {
           "name": "consultation_from",
@@ -1747,7 +1889,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Consultation from time"
+          "description": "Consultation from time",
+          "semantic": false
         },
         {
           "name": "consultation_time",
@@ -1756,7 +1899,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Consultation duration"
+          "description": "Consultation duration",
+          "semantic": false
         },
         {
           "name": "consultation_to",
@@ -1765,7 +1909,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Consultation to time"
+          "description": "Consultation to time",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1774,7 +1919,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Creation timestamp"
+          "description": "Creation timestamp",
+          "semantic": false
         },
         {
           "name": "duration",
@@ -1783,7 +1929,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Duration in seconds"
+          "description": "Duration in seconds",
+          "semantic": false
         },
         {
           "name": "forwarded_to",
@@ -1792,7 +1939,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Number forwarded to"
+          "description": "Number forwarded to",
+          "semantic": false
         },
         {
           "name": "hold_time",
@@ -1801,7 +1949,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Hold time in seconds"
+          "description": "Hold time in seconds",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1810,7 +1959,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Call leg ID"
+          "description": "Call leg ID",
+          "semantic": false
         },
         {
           "name": "minutes_billed",
@@ -1819,7 +1969,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Minutes billed"
+          "description": "Minutes billed",
+          "semantic": false
         },
         {
           "name": "quality_issues",
@@ -1828,7 +1979,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Quality issues detected"
+          "description": "Quality issues detected",
+          "semantic": false
         },
         {
           "name": "talk_time",
@@ -1837,7 +1989,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Talk time in seconds"
+          "description": "Talk time in seconds",
+          "semantic": false
         },
         {
           "name": "transferred_from",
@@ -1846,7 +1999,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Transferred from agent ID"
+          "description": "Transferred from agent ID",
+          "semantic": false
         },
         {
           "name": "transferred_to",
@@ -1855,7 +2009,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Transferred to agent ID"
+          "description": "Transferred to agent ID",
+          "semantic": false
         },
         {
           "name": "type",
@@ -1864,7 +2019,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of call leg"
+          "description": "Type of call leg",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1873,7 +2029,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last update timestamp"
+          "description": "Last update timestamp",
+          "semantic": false
         },
         {
           "name": "user_id",
@@ -1882,7 +2039,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "User ID"
+          "description": "User ID",
+          "semantic": false
         },
         {
           "name": "wrap_up_time",
@@ -1891,12 +2049,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Wrap-up time in seconds"
+          "description": "Wrap-up time in seconds",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "calls": {
       "entity": "calls",
+      "kind": "DATA",
       "data_type_name": "CallsSearchData",
       "filter_type_name": "CallsSearchFilter",
       "in_filter_type_name": "CallsInFilter",
@@ -1915,7 +2079,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Agent ID"
+          "description": "Agent ID",
+          "semantic": false
         },
         {
           "name": "call_charge",
@@ -1924,7 +2089,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Call charge amount"
+          "description": "Call charge amount",
+          "semantic": false
         },
         {
           "name": "call_group_id",
@@ -1933,7 +2099,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Call group ID"
+          "description": "Call group ID",
+          "semantic": false
         },
         {
           "name": "call_recording_consent",
@@ -1942,7 +2109,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Call recording consent status"
+          "description": "Call recording consent status",
+          "semantic": false
         },
         {
           "name": "call_recording_consent_action",
@@ -1951,7 +2119,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Recording consent action"
+          "description": "Recording consent action",
+          "semantic": false
         },
         {
           "name": "call_recording_consent_keypress",
@@ -1960,7 +2129,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Recording consent keypress"
+          "description": "Recording consent keypress",
+          "semantic": false
         },
         {
           "name": "callback",
@@ -1969,7 +2139,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this was a callback"
+          "description": "Whether this was a callback",
+          "semantic": false
         },
         {
           "name": "callback_source",
@@ -1978,7 +2149,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Source of the callback"
+          "description": "Source of the callback",
+          "semantic": false
         },
         {
           "name": "completion_status",
@@ -1987,7 +2159,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Call completion status"
+          "description": "Call completion status",
+          "semantic": false
         },
         {
           "name": "consultation_time",
@@ -1996,7 +2169,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Consultation time"
+          "description": "Consultation time",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -2005,7 +2179,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Creation timestamp"
+          "description": "Creation timestamp",
+          "semantic": false
         },
         {
           "name": "customer_requested_voicemail",
@@ -2014,7 +2189,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether customer requested voicemail"
+          "description": "Whether customer requested voicemail",
+          "semantic": false
         },
         {
           "name": "default_group",
@@ -2023,7 +2199,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether default group was used"
+          "description": "Whether default group was used",
+          "semantic": false
         },
         {
           "name": "direction",
@@ -2032,7 +2209,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Call direction (inbound/outbound)"
+          "description": "Call direction (inbound/outbound)",
+          "semantic": false
         },
         {
           "name": "duration",
@@ -2041,7 +2219,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Call duration in seconds"
+          "description": "Call duration in seconds",
+          "semantic": false
         },
         {
           "name": "exceeded_queue_time",
@@ -2050,7 +2229,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether queue time was exceeded"
+          "description": "Whether queue time was exceeded",
+          "semantic": false
         },
         {
           "name": "exceeded_queue_wait_time",
@@ -2059,7 +2239,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether max queue wait time was exceeded"
+          "description": "Whether max queue wait time was exceeded",
+          "semantic": false
         },
         {
           "name": "hold_time",
@@ -2068,7 +2249,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Hold time in seconds"
+          "description": "Hold time in seconds",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2077,7 +2259,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Call ID"
+          "description": "Call ID",
+          "semantic": false
         },
         {
           "name": "ivr_action",
@@ -2086,7 +2269,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "IVR action taken"
+          "description": "IVR action taken",
+          "semantic": false
         },
         {
           "name": "ivr_destination_group_name",
@@ -2095,7 +2279,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "IVR destination group name"
+          "description": "IVR destination group name",
+          "semantic": false
         },
         {
           "name": "ivr_hops",
@@ -2104,7 +2289,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of IVR hops"
+          "description": "Number of IVR hops",
+          "semantic": false
         },
         {
           "name": "ivr_routed_to",
@@ -2113,7 +2299,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Where IVR routed the call"
+          "description": "Where IVR routed the call",
+          "semantic": false
         },
         {
           "name": "ivr_time_spent",
@@ -2122,7 +2309,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Time spent in IVR"
+          "description": "Time spent in IVR",
+          "semantic": false
         },
         {
           "name": "minutes_billed",
@@ -2131,7 +2319,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Minutes billed"
+          "description": "Minutes billed",
+          "semantic": false
         },
         {
           "name": "not_recording_time",
@@ -2140,7 +2329,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Time not recording"
+          "description": "Time not recording",
+          "semantic": false
         },
         {
           "name": "outside_business_hours",
@@ -2149,7 +2339,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether call was outside business hours"
+          "description": "Whether call was outside business hours",
+          "semantic": false
         },
         {
           "name": "overflowed",
@@ -2158,7 +2349,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether call overflowed"
+          "description": "Whether call overflowed",
+          "semantic": false
         },
         {
           "name": "overflowed_to",
@@ -2167,7 +2359,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Where call overflowed to"
+          "description": "Where call overflowed to",
+          "semantic": false
         },
         {
           "name": "phone_number",
@@ -2176,7 +2369,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Phone number used"
+          "description": "Phone number used",
+          "semantic": false
         },
         {
           "name": "phone_number_id",
@@ -2185,7 +2379,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Phone number ID"
+          "description": "Phone number ID",
+          "semantic": false
         },
         {
           "name": "quality_issues",
@@ -2194,7 +2389,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Quality issues detected"
+          "description": "Quality issues detected",
+          "semantic": false
         },
         {
           "name": "recording_control_interactions",
@@ -2203,7 +2399,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Recording control interactions count"
+          "description": "Recording control interactions count",
+          "semantic": false
         },
         {
           "name": "recording_time",
@@ -2212,7 +2409,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Recording time"
+          "description": "Recording time",
+          "semantic": false
         },
         {
           "name": "talk_time",
@@ -2221,7 +2419,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Talk time in seconds"
+          "description": "Talk time in seconds",
+          "semantic": false
         },
         {
           "name": "ticket_id",
@@ -2230,7 +2429,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Associated ticket ID"
+          "description": "Associated ticket ID",
+          "semantic": false
         },
         {
           "name": "time_to_answer",
@@ -2239,7 +2439,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Time to answer in seconds"
+          "description": "Time to answer in seconds",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2248,7 +2449,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last update timestamp"
+          "description": "Last update timestamp",
+          "semantic": false
         },
         {
           "name": "voicemail",
@@ -2257,7 +2459,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether it was a voicemail"
+          "description": "Whether it was a voicemail",
+          "semantic": false
         },
         {
           "name": "wait_time",
@@ -2266,7 +2469,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Wait time in seconds"
+          "description": "Wait time in seconds",
+          "semantic": false
         },
         {
           "name": "wrap_up_time",
@@ -2275,12 +2479,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Wrap-up time in seconds"
+          "description": "Wrap-up time in seconds",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "current_queue_activity": {
       "entity": "current_queue_activity",
+      "kind": "DATA",
       "data_type_name": "CurrentQueueActivitySearchData",
       "filter_type_name": "CurrentQueueActivitySearchFilter",
       "in_filter_type_name": "CurrentQueueActivityInFilter",
@@ -2299,7 +2509,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Current number of agents online"
+          "description": "Current number of agents online",
+          "semantic": false
         },
         {
           "name": "average_wait_time",
@@ -2308,7 +2519,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average wait time for callers in queue (seconds)"
+          "description": "Average wait time for callers in queue (seconds)",
+          "semantic": false
         },
         {
           "name": "callbacks_waiting",
@@ -2317,7 +2529,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of callers in callback queue"
+          "description": "Number of callers in callback queue",
+          "semantic": false
         },
         {
           "name": "calls_waiting",
@@ -2326,7 +2539,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of callers waiting in queue"
+          "description": "Number of callers waiting in queue",
+          "semantic": false
         },
         {
           "name": "current_timestamp",
@@ -2335,7 +2549,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Current timestamp"
+          "description": "Current timestamp",
+          "semantic": false
         },
         {
           "name": "embeddable_callbacks_waiting",
@@ -2344,7 +2559,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of Web Widget callback requests waiting"
+          "description": "Number of Web Widget callback requests waiting",
+          "semantic": false
         },
         {
           "name": "longest_wait_time",
@@ -2353,12 +2569,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Longest wait time for any caller (seconds)"
+          "description": "Longest wait time for any caller (seconds)",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "account_overview": {
       "entity": "account_overview",
+      "kind": "DATA",
       "data_type_name": "AccountOverviewSearchData",
       "filter_type_name": "AccountOverviewSearchFilter",
       "in_filter_type_name": "AccountOverviewInFilter",
@@ -2377,7 +2599,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average call duration"
+          "description": "Average call duration",
+          "semantic": false
         },
         {
           "name": "average_callback_wait_time",
@@ -2386,7 +2609,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average callback wait time"
+          "description": "Average callback wait time",
+          "semantic": false
         },
         {
           "name": "average_hold_time",
@@ -2395,7 +2619,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average hold time per call"
+          "description": "Average hold time per call",
+          "semantic": false
         },
         {
           "name": "average_queue_wait_time",
@@ -2404,7 +2629,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average queue wait time"
+          "description": "Average queue wait time",
+          "semantic": false
         },
         {
           "name": "average_time_to_answer",
@@ -2413,7 +2639,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average time to answer"
+          "description": "Average time to answer",
+          "semantic": false
         },
         {
           "name": "average_wrap_up_time",
@@ -2422,7 +2649,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average wrap-up time"
+          "description": "Average wrap-up time",
+          "semantic": false
         },
         {
           "name": "current_timestamp",
@@ -2431,7 +2659,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Current timestamp"
+          "description": "Current timestamp",
+          "semantic": false
         },
         {
           "name": "max_calls_waiting",
@@ -2440,7 +2669,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Max calls waiting in queue"
+          "description": "Max calls waiting in queue",
+          "semantic": false
         },
         {
           "name": "max_queue_wait_time",
@@ -2449,7 +2679,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Max queue wait time"
+          "description": "Max queue wait time",
+          "semantic": false
         },
         {
           "name": "total_call_duration",
@@ -2458,7 +2689,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total call duration"
+          "description": "Total call duration",
+          "semantic": false
         },
         {
           "name": "total_callback_calls",
@@ -2467,7 +2699,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total callback calls"
+          "description": "Total callback calls",
+          "semantic": false
         },
         {
           "name": "total_calls",
@@ -2476,7 +2709,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls"
+          "description": "Total calls",
+          "semantic": false
         },
         {
           "name": "total_calls_abandoned_in_queue",
@@ -2485,7 +2719,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls abandoned in queue"
+          "description": "Total calls abandoned in queue",
+          "semantic": false
         },
         {
           "name": "total_calls_outside_business_hours",
@@ -2494,7 +2729,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls outside business hours"
+          "description": "Total calls outside business hours",
+          "semantic": false
         },
         {
           "name": "total_calls_with_exceeded_queue_wait_time",
@@ -2503,7 +2739,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls exceeding max queue wait time"
+          "description": "Total calls exceeding max queue wait time",
+          "semantic": false
         },
         {
           "name": "total_calls_with_requested_voicemail",
@@ -2512,7 +2749,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total calls requesting voicemail"
+          "description": "Total calls requesting voicemail",
+          "semantic": false
         },
         {
           "name": "total_embeddable_callback_calls",
@@ -2521,7 +2759,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total embeddable callback calls"
+          "description": "Total embeddable callback calls",
+          "semantic": false
         },
         {
           "name": "total_hold_time",
@@ -2530,7 +2769,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total hold time"
+          "description": "Total hold time",
+          "semantic": false
         },
         {
           "name": "total_inbound_calls",
@@ -2539,7 +2779,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total inbound calls"
+          "description": "Total inbound calls",
+          "semantic": false
         },
         {
           "name": "total_outbound_calls",
@@ -2548,7 +2789,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total outbound calls"
+          "description": "Total outbound calls",
+          "semantic": false
         },
         {
           "name": "total_textback_requests",
@@ -2557,7 +2799,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total textback requests"
+          "description": "Total textback requests",
+          "semantic": false
         },
         {
           "name": "total_voicemails",
@@ -2566,7 +2809,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total voicemails"
+          "description": "Total voicemails",
+          "semantic": false
         },
         {
           "name": "total_wrap_up_time",
@@ -2575,12 +2819,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total wrap-up time"
+          "description": "Total wrap-up time",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "ivrs": {
       "entity": "ivrs",
+      "kind": "DATA",
       "data_type_name": "IvrsSearchData",
       "filter_type_name": "IvrsSearchFilter",
       "in_filter_type_name": "IvrsInFilter",
@@ -2599,7 +2849,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "IVR ID"
+          "description": "IVR ID",
+          "semantic": false
         },
         {
           "name": "menus",
@@ -2608,7 +2859,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of IVR menus"
+          "description": "List of IVR menus",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2617,7 +2869,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the IVR"
+          "description": "Name of the IVR",
+          "semantic": false
         },
         {
           "name": "phone_number_ids",
@@ -2626,7 +2879,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "IDs of phone numbers configured with this IVR"
+          "description": "IDs of phone numbers configured with this IVR",
+          "semantic": false
         },
         {
           "name": "phone_number_names",
@@ -2635,9 +2889,14 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Names of phone numbers configured with this IVR"
+          "description": "Names of phone numbers configured with this IVR",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

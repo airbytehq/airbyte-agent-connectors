@@ -1161,6 +1161,7 @@
   "search_schemas": {
     "user": {
       "entity": "user",
+      "kind": "DATA",
       "data_type_name": "UserSearchData",
       "filter_type_name": "UserSearchFilter",
       "in_filter_type_name": "UserInFilter",
@@ -1179,7 +1180,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the user"
+          "description": "Unique identifier for the user",
+          "semantic": false
         },
         {
           "name": "username",
@@ -1188,12 +1190,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Display name of the user"
+          "description": "Display name of the user",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "teams": {
       "entity": "teams",
+      "kind": "DATA",
       "data_type_name": "TeamsSearchData",
       "filter_type_name": "TeamsSearchFilter",
       "in_filter_type_name": "TeamsInFilter",
@@ -1212,7 +1220,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the team (workspace)"
+          "description": "Unique identifier for the team (workspace)",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1221,12 +1230,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the team"
+          "description": "Name of the team",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "spaces": {
       "entity": "spaces",
+      "kind": "DATA",
       "data_type_name": "SpacesSearchData",
       "filter_type_name": "SpacesSearchFilter",
       "in_filter_type_name": "SpacesInFilter",
@@ -1245,7 +1260,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the space"
+          "description": "Unique identifier for the space",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1254,7 +1270,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the space"
+          "description": "Name of the space",
+          "semantic": false
         },
         {
           "name": "private",
@@ -1263,12 +1280,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the space is private"
+          "description": "Whether the space is private",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "folders": {
       "entity": "folders",
+      "kind": "DATA",
       "data_type_name": "FoldersSearchData",
       "filter_type_name": "FoldersSearchFilter",
       "in_filter_type_name": "FoldersInFilter",
@@ -1287,7 +1310,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the folder"
+          "description": "Unique identifier for the folder",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1296,7 +1320,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the folder"
+          "description": "Name of the folder",
+          "semantic": false
         },
         {
           "name": "hidden",
@@ -1305,7 +1330,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the folder is hidden from the sidebar"
+          "description": "Whether the folder is hidden from the sidebar",
+          "semantic": false
         },
         {
           "name": "task_count",
@@ -1314,12 +1340,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Number of tasks contained in the folder"
+          "description": "Number of tasks contained in the folder",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "lists": {
       "entity": "lists",
+      "kind": "DATA",
       "data_type_name": "ListsSearchData",
       "filter_type_name": "ListsSearchFilter",
       "in_filter_type_name": "ListsInFilter",
@@ -1338,7 +1370,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the list"
+          "description": "Unique identifier for the list",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1347,7 +1380,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the list"
+          "description": "Name of the list",
+          "semantic": false
         },
         {
           "name": "archived",
@@ -1356,7 +1390,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the list has been archived"
+          "description": "Whether the list has been archived",
+          "semantic": false
         },
         {
           "name": "due_date",
@@ -1365,7 +1400,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Due date for the list, in ClickUp timestamp format"
+          "description": "Due date for the list, in ClickUp timestamp format",
+          "semantic": false
         },
         {
           "name": "start_date",
@@ -1374,7 +1410,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date for the list, in ClickUp timestamp format"
+          "description": "Start date for the list, in ClickUp timestamp format",
+          "semantic": false
         },
         {
           "name": "priority",
@@ -1383,7 +1420,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Priority assigned to the list"
+          "description": "Priority assigned to the list",
+          "semantic": false
         },
         {
           "name": "task_count",
@@ -1392,12 +1430,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of tasks contained in the list"
+          "description": "Number of tasks contained in the list",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "tasks": {
       "entity": "tasks",
+      "kind": "DATA",
       "data_type_name": "TasksSearchData",
       "filter_type_name": "TasksSearchFilter",
       "in_filter_type_name": "TasksInFilter",
@@ -1416,7 +1460,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the task"
+          "description": "Unique identifier for the task",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1425,7 +1470,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the task"
+          "description": "Name of the task",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -1434,7 +1480,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Creation timestamp of the task, in ClickUp timestamp format"
+          "description": "Creation timestamp of the task, in ClickUp timestamp format",
+          "semantic": false
         },
         {
           "name": "date_updated",
@@ -1443,7 +1490,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last update timestamp of the task, in ClickUp timestamp format"
+          "description": "Last update timestamp of the task, in ClickUp timestamp format",
+          "semantic": false
         },
         {
           "name": "date_closed",
@@ -1452,7 +1500,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the task was closed, in ClickUp timestamp format"
+          "description": "Timestamp when the task was closed, in ClickUp timestamp format",
+          "semantic": false
         },
         {
           "name": "due_date",
@@ -1461,7 +1510,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Due date for the task, in ClickUp timestamp format"
+          "description": "Due date for the task, in ClickUp timestamp format",
+          "semantic": false
         },
         {
           "name": "start_date",
@@ -1470,7 +1520,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date for the task, in ClickUp timestamp format"
+          "description": "Start date for the task, in ClickUp timestamp format",
+          "semantic": false
         },
         {
           "name": "parent",
@@ -1479,7 +1530,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the parent task, if this task is a subtask"
+          "description": "ID of the parent task, if this task is a subtask",
+          "semantic": false
         },
         {
           "name": "url",
@@ -1488,12 +1540,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink URL to view the task in ClickUp"
+          "description": "Permalink URL to view the task in ClickUp",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "comments": {
       "entity": "comments",
+      "kind": "DATA",
       "data_type_name": "CommentsSearchData",
       "filter_type_name": "CommentsSearchFilter",
       "in_filter_type_name": "CommentsInFilter",
@@ -1512,7 +1570,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the comment"
+          "description": "Unique identifier for the comment",
+          "semantic": false
         },
         {
           "name": "comment_text",
@@ -1521,7 +1580,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Plain-text content of the comment"
+          "description": "Plain-text content of the comment",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1530,7 +1590,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the comment was posted, in ClickUp timestamp format"
+          "description": "Timestamp when the comment was posted, in ClickUp timestamp format",
+          "semantic": false
         },
         {
           "name": "reply_count",
@@ -1539,12 +1600,18 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Number of replies on the comment"
+          "description": "Number of replies on the comment",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "goals": {
       "entity": "goals",
+      "kind": "DATA",
       "data_type_name": "GoalsSearchData",
       "filter_type_name": "GoalsSearchFilter",
       "in_filter_type_name": "GoalsInFilter",
@@ -1563,7 +1630,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the goal"
+          "description": "Unique identifier for the goal",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1572,7 +1640,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the goal"
+          "description": "Name of the goal",
+          "semantic": false
         },
         {
           "name": "description",
@@ -1581,7 +1650,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description of the goal"
+          "description": "Description of the goal",
+          "semantic": false
         },
         {
           "name": "archived",
@@ -1590,7 +1660,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the goal has been archived"
+          "description": "Whether the goal has been archived",
+          "semantic": false
         },
         {
           "name": "pinned",
@@ -1599,7 +1670,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the goal is pinned to the top of the list"
+          "description": "Whether the goal is pinned to the top of the list",
+          "semantic": false
         },
         {
           "name": "private",
@@ -1608,7 +1680,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the goal is private to its owners"
+          "description": "Whether the goal is private to its owners",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -1617,7 +1690,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Creation timestamp of the goal, in ClickUp timestamp format"
+          "description": "Creation timestamp of the goal, in ClickUp timestamp format",
+          "semantic": false
         },
         {
           "name": "due_date",
@@ -1626,7 +1700,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Due date for the goal, in ClickUp timestamp format"
+          "description": "Due date for the goal, in ClickUp timestamp format",
+          "semantic": false
         },
         {
           "name": "percent_completed",
@@ -1635,7 +1710,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Completion percentage of the goal, between 0 and 100"
+          "description": "Completion percentage of the goal, between 0 and 100",
+          "semantic": false
         },
         {
           "name": "team_id",
@@ -1644,12 +1720,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Identifier of the team that owns the goal"
+          "description": "Identifier of the team that owns the goal",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "time_tracking": {
       "entity": "time_tracking",
+      "kind": "DATA",
       "data_type_name": "TimeTrackingSearchData",
       "filter_type_name": "TimeTrackingSearchFilter",
       "in_filter_type_name": "TimeTrackingInFilter",
@@ -1668,7 +1750,8 @@
           "json_type": "number | null",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Total tracked time in milliseconds"
+          "description": "Total tracked time in milliseconds",
+          "semantic": false
         },
         {
           "name": "user",
@@ -1677,9 +1760,14 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "User who tracked the time"
+          "description": "User who tracked the time",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

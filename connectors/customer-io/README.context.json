@@ -2240,6 +2240,7 @@
   "search_schemas": {
     "campaigns": {
       "entity": "campaigns",
+      "kind": "DATA",
       "data_type_name": "CampaignsSearchData",
       "filter_type_name": "CampaignsSearchFilter",
       "in_filter_type_name": "CampaignsInFilter",
@@ -2258,7 +2259,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Actions defined in this campaign"
+          "description": "Actions defined in this campaign",
+          "semantic": false
         },
         {
           "name": "active",
@@ -2267,7 +2269,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the campaign is active"
+          "description": "Whether the campaign is active",
+          "semantic": false
         },
         {
           "name": "created",
@@ -2276,7 +2279,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Creation timestamp (Unix)"
+          "description": "Creation timestamp (Unix)",
+          "semantic": false
         },
         {
           "name": "created_by",
@@ -2285,7 +2289,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Who created the campaign"
+          "description": "Who created the campaign",
+          "semantic": false
         },
         {
           "name": "date_attribute",
@@ -2294,7 +2299,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date attribute used for date-triggered campaigns"
+          "description": "Date attribute used for date-triggered campaigns",
+          "semantic": false
         },
         {
           "name": "deduplicate_id",
@@ -2303,7 +2309,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deduplication identifier"
+          "description": "Deduplication identifier",
+          "semantic": false
         },
         {
           "name": "event_name",
@@ -2312,7 +2319,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Event name that triggers the campaign"
+          "description": "Event name that triggers the campaign",
+          "semantic": false
         },
         {
           "name": "first_started",
@@ -2321,7 +2329,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "When the campaign was first started (Unix)"
+          "description": "When the campaign was first started (Unix)",
+          "semantic": false
         },
         {
           "name": "frequency",
@@ -2330,7 +2339,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "How frequently a person can receive this campaign"
+          "description": "How frequently a person can receive this campaign",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2339,7 +2349,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique campaign identifier"
+          "description": "Unique campaign identifier",
+          "semantic": false
         },
         {
           "name": "msg_templates",
@@ -2348,7 +2359,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Message templates used in the campaign"
+          "description": "Message templates used in the campaign",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2357,7 +2369,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign name"
+          "description": "Campaign name",
+          "semantic": false
         },
         {
           "name": "start_hour",
@@ -2366,7 +2379,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Hour of the day to trigger"
+          "description": "Hour of the day to trigger",
+          "semantic": false
         },
         {
           "name": "start_minutes",
@@ -2375,7 +2389,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Minute of the hour to trigger"
+          "description": "Minute of the hour to trigger",
+          "semantic": false
         },
         {
           "name": "state",
@@ -2384,7 +2399,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign status (draft, active, stopped)"
+          "description": "Campaign status (draft, active, stopped)",
+          "semantic": false
         },
         {
           "name": "tags",
@@ -2393,7 +2409,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Tags associated with the campaign"
+          "description": "Tags associated with the campaign",
+          "semantic": false
         },
         {
           "name": "timezone",
@@ -2402,7 +2419,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timezone for trigger scheduling"
+          "description": "Timezone for trigger scheduling",
+          "semantic": false
         },
         {
           "name": "trigger_segment_ids",
@@ -2411,7 +2429,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Segment IDs that trigger this campaign"
+          "description": "Segment IDs that trigger this campaign",
+          "semantic": false
         },
         {
           "name": "type",
@@ -2420,7 +2439,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign trigger type"
+          "description": "Campaign trigger type",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -2429,7 +2449,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Last update timestamp (Unix)"
+          "description": "Last update timestamp (Unix)",
+          "semantic": false
         },
         {
           "name": "use_customer_timezone",
@@ -2438,12 +2459,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether to use the customer's timezone"
+          "description": "Whether to use the customer's timezone",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "campaign_actions": {
       "entity": "campaign_actions",
+      "kind": "DATA",
       "data_type_name": "CampaignActionsSearchData",
       "filter_type_name": "CampaignActionsSearchFilter",
       "in_filter_type_name": "CampaignActionsInFilter",
@@ -2462,7 +2489,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "BCC addresses"
+          "description": "BCC addresses",
+          "semantic": false
         },
         {
           "name": "body",
@@ -2471,7 +2499,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Action body content (HTML for emails)"
+          "description": "Action body content (HTML for emails)",
+          "semantic": false
         },
         {
           "name": "campaign_id",
@@ -2480,7 +2509,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Parent campaign ID"
+          "description": "Parent campaign ID",
+          "semantic": false
         },
         {
           "name": "created",
@@ -2489,7 +2519,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Creation timestamp (Unix)"
+          "description": "Creation timestamp (Unix)",
+          "semantic": false
         },
         {
           "name": "deduplicate_id",
@@ -2498,7 +2529,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deduplication identifier"
+          "description": "Deduplication identifier",
+          "semantic": false
         },
         {
           "name": "editor",
@@ -2507,7 +2539,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Editor used to create the action"
+          "description": "Editor used to create the action",
+          "semantic": false
         },
         {
           "name": "fake_bcc",
@@ -2516,7 +2549,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether to use fake BCC"
+          "description": "Whether to use fake BCC",
+          "semantic": false
         },
         {
           "name": "from",
@@ -2525,7 +2559,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "From address"
+          "description": "From address",
+          "semantic": false
         },
         {
           "name": "from_id",
@@ -2534,7 +2569,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Sender identity ID"
+          "description": "Sender identity ID",
+          "semantic": false
         },
         {
           "name": "headers",
@@ -2543,7 +2579,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Custom email headers as JSON"
+          "description": "Custom email headers as JSON",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2552,7 +2589,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique action identifier"
+          "description": "Unique action identifier",
+          "semantic": false
         },
         {
           "name": "language",
@@ -2561,7 +2599,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Language variant"
+          "description": "Language variant",
+          "semantic": false
         },
         {
           "name": "layout",
@@ -2570,7 +2609,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Layout template used"
+          "description": "Layout template used",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2579,7 +2619,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Action name"
+          "description": "Action name",
+          "semantic": false
         },
         {
           "name": "parent_action_id",
@@ -2588,7 +2629,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Parent action ID for language variants"
+          "description": "Parent action ID for language variants",
+          "semantic": false
         },
         {
           "name": "preheader_text",
@@ -2597,7 +2639,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email preheader/preview text"
+          "description": "Email preheader/preview text",
+          "semantic": false
         },
         {
           "name": "preprocessor",
@@ -2606,7 +2649,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "CSS preprocessor setting"
+          "description": "CSS preprocessor setting",
+          "semantic": false
         },
         {
           "name": "recipient",
@@ -2615,7 +2659,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Recipient address"
+          "description": "Recipient address",
+          "semantic": false
         },
         {
           "name": "recipient_environment_id",
@@ -2624,7 +2669,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Recipient environment ID"
+          "description": "Recipient environment ID",
+          "semantic": false
         },
         {
           "name": "reply_to",
@@ -2633,7 +2679,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Reply-to address"
+          "description": "Reply-to address",
+          "semantic": false
         },
         {
           "name": "reply_to_id",
@@ -2642,7 +2689,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Reply-to sender identity ID"
+          "description": "Reply-to sender identity ID",
+          "semantic": false
         },
         {
           "name": "request_method",
@@ -2651,7 +2699,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HTTP request method for webhook actions"
+          "description": "HTTP request method for webhook actions",
+          "semantic": false
         },
         {
           "name": "sending_state",
@@ -2660,7 +2709,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Sending behavior (automatic or draft)"
+          "description": "Sending behavior (automatic or draft)",
+          "semantic": false
         },
         {
           "name": "subject",
@@ -2669,7 +2719,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email subject line"
+          "description": "Email subject line",
+          "semantic": false
         },
         {
           "name": "type",
@@ -2678,7 +2729,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Action type (email, webhook, twilio, push, slack, in_app, whatsapp)"
+          "description": "Action type (email, webhook, twilio, push, slack, in_app, whatsapp)",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -2687,7 +2739,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Last update timestamp (Unix)"
+          "description": "Last update timestamp (Unix)",
+          "semantic": false
         },
         {
           "name": "url",
@@ -2696,12 +2749,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Webhook URL (for webhook actions)"
+          "description": "Webhook URL (for webhook actions)",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "newsletters": {
       "entity": "newsletters",
+      "kind": "DATA",
       "data_type_name": "NewslettersSearchData",
       "filter_type_name": "NewslettersSearchFilter",
       "in_filter_type_name": "NewslettersInFilter",
@@ -2720,7 +2779,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Content variant IDs for this newsletter"
+          "description": "Content variant IDs for this newsletter",
+          "semantic": false
         },
         {
           "name": "created",
@@ -2729,7 +2789,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Creation timestamp (Unix)"
+          "description": "Creation timestamp (Unix)",
+          "semantic": false
         },
         {
           "name": "deduplicate_id",
@@ -2738,7 +2799,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deduplication identifier"
+          "description": "Deduplication identifier",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2747,7 +2809,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique newsletter identifier"
+          "description": "Unique newsletter identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2756,7 +2819,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Newsletter name"
+          "description": "Newsletter name",
+          "semantic": false
         },
         {
           "name": "sent_at",
@@ -2765,7 +2829,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "When the newsletter was last sent (Unix)"
+          "description": "When the newsletter was last sent (Unix)",
+          "semantic": false
         },
         {
           "name": "tags",
@@ -2774,7 +2839,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Tags associated with the newsletter"
+          "description": "Tags associated with the newsletter",
+          "semantic": false
         },
         {
           "name": "type",
@@ -2783,7 +2849,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Channel type (email, webhook, twilio, push, in_app, inbox)"
+          "description": "Channel type (email, webhook, twilio, push, in_app, inbox)",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -2792,9 +2859,14 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Last update timestamp (Unix)"
+          "description": "Last update timestamp (Unix)",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

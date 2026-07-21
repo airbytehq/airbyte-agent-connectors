@@ -1706,6 +1706,7 @@
   "search_schemas": {
     "campaigns": {
       "entity": "campaigns",
+      "kind": "DATA",
       "data_type_name": "CampaignsSearchData",
       "filter_type_name": "CampaignsSearchFilter",
       "in_filter_type_name": "CampaignsInFilter",
@@ -1724,7 +1725,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign ID"
+          "description": "Campaign ID",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1733,7 +1735,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign name"
+          "description": "Campaign name",
+          "semantic": false
         },
         {
           "name": "account_id",
@@ -1742,7 +1745,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account ID"
+          "description": "Ad account ID",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1751,7 +1755,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign status"
+          "description": "Campaign status",
+          "semantic": false
         },
         {
           "name": "effective_status",
@@ -1760,7 +1765,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Effective status"
+          "description": "Effective status",
+          "semantic": false
         },
         {
           "name": "objective",
@@ -1769,7 +1775,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign objective"
+          "description": "Campaign objective",
+          "semantic": false
         },
         {
           "name": "daily_budget",
@@ -1778,7 +1785,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Daily budget in account currency"
+          "description": "Daily budget in account currency",
+          "semantic": false
         },
         {
           "name": "lifetime_budget",
@@ -1787,7 +1795,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Lifetime budget"
+          "description": "Lifetime budget",
+          "semantic": false
         },
         {
           "name": "budget_remaining",
@@ -1796,7 +1805,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Remaining budget"
+          "description": "Remaining budget",
+          "semantic": false
         },
         {
           "name": "created_time",
@@ -1805,7 +1815,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign creation time"
+          "description": "Campaign creation time",
+          "semantic": false
         },
         {
           "name": "start_time",
@@ -1814,7 +1825,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign start time"
+          "description": "Campaign start time",
+          "semantic": false
         },
         {
           "name": "stop_time",
@@ -1823,7 +1835,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign stop time"
+          "description": "Campaign stop time",
+          "semantic": false
         },
         {
           "name": "updated_time",
@@ -1832,12 +1845,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last update time"
+          "description": "Last update time",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "ad_sets": {
       "entity": "ad_sets",
+      "kind": "DATA",
       "data_type_name": "AdSetsSearchData",
       "filter_type_name": "AdSetsSearchFilter",
       "in_filter_type_name": "AdSetsInFilter",
@@ -1856,7 +1875,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad Set ID"
+          "description": "Ad Set ID",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1865,7 +1885,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad Set name"
+          "description": "Ad Set name",
+          "semantic": false
         },
         {
           "name": "account_id",
@@ -1874,7 +1895,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account ID"
+          "description": "Ad account ID",
+          "semantic": false
         },
         {
           "name": "campaign_id",
@@ -1883,7 +1905,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Parent campaign ID"
+          "description": "Parent campaign ID",
+          "semantic": false
         },
         {
           "name": "effective_status",
@@ -1892,7 +1915,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Effective status"
+          "description": "Effective status",
+          "semantic": false
         },
         {
           "name": "daily_budget",
@@ -1901,7 +1925,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Daily budget"
+          "description": "Daily budget",
+          "semantic": false
         },
         {
           "name": "lifetime_budget",
@@ -1910,7 +1935,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Lifetime budget"
+          "description": "Lifetime budget",
+          "semantic": false
         },
         {
           "name": "budget_remaining",
@@ -1919,7 +1945,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Remaining budget"
+          "description": "Remaining budget",
+          "semantic": false
         },
         {
           "name": "bid_amount",
@@ -1928,7 +1955,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Bid amount"
+          "description": "Bid amount",
+          "semantic": false
         },
         {
           "name": "bid_strategy",
@@ -1937,7 +1965,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Bid strategy"
+          "description": "Bid strategy",
+          "semantic": false
         },
         {
           "name": "created_time",
@@ -1946,7 +1975,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad set creation time"
+          "description": "Ad set creation time",
+          "semantic": false
         },
         {
           "name": "start_time",
@@ -1955,7 +1985,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad set start time"
+          "description": "Ad set start time",
+          "semantic": false
         },
         {
           "name": "end_time",
@@ -1964,7 +1995,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad set end time"
+          "description": "Ad set end time",
+          "semantic": false
         },
         {
           "name": "updated_time",
@@ -1973,12 +2005,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last update time"
+          "description": "Last update time",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "ads": {
       "entity": "ads",
+      "kind": "DATA",
       "data_type_name": "AdsSearchData",
       "filter_type_name": "AdsSearchFilter",
       "in_filter_type_name": "AdsInFilter",
@@ -1997,7 +2035,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad ID"
+          "description": "Ad ID",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2006,7 +2045,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad name"
+          "description": "Ad name",
+          "semantic": false
         },
         {
           "name": "account_id",
@@ -2015,7 +2055,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account ID"
+          "description": "Ad account ID",
+          "semantic": false
         },
         {
           "name": "adset_id",
@@ -2024,7 +2065,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Parent ad set ID"
+          "description": "Parent ad set ID",
+          "semantic": false
         },
         {
           "name": "campaign_id",
@@ -2033,7 +2075,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Parent campaign ID"
+          "description": "Parent campaign ID",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2042,7 +2085,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad status"
+          "description": "Ad status",
+          "semantic": false
         },
         {
           "name": "effective_status",
@@ -2051,7 +2095,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Effective status"
+          "description": "Effective status",
+          "semantic": false
         },
         {
           "name": "created_time",
@@ -2060,7 +2105,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad creation time"
+          "description": "Ad creation time",
+          "semantic": false
         },
         {
           "name": "updated_time",
@@ -2069,12 +2115,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last update time"
+          "description": "Last update time",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "ad_creatives": {
       "entity": "ad_creatives",
+      "kind": "DATA",
       "data_type_name": "AdCreativesSearchData",
       "filter_type_name": "AdCreativesSearchFilter",
       "in_filter_type_name": "AdCreativesInFilter",
@@ -2093,7 +2145,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad Creative ID"
+          "description": "Ad Creative ID",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2102,7 +2155,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad Creative name"
+          "description": "Ad Creative name",
+          "semantic": false
         },
         {
           "name": "account_id",
@@ -2111,7 +2165,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account ID"
+          "description": "Ad account ID",
+          "semantic": false
         },
         {
           "name": "body",
@@ -2120,7 +2175,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad body text"
+          "description": "Ad body text",
+          "semantic": false
         },
         {
           "name": "title",
@@ -2129,7 +2185,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad title"
+          "description": "Ad title",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2138,7 +2195,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Creative status"
+          "description": "Creative status",
+          "semantic": false
         },
         {
           "name": "image_url",
@@ -2147,7 +2205,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Image URL"
+          "description": "Image URL",
+          "semantic": false
         },
         {
           "name": "thumbnail_url",
@@ -2156,7 +2215,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Thumbnail URL"
+          "description": "Thumbnail URL",
+          "semantic": false
         },
         {
           "name": "link_url",
@@ -2165,7 +2225,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Link URL"
+          "description": "Link URL",
+          "semantic": false
         },
         {
           "name": "call_to_action_type",
@@ -2174,12 +2235,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Call to action type"
+          "description": "Call to action type",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "ads_insights": {
       "entity": "ads_insights",
+      "kind": "DATA",
       "data_type_name": "AdsInsightsSearchData",
       "filter_type_name": "AdsInsightsSearchFilter",
       "in_filter_type_name": "AdsInsightsInFilter",
@@ -2198,7 +2265,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account ID"
+          "description": "Ad account ID",
+          "semantic": false
         },
         {
           "name": "account_name",
@@ -2207,7 +2275,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account name"
+          "description": "Ad account name",
+          "semantic": false
         },
         {
           "name": "campaign_id",
@@ -2216,7 +2285,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign ID"
+          "description": "Campaign ID",
+          "semantic": false
         },
         {
           "name": "campaign_name",
@@ -2225,7 +2295,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Campaign name"
+          "description": "Campaign name",
+          "semantic": false
         },
         {
           "name": "adset_id",
@@ -2234,7 +2305,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad set ID"
+          "description": "Ad set ID",
+          "semantic": false
         },
         {
           "name": "adset_name",
@@ -2243,7 +2315,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad set name"
+          "description": "Ad set name",
+          "semantic": false
         },
         {
           "name": "ad_id",
@@ -2252,7 +2325,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad ID"
+          "description": "Ad ID",
+          "semantic": false
         },
         {
           "name": "ad_name",
@@ -2261,7 +2335,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad name"
+          "description": "Ad name",
+          "semantic": false
         },
         {
           "name": "clicks",
@@ -2270,7 +2345,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of clicks"
+          "description": "Number of clicks",
+          "semantic": false
         },
         {
           "name": "impressions",
@@ -2279,7 +2355,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of impressions"
+          "description": "Number of impressions",
+          "semantic": false
         },
         {
           "name": "reach",
@@ -2288,7 +2365,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of unique people reached"
+          "description": "Number of unique people reached",
+          "semantic": false
         },
         {
           "name": "spend",
@@ -2297,7 +2375,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Amount spent"
+          "description": "Amount spent",
+          "semantic": false
         },
         {
           "name": "cpc",
@@ -2306,7 +2385,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Cost per click"
+          "description": "Cost per click",
+          "semantic": false
         },
         {
           "name": "cpm",
@@ -2315,7 +2395,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Cost per 1000 impressions"
+          "description": "Cost per 1000 impressions",
+          "semantic": false
         },
         {
           "name": "ctr",
@@ -2324,7 +2405,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Click-through rate"
+          "description": "Click-through rate",
+          "semantic": false
         },
         {
           "name": "date_start",
@@ -2333,7 +2415,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of the reporting period"
+          "description": "Start date of the reporting period",
+          "semantic": false
         },
         {
           "name": "date_stop",
@@ -2342,7 +2425,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of the reporting period"
+          "description": "End date of the reporting period",
+          "semantic": false
         },
         {
           "name": "actions",
@@ -2351,7 +2435,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Total number of actions taken"
+          "description": "Total number of actions taken",
+          "semantic": false
         },
         {
           "name": "action_values",
@@ -2360,12 +2445,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Action values taken on the ad"
+          "description": "Action values taken on the ad",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "ad_accounts": {
       "entity": "ad_accounts",
+      "kind": "DATA",
       "data_type_name": "AdAccountsSearchData",
       "filter_type_name": "AdAccountsSearchFilter",
       "in_filter_type_name": "AdAccountsInFilter",
@@ -2384,7 +2475,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account ID"
+          "description": "Ad account ID",
+          "semantic": false
         },
         {
           "name": "account_id",
@@ -2393,7 +2485,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account ID (numeric)"
+          "description": "Ad account ID (numeric)",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2402,7 +2495,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account name"
+          "description": "Ad account name",
+          "semantic": false
         },
         {
           "name": "balance",
@@ -2411,7 +2505,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current balance of the ad account"
+          "description": "Current balance of the ad account",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -2420,7 +2515,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Currency used by the ad account"
+          "description": "Currency used by the ad account",
+          "semantic": false
         },
         {
           "name": "account_status",
@@ -2429,7 +2525,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Account status"
+          "description": "Account status",
+          "semantic": false
         },
         {
           "name": "amount_spent",
@@ -2438,7 +2535,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Total amount spent"
+          "description": "Total amount spent",
+          "semantic": false
         },
         {
           "name": "business_name",
@@ -2447,7 +2545,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Business name"
+          "description": "Business name",
+          "semantic": false
         },
         {
           "name": "created_time",
@@ -2456,7 +2555,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Account creation time"
+          "description": "Account creation time",
+          "semantic": false
         },
         {
           "name": "spend_cap",
@@ -2465,7 +2565,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Spend cap"
+          "description": "Spend cap",
+          "semantic": false
         },
         {
           "name": "timezone_name",
@@ -2474,12 +2575,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timezone name"
+          "description": "Timezone name",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "custom_conversions": {
       "entity": "custom_conversions",
+      "kind": "DATA",
       "data_type_name": "CustomConversionsSearchData",
       "filter_type_name": "CustomConversionsSearchFilter",
       "in_filter_type_name": "CustomConversionsInFilter",
@@ -2498,7 +2605,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Custom Conversion ID"
+          "description": "Custom Conversion ID",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2507,7 +2615,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Custom Conversion name"
+          "description": "Custom Conversion name",
+          "semantic": false
         },
         {
           "name": "account_id",
@@ -2516,7 +2625,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account ID"
+          "description": "Ad account ID",
+          "semantic": false
         },
         {
           "name": "description",
@@ -2525,7 +2635,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description"
+          "description": "Description",
+          "semantic": false
         },
         {
           "name": "custom_event_type",
@@ -2534,7 +2645,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Custom event type"
+          "description": "Custom event type",
+          "semantic": false
         },
         {
           "name": "creation_time",
@@ -2543,7 +2655,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Creation time"
+          "description": "Creation time",
+          "semantic": false
         },
         {
           "name": "first_fired_time",
@@ -2552,7 +2665,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "First fired time"
+          "description": "First fired time",
+          "semantic": false
         },
         {
           "name": "last_fired_time",
@@ -2561,7 +2675,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last fired time"
+          "description": "Last fired time",
+          "semantic": false
         },
         {
           "name": "is_archived",
@@ -2570,12 +2685,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the conversion is archived"
+          "description": "Whether the conversion is archived",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "images": {
       "entity": "images",
+      "kind": "DATA",
       "data_type_name": "ImagesSearchData",
       "filter_type_name": "ImagesSearchFilter",
       "in_filter_type_name": "ImagesInFilter",
@@ -2594,7 +2715,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Image ID"
+          "description": "Image ID",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2603,7 +2725,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Image name"
+          "description": "Image name",
+          "semantic": false
         },
         {
           "name": "account_id",
@@ -2612,7 +2735,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account ID"
+          "description": "Ad account ID",
+          "semantic": false
         },
         {
           "name": "hash",
@@ -2621,7 +2745,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Image hash"
+          "description": "Image hash",
+          "semantic": false
         },
         {
           "name": "url",
@@ -2630,7 +2755,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Image URL"
+          "description": "Image URL",
+          "semantic": false
         },
         {
           "name": "permalink_url",
@@ -2639,7 +2765,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink URL"
+          "description": "Permalink URL",
+          "semantic": false
         },
         {
           "name": "width",
@@ -2648,7 +2775,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Image width"
+          "description": "Image width",
+          "semantic": false
         },
         {
           "name": "height",
@@ -2657,7 +2785,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Image height"
+          "description": "Image height",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2666,7 +2795,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Image status"
+          "description": "Image status",
+          "semantic": false
         },
         {
           "name": "created_time",
@@ -2675,7 +2805,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Creation time"
+          "description": "Creation time",
+          "semantic": false
         },
         {
           "name": "updated_time",
@@ -2684,12 +2815,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last update time"
+          "description": "Last update time",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "videos": {
       "entity": "videos",
+      "kind": "DATA",
       "data_type_name": "VideosSearchData",
       "filter_type_name": "VideosSearchFilter",
       "in_filter_type_name": "VideosInFilter",
@@ -2708,7 +2845,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Video ID"
+          "description": "Video ID",
+          "semantic": false
         },
         {
           "name": "title",
@@ -2717,7 +2855,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Video title"
+          "description": "Video title",
+          "semantic": false
         },
         {
           "name": "account_id",
@@ -2726,7 +2865,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ad account ID"
+          "description": "Ad account ID",
+          "semantic": false
         },
         {
           "name": "description",
@@ -2735,7 +2875,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Video description"
+          "description": "Video description",
+          "semantic": false
         },
         {
           "name": "length",
@@ -2744,7 +2885,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Video length in seconds"
+          "description": "Video length in seconds",
+          "semantic": false
         },
         {
           "name": "source",
@@ -2753,7 +2895,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Video source URL"
+          "description": "Video source URL",
+          "semantic": false
         },
         {
           "name": "permalink_url",
@@ -2762,7 +2905,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink URL"
+          "description": "Permalink URL",
+          "semantic": false
         },
         {
           "name": "views",
@@ -2771,7 +2915,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of views"
+          "description": "Number of views",
+          "semantic": false
         },
         {
           "name": "created_time",
@@ -2780,7 +2925,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Creation time"
+          "description": "Creation time",
+          "semantic": false
         },
         {
           "name": "updated_time",
@@ -2789,9 +2935,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last update time"
+          "description": "Last update time",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

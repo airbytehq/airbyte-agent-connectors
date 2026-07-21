@@ -2696,6 +2696,7 @@
   "search_schemas": {
     "charges": {
       "entity": "charges",
+      "kind": "DATA",
       "data_type_name": "ChargesSearchData",
       "filter_type_name": "ChargesSearchFilter",
       "in_filter_type_name": "ChargesInFilter",
@@ -2714,7 +2715,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Amount intended to be collected by this payment in the smallest currency unit (e.g., 100 cents for $1.00), supporting up to eight digits."
+          "description": "Amount intended to be collected by this payment in the smallest currency unit (e.g., 100 cents for $1.00), supporting up to eight digits.",
+          "semantic": false
         },
         {
           "name": "amount_captured",
@@ -2723,7 +2725,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Amount that was actually captured from this charge."
+          "description": "Amount that was actually captured from this charge.",
+          "semantic": false
         },
         {
           "name": "amount_refunded",
@@ -2732,7 +2735,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Amount that has been refunded back to the customer."
+          "description": "Amount that has been refunded back to the customer.",
+          "semantic": false
         },
         {
           "name": "amount_updates",
@@ -2741,7 +2745,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Updates to the amount that have been made during the charge lifecycle."
+          "description": "Updates to the amount that have been made during the charge lifecycle.",
+          "semantic": false
         },
         {
           "name": "application",
@@ -2750,7 +2755,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the application that created this charge (Connect only)."
+          "description": "ID of the application that created this charge (Connect only).",
+          "semantic": false
         },
         {
           "name": "application_fee",
@@ -2759,7 +2765,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the application fee associated with this charge (Connect only)."
+          "description": "ID of the application fee associated with this charge (Connect only).",
+          "semantic": false
         },
         {
           "name": "application_fee_amount",
@@ -2768,7 +2775,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The amount of the application fee deducted from this charge (Connect only)."
+          "description": "The amount of the application fee deducted from this charge (Connect only).",
+          "semantic": false
         },
         {
           "name": "balance_transaction",
@@ -2777,7 +2785,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the balance transaction that describes the impact of this charge on your account balance (excluding refunds or disputes)."
+          "description": "ID of the balance transaction that describes the impact of this charge on your account balance (excluding refunds or disputes).",
+          "semantic": false
         },
         {
           "name": "billing_details",
@@ -2786,7 +2795,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Billing information associated with the payment method at the time of the transaction, including name, email, phone, and address."
+          "description": "Billing information associated with the payment method at the time of the transaction, including name, email, phone, and address.",
+          "semantic": false
         },
         {
           "name": "calculated_statement_descriptor",
@@ -2795,7 +2805,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The full statement descriptor that appears on the customer's credit card statement, combining prefix and suffix."
+          "description": "The full statement descriptor that appears on the customer's credit card statement, combining prefix and suffix.",
+          "semantic": false
         },
         {
           "name": "captured",
@@ -2804,7 +2815,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the charge has been captured and funds transferred to your account."
+          "description": "Whether the charge has been captured and funds transferred to your account.",
+          "semantic": false
         },
         {
           "name": "card",
@@ -2813,7 +2825,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Deprecated card object containing payment card details if a card was used."
+          "description": "Deprecated card object containing payment card details if a card was used.",
+          "semantic": false
         },
         {
           "name": "created",
@@ -2822,7 +2835,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp indicating when the charge was created."
+          "description": "Timestamp indicating when the charge was created.",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -2831,7 +2845,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Three-letter ISO currency code in lowercase (e.g., 'usd', 'eur') for the charge amount."
+          "description": "Three-letter ISO currency code in lowercase (e.g., 'usd', 'eur') for the charge amount.",
+          "semantic": false
         },
         {
           "name": "customer",
@@ -2840,7 +2855,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the customer this charge is for, if one exists."
+          "description": "ID of the customer this charge is for, if one exists.",
+          "semantic": false
         },
         {
           "name": "description",
@@ -2849,7 +2865,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "An arbitrary string attached to the charge, often useful for displaying to users or internal reference."
+          "description": "An arbitrary string attached to the charge, often useful for displaying to users or internal reference.",
+          "semantic": false
         },
         {
           "name": "destination",
@@ -2858,7 +2875,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the destination account where funds are transferred (Connect only)."
+          "description": "ID of the destination account where funds are transferred (Connect only).",
+          "semantic": false
         },
         {
           "name": "dispute",
@@ -2867,7 +2885,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the dispute object if the charge has been disputed."
+          "description": "ID of the dispute object if the charge has been disputed.",
+          "semantic": false
         },
         {
           "name": "disputed",
@@ -2876,7 +2895,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the charge has been disputed by the customer with their card issuer."
+          "description": "Whether the charge has been disputed by the customer with their card issuer.",
+          "semantic": false
         },
         {
           "name": "failure_balance_transaction",
@@ -2885,7 +2905,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the balance transaction that describes the reversal of funds if the charge failed."
+          "description": "ID of the balance transaction that describes the reversal of funds if the charge failed.",
+          "semantic": false
         },
         {
           "name": "failure_code",
@@ -2894,7 +2915,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Error code explaining the reason for charge failure, if applicable."
+          "description": "Error code explaining the reason for charge failure, if applicable.",
+          "semantic": false
         },
         {
           "name": "failure_message",
@@ -2903,7 +2925,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Human-readable message providing more details about why the charge failed."
+          "description": "Human-readable message providing more details about why the charge failed.",
+          "semantic": false
         },
         {
           "name": "fraud_details",
@@ -2912,7 +2935,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Information about fraud assessments and user reports related to this charge."
+          "description": "Information about fraud assessments and user reports related to this charge.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2921,7 +2945,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the charge, used to link transactions across other records."
+          "description": "Unique identifier for the charge, used to link transactions across other records.",
+          "semantic": false
         },
         {
           "name": "invoice",
@@ -2930,7 +2955,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the invoice this charge is for, if the charge was created by invoicing."
+          "description": "ID of the invoice this charge is for, if the charge was created by invoicing.",
+          "semantic": false
         },
         {
           "name": "livemode",
@@ -2939,7 +2965,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the charge occurred in live mode (true) or test mode (false)."
+          "description": "Whether the charge occurred in live mode (true) or test mode (false).",
+          "semantic": false
         },
         {
           "name": "metadata",
@@ -2948,7 +2975,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Key-value pairs for storing additional structured information about the charge, useful for internal tracking."
+          "description": "Key-value pairs for storing additional structured information about the charge, useful for internal tracking.",
+          "semantic": false
         },
         {
           "name": "object",
@@ -2957,7 +2985,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "String representing the object type, always 'charge' for charge objects."
+          "description": "String representing the object type, always 'charge' for charge objects.",
+          "semantic": false
         },
         {
           "name": "on_behalf_of",
@@ -2966,7 +2995,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the account on whose behalf the charge was made (Connect only)."
+          "description": "ID of the account on whose behalf the charge was made (Connect only).",
+          "semantic": false
         },
         {
           "name": "order",
@@ -2975,7 +3005,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deprecated field for order information associated with this charge."
+          "description": "Deprecated field for order information associated with this charge.",
+          "semantic": false
         },
         {
           "name": "outcome",
@@ -2984,7 +3015,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details about the outcome of the charge, including network status, risk assessment, and reason codes."
+          "description": "Details about the outcome of the charge, including network status, risk assessment, and reason codes.",
+          "semantic": false
         },
         {
           "name": "paid",
@@ -2993,7 +3025,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the charge succeeded and funds were successfully collected."
+          "description": "Whether the charge succeeded and funds were successfully collected.",
+          "semantic": false
         },
         {
           "name": "payment_intent",
@@ -3002,7 +3035,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the PaymentIntent associated with this charge, if one exists."
+          "description": "ID of the PaymentIntent associated with this charge, if one exists.",
+          "semantic": false
         },
         {
           "name": "payment_method",
@@ -3011,7 +3045,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the payment method used for this charge."
+          "description": "ID of the payment method used for this charge.",
+          "semantic": false
         },
         {
           "name": "payment_method_details",
@@ -3020,7 +3055,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details about the payment method at the time of the transaction, including card brand, network, and authentication results."
+          "description": "Details about the payment method at the time of the transaction, including card brand, network, and authentication results.",
+          "semantic": false
         },
         {
           "name": "receipt_email",
@@ -3029,7 +3065,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email address to which the receipt for this charge was sent."
+          "description": "Email address to which the receipt for this charge was sent.",
+          "semantic": false
         },
         {
           "name": "receipt_number",
@@ -3038,7 +3075,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Receipt number that appears on email receipts sent for this charge."
+          "description": "Receipt number that appears on email receipts sent for this charge.",
+          "semantic": false
         },
         {
           "name": "receipt_url",
@@ -3047,7 +3085,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL to a hosted receipt page for this charge, viewable by the customer."
+          "description": "URL to a hosted receipt page for this charge, viewable by the customer.",
+          "semantic": false
         },
         {
           "name": "refunded",
@@ -3056,7 +3095,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the charge has been fully refunded (partial refunds will still show as false)."
+          "description": "Whether the charge has been fully refunded (partial refunds will still show as false).",
+          "semantic": false
         },
         {
           "name": "refunds",
@@ -3065,7 +3105,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "List of refunds that have been applied to this charge."
+          "description": "List of refunds that have been applied to this charge.",
+          "semantic": false
         },
         {
           "name": "review",
@@ -3074,7 +3115,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the review object associated with this charge, if it was flagged for manual review."
+          "description": "ID of the review object associated with this charge, if it was flagged for manual review.",
+          "semantic": false
         },
         {
           "name": "shipping",
@@ -3083,7 +3125,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Shipping information for the charge, including recipient name, address, and tracking details."
+          "description": "Shipping information for the charge, including recipient name, address, and tracking details.",
+          "semantic": false
         },
         {
           "name": "source",
@@ -3092,7 +3135,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Deprecated payment source object used to create this charge."
+          "description": "Deprecated payment source object used to create this charge.",
+          "semantic": false
         },
         {
           "name": "source_transfer",
@@ -3101,7 +3145,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the transfer from a source account if funds came from another Stripe account (Connect only)."
+          "description": "ID of the transfer from a source account if funds came from another Stripe account (Connect only).",
+          "semantic": false
         },
         {
           "name": "statement_description",
@@ -3110,7 +3155,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deprecated alias for statement_descriptor."
+          "description": "Deprecated alias for statement_descriptor.",
+          "semantic": false
         },
         {
           "name": "statement_descriptor",
@@ -3119,7 +3165,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Statement descriptor that overrides the account default for card charges, appearing on the customer's statement."
+          "description": "Statement descriptor that overrides the account default for card charges, appearing on the customer's statement.",
+          "semantic": false
         },
         {
           "name": "statement_descriptor_suffix",
@@ -3128,7 +3175,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Suffix concatenated to the account's statement descriptor prefix to form the complete descriptor on customer statements."
+          "description": "Suffix concatenated to the account's statement descriptor prefix to form the complete descriptor on customer statements.",
+          "semantic": false
         },
         {
           "name": "status",
@@ -3137,7 +3185,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current status of the payment: 'succeeded' (completed), 'pending' (processing), or 'failed' (unsuccessful)."
+          "description": "Current status of the payment: 'succeeded' (completed), 'pending' (processing), or 'failed' (unsuccessful).",
+          "semantic": false
         },
         {
           "name": "transfer_data",
@@ -3146,7 +3195,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Object containing destination and amount for transfers to connected accounts (Connect only)."
+          "description": "Object containing destination and amount for transfers to connected accounts (Connect only).",
+          "semantic": false
         },
         {
           "name": "transfer_group",
@@ -3155,7 +3205,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "String identifier for grouping related charges and transfers together (Connect only)."
+          "description": "String identifier for grouping related charges and transfers together (Connect only).",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -3164,12 +3215,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp of the last update to this charge object."
+          "description": "Timestamp of the last update to this charge object.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "customers": {
       "entity": "customers",
+      "kind": "DATA",
       "data_type_name": "CustomersSearchData",
       "filter_type_name": "CustomersSearchFilter",
       "in_filter_type_name": "CustomersInFilter",
@@ -3188,7 +3245,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Current balance value representing funds owed by or to the customer."
+          "description": "Current balance value representing funds owed by or to the customer.",
+          "semantic": false
         },
         {
           "name": "address",
@@ -3197,7 +3255,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The customer's address information including line1, line2, city, state, postal code, and country."
+          "description": "The customer's address information including line1, line2, city, state, postal code, and country.",
+          "semantic": false
         },
         {
           "name": "balance",
@@ -3206,7 +3265,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Current balance (positive or negative) that is automatically applied to the customer's next invoice."
+          "description": "Current balance (positive or negative) that is automatically applied to the customer's next invoice.",
+          "semantic": false
         },
         {
           "name": "cards",
@@ -3215,7 +3275,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Card payment methods associated with the customer account."
+          "description": "Card payment methods associated with the customer account.",
+          "semantic": false
         },
         {
           "name": "created",
@@ -3224,7 +3285,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp indicating when the customer object was created."
+          "description": "Timestamp indicating when the customer object was created.",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -3233,7 +3295,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Three-letter ISO currency code representing the customer's default currency."
+          "description": "Three-letter ISO currency code representing the customer's default currency.",
+          "semantic": false
         },
         {
           "name": "default_card",
@@ -3242,7 +3305,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The default card to be used for charges when no specific payment method is provided."
+          "description": "The default card to be used for charges when no specific payment method is provided.",
+          "semantic": false
         },
         {
           "name": "default_source",
@@ -3251,7 +3315,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The default payment source (card or bank account) for the customer."
+          "description": "The default payment source (card or bank account) for the customer.",
+          "semantic": false
         },
         {
           "name": "delinquent",
@@ -3260,7 +3325,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Boolean indicating whether the customer is currently delinquent on payments."
+          "description": "Boolean indicating whether the customer is currently delinquent on payments.",
+          "semantic": false
         },
         {
           "name": "description",
@@ -3269,7 +3335,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "An arbitrary string attached to the customer, often useful for displaying to users."
+          "description": "An arbitrary string attached to the customer, often useful for displaying to users.",
+          "semantic": false
         },
         {
           "name": "discount",
@@ -3278,7 +3345,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Discount object describing any active discount applied to the customer."
+          "description": "Discount object describing any active discount applied to the customer.",
+          "semantic": false
         },
         {
           "name": "email",
@@ -3287,7 +3355,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The customer's email address for communication and tracking purposes."
+          "description": "The customer's email address for communication and tracking purposes.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -3296,7 +3365,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the customer object."
+          "description": "Unique identifier for the customer object.",
+          "semantic": false
         },
         {
           "name": "invoice_prefix",
@@ -3305,7 +3375,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The prefix for invoice numbers generated for this customer."
+          "description": "The prefix for invoice numbers generated for this customer.",
+          "semantic": false
         },
         {
           "name": "invoice_settings",
@@ -3314,7 +3385,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Customer's invoice-related settings including default payment method and custom fields."
+          "description": "Customer's invoice-related settings including default payment method and custom fields.",
+          "semantic": false
         },
         {
           "name": "is_deleted",
@@ -3323,7 +3395,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Boolean indicating whether the customer has been deleted."
+          "description": "Boolean indicating whether the customer has been deleted.",
+          "semantic": false
         },
         {
           "name": "livemode",
@@ -3332,7 +3405,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Boolean indicating whether the object exists in live mode or test mode."
+          "description": "Boolean indicating whether the object exists in live mode or test mode.",
+          "semantic": false
         },
         {
           "name": "metadata",
@@ -3341,7 +3415,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Set of key-value pairs for storing additional structured information about the customer."
+          "description": "Set of key-value pairs for storing additional structured information about the customer.",
+          "semantic": false
         },
         {
           "name": "name",
@@ -3350,7 +3425,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The customer's full name or business name."
+          "description": "The customer's full name or business name.",
+          "semantic": false
         },
         {
           "name": "next_invoice_sequence",
@@ -3359,7 +3435,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The sequence number for the next invoice generated for this customer."
+          "description": "The sequence number for the next invoice generated for this customer.",
+          "semantic": false
         },
         {
           "name": "object",
@@ -3368,7 +3445,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "String representing the object type, always 'customer'."
+          "description": "String representing the object type, always 'customer'.",
+          "semantic": false
         },
         {
           "name": "phone",
@@ -3377,7 +3455,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The customer's phone number."
+          "description": "The customer's phone number.",
+          "semantic": false
         },
         {
           "name": "preferred_locales",
@@ -3386,7 +3465,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Array of preferred locales for the customer, used for invoice and receipt localization."
+          "description": "Array of preferred locales for the customer, used for invoice and receipt localization.",
+          "semantic": false
         },
         {
           "name": "shipping",
@@ -3395,7 +3475,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Mailing and shipping address for the customer, appears on invoices emailed to the customer."
+          "description": "Mailing and shipping address for the customer, appears on invoices emailed to the customer.",
+          "semantic": false
         },
         {
           "name": "sources",
@@ -3404,7 +3485,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Payment sources (cards, bank accounts) attached to the customer for making payments."
+          "description": "Payment sources (cards, bank accounts) attached to the customer for making payments.",
+          "semantic": false
         },
         {
           "name": "subscriptions",
@@ -3413,7 +3495,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "List of active subscriptions associated with the customer."
+          "description": "List of active subscriptions associated with the customer.",
+          "semantic": false
         },
         {
           "name": "tax_exempt",
@@ -3422,7 +3505,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Describes the customer's tax exemption status (none, exempt, or reverse)."
+          "description": "Describes the customer's tax exemption status (none, exempt, or reverse).",
+          "semantic": false
         },
         {
           "name": "tax_info",
@@ -3431,7 +3515,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tax identification information for the customer."
+          "description": "Tax identification information for the customer.",
+          "semantic": false
         },
         {
           "name": "tax_info_verification",
@@ -3440,7 +3525,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Verification status of the customer's tax information."
+          "description": "Verification status of the customer's tax information.",
+          "semantic": false
         },
         {
           "name": "test_clock",
@@ -3449,7 +3535,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the test clock associated with this customer for testing time-dependent scenarios."
+          "description": "ID of the test clock associated with this customer for testing time-dependent scenarios.",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -3458,12 +3545,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp indicating when the customer object was last updated."
+          "description": "Timestamp indicating when the customer object was last updated.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "invoices": {
       "entity": "invoices",
+      "kind": "DATA",
       "data_type_name": "InvoicesSearchData",
       "filter_type_name": "InvoicesSearchFilter",
       "in_filter_type_name": "InvoicesInFilter",
@@ -3482,7 +3575,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The country of the business associated with this invoice, commonly used to display localized content."
+          "description": "The country of the business associated with this invoice, commonly used to display localized content.",
+          "semantic": false
         },
         {
           "name": "account_name",
@@ -3491,7 +3585,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The public name of the business associated with this invoice."
+          "description": "The public name of the business associated with this invoice.",
+          "semantic": false
         },
         {
           "name": "account_tax_ids",
@@ -3500,7 +3595,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Tax IDs of the account associated with this invoice."
+          "description": "Tax IDs of the account associated with this invoice.",
+          "semantic": false
         },
         {
           "name": "amount_due",
@@ -3509,7 +3605,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total amount, in smallest currency unit, that is due and owed by the customer."
+          "description": "Total amount, in smallest currency unit, that is due and owed by the customer.",
+          "semantic": false
         },
         {
           "name": "amount_paid",
@@ -3518,7 +3615,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total amount, in smallest currency unit, that has been paid by the customer."
+          "description": "Total amount, in smallest currency unit, that has been paid by the customer.",
+          "semantic": false
         },
         {
           "name": "amount_remaining",
@@ -3527,7 +3625,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The difference between amount_due and amount_paid, representing the outstanding balance."
+          "description": "The difference between amount_due and amount_paid, representing the outstanding balance.",
+          "semantic": false
         },
         {
           "name": "amount_shipping",
@@ -3536,7 +3635,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total amount of shipping costs on the invoice."
+          "description": "Total amount of shipping costs on the invoice.",
+          "semantic": false
         },
         {
           "name": "application",
@@ -3545,7 +3645,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the Connect application that created this invoice."
+          "description": "ID of the Connect application that created this invoice.",
+          "semantic": false
         },
         {
           "name": "application_fee",
@@ -3554,7 +3655,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Amount of application fee charged for this invoice in a Connect scenario."
+          "description": "Amount of application fee charged for this invoice in a Connect scenario.",
+          "semantic": false
         },
         {
           "name": "application_fee_amount",
@@ -3563,7 +3665,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The fee in smallest currency unit that is collected by the application in a Connect scenario."
+          "description": "The fee in smallest currency unit that is collected by the application in a Connect scenario.",
+          "semantic": false
         },
         {
           "name": "attempt_count",
@@ -3572,7 +3675,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of payment attempts made for this invoice."
+          "description": "Number of payment attempts made for this invoice.",
+          "semantic": false
         },
         {
           "name": "attempted",
@@ -3581,7 +3685,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether an attempt has been made to pay the invoice."
+          "description": "Whether an attempt has been made to pay the invoice.",
+          "semantic": false
         },
         {
           "name": "auto_advance",
@@ -3590,7 +3695,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Controls whether Stripe performs automatic collection of the invoice."
+          "description": "Controls whether Stripe performs automatic collection of the invoice.",
+          "semantic": false
         },
         {
           "name": "automatic_tax",
@@ -3599,7 +3705,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Settings and status for automatic tax calculation on this invoice."
+          "description": "Settings and status for automatic tax calculation on this invoice.",
+          "semantic": false
         },
         {
           "name": "billing",
@@ -3608,7 +3715,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Billing method used for the invoice (charge_automatically or send_invoice)."
+          "description": "Billing method used for the invoice (charge_automatically or send_invoice).",
+          "semantic": false
         },
         {
           "name": "billing_reason",
@@ -3617,7 +3725,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Indicates the reason why the invoice was created (subscription_cycle, manual, etc.)."
+          "description": "Indicates the reason why the invoice was created (subscription_cycle, manual, etc.).",
+          "semantic": false
         },
         {
           "name": "charge",
@@ -3626,7 +3735,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the latest charge generated for this invoice, if any."
+          "description": "ID of the latest charge generated for this invoice, if any.",
+          "semantic": false
         },
         {
           "name": "closed",
@@ -3635,7 +3745,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the invoice has been marked as closed and no longer open for collection."
+          "description": "Whether the invoice has been marked as closed and no longer open for collection.",
+          "semantic": false
         },
         {
           "name": "collection_method",
@@ -3644,7 +3755,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Method by which the invoice is collected: charge_automatically or send_invoice."
+          "description": "Method by which the invoice is collected: charge_automatically or send_invoice.",
+          "semantic": false
         },
         {
           "name": "created",
@@ -3653,7 +3765,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp indicating when the invoice was created."
+          "description": "Timestamp indicating when the invoice was created.",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -3662,7 +3775,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Three-letter ISO currency code in which the invoice is denominated."
+          "description": "Three-letter ISO currency code in which the invoice is denominated.",
+          "semantic": false
         },
         {
           "name": "custom_fields",
@@ -3671,7 +3785,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Custom fields displayed on the invoice as specified by the account."
+          "description": "Custom fields displayed on the invoice as specified by the account.",
+          "semantic": false
         },
         {
           "name": "customer",
@@ -3680,7 +3795,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The customer object or ID associated with this invoice."
+          "description": "The customer object or ID associated with this invoice.",
+          "semantic": false
         },
         {
           "name": "customer_address",
@@ -3689,7 +3805,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The customer's address at the time the invoice was finalized."
+          "description": "The customer's address at the time the invoice was finalized.",
+          "semantic": false
         },
         {
           "name": "customer_email",
@@ -3698,7 +3815,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The customer's email address at the time the invoice was finalized."
+          "description": "The customer's email address at the time the invoice was finalized.",
+          "semantic": false
         },
         {
           "name": "customer_name",
@@ -3707,7 +3825,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The customer's name at the time the invoice was finalized."
+          "description": "The customer's name at the time the invoice was finalized.",
+          "semantic": false
         },
         {
           "name": "customer_phone",
@@ -3716,7 +3835,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The customer's phone number at the time the invoice was finalized."
+          "description": "The customer's phone number at the time the invoice was finalized.",
+          "semantic": false
         },
         {
           "name": "customer_shipping",
@@ -3725,7 +3845,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The customer's shipping information at the time the invoice was finalized."
+          "description": "The customer's shipping information at the time the invoice was finalized.",
+          "semantic": false
         },
         {
           "name": "customer_tax_exempt",
@@ -3734,7 +3855,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The customer's tax exempt status at the time the invoice was finalized."
+          "description": "The customer's tax exempt status at the time the invoice was finalized.",
+          "semantic": false
         },
         {
           "name": "customer_tax_ids",
@@ -3743,7 +3865,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "The customer's tax IDs at the time the invoice was finalized."
+          "description": "The customer's tax IDs at the time the invoice was finalized.",
+          "semantic": false
         },
         {
           "name": "default_payment_method",
@@ -3752,7 +3875,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Default payment method for the invoice, used if no other method is specified."
+          "description": "Default payment method for the invoice, used if no other method is specified.",
+          "semantic": false
         },
         {
           "name": "default_source",
@@ -3761,7 +3885,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Default payment source for the invoice if no payment method is set."
+          "description": "Default payment source for the invoice if no payment method is set.",
+          "semantic": false
         },
         {
           "name": "default_tax_rates",
@@ -3770,7 +3895,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "The tax rates applied to the invoice by default."
+          "description": "The tax rates applied to the invoice by default.",
+          "semantic": false
         },
         {
           "name": "description",
@@ -3779,7 +3905,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "An arbitrary string attached to the invoice, often displayed to customers."
+          "description": "An arbitrary string attached to the invoice, often displayed to customers.",
+          "semantic": false
         },
         {
           "name": "discount",
@@ -3788,7 +3915,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The discount object applied to the invoice, if any."
+          "description": "The discount object applied to the invoice, if any.",
+          "semantic": false
         },
         {
           "name": "discounts",
@@ -3797,7 +3925,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Array of discount IDs or objects currently applied to this invoice."
+          "description": "Array of discount IDs or objects currently applied to this invoice.",
+          "semantic": false
         },
         {
           "name": "due_date",
@@ -3806,7 +3935,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The date by which payment on this invoice is due, if the invoice is not auto-collected."
+          "description": "The date by which payment on this invoice is due, if the invoice is not auto-collected.",
+          "semantic": false
         },
         {
           "name": "effective_at",
@@ -3815,7 +3945,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp when the invoice becomes effective and finalized for payment."
+          "description": "Timestamp when the invoice becomes effective and finalized for payment.",
+          "semantic": false
         },
         {
           "name": "ending_balance",
@@ -3824,7 +3955,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The customer's ending account balance after this invoice is finalized."
+          "description": "The customer's ending account balance after this invoice is finalized.",
+          "semantic": false
         },
         {
           "name": "footer",
@@ -3833,7 +3965,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Footer text displayed on the invoice."
+          "description": "Footer text displayed on the invoice.",
+          "semantic": false
         },
         {
           "name": "forgiven",
@@ -3842,7 +3975,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the invoice has been forgiven and is considered paid without actual payment."
+          "description": "Whether the invoice has been forgiven and is considered paid without actual payment.",
+          "semantic": false
         },
         {
           "name": "from_invoice",
@@ -3851,7 +3985,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details about the invoice this invoice was created from, if applicable."
+          "description": "Details about the invoice this invoice was created from, if applicable.",
+          "semantic": false
         },
         {
           "name": "hosted_invoice_url",
@@ -3860,7 +3995,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL for the hosted invoice page where customers can view and pay the invoice."
+          "description": "URL for the hosted invoice page where customers can view and pay the invoice.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -3869,7 +4005,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the invoice object."
+          "description": "Unique identifier for the invoice object.",
+          "semantic": false
         },
         {
           "name": "invoice_pdf",
@@ -3878,7 +4015,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL for the PDF version of the invoice."
+          "description": "URL for the PDF version of the invoice.",
+          "semantic": false
         },
         {
           "name": "is_deleted",
@@ -3887,7 +4025,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether this invoice has been deleted."
+          "description": "Indicates whether this invoice has been deleted.",
+          "semantic": false
         },
         {
           "name": "issuer",
@@ -3896,7 +4035,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details about the entity issuing the invoice."
+          "description": "Details about the entity issuing the invoice.",
+          "semantic": false
         },
         {
           "name": "last_finalization_error",
@@ -3905,7 +4045,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The error encountered during the last finalization attempt, if any."
+          "description": "The error encountered during the last finalization attempt, if any.",
+          "semantic": false
         },
         {
           "name": "latest_revision",
@@ -3914,7 +4055,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The latest revision of the invoice, if revisions are enabled."
+          "description": "The latest revision of the invoice, if revisions are enabled.",
+          "semantic": false
         },
         {
           "name": "lines",
@@ -3923,7 +4065,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The individual line items that make up the invoice, representing products, services, or fees."
+          "description": "The individual line items that make up the invoice, representing products, services, or fees.",
+          "semantic": false
         },
         {
           "name": "livemode",
@@ -3932,7 +4075,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the invoice exists in live mode (true) or test mode (false)."
+          "description": "Indicates whether the invoice exists in live mode (true) or test mode (false).",
+          "semantic": false
         },
         {
           "name": "metadata",
@@ -3941,7 +4085,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Key-value pairs for storing additional structured information about the invoice."
+          "description": "Key-value pairs for storing additional structured information about the invoice.",
+          "semantic": false
         },
         {
           "name": "next_payment_attempt",
@@ -3950,7 +4095,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Timestamp of the next automatic payment attempt for this invoice, if applicable."
+          "description": "Timestamp of the next automatic payment attempt for this invoice, if applicable.",
+          "semantic": false
         },
         {
           "name": "number",
@@ -3959,7 +4105,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A unique, human-readable identifier for this invoice, often shown to customers."
+          "description": "A unique, human-readable identifier for this invoice, often shown to customers.",
+          "semantic": false
         },
         {
           "name": "object",
@@ -3968,7 +4115,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "String representing the object type, always 'invoice'."
+          "description": "String representing the object type, always 'invoice'.",
+          "semantic": false
         },
         {
           "name": "on_behalf_of",
@@ -3977,7 +4125,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The account on behalf of which the invoice is being created, used in Connect scenarios."
+          "description": "The account on behalf of which the invoice is being created, used in Connect scenarios.",
+          "semantic": false
         },
         {
           "name": "paid",
@@ -3986,7 +4135,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the invoice has been paid in full."
+          "description": "Whether the invoice has been paid in full.",
+          "semantic": false
         },
         {
           "name": "paid_out_of_band",
@@ -3995,7 +4145,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether payment was made outside of Stripe and manually marked as paid."
+          "description": "Whether payment was made outside of Stripe and manually marked as paid.",
+          "semantic": false
         },
         {
           "name": "payment",
@@ -4004,7 +4155,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the payment associated with this invoice, if any."
+          "description": "ID of the payment associated with this invoice, if any.",
+          "semantic": false
         },
         {
           "name": "payment_intent",
@@ -4013,7 +4165,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The PaymentIntent associated with this invoice for processing payment."
+          "description": "The PaymentIntent associated with this invoice for processing payment.",
+          "semantic": false
         },
         {
           "name": "payment_settings",
@@ -4022,7 +4175,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Configuration settings for how payment should be collected on this invoice."
+          "description": "Configuration settings for how payment should be collected on this invoice.",
+          "semantic": false
         },
         {
           "name": "period_end",
@@ -4031,7 +4185,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "End date of the billing period covered by this invoice."
+          "description": "End date of the billing period covered by this invoice.",
+          "semantic": false
         },
         {
           "name": "period_start",
@@ -4040,7 +4195,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Start date of the billing period covered by this invoice."
+          "description": "Start date of the billing period covered by this invoice.",
+          "semantic": false
         },
         {
           "name": "post_payment_credit_notes_amount",
@@ -4049,7 +4205,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total amount of credit notes issued after the invoice was paid."
+          "description": "Total amount of credit notes issued after the invoice was paid.",
+          "semantic": false
         },
         {
           "name": "pre_payment_credit_notes_amount",
@@ -4058,7 +4215,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total amount of credit notes applied before payment was attempted."
+          "description": "Total amount of credit notes applied before payment was attempted.",
+          "semantic": false
         },
         {
           "name": "quote",
@@ -4067,7 +4225,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The quote from which this invoice was generated, if applicable."
+          "description": "The quote from which this invoice was generated, if applicable.",
+          "semantic": false
         },
         {
           "name": "receipt_number",
@@ -4076,7 +4235,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The receipt number displayed on the invoice, if available."
+          "description": "The receipt number displayed on the invoice, if available.",
+          "semantic": false
         },
         {
           "name": "rendering",
@@ -4085,7 +4245,8 @@
           "json_type": "object | null",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Settings that control how the invoice is rendered for display."
+          "description": "Settings that control how the invoice is rendered for display.",
+          "semantic": false
         },
         {
           "name": "rendering_options",
@@ -4094,7 +4255,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Options for customizing the visual rendering of the invoice."
+          "description": "Options for customizing the visual rendering of the invoice.",
+          "semantic": false
         },
         {
           "name": "shipping_cost",
@@ -4103,7 +4265,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Total cost of shipping charges included in the invoice."
+          "description": "Total cost of shipping charges included in the invoice.",
+          "semantic": false
         },
         {
           "name": "shipping_details",
@@ -4112,7 +4275,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Detailed shipping information for the invoice, including address and carrier."
+          "description": "Detailed shipping information for the invoice, including address and carrier.",
+          "semantic": false
         },
         {
           "name": "starting_balance",
@@ -4121,7 +4285,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The customer's starting account balance at the beginning of the billing period."
+          "description": "The customer's starting account balance at the beginning of the billing period.",
+          "semantic": false
         },
         {
           "name": "statement_description",
@@ -4130,7 +4295,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Extra information about the invoice that appears on the customer's credit card statement."
+          "description": "Extra information about the invoice that appears on the customer's credit card statement.",
+          "semantic": false
         },
         {
           "name": "statement_descriptor",
@@ -4139,7 +4305,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A dynamic descriptor that appears on the customer's credit card statement for this invoice."
+          "description": "A dynamic descriptor that appears on the customer's credit card statement for this invoice.",
+          "semantic": false
         },
         {
           "name": "status",
@@ -4148,7 +4315,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The status of the invoice: draft, open, paid, void, or uncollectible."
+          "description": "The status of the invoice: draft, open, paid, void, or uncollectible.",
+          "semantic": false
         },
         {
           "name": "status_transitions",
@@ -4157,7 +4325,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Timestamps tracking when the invoice transitioned between different statuses."
+          "description": "Timestamps tracking when the invoice transitioned between different statuses.",
+          "semantic": false
         },
         {
           "name": "subscription",
@@ -4166,7 +4335,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The subscription this invoice was generated for, if applicable."
+          "description": "The subscription this invoice was generated for, if applicable.",
+          "semantic": false
         },
         {
           "name": "subscription_details",
@@ -4175,7 +4345,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Additional details about the subscription associated with this invoice."
+          "description": "Additional details about the subscription associated with this invoice.",
+          "semantic": false
         },
         {
           "name": "subtotal",
@@ -4184,7 +4355,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total of all line items before discounts or tax are applied."
+          "description": "Total of all line items before discounts or tax are applied.",
+          "semantic": false
         },
         {
           "name": "subtotal_excluding_tax",
@@ -4193,7 +4365,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The subtotal amount excluding any tax calculations."
+          "description": "The subtotal amount excluding any tax calculations.",
+          "semantic": false
         },
         {
           "name": "tax",
@@ -4202,7 +4375,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total tax amount applied to the invoice."
+          "description": "Total tax amount applied to the invoice.",
+          "semantic": false
         },
         {
           "name": "tax_percent",
@@ -4211,7 +4385,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The percentage of tax applied to the invoice (deprecated, use total_tax_amounts instead)."
+          "description": "The percentage of tax applied to the invoice (deprecated, use total_tax_amounts instead).",
+          "semantic": false
         },
         {
           "name": "test_clock",
@@ -4220,7 +4395,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the test clock this invoice belongs to, used for testing time-dependent billing."
+          "description": "ID of the test clock this invoice belongs to, used for testing time-dependent billing.",
+          "semantic": false
         },
         {
           "name": "total",
@@ -4229,7 +4405,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total amount of the invoice after all line items, discounts, and taxes are calculated."
+          "description": "Total amount of the invoice after all line items, discounts, and taxes are calculated.",
+          "semantic": false
         },
         {
           "name": "total_discount_amounts",
@@ -4238,7 +4415,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Array of the total discount amounts applied, broken down by discount."
+          "description": "Array of the total discount amounts applied, broken down by discount.",
+          "semantic": false
         },
         {
           "name": "total_excluding_tax",
@@ -4247,7 +4425,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total amount of the invoice excluding all tax calculations."
+          "description": "Total amount of the invoice excluding all tax calculations.",
+          "semantic": false
         },
         {
           "name": "total_tax_amounts",
@@ -4256,7 +4435,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Array of tax amounts applied to the invoice, broken down by tax rate."
+          "description": "Array of tax amounts applied to the invoice, broken down by tax rate.",
+          "semantic": false
         },
         {
           "name": "transfer_data",
@@ -4265,7 +4445,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Information about the transfer of funds associated with this invoice in Connect scenarios."
+          "description": "Information about the transfer of funds associated with this invoice in Connect scenarios.",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -4274,7 +4455,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp indicating when the invoice was last updated."
+          "description": "Timestamp indicating when the invoice was last updated.",
+          "semantic": false
         },
         {
           "name": "webhooks_delivered_at",
@@ -4283,12 +4465,18 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Timestamp indicating when webhooks for this invoice were successfully delivered."
+          "description": "Timestamp indicating when webhooks for this invoice were successfully delivered.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "refunds": {
       "entity": "refunds",
+      "kind": "DATA",
       "data_type_name": "RefundsSearchData",
       "filter_type_name": "RefundsSearchFilter",
       "in_filter_type_name": "RefundsInFilter",
@@ -4307,7 +4495,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Amount refunded, in cents (the smallest currency unit)."
+          "description": "Amount refunded, in cents (the smallest currency unit).",
+          "semantic": false
         },
         {
           "name": "balance_transaction",
@@ -4316,7 +4505,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the balance transaction that describes the impact of this refund on your account balance."
+          "description": "ID of the balance transaction that describes the impact of this refund on your account balance.",
+          "semantic": false
         },
         {
           "name": "charge",
@@ -4325,7 +4515,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the charge that was refunded."
+          "description": "ID of the charge that was refunded.",
+          "semantic": false
         },
         {
           "name": "created",
@@ -4334,7 +4525,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp indicating when the refund was created."
+          "description": "Timestamp indicating when the refund was created.",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -4343,7 +4535,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Three-letter ISO currency code in lowercase representing the currency of the refund."
+          "description": "Three-letter ISO currency code in lowercase representing the currency of the refund.",
+          "semantic": false
         },
         {
           "name": "destination_details",
@@ -4352,7 +4545,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details about the destination where the refunded funds should be sent."
+          "description": "Details about the destination where the refunded funds should be sent.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4361,7 +4555,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the refund object."
+          "description": "Unique identifier for the refund object.",
+          "semantic": false
         },
         {
           "name": "metadata",
@@ -4370,7 +4565,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Set of key-value pairs that you can attach to an object for storing additional structured information."
+          "description": "Set of key-value pairs that you can attach to an object for storing additional structured information.",
+          "semantic": false
         },
         {
           "name": "object",
@@ -4379,7 +4575,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "String representing the object type, always 'refund'."
+          "description": "String representing the object type, always 'refund'.",
+          "semantic": false
         },
         {
           "name": "payment_intent",
@@ -4388,7 +4585,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the PaymentIntent that was refunded."
+          "description": "ID of the PaymentIntent that was refunded.",
+          "semantic": false
         },
         {
           "name": "reason",
@@ -4397,7 +4595,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Reason for the refund, either user-provided (duplicate, fraudulent, or requested_by_customer) or generated by Stripe internally (expired_uncaptured_charge)."
+          "description": "Reason for the refund, either user-provided (duplicate, fraudulent, or requested_by_customer) or generated by Stripe internally (expired_uncaptured_charge).",
+          "semantic": false
         },
         {
           "name": "receipt_number",
@@ -4406,7 +4605,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The transaction number that appears on email receipts sent for this refund."
+          "description": "The transaction number that appears on email receipts sent for this refund.",
+          "semantic": false
         },
         {
           "name": "source_transfer_reversal",
@@ -4415,7 +4615,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the transfer reversal that was created as a result of refunding a transfer (Connect only)."
+          "description": "ID of the transfer reversal that was created as a result of refunding a transfer (Connect only).",
+          "semantic": false
         },
         {
           "name": "status",
@@ -4424,7 +4625,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the refund (pending, requires_action, succeeded, failed, or canceled)."
+          "description": "Status of the refund (pending, requires_action, succeeded, failed, or canceled).",
+          "semantic": false
         },
         {
           "name": "transfer_reversal",
@@ -4433,7 +4635,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the reversal of the transfer that funded the charge being refunded (Connect only)."
+          "description": "ID of the reversal of the transfer that funded the charge being refunded (Connect only).",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -4442,12 +4645,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp indicating when the refund was last updated."
+          "description": "Timestamp indicating when the refund was last updated.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "subscriptions": {
       "entity": "subscriptions",
+      "kind": "DATA",
       "data_type_name": "SubscriptionsSearchData",
       "filter_type_name": "SubscriptionsSearchFilter",
       "in_filter_type_name": "SubscriptionsInFilter",
@@ -4466,7 +4675,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "For Connect platforms, the application associated with the subscription."
+          "description": "For Connect platforms, the application associated with the subscription.",
+          "semantic": false
         },
         {
           "name": "application_fee_percent",
@@ -4475,7 +4685,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "For Connect platforms, the percentage of the subscription amount taken as an application fee."
+          "description": "For Connect platforms, the percentage of the subscription amount taken as an application fee.",
+          "semantic": false
         },
         {
           "name": "automatic_tax",
@@ -4484,7 +4695,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Automatic tax calculation settings for the subscription."
+          "description": "Automatic tax calculation settings for the subscription.",
+          "semantic": false
         },
         {
           "name": "billing",
@@ -4493,7 +4705,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Billing mode configuration for the subscription."
+          "description": "Billing mode configuration for the subscription.",
+          "semantic": false
         },
         {
           "name": "billing_cycle_anchor",
@@ -4502,7 +4715,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Timestamp determining when the billing cycle for the subscription starts."
+          "description": "Timestamp determining when the billing cycle for the subscription starts.",
+          "semantic": false
         },
         {
           "name": "billing_cycle_anchor_config",
@@ -4511,7 +4725,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Configuration for the subscription's billing cycle anchor behavior."
+          "description": "Configuration for the subscription's billing cycle anchor behavior.",
+          "semantic": false
         },
         {
           "name": "billing_thresholds",
@@ -4520,7 +4735,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Defines thresholds at which an invoice will be sent, controlling billing timing based on usage."
+          "description": "Defines thresholds at which an invoice will be sent, controlling billing timing based on usage.",
+          "semantic": false
         },
         {
           "name": "cancel_at",
@@ -4529,7 +4745,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Timestamp indicating when the subscription is scheduled to be canceled."
+          "description": "Timestamp indicating when the subscription is scheduled to be canceled.",
+          "semantic": false
         },
         {
           "name": "cancel_at_period_end",
@@ -4538,7 +4755,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Boolean indicating whether the subscription will be canceled at the end of the current billing period."
+          "description": "Boolean indicating whether the subscription will be canceled at the end of the current billing period.",
+          "semantic": false
         },
         {
           "name": "canceled_at",
@@ -4547,7 +4765,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Timestamp indicating when the subscription was canceled, if applicable."
+          "description": "Timestamp indicating when the subscription was canceled, if applicable.",
+          "semantic": false
         },
         {
           "name": "cancellation_details",
@@ -4556,7 +4775,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details about why and how the subscription was canceled."
+          "description": "Details about why and how the subscription was canceled.",
+          "semantic": false
         },
         {
           "name": "collection_method",
@@ -4565,7 +4785,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "How invoices are collected (charge_automatically or send_invoice)."
+          "description": "How invoices are collected (charge_automatically or send_invoice).",
+          "semantic": false
         },
         {
           "name": "created",
@@ -4574,7 +4795,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp indicating when the subscription was created."
+          "description": "Timestamp indicating when the subscription was created.",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -4583,7 +4805,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Three-letter ISO currency code in lowercase indicating the currency for the subscription."
+          "description": "Three-letter ISO currency code in lowercase indicating the currency for the subscription.",
+          "semantic": false
         },
         {
           "name": "current_period_end",
@@ -4592,7 +4815,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Timestamp marking the end of the current billing period."
+          "description": "Timestamp marking the end of the current billing period.",
+          "semantic": false
         },
         {
           "name": "current_period_start",
@@ -4601,7 +4825,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp marking the start of the current billing period."
+          "description": "Timestamp marking the start of the current billing period.",
+          "semantic": false
         },
         {
           "name": "customer",
@@ -4610,7 +4835,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the customer who owns the subscription, expandable to full customer object."
+          "description": "ID of the customer who owns the subscription, expandable to full customer object.",
+          "semantic": false
         },
         {
           "name": "days_until_due",
@@ -4619,7 +4845,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of days until the invoice is due for subscriptions using send_invoice collection method."
+          "description": "Number of days until the invoice is due for subscriptions using send_invoice collection method.",
+          "semantic": false
         },
         {
           "name": "default_payment_method",
@@ -4628,7 +4855,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the default payment method for the subscription, taking precedence over default_source."
+          "description": "ID of the default payment method for the subscription, taking precedence over default_source.",
+          "semantic": false
         },
         {
           "name": "default_source",
@@ -4637,7 +4865,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the default payment source for the subscription."
+          "description": "ID of the default payment source for the subscription.",
+          "semantic": false
         },
         {
           "name": "default_tax_rates",
@@ -4646,7 +4875,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Tax rates that apply to the subscription by default."
+          "description": "Tax rates that apply to the subscription by default.",
+          "semantic": false
         },
         {
           "name": "description",
@@ -4655,7 +4885,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Human-readable description of the subscription, displayable to the customer."
+          "description": "Human-readable description of the subscription, displayable to the customer.",
+          "semantic": false
         },
         {
           "name": "discount",
@@ -4664,7 +4895,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Describes any discount currently applied to the subscription."
+          "description": "Describes any discount currently applied to the subscription.",
+          "semantic": false
         },
         {
           "name": "ended_at",
@@ -4673,7 +4905,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Timestamp indicating when the subscription ended, if applicable."
+          "description": "Timestamp indicating when the subscription ended, if applicable.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4682,7 +4915,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the subscription object."
+          "description": "Unique identifier for the subscription object.",
+          "semantic": false
         },
         {
           "name": "invoice_settings",
@@ -4691,7 +4925,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Settings for invoices generated by this subscription, such as custom fields and footer."
+          "description": "Settings for invoices generated by this subscription, such as custom fields and footer.",
+          "semantic": false
         },
         {
           "name": "is_deleted",
@@ -4700,7 +4935,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the subscription has been deleted."
+          "description": "Indicates whether the subscription has been deleted.",
+          "semantic": false
         },
         {
           "name": "items",
@@ -4709,7 +4945,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "List of subscription items, each with an attached price defining what the customer is subscribed to."
+          "description": "List of subscription items, each with an attached price defining what the customer is subscribed to.",
+          "semantic": false
         },
         {
           "name": "latest_invoice",
@@ -4718,7 +4955,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The most recent invoice this subscription has generated, expandable to full invoice object."
+          "description": "The most recent invoice this subscription has generated, expandable to full invoice object.",
+          "semantic": false
         },
         {
           "name": "livemode",
@@ -4727,7 +4965,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the subscription exists in live mode (true) or test mode (false)."
+          "description": "Indicates whether the subscription exists in live mode (true) or test mode (false).",
+          "semantic": false
         },
         {
           "name": "metadata",
@@ -4736,7 +4975,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Set of key-value pairs that you can attach to the subscription for storing additional structured information."
+          "description": "Set of key-value pairs that you can attach to the subscription for storing additional structured information.",
+          "semantic": false
         },
         {
           "name": "next_pending_invoice_item_invoice",
@@ -4745,7 +4985,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp when the next invoice for pending invoice items will be created."
+          "description": "Timestamp when the next invoice for pending invoice items will be created.",
+          "semantic": false
         },
         {
           "name": "object",
@@ -4754,7 +4995,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "String representing the object type, always 'subscription'."
+          "description": "String representing the object type, always 'subscription'.",
+          "semantic": false
         },
         {
           "name": "on_behalf_of",
@@ -4763,7 +5005,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "For Connect platforms, the account for which the subscription is being created or managed."
+          "description": "For Connect platforms, the account for which the subscription is being created or managed.",
+          "semantic": false
         },
         {
           "name": "pause_collection",
@@ -4772,7 +5015,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Configuration for pausing collection on the subscription while retaining the subscription structure."
+          "description": "Configuration for pausing collection on the subscription while retaining the subscription structure.",
+          "semantic": false
         },
         {
           "name": "payment_settings",
@@ -4781,7 +5025,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Payment settings for invoices generated by this subscription."
+          "description": "Payment settings for invoices generated by this subscription.",
+          "semantic": false
         },
         {
           "name": "pending_invoice_item_interval",
@@ -4790,7 +5035,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Specifies an interval for aggregating usage records into pending invoice items."
+          "description": "Specifies an interval for aggregating usage records into pending invoice items.",
+          "semantic": false
         },
         {
           "name": "pending_setup_intent",
@@ -4799,7 +5045,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "SetupIntent used for collecting user authentication when updating payment methods without immediate payment."
+          "description": "SetupIntent used for collecting user authentication when updating payment methods without immediate payment.",
+          "semantic": false
         },
         {
           "name": "pending_update",
@@ -4808,7 +5055,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "If specified, pending updates that will be applied to the subscription once the latest_invoice has been paid."
+          "description": "If specified, pending updates that will be applied to the subscription once the latest_invoice has been paid.",
+          "semantic": false
         },
         {
           "name": "plan",
@@ -4817,7 +5065,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The plan associated with the subscription (deprecated, use items instead)."
+          "description": "The plan associated with the subscription (deprecated, use items instead).",
+          "semantic": false
         },
         {
           "name": "quantity",
@@ -4826,7 +5075,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Quantity of the plan subscribed to (deprecated, use items instead)."
+          "description": "Quantity of the plan subscribed to (deprecated, use items instead).",
+          "semantic": false
         },
         {
           "name": "schedule",
@@ -4835,7 +5085,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the subscription schedule managing this subscription's lifecycle, if applicable."
+          "description": "ID of the subscription schedule managing this subscription's lifecycle, if applicable.",
+          "semantic": false
         },
         {
           "name": "start_date",
@@ -4844,7 +5095,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp indicating when the subscription started."
+          "description": "Timestamp indicating when the subscription started.",
+          "semantic": false
         },
         {
           "name": "status",
@@ -4853,7 +5105,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current status of the subscription (incomplete, incomplete_expired, trialing, active, past_due, canceled, unpaid, or paused)."
+          "description": "Current status of the subscription (incomplete, incomplete_expired, trialing, active, past_due, canceled, unpaid, or paused).",
+          "semantic": false
         },
         {
           "name": "tax_percent",
@@ -4862,7 +5115,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The percentage of tax applied to the subscription (deprecated, use default_tax_rates instead)."
+          "description": "The percentage of tax applied to the subscription (deprecated, use default_tax_rates instead).",
+          "semantic": false
         },
         {
           "name": "test_clock",
@@ -4871,7 +5125,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the test clock associated with this subscription for simulating time-based scenarios."
+          "description": "ID of the test clock associated with this subscription for simulating time-based scenarios.",
+          "semantic": false
         },
         {
           "name": "transfer_data",
@@ -4880,7 +5135,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "For Connect platforms, the account receiving funds from the subscription and optional percentage transferred."
+          "description": "For Connect platforms, the account receiving funds from the subscription and optional percentage transferred.",
+          "semantic": false
         },
         {
           "name": "trial_end",
@@ -4889,7 +5145,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Timestamp indicating when the trial period ends, if applicable."
+          "description": "Timestamp indicating when the trial period ends, if applicable.",
+          "semantic": false
         },
         {
           "name": "trial_settings",
@@ -4898,7 +5155,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Settings related to trial periods, including conditions for ending trials."
+          "description": "Settings related to trial periods, including conditions for ending trials.",
+          "semantic": false
         },
         {
           "name": "trial_start",
@@ -4907,7 +5165,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp indicating when the trial period began, if applicable."
+          "description": "Timestamp indicating when the trial period began, if applicable.",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -4916,9 +5175,14 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp indicating when the subscription was last updated."
+          "description": "Timestamp indicating when the subscription was last updated.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

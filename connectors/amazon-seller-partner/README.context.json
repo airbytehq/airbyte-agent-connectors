@@ -896,6 +896,7 @@
   "search_schemas": {
     "orders": {
       "entity": "orders",
+      "kind": "DATA",
       "data_type_name": "OrdersSearchData",
       "filter_type_name": "OrdersSearchFilter",
       "in_filter_type_name": "OrdersInFilter",
@@ -914,7 +915,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the Amazon order"
+          "description": "Unique identifier for the Amazon order",
+          "semantic": false
         },
         {
           "name": "AutomatedShippingSettings",
@@ -923,7 +925,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Settings related to automated shipping processes"
+          "description": "Settings related to automated shipping processes",
+          "semantic": false
         },
         {
           "name": "BuyerInfo",
@@ -932,7 +935,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Information about the buyer"
+          "description": "Information about the buyer",
+          "semantic": false
         },
         {
           "name": "DefaultShipFromLocationAddress",
@@ -941,7 +945,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The default address from which orders are shipped"
+          "description": "The default address from which orders are shipped",
+          "semantic": false
         },
         {
           "name": "EarliestDeliveryDate",
@@ -950,7 +955,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Earliest estimated delivery date of the order"
+          "description": "Earliest estimated delivery date of the order",
+          "semantic": false
         },
         {
           "name": "EarliestShipDate",
@@ -959,7 +965,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Earliest shipment date for the order"
+          "description": "Earliest shipment date for the order",
+          "semantic": false
         },
         {
           "name": "FulfillmentChannel",
@@ -968,7 +975,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Channel through which the order is fulfilled"
+          "description": "Channel through which the order is fulfilled",
+          "semantic": false
         },
         {
           "name": "HasRegulatedItems",
@@ -977,7 +985,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the order has regulated items"
+          "description": "Indicates if the order has regulated items",
+          "semantic": false
         },
         {
           "name": "IsAccessPointOrder",
@@ -986,7 +995,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the order is an Amazon Hub Counter order"
+          "description": "Indicates if the order is an Amazon Hub Counter order",
+          "semantic": false
         },
         {
           "name": "IsBusinessOrder",
@@ -995,7 +1005,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the order is a business order"
+          "description": "Indicates if the order is a business order",
+          "semantic": false
         },
         {
           "name": "IsGlobalExpressEnabled",
@@ -1004,7 +1015,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if global express is enabled for the order"
+          "description": "Indicates if global express is enabled for the order",
+          "semantic": false
         },
         {
           "name": "IsISPU",
@@ -1013,7 +1025,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the order is for In-Store Pickup"
+          "description": "Indicates if the order is for In-Store Pickup",
+          "semantic": false
         },
         {
           "name": "IsPremiumOrder",
@@ -1022,7 +1035,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the order is a premium order"
+          "description": "Indicates if the order is a premium order",
+          "semantic": false
         },
         {
           "name": "IsPrime",
@@ -1031,7 +1045,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the order is a Prime order"
+          "description": "Indicates if the order is a Prime order",
+          "semantic": false
         },
         {
           "name": "IsReplacementOrder",
@@ -1040,7 +1055,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Indicates if the order is a replacement order"
+          "description": "Indicates if the order is a replacement order",
+          "semantic": false
         },
         {
           "name": "IsSoldByAB",
@@ -1049,7 +1065,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the order is sold by Amazon Business"
+          "description": "Indicates if the order is sold by Amazon Business",
+          "semantic": false
         },
         {
           "name": "LastUpdateDate",
@@ -1058,7 +1075,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the order was last updated"
+          "description": "Date and time when the order was last updated",
+          "semantic": false
         },
         {
           "name": "LatestDeliveryDate",
@@ -1067,7 +1085,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Latest estimated delivery date of the order"
+          "description": "Latest estimated delivery date of the order",
+          "semantic": false
         },
         {
           "name": "LatestShipDate",
@@ -1076,7 +1095,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Latest shipment date for the order"
+          "description": "Latest shipment date for the order",
+          "semantic": false
         },
         {
           "name": "MarketplaceId",
@@ -1085,7 +1105,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Identifier for the marketplace where the order was placed"
+          "description": "Identifier for the marketplace where the order was placed",
+          "semantic": false
         },
         {
           "name": "NumberOfItemsShipped",
@@ -1094,7 +1115,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of items shipped in the order"
+          "description": "Number of items shipped in the order",
+          "semantic": false
         },
         {
           "name": "NumberOfItemsUnshipped",
@@ -1103,7 +1125,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of items yet to be shipped in the order"
+          "description": "Number of items yet to be shipped in the order",
+          "semantic": false
         },
         {
           "name": "OrderStatus",
@@ -1112,7 +1135,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the order"
+          "description": "Status of the order",
+          "semantic": false
         },
         {
           "name": "OrderTotal",
@@ -1121,7 +1145,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Total amount of the order"
+          "description": "Total amount of the order",
+          "semantic": false
         },
         {
           "name": "OrderType",
@@ -1130,7 +1155,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of the order"
+          "description": "Type of the order",
+          "semantic": false
         },
         {
           "name": "PaymentMethod",
@@ -1139,7 +1165,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Payment method used for the order"
+          "description": "Payment method used for the order",
+          "semantic": false
         },
         {
           "name": "PaymentMethodDetails",
@@ -1148,7 +1175,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Details of the payment method used for the order"
+          "description": "Details of the payment method used for the order",
+          "semantic": false
         },
         {
           "name": "PurchaseDate",
@@ -1157,7 +1185,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the order was purchased"
+          "description": "Date and time when the order was purchased",
+          "semantic": false
         },
         {
           "name": "SalesChannel",
@@ -1166,7 +1195,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Channel through which the order was sold"
+          "description": "Channel through which the order was sold",
+          "semantic": false
         },
         {
           "name": "SellerOrderId",
@@ -1175,7 +1205,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier given by the seller for the order"
+          "description": "Unique identifier given by the seller for the order",
+          "semantic": false
         },
         {
           "name": "ShipServiceLevel",
@@ -1184,7 +1215,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Service level for shipping the order"
+          "description": "Service level for shipping the order",
+          "semantic": false
         },
         {
           "name": "ShipmentServiceLevelCategory",
@@ -1193,7 +1225,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Service level category for shipping the order"
+          "description": "Service level category for shipping the order",
+          "semantic": false
         },
         {
           "name": "ShippingAddress",
@@ -1202,7 +1235,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The address to which the order will be shipped"
+          "description": "The address to which the order will be shipped",
+          "semantic": false
         },
         {
           "name": "seller_id",
@@ -1211,12 +1245,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Identifier for the seller associated with the order"
+          "description": "Identifier for the seller associated with the order",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "order_items": {
       "entity": "order_items",
+      "kind": "DATA",
       "data_type_name": "OrderItemsSearchData",
       "filter_type_name": "OrderItemsSearchFilter",
       "in_filter_type_name": "OrderItemsInFilter",
@@ -1235,7 +1275,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Amazon Standard Identification Number of the product"
+          "description": "Amazon Standard Identification Number of the product",
+          "semantic": false
         },
         {
           "name": "AmazonOrderId",
@@ -1244,7 +1285,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the Amazon order"
+          "description": "ID of the Amazon order",
+          "semantic": false
         },
         {
           "name": "BuyerInfo",
@@ -1253,7 +1295,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Information about the buyer"
+          "description": "Information about the buyer",
+          "semantic": false
         },
         {
           "name": "BuyerRequestedCancel",
@@ -1262,7 +1305,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Information about buyer's request for cancellation"
+          "description": "Information about buyer's request for cancellation",
+          "semantic": false
         },
         {
           "name": "CODFee",
@@ -1271,7 +1315,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Cash on delivery fee"
+          "description": "Cash on delivery fee",
+          "semantic": false
         },
         {
           "name": "CODFeeDiscount",
@@ -1280,7 +1325,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Discount on cash on delivery fee"
+          "description": "Discount on cash on delivery fee",
+          "semantic": false
         },
         {
           "name": "ConditionId",
@@ -1289,7 +1335,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Condition ID of the product"
+          "description": "Condition ID of the product",
+          "semantic": false
         },
         {
           "name": "ConditionNote",
@@ -1298,7 +1345,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Additional notes on the condition of the product"
+          "description": "Additional notes on the condition of the product",
+          "semantic": false
         },
         {
           "name": "ConditionSubtypeId",
@@ -1307,7 +1355,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Subtype ID of the product condition"
+          "description": "Subtype ID of the product condition",
+          "semantic": false
         },
         {
           "name": "DeemedResellerCategory",
@@ -1316,7 +1365,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Category indicating if the seller is considered a reseller"
+          "description": "Category indicating if the seller is considered a reseller",
+          "semantic": false
         },
         {
           "name": "IossNumber",
@@ -1325,7 +1375,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Import One Stop Shop number"
+          "description": "Import One Stop Shop number",
+          "semantic": false
         },
         {
           "name": "IsGift",
@@ -1334,7 +1385,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Flag indicating if the order is a gift"
+          "description": "Flag indicating if the order is a gift",
+          "semantic": false
         },
         {
           "name": "IsTransparency",
@@ -1343,7 +1395,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if transparency is applied"
+          "description": "Flag indicating if transparency is applied",
+          "semantic": false
         },
         {
           "name": "ItemPrice",
@@ -1352,7 +1405,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Price of the item"
+          "description": "Price of the item",
+          "semantic": false
         },
         {
           "name": "ItemTax",
@@ -1361,7 +1415,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Tax applied on the item"
+          "description": "Tax applied on the item",
+          "semantic": false
         },
         {
           "name": "LastUpdateDate",
@@ -1370,7 +1425,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time of the last update"
+          "description": "Date and time of the last update",
+          "semantic": false
         },
         {
           "name": "OrderItemId",
@@ -1379,7 +1435,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the order item"
+          "description": "ID of the order item",
+          "semantic": false
         },
         {
           "name": "PointsGranted",
@@ -1388,7 +1445,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Points granted for the purchase"
+          "description": "Points granted for the purchase",
+          "semantic": false
         },
         {
           "name": "PriceDesignation",
@@ -1397,7 +1455,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Designation of the price"
+          "description": "Designation of the price",
+          "semantic": false
         },
         {
           "name": "ProductInfo",
@@ -1406,7 +1465,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Information about the product"
+          "description": "Information about the product",
+          "semantic": false
         },
         {
           "name": "PromotionDiscount",
@@ -1415,7 +1475,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Discount applied due to promotion"
+          "description": "Discount applied due to promotion",
+          "semantic": false
         },
         {
           "name": "PromotionDiscountTax",
@@ -1424,7 +1485,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Tax applied on the promotion discount"
+          "description": "Tax applied on the promotion discount",
+          "semantic": false
         },
         {
           "name": "PromotionIds",
@@ -1433,7 +1495,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "IDs of promotions applied"
+          "description": "IDs of promotions applied",
+          "semantic": false
         },
         {
           "name": "QuantityOrdered",
@@ -1442,7 +1505,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Quantity of the item ordered"
+          "description": "Quantity of the item ordered",
+          "semantic": false
         },
         {
           "name": "QuantityShipped",
@@ -1451,7 +1515,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Quantity of the item shipped"
+          "description": "Quantity of the item shipped",
+          "semantic": false
         },
         {
           "name": "ScheduledDeliveryEndDate",
@@ -1460,7 +1525,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date for scheduled delivery"
+          "description": "End date for scheduled delivery",
+          "semantic": false
         },
         {
           "name": "ScheduledDeliveryStartDate",
@@ -1469,7 +1535,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date for scheduled delivery"
+          "description": "Start date for scheduled delivery",
+          "semantic": false
         },
         {
           "name": "SellerSKU",
@@ -1478,7 +1545,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "SKU of the seller"
+          "description": "SKU of the seller",
+          "semantic": false
         },
         {
           "name": "SerialNumberRequired",
@@ -1487,7 +1555,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if serial number is required"
+          "description": "Flag indicating if serial number is required",
+          "semantic": false
         },
         {
           "name": "SerialNumbers",
@@ -1496,7 +1565,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of serial numbers"
+          "description": "List of serial numbers",
+          "semantic": false
         },
         {
           "name": "ShippingDiscount",
@@ -1505,7 +1575,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Discount applied on shipping"
+          "description": "Discount applied on shipping",
+          "semantic": false
         },
         {
           "name": "ShippingDiscountTax",
@@ -1514,7 +1585,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Tax applied on the shipping discount"
+          "description": "Tax applied on the shipping discount",
+          "semantic": false
         },
         {
           "name": "ShippingPrice",
@@ -1523,7 +1595,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Price of shipping"
+          "description": "Price of shipping",
+          "semantic": false
         },
         {
           "name": "ShippingTax",
@@ -1532,7 +1605,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Tax applied on shipping"
+          "description": "Tax applied on shipping",
+          "semantic": false
         },
         {
           "name": "StoreChainStoreId",
@@ -1541,7 +1615,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the store chain"
+          "description": "ID of the store chain",
+          "semantic": false
         },
         {
           "name": "TaxCollection",
@@ -1550,7 +1625,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Information about tax collection"
+          "description": "Information about tax collection",
+          "semantic": false
         },
         {
           "name": "Title",
@@ -1559,12 +1635,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Title of the product"
+          "description": "Title of the product",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "list_financial_event_groups": {
       "entity": "list_financial_event_groups",
+      "kind": "DATA",
       "data_type_name": "ListFinancialEventGroupsSearchData",
       "filter_type_name": "ListFinancialEventGroupsSearchFilter",
       "in_filter_type_name": "ListFinancialEventGroupsInFilter",
@@ -1583,7 +1665,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The last digits of the account number"
+          "description": "The last digits of the account number",
+          "semantic": false
         },
         {
           "name": "BeginningBalance",
@@ -1592,7 +1675,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Beginning balance"
+          "description": "Beginning balance",
+          "semantic": false
         },
         {
           "name": "ConvertedTotal",
@@ -1601,7 +1685,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Converted total"
+          "description": "Converted total",
+          "semantic": false
         },
         {
           "name": "FinancialEventGroupEnd",
@@ -1610,7 +1695,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End datetime of the financial event group"
+          "description": "End datetime of the financial event group",
+          "semantic": false
         },
         {
           "name": "FinancialEventGroupId",
@@ -1619,7 +1705,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the financial event group"
+          "description": "Unique identifier for the financial event group",
+          "semantic": false
         },
         {
           "name": "FinancialEventGroupStart",
@@ -1628,7 +1715,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start datetime of the financial event group"
+          "description": "Start datetime of the financial event group",
+          "semantic": false
         },
         {
           "name": "FundTransferDate",
@@ -1637,7 +1725,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date the fund transfer occurred"
+          "description": "Date the fund transfer occurred",
+          "semantic": false
         },
         {
           "name": "FundTransferStatus",
@@ -1646,7 +1735,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the fund transfer"
+          "description": "Status of the fund transfer",
+          "semantic": false
         },
         {
           "name": "OriginalTotal",
@@ -1655,7 +1745,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Original total amount"
+          "description": "Original total amount",
+          "semantic": false
         },
         {
           "name": "ProcessingStatus",
@@ -1664,7 +1755,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Processing status of the financial event group"
+          "description": "Processing status of the financial event group",
+          "semantic": false
         },
         {
           "name": "TraceId",
@@ -1673,12 +1765,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for tracing"
+          "description": "Unique identifier for tracing",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "list_financial_events": {
       "entity": "list_financial_events",
+      "kind": "DATA",
       "data_type_name": "ListFinancialEventsSearchData",
       "filter_type_name": "ListFinancialEventsSearchFilter",
       "in_filter_type_name": "ListFinancialEventsInFilter",
@@ -1697,7 +1795,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of adhoc disbursement events"
+          "description": "List of adhoc disbursement events",
+          "semantic": false
         },
         {
           "name": "AdjustmentEventList",
@@ -1706,7 +1805,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of adjustment events"
+          "description": "List of adjustment events",
+          "semantic": false
         },
         {
           "name": "AffordabilityExpenseEventList",
@@ -1715,7 +1815,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of affordability expense events"
+          "description": "List of affordability expense events",
+          "semantic": false
         },
         {
           "name": "AffordabilityExpenseReversalEventList",
@@ -1724,7 +1825,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of affordability expense reversal events"
+          "description": "List of affordability expense reversal events",
+          "semantic": false
         },
         {
           "name": "CapacityReservationBillingEventList",
@@ -1733,7 +1835,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of capacity reservation billing events"
+          "description": "List of capacity reservation billing events",
+          "semantic": false
         },
         {
           "name": "ChargeRefundEventList",
@@ -1742,7 +1845,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of charge refund events"
+          "description": "List of charge refund events",
+          "semantic": false
         },
         {
           "name": "ChargebackEventList",
@@ -1751,7 +1855,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of chargeback events"
+          "description": "List of chargeback events",
+          "semantic": false
         },
         {
           "name": "CouponPaymentEventList",
@@ -1760,7 +1865,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of coupon payment events"
+          "description": "List of coupon payment events",
+          "semantic": false
         },
         {
           "name": "DebtRecoveryEventList",
@@ -1769,7 +1875,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of debt recovery events"
+          "description": "List of debt recovery events",
+          "semantic": false
         },
         {
           "name": "FBALiquidationEventList",
@@ -1778,7 +1885,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of FBA liquidation events"
+          "description": "List of FBA liquidation events",
+          "semantic": false
         },
         {
           "name": "FailedAdhocDisbursementEventList",
@@ -1787,7 +1895,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of failed adhoc disbursement events"
+          "description": "List of failed adhoc disbursement events",
+          "semantic": false
         },
         {
           "name": "GuaranteeClaimEventList",
@@ -1796,7 +1905,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of guarantee claim events"
+          "description": "List of guarantee claim events",
+          "semantic": false
         },
         {
           "name": "ImagingServicesFeeEventList",
@@ -1805,7 +1915,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of imaging services fee events"
+          "description": "List of imaging services fee events",
+          "semantic": false
         },
         {
           "name": "LoanServicingEventList",
@@ -1814,7 +1925,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of loan servicing events"
+          "description": "List of loan servicing events",
+          "semantic": false
         },
         {
           "name": "NetworkComminglingTransactionEventList",
@@ -1823,7 +1935,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of network commingling events"
+          "description": "List of network commingling events",
+          "semantic": false
         },
         {
           "name": "PayWithAmazonEventList",
@@ -1832,7 +1945,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of Pay with Amazon events"
+          "description": "List of Pay with Amazon events",
+          "semantic": false
         },
         {
           "name": "PerformanceBondRefundEventList",
@@ -1841,7 +1955,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of performance bond refund events"
+          "description": "List of performance bond refund events",
+          "semantic": false
         },
         {
           "name": "PostedBefore",
@@ -1850,7 +1965,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date filter for events posted before"
+          "description": "Date filter for events posted before",
+          "semantic": false
         },
         {
           "name": "ProductAdsPaymentEventList",
@@ -1859,7 +1975,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of product ads payment events"
+          "description": "List of product ads payment events",
+          "semantic": false
         },
         {
           "name": "RefundEventList",
@@ -1868,7 +1985,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of refund events"
+          "description": "List of refund events",
+          "semantic": false
         },
         {
           "name": "RemovalShipmentAdjustmentEventList",
@@ -1877,7 +1995,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of removal shipment adjustment events"
+          "description": "List of removal shipment adjustment events",
+          "semantic": false
         },
         {
           "name": "RemovalShipmentEventList",
@@ -1886,7 +2005,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of removal shipment events"
+          "description": "List of removal shipment events",
+          "semantic": false
         },
         {
           "name": "RentalTransactionEventList",
@@ -1895,7 +2015,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of rental transaction events"
+          "description": "List of rental transaction events",
+          "semantic": false
         },
         {
           "name": "RetrochargeEventList",
@@ -1904,7 +2025,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of retrocharge events"
+          "description": "List of retrocharge events",
+          "semantic": false
         },
         {
           "name": "SAFETReimbursementEventList",
@@ -1913,7 +2035,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of SAFET reimbursement events"
+          "description": "List of SAFET reimbursement events",
+          "semantic": false
         },
         {
           "name": "SellerDealPaymentEventList",
@@ -1922,7 +2045,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of seller deal payment events"
+          "description": "List of seller deal payment events",
+          "semantic": false
         },
         {
           "name": "SellerReviewEnrollmentPaymentEventList",
@@ -1931,7 +2055,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of seller review enrollment events"
+          "description": "List of seller review enrollment events",
+          "semantic": false
         },
         {
           "name": "ServiceFeeEventList",
@@ -1940,7 +2065,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of service fee events"
+          "description": "List of service fee events",
+          "semantic": false
         },
         {
           "name": "ServiceProviderCreditEventList",
@@ -1949,7 +2075,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of service provider credit events"
+          "description": "List of service provider credit events",
+          "semantic": false
         },
         {
           "name": "ShipmentEventList",
@@ -1958,7 +2085,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of shipment events"
+          "description": "List of shipment events",
+          "semantic": false
         },
         {
           "name": "ShipmentSettleEventList",
@@ -1967,7 +2095,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of shipment settlement events"
+          "description": "List of shipment settlement events",
+          "semantic": false
         },
         {
           "name": "TDSReimbursementEventList",
@@ -1976,7 +2105,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of TDS reimbursement events"
+          "description": "List of TDS reimbursement events",
+          "semantic": false
         },
         {
           "name": "TaxWithholdingEventList",
@@ -1985,7 +2115,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of tax withholding events"
+          "description": "List of tax withholding events",
+          "semantic": false
         },
         {
           "name": "TrialShipmentEventList",
@@ -1994,7 +2125,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of trial shipment events"
+          "description": "List of trial shipment events",
+          "semantic": false
         },
         {
           "name": "ValueAddedServiceChargeEventList",
@@ -2003,9 +2135,14 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of value-added service charge events"
+          "description": "List of value-added service charge events",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

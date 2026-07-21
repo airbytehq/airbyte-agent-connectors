@@ -2448,6 +2448,7 @@
   "search_schemas": {
     "customers": {
       "entity": "customers",
+      "kind": "DATA",
       "data_type_name": "CustomersSearchData",
       "filter_type_name": "CustomersSearchFilter",
       "in_filter_type_name": "CustomersInFilter",
@@ -2466,7 +2467,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Avatar URL"
+          "description": "Avatar URL",
+          "semantic": false
         },
         {
           "name": "billing",
@@ -2475,7 +2477,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "List of billing address data"
+          "description": "List of billing address data",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -2484,7 +2487,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the customer was created, in the site's timezone"
+          "description": "The date the customer was created, in the site's timezone",
+          "semantic": false
         },
         {
           "name": "date_created_gmt",
@@ -2493,7 +2497,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the customer was created, as GMT"
+          "description": "The date the customer was created, as GMT",
+          "semantic": false
         },
         {
           "name": "date_modified",
@@ -2502,7 +2507,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the customer was last modified, in the site's timezone"
+          "description": "The date the customer was last modified, in the site's timezone",
+          "semantic": false
         },
         {
           "name": "date_modified_gmt",
@@ -2511,7 +2517,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the customer was last modified, as GMT"
+          "description": "The date the customer was last modified, as GMT",
+          "semantic": false
         },
         {
           "name": "email",
@@ -2520,7 +2527,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The email address for the customer"
+          "description": "The email address for the customer",
+          "semantic": false
         },
         {
           "name": "first_name",
@@ -2529,7 +2537,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Customer first name"
+          "description": "Customer first name",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2538,7 +2547,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the resource"
+          "description": "Unique identifier for the resource",
+          "semantic": false
         },
         {
           "name": "is_paying_customer",
@@ -2547,7 +2557,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Is the customer a paying customer"
+          "description": "Is the customer a paying customer",
+          "semantic": false
         },
         {
           "name": "last_name",
@@ -2556,7 +2567,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Customer last name"
+          "description": "Customer last name",
+          "semantic": false
         },
         {
           "name": "meta_data",
@@ -2565,7 +2577,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Meta data"
+          "description": "Meta data",
+          "semantic": false
         },
         {
           "name": "role",
@@ -2574,7 +2587,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Customer role"
+          "description": "Customer role",
+          "semantic": false
         },
         {
           "name": "shipping",
@@ -2583,7 +2597,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "List of shipping address data"
+          "description": "List of shipping address data",
+          "semantic": false
         },
         {
           "name": "username",
@@ -2592,12 +2607,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Customer login name"
+          "description": "Customer login name",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "orders": {
       "entity": "orders",
+      "kind": "DATA",
       "data_type_name": "OrdersSearchData",
       "filter_type_name": "OrdersSearchFilter",
       "in_filter_type_name": "OrdersInFilter",
@@ -2616,7 +2637,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Billing address"
+          "description": "Billing address",
+          "semantic": false
         },
         {
           "name": "cart_hash",
@@ -2625,7 +2647,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "MD5 hash of cart items to ensure orders are not modified"
+          "description": "MD5 hash of cart items to ensure orders are not modified",
+          "semantic": false
         },
         {
           "name": "cart_tax",
@@ -2634,7 +2657,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Sum of line item taxes only"
+          "description": "Sum of line item taxes only",
+          "semantic": false
         },
         {
           "name": "coupon_lines",
@@ -2643,7 +2667,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Coupons line data"
+          "description": "Coupons line data",
+          "semantic": false
         },
         {
           "name": "created_via",
@@ -2652,7 +2677,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Shows where the order was created"
+          "description": "Shows where the order was created",
+          "semantic": false
         },
         {
           "name": "currency",
@@ -2661,7 +2687,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Currency the order was created with, in ISO format"
+          "description": "Currency the order was created with, in ISO format",
+          "semantic": false
         },
         {
           "name": "customer_id",
@@ -2670,7 +2697,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "User ID who owns the order (0 for guests)"
+          "description": "User ID who owns the order (0 for guests)",
+          "semantic": false
         },
         {
           "name": "customer_ip_address",
@@ -2679,7 +2707,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Customer's IP address"
+          "description": "Customer's IP address",
+          "semantic": false
         },
         {
           "name": "customer_note",
@@ -2688,7 +2717,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Note left by the customer during checkout"
+          "description": "Note left by the customer during checkout",
+          "semantic": false
         },
         {
           "name": "customer_user_agent",
@@ -2697,7 +2727,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User agent of the customer"
+          "description": "User agent of the customer",
+          "semantic": false
         },
         {
           "name": "date_completed",
@@ -2706,7 +2737,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the order was completed, in the site's timezone"
+          "description": "The date the order was completed, in the site's timezone",
+          "semantic": false
         },
         {
           "name": "date_completed_gmt",
@@ -2715,7 +2747,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the order was completed, as GMT"
+          "description": "The date the order was completed, as GMT",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -2724,7 +2757,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the order was created, in the site's timezone"
+          "description": "The date the order was created, in the site's timezone",
+          "semantic": false
         },
         {
           "name": "date_created_gmt",
@@ -2733,7 +2767,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the order was created, as GMT"
+          "description": "The date the order was created, as GMT",
+          "semantic": false
         },
         {
           "name": "date_modified",
@@ -2742,7 +2777,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the order was last modified, in the site's timezone"
+          "description": "The date the order was last modified, in the site's timezone",
+          "semantic": false
         },
         {
           "name": "date_modified_gmt",
@@ -2751,7 +2787,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the order was last modified, as GMT"
+          "description": "The date the order was last modified, as GMT",
+          "semantic": false
         },
         {
           "name": "date_paid",
@@ -2760,7 +2797,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the order was paid, in the site's timezone"
+          "description": "The date the order was paid, in the site's timezone",
+          "semantic": false
         },
         {
           "name": "date_paid_gmt",
@@ -2769,7 +2807,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the order was paid, as GMT"
+          "description": "The date the order was paid, as GMT",
+          "semantic": false
         },
         {
           "name": "discount_tax",
@@ -2778,7 +2817,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Total discount tax amount for the order"
+          "description": "Total discount tax amount for the order",
+          "semantic": false
         },
         {
           "name": "discount_total",
@@ -2787,7 +2827,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Total discount amount for the order"
+          "description": "Total discount amount for the order",
+          "semantic": false
         },
         {
           "name": "fee_lines",
@@ -2796,7 +2837,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Fee lines data"
+          "description": "Fee lines data",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2805,7 +2847,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the resource"
+          "description": "Unique identifier for the resource",
+          "semantic": false
         },
         {
           "name": "line_items",
@@ -2814,7 +2857,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Line items data"
+          "description": "Line items data",
+          "semantic": false
         },
         {
           "name": "meta_data",
@@ -2823,7 +2867,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Meta data"
+          "description": "Meta data",
+          "semantic": false
         },
         {
           "name": "number",
@@ -2832,7 +2877,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Order number"
+          "description": "Order number",
+          "semantic": false
         },
         {
           "name": "order_key",
@@ -2841,7 +2887,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Order key"
+          "description": "Order key",
+          "semantic": false
         },
         {
           "name": "parent_id",
@@ -2850,7 +2897,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Parent order ID"
+          "description": "Parent order ID",
+          "semantic": false
         },
         {
           "name": "payment_method",
@@ -2859,7 +2907,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Payment method ID"
+          "description": "Payment method ID",
+          "semantic": false
         },
         {
           "name": "payment_method_title",
@@ -2868,7 +2917,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Payment method title"
+          "description": "Payment method title",
+          "semantic": false
         },
         {
           "name": "prices_include_tax",
@@ -2877,7 +2927,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "True if the prices included tax during checkout"
+          "description": "True if the prices included tax during checkout",
+          "semantic": false
         },
         {
           "name": "refunds",
@@ -2886,7 +2937,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of refunds"
+          "description": "List of refunds",
+          "semantic": false
         },
         {
           "name": "shipping",
@@ -2895,7 +2947,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Shipping address"
+          "description": "Shipping address",
+          "semantic": false
         },
         {
           "name": "shipping_lines",
@@ -2904,7 +2957,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Shipping lines data"
+          "description": "Shipping lines data",
+          "semantic": false
         },
         {
           "name": "shipping_tax",
@@ -2913,7 +2967,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Total shipping tax amount for the order"
+          "description": "Total shipping tax amount for the order",
+          "semantic": false
         },
         {
           "name": "shipping_total",
@@ -2922,7 +2977,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Total shipping amount for the order"
+          "description": "Total shipping amount for the order",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2931,7 +2987,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Order status"
+          "description": "Order status",
+          "semantic": false
         },
         {
           "name": "tax_lines",
@@ -2940,7 +2997,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Tax lines data"
+          "description": "Tax lines data",
+          "semantic": false
         },
         {
           "name": "total",
@@ -2949,7 +3007,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Grand total"
+          "description": "Grand total",
+          "semantic": false
         },
         {
           "name": "total_tax",
@@ -2958,7 +3017,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Sum of all taxes"
+          "description": "Sum of all taxes",
+          "semantic": false
         },
         {
           "name": "transaction_id",
@@ -2967,7 +3027,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique transaction ID"
+          "description": "Unique transaction ID",
+          "semantic": false
         },
         {
           "name": "version",
@@ -2976,12 +3037,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Version of WooCommerce which last updated the order"
+          "description": "Version of WooCommerce which last updated the order",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "products": {
       "entity": "products",
+      "kind": "DATA",
       "data_type_name": "ProductsSearchData",
       "filter_type_name": "ProductsSearchFilter",
       "in_filter_type_name": "ProductsInFilter",
@@ -3000,7 +3067,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of attributes"
+          "description": "List of attributes",
+          "semantic": false
         },
         {
           "name": "average_rating",
@@ -3009,7 +3077,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Reviews average rating"
+          "description": "Reviews average rating",
+          "semantic": false
         },
         {
           "name": "backordered",
@@ -3018,7 +3087,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Shows if the product is on backordered"
+          "description": "Shows if the product is on backordered",
+          "semantic": false
         },
         {
           "name": "backorders",
@@ -3027,7 +3097,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "If managing stock, this controls if backorders are allowed"
+          "description": "If managing stock, this controls if backorders are allowed",
+          "semantic": false
         },
         {
           "name": "backorders_allowed",
@@ -3036,7 +3107,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Shows if backorders are allowed"
+          "description": "Shows if backorders are allowed",
+          "semantic": false
         },
         {
           "name": "button_text",
@@ -3045,7 +3117,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product external button text"
+          "description": "Product external button text",
+          "semantic": false
         },
         {
           "name": "catalog_visibility",
@@ -3054,7 +3127,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Catalog visibility"
+          "description": "Catalog visibility",
+          "semantic": false
         },
         {
           "name": "categories",
@@ -3063,7 +3137,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of categories"
+          "description": "List of categories",
+          "semantic": false
         },
         {
           "name": "cross_sell_ids",
@@ -3072,7 +3147,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of cross-sell products IDs"
+          "description": "List of cross-sell products IDs",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -3081,7 +3157,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the product was created"
+          "description": "The date the product was created",
+          "semantic": false
         },
         {
           "name": "date_created_gmt",
@@ -3090,7 +3167,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the product was created, as GMT"
+          "description": "The date the product was created, as GMT",
+          "semantic": false
         },
         {
           "name": "date_modified",
@@ -3099,7 +3177,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the product was last modified"
+          "description": "The date the product was last modified",
+          "semantic": false
         },
         {
           "name": "date_modified_gmt",
@@ -3108,7 +3187,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the product was last modified, as GMT"
+          "description": "The date the product was last modified, as GMT",
+          "semantic": false
         },
         {
           "name": "date_on_sale_from",
@@ -3117,7 +3197,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of sale price"
+          "description": "Start date of sale price",
+          "semantic": false
         },
         {
           "name": "date_on_sale_from_gmt",
@@ -3126,7 +3207,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of sale price, as GMT"
+          "description": "Start date of sale price, as GMT",
+          "semantic": false
         },
         {
           "name": "date_on_sale_to",
@@ -3135,7 +3217,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of sale price"
+          "description": "End date of sale price",
+          "semantic": false
         },
         {
           "name": "date_on_sale_to_gmt",
@@ -3144,7 +3227,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of sale price, as GMT"
+          "description": "End date of sale price, as GMT",
+          "semantic": false
         },
         {
           "name": "default_attributes",
@@ -3153,7 +3237,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Defaults variation attributes"
+          "description": "Defaults variation attributes",
+          "semantic": false
         },
         {
           "name": "description",
@@ -3162,7 +3247,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product description"
+          "description": "Product description",
+          "semantic": false
         },
         {
           "name": "dimensions",
@@ -3171,7 +3257,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Product dimensions"
+          "description": "Product dimensions",
+          "semantic": false
         },
         {
           "name": "download_expiry",
@@ -3180,7 +3267,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of days until access to downloadable files expires"
+          "description": "Number of days until access to downloadable files expires",
+          "semantic": false
         },
         {
           "name": "download_limit",
@@ -3189,7 +3277,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of times downloadable files can be downloaded"
+          "description": "Number of times downloadable files can be downloaded",
+          "semantic": false
         },
         {
           "name": "downloadable",
@@ -3198,7 +3287,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "If the product is downloadable"
+          "description": "If the product is downloadable",
+          "semantic": false
         },
         {
           "name": "downloads",
@@ -3207,7 +3297,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of downloadable files"
+          "description": "List of downloadable files",
+          "semantic": false
         },
         {
           "name": "external_url",
@@ -3216,7 +3307,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product external URL"
+          "description": "Product external URL",
+          "semantic": false
         },
         {
           "name": "grouped_products",
@@ -3225,7 +3317,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of grouped products ID"
+          "description": "List of grouped products ID",
+          "semantic": false
         },
         {
           "name": "id",
@@ -3234,7 +3327,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the resource"
+          "description": "Unique identifier for the resource",
+          "semantic": false
         },
         {
           "name": "images",
@@ -3243,7 +3337,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of images"
+          "description": "List of images",
+          "semantic": false
         },
         {
           "name": "manage_stock",
@@ -3252,7 +3347,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Stock management at product level"
+          "description": "Stock management at product level",
+          "semantic": false
         },
         {
           "name": "menu_order",
@@ -3261,7 +3357,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Menu order"
+          "description": "Menu order",
+          "semantic": false
         },
         {
           "name": "meta_data",
@@ -3270,7 +3367,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Meta data"
+          "description": "Meta data",
+          "semantic": false
         },
         {
           "name": "name",
@@ -3279,7 +3377,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product name"
+          "description": "Product name",
+          "semantic": false
         },
         {
           "name": "on_sale",
@@ -3288,7 +3387,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Shows if the product is on sale"
+          "description": "Shows if the product is on sale",
+          "semantic": false
         },
         {
           "name": "parent_id",
@@ -3297,7 +3397,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Product parent ID"
+          "description": "Product parent ID",
+          "semantic": false
         },
         {
           "name": "permalink",
@@ -3306,7 +3407,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product URL"
+          "description": "Product URL",
+          "semantic": false
         },
         {
           "name": "price",
@@ -3315,7 +3417,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current product price"
+          "description": "Current product price",
+          "semantic": false
         },
         {
           "name": "price_html",
@@ -3324,7 +3427,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Price formatted in HTML"
+          "description": "Price formatted in HTML",
+          "semantic": false
         },
         {
           "name": "purchasable",
@@ -3333,7 +3437,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Shows if the product can be bought"
+          "description": "Shows if the product can be bought",
+          "semantic": false
         },
         {
           "name": "purchase_note",
@@ -3342,7 +3447,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Note to send customer after purchase"
+          "description": "Note to send customer after purchase",
+          "semantic": false
         },
         {
           "name": "rating_count",
@@ -3351,7 +3457,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Amount of reviews"
+          "description": "Amount of reviews",
+          "semantic": false
         },
         {
           "name": "regular_price",
@@ -3360,7 +3467,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product regular price"
+          "description": "Product regular price",
+          "semantic": false
         },
         {
           "name": "related_ids",
@@ -3369,7 +3477,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of related products IDs"
+          "description": "List of related products IDs",
+          "semantic": false
         },
         {
           "name": "reviews_allowed",
@@ -3378,7 +3487,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Allow reviews"
+          "description": "Allow reviews",
+          "semantic": false
         },
         {
           "name": "sale_price",
@@ -3387,7 +3497,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product sale price"
+          "description": "Product sale price",
+          "semantic": false
         },
         {
           "name": "shipping_class",
@@ -3396,7 +3507,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Shipping class slug"
+          "description": "Shipping class slug",
+          "semantic": false
         },
         {
           "name": "shipping_class_id",
@@ -3405,7 +3517,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Shipping class ID"
+          "description": "Shipping class ID",
+          "semantic": false
         },
         {
           "name": "shipping_required",
@@ -3414,7 +3527,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Shows if the product needs to be shipped"
+          "description": "Shows if the product needs to be shipped",
+          "semantic": false
         },
         {
           "name": "shipping_taxable",
@@ -3423,7 +3537,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Shows if product shipping is taxable"
+          "description": "Shows if product shipping is taxable",
+          "semantic": false
         },
         {
           "name": "short_description",
@@ -3432,7 +3547,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product short description"
+          "description": "Product short description",
+          "semantic": false
         },
         {
           "name": "sku",
@@ -3441,7 +3557,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier (SKU)"
+          "description": "Unique identifier (SKU)",
+          "semantic": false
         },
         {
           "name": "slug",
@@ -3450,7 +3567,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product slug"
+          "description": "Product slug",
+          "semantic": false
         },
         {
           "name": "sold_individually",
@@ -3459,7 +3577,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Allow one item per order"
+          "description": "Allow one item per order",
+          "semantic": false
         },
         {
           "name": "status",
@@ -3468,7 +3587,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product status"
+          "description": "Product status",
+          "semantic": false
         },
         {
           "name": "stock_quantity",
@@ -3477,7 +3597,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Stock quantity"
+          "description": "Stock quantity",
+          "semantic": false
         },
         {
           "name": "stock_status",
@@ -3486,7 +3607,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Controls the stock status"
+          "description": "Controls the stock status",
+          "semantic": false
         },
         {
           "name": "tags",
@@ -3495,7 +3617,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of tags"
+          "description": "List of tags",
+          "semantic": false
         },
         {
           "name": "tax_class",
@@ -3504,7 +3627,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tax class"
+          "description": "Tax class",
+          "semantic": false
         },
         {
           "name": "tax_status",
@@ -3513,7 +3637,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tax status"
+          "description": "Tax status",
+          "semantic": false
         },
         {
           "name": "total_sales",
@@ -3522,7 +3647,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Amount of sales"
+          "description": "Amount of sales",
+          "semantic": false
         },
         {
           "name": "type",
@@ -3531,7 +3657,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product type"
+          "description": "Product type",
+          "semantic": false
         },
         {
           "name": "upsell_ids",
@@ -3540,7 +3667,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of up-sell products IDs"
+          "description": "List of up-sell products IDs",
+          "semantic": false
         },
         {
           "name": "variations",
@@ -3549,7 +3677,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of variations IDs"
+          "description": "List of variations IDs",
+          "semantic": false
         },
         {
           "name": "virtual",
@@ -3558,7 +3687,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "If the product is virtual"
+          "description": "If the product is virtual",
+          "semantic": false
         },
         {
           "name": "weight",
@@ -3567,12 +3697,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Product weight"
+          "description": "Product weight",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "coupons": {
       "entity": "coupons",
+      "kind": "DATA",
       "data_type_name": "CouponsSearchData",
       "filter_type_name": "CouponsSearchFilter",
       "in_filter_type_name": "CouponsInFilter",
@@ -3591,7 +3727,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The amount of discount"
+          "description": "The amount of discount",
+          "semantic": false
         },
         {
           "name": "code",
@@ -3600,7 +3737,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Coupon code"
+          "description": "Coupon code",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -3609,7 +3747,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the coupon was created"
+          "description": "The date the coupon was created",
+          "semantic": false
         },
         {
           "name": "date_created_gmt",
@@ -3618,7 +3757,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the coupon was created, as GMT"
+          "description": "The date the coupon was created, as GMT",
+          "semantic": false
         },
         {
           "name": "date_expires",
@@ -3627,7 +3767,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the coupon expires"
+          "description": "The date the coupon expires",
+          "semantic": false
         },
         {
           "name": "date_expires_gmt",
@@ -3636,7 +3777,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the coupon expires, as GMT"
+          "description": "The date the coupon expires, as GMT",
+          "semantic": false
         },
         {
           "name": "date_modified",
@@ -3645,7 +3787,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the coupon was last modified"
+          "description": "The date the coupon was last modified",
+          "semantic": false
         },
         {
           "name": "date_modified_gmt",
@@ -3654,7 +3797,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the coupon was last modified, as GMT"
+          "description": "The date the coupon was last modified, as GMT",
+          "semantic": false
         },
         {
           "name": "description",
@@ -3663,7 +3807,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Coupon description"
+          "description": "Coupon description",
+          "semantic": false
         },
         {
           "name": "discount_type",
@@ -3672,7 +3817,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Determines the type of discount"
+          "description": "Determines the type of discount",
+          "semantic": false
         },
         {
           "name": "email_restrictions",
@@ -3681,7 +3827,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of email addresses that can use this coupon"
+          "description": "List of email addresses that can use this coupon",
+          "semantic": false
         },
         {
           "name": "exclude_sale_items",
@@ -3690,7 +3837,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "If true, not applied to sale items"
+          "description": "If true, not applied to sale items",
+          "semantic": false
         },
         {
           "name": "excluded_product_categories",
@@ -3699,7 +3847,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Excluded category IDs"
+          "description": "Excluded category IDs",
+          "semantic": false
         },
         {
           "name": "excluded_product_ids",
@@ -3708,7 +3857,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Excluded product IDs"
+          "description": "Excluded product IDs",
+          "semantic": false
         },
         {
           "name": "free_shipping",
@@ -3717,7 +3867,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Enables free shipping"
+          "description": "Enables free shipping",
+          "semantic": false
         },
         {
           "name": "id",
@@ -3726,7 +3877,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "individual_use",
@@ -3735,7 +3887,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Can only be used individually"
+          "description": "Can only be used individually",
+          "semantic": false
         },
         {
           "name": "limit_usage_to_x_items",
@@ -3744,7 +3897,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Max cart items coupon applies to"
+          "description": "Max cart items coupon applies to",
+          "semantic": false
         },
         {
           "name": "maximum_amount",
@@ -3753,7 +3907,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Maximum order amount"
+          "description": "Maximum order amount",
+          "semantic": false
         },
         {
           "name": "meta_data",
@@ -3762,7 +3917,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Meta data"
+          "description": "Meta data",
+          "semantic": false
         },
         {
           "name": "minimum_amount",
@@ -3771,7 +3927,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Minimum order amount"
+          "description": "Minimum order amount",
+          "semantic": false
         },
         {
           "name": "product_categories",
@@ -3780,7 +3937,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Applicable category IDs"
+          "description": "Applicable category IDs",
+          "semantic": false
         },
         {
           "name": "product_ids",
@@ -3789,7 +3947,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Applicable product IDs"
+          "description": "Applicable product IDs",
+          "semantic": false
         },
         {
           "name": "usage_count",
@@ -3798,7 +3957,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Times used"
+          "description": "Times used",
+          "semantic": false
         },
         {
           "name": "usage_limit",
@@ -3807,7 +3967,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Total usage limit"
+          "description": "Total usage limit",
+          "semantic": false
         },
         {
           "name": "usage_limit_per_user",
@@ -3816,7 +3977,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Per-customer usage limit"
+          "description": "Per-customer usage limit",
+          "semantic": false
         },
         {
           "name": "used_by",
@@ -3825,12 +3987,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Users who have used the coupon"
+          "description": "Users who have used the coupon",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "product_categories": {
       "entity": "product_categories",
+      "kind": "DATA",
       "data_type_name": "ProductCategoriesSearchData",
       "filter_type_name": "ProductCategoriesSearchFilter",
       "in_filter_type_name": "ProductCategoriesInFilter",
@@ -3849,7 +4017,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of published products for the resource"
+          "description": "Number of published products for the resource",
+          "semantic": false
         },
         {
           "name": "description",
@@ -3858,7 +4027,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HTML description of the resource"
+          "description": "HTML description of the resource",
+          "semantic": false
         },
         {
           "name": "display",
@@ -3867,7 +4037,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Category archive display type"
+          "description": "Category archive display type",
+          "semantic": false
         },
         {
           "name": "id",
@@ -3876,7 +4047,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the resource"
+          "description": "Unique identifier for the resource",
+          "semantic": false
         },
         {
           "name": "image",
@@ -3885,7 +4057,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Image data"
+          "description": "Image data",
+          "semantic": false
         },
         {
           "name": "menu_order",
@@ -3894,7 +4067,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Menu order"
+          "description": "Menu order",
+          "semantic": false
         },
         {
           "name": "name",
@@ -3903,7 +4077,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Category name"
+          "description": "Category name",
+          "semantic": false
         },
         {
           "name": "parent",
@@ -3912,7 +4087,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The ID for the parent of the resource"
+          "description": "The ID for the parent of the resource",
+          "semantic": false
         },
         {
           "name": "slug",
@@ -3921,12 +4097,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "An alphanumeric identifier"
+          "description": "An alphanumeric identifier",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "product_tags": {
       "entity": "product_tags",
+      "kind": "DATA",
       "data_type_name": "ProductTagsSearchData",
       "filter_type_name": "ProductTagsSearchFilter",
       "in_filter_type_name": "ProductTagsInFilter",
@@ -3945,7 +4127,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of published products"
+          "description": "Number of published products",
+          "semantic": false
         },
         {
           "name": "description",
@@ -3954,7 +4137,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HTML description"
+          "description": "HTML description",
+          "semantic": false
         },
         {
           "name": "id",
@@ -3963,7 +4147,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -3972,7 +4157,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tag name"
+          "description": "Tag name",
+          "semantic": false
         },
         {
           "name": "slug",
@@ -3981,12 +4167,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Alphanumeric identifier"
+          "description": "Alphanumeric identifier",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "product_reviews": {
       "entity": "product_reviews",
+      "kind": "DATA",
       "data_type_name": "ProductReviewsSearchData",
       "filter_type_name": "ProductReviewsSearchFilter",
       "in_filter_type_name": "ProductReviewsInFilter",
@@ -4005,7 +4197,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the review was created"
+          "description": "The date the review was created",
+          "semantic": false
         },
         {
           "name": "date_created_gmt",
@@ -4014,7 +4207,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the review was created, as GMT"
+          "description": "The date the review was created, as GMT",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4023,7 +4217,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "product_id",
@@ -4032,7 +4227,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Product the review belongs to"
+          "description": "Product the review belongs to",
+          "semantic": false
         },
         {
           "name": "rating",
@@ -4041,7 +4237,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Review rating (0 to 5)"
+          "description": "Review rating (0 to 5)",
+          "semantic": false
         },
         {
           "name": "review",
@@ -4050,7 +4247,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The content of the review"
+          "description": "The content of the review",
+          "semantic": false
         },
         {
           "name": "reviewer",
@@ -4059,7 +4257,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Reviewer name"
+          "description": "Reviewer name",
+          "semantic": false
         },
         {
           "name": "reviewer_email",
@@ -4068,7 +4267,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Reviewer email"
+          "description": "Reviewer email",
+          "semantic": false
         },
         {
           "name": "status",
@@ -4077,7 +4277,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the review"
+          "description": "Status of the review",
+          "semantic": false
         },
         {
           "name": "verified",
@@ -4086,12 +4287,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Shows if the reviewer bought the product"
+          "description": "Shows if the reviewer bought the product",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "product_attributes": {
       "entity": "product_attributes",
+      "kind": "DATA",
       "data_type_name": "ProductAttributesSearchData",
       "filter_type_name": "ProductAttributesSearchFilter",
       "in_filter_type_name": "ProductAttributesInFilter",
@@ -4110,7 +4317,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Enable/Disable attribute archives"
+          "description": "Enable/Disable attribute archives",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4119,7 +4327,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -4128,7 +4337,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Attribute name"
+          "description": "Attribute name",
+          "semantic": false
         },
         {
           "name": "order_by",
@@ -4137,7 +4347,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Default sort order"
+          "description": "Default sort order",
+          "semantic": false
         },
         {
           "name": "slug",
@@ -4146,7 +4357,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Alphanumeric identifier"
+          "description": "Alphanumeric identifier",
+          "semantic": false
         },
         {
           "name": "type",
@@ -4155,12 +4367,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of attribute"
+          "description": "Type of attribute",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "product_variations": {
       "entity": "product_variations",
+      "kind": "DATA",
       "data_type_name": "ProductVariationsSearchData",
       "filter_type_name": "ProductVariationsSearchFilter",
       "in_filter_type_name": "ProductVariationsInFilter",
@@ -4179,7 +4397,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of attributes"
+          "description": "List of attributes",
+          "semantic": false
         },
         {
           "name": "backordered",
@@ -4188,7 +4407,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "On backordered"
+          "description": "On backordered",
+          "semantic": false
         },
         {
           "name": "backorders",
@@ -4197,7 +4417,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Backorders allowed setting"
+          "description": "Backorders allowed setting",
+          "semantic": false
         },
         {
           "name": "backorders_allowed",
@@ -4206,7 +4427,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Shows if backorders are allowed"
+          "description": "Shows if backorders are allowed",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -4215,7 +4437,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the variation was created"
+          "description": "The date the variation was created",
+          "semantic": false
         },
         {
           "name": "date_created_gmt",
@@ -4224,7 +4447,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the variation was created, as GMT"
+          "description": "The date the variation was created, as GMT",
+          "semantic": false
         },
         {
           "name": "date_modified",
@@ -4233,7 +4457,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the variation was last modified"
+          "description": "The date the variation was last modified",
+          "semantic": false
         },
         {
           "name": "date_modified_gmt",
@@ -4242,7 +4467,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the variation was last modified, as GMT"
+          "description": "The date the variation was last modified, as GMT",
+          "semantic": false
         },
         {
           "name": "date_on_sale_from",
@@ -4251,7 +4477,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of sale price"
+          "description": "Start date of sale price",
+          "semantic": false
         },
         {
           "name": "date_on_sale_from_gmt",
@@ -4260,7 +4487,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date of sale price, as GMT"
+          "description": "Start date of sale price, as GMT",
+          "semantic": false
         },
         {
           "name": "date_on_sale_to",
@@ -4269,7 +4497,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of sale price"
+          "description": "End date of sale price",
+          "semantic": false
         },
         {
           "name": "date_on_sale_to_gmt",
@@ -4278,7 +4507,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End date of sale price, as GMT"
+          "description": "End date of sale price, as GMT",
+          "semantic": false
         },
         {
           "name": "description",
@@ -4287,7 +4517,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Variation description"
+          "description": "Variation description",
+          "semantic": false
         },
         {
           "name": "dimensions",
@@ -4296,7 +4527,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Variation dimensions"
+          "description": "Variation dimensions",
+          "semantic": false
         },
         {
           "name": "download_expiry",
@@ -4305,7 +4537,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Days until access expires"
+          "description": "Days until access expires",
+          "semantic": false
         },
         {
           "name": "download_limit",
@@ -4314,7 +4547,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Download limit"
+          "description": "Download limit",
+          "semantic": false
         },
         {
           "name": "downloadable",
@@ -4323,7 +4557,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "If downloadable"
+          "description": "If downloadable",
+          "semantic": false
         },
         {
           "name": "downloads",
@@ -4332,7 +4567,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Downloadable files"
+          "description": "Downloadable files",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4341,7 +4577,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "image",
@@ -4350,7 +4587,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Variation image data"
+          "description": "Variation image data",
+          "semantic": false
         },
         {
           "name": "manage_stock",
@@ -4359,7 +4597,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Stock management at variation level"
+          "description": "Stock management at variation level",
+          "semantic": false
         },
         {
           "name": "menu_order",
@@ -4368,7 +4607,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Menu order"
+          "description": "Menu order",
+          "semantic": false
         },
         {
           "name": "meta_data",
@@ -4377,7 +4617,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Meta data"
+          "description": "Meta data",
+          "semantic": false
         },
         {
           "name": "on_sale",
@@ -4386,7 +4627,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Shows if on sale"
+          "description": "Shows if on sale",
+          "semantic": false
         },
         {
           "name": "permalink",
@@ -4395,7 +4637,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Variation URL"
+          "description": "Variation URL",
+          "semantic": false
         },
         {
           "name": "price",
@@ -4404,7 +4647,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current variation price"
+          "description": "Current variation price",
+          "semantic": false
         },
         {
           "name": "purchasable",
@@ -4413,7 +4657,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Can be bought"
+          "description": "Can be bought",
+          "semantic": false
         },
         {
           "name": "regular_price",
@@ -4422,7 +4667,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Variation regular price"
+          "description": "Variation regular price",
+          "semantic": false
         },
         {
           "name": "sale_price",
@@ -4431,7 +4677,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Variation sale price"
+          "description": "Variation sale price",
+          "semantic": false
         },
         {
           "name": "shipping_class",
@@ -4440,7 +4687,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Shipping class slug"
+          "description": "Shipping class slug",
+          "semantic": false
         },
         {
           "name": "shipping_class_id",
@@ -4449,7 +4697,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Shipping class ID"
+          "description": "Shipping class ID",
+          "semantic": false
         },
         {
           "name": "sku",
@@ -4458,7 +4707,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier (SKU)"
+          "description": "Unique identifier (SKU)",
+          "semantic": false
         },
         {
           "name": "status",
@@ -4467,7 +4717,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Variation status"
+          "description": "Variation status",
+          "semantic": false
         },
         {
           "name": "stock_quantity",
@@ -4476,7 +4727,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Stock quantity"
+          "description": "Stock quantity",
+          "semantic": false
         },
         {
           "name": "stock_status",
@@ -4485,7 +4737,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Controls the stock status"
+          "description": "Controls the stock status",
+          "semantic": false
         },
         {
           "name": "tax_class",
@@ -4494,7 +4747,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tax class"
+          "description": "Tax class",
+          "semantic": false
         },
         {
           "name": "tax_status",
@@ -4503,7 +4757,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tax status"
+          "description": "Tax status",
+          "semantic": false
         },
         {
           "name": "virtual",
@@ -4512,7 +4767,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "If virtual"
+          "description": "If virtual",
+          "semantic": false
         },
         {
           "name": "weight",
@@ -4521,12 +4777,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Variation weight"
+          "description": "Variation weight",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "order_notes": {
       "entity": "order_notes",
+      "kind": "DATA",
       "data_type_name": "OrderNotesSearchData",
       "filter_type_name": "OrderNotesSearchFilter",
       "in_filter_type_name": "OrderNotesInFilter",
@@ -4545,7 +4807,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Order note author"
+          "description": "Order note author",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -4554,7 +4817,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the order note was created"
+          "description": "The date the order note was created",
+          "semantic": false
         },
         {
           "name": "date_created_gmt",
@@ -4563,7 +4827,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the order note was created, as GMT"
+          "description": "The date the order note was created, as GMT",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4572,7 +4837,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "note",
@@ -4581,12 +4847,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Order note content"
+          "description": "Order note content",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "refunds": {
       "entity": "refunds",
+      "kind": "DATA",
       "data_type_name": "RefundsSearchData",
       "filter_type_name": "RefundsSearchFilter",
       "in_filter_type_name": "RefundsInFilter",
@@ -4605,7 +4877,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Refund amount"
+          "description": "Refund amount",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -4614,7 +4887,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the refund was created"
+          "description": "The date the refund was created",
+          "semantic": false
         },
         {
           "name": "date_created_gmt",
@@ -4623,7 +4897,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date the refund was created, as GMT"
+          "description": "The date the refund was created, as GMT",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4632,7 +4907,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "line_items",
@@ -4641,7 +4917,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Line items data"
+          "description": "Line items data",
+          "semantic": false
         },
         {
           "name": "meta_data",
@@ -4650,7 +4927,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Meta data"
+          "description": "Meta data",
+          "semantic": false
         },
         {
           "name": "reason",
@@ -4659,7 +4937,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Reason for refund"
+          "description": "Reason for refund",
+          "semantic": false
         },
         {
           "name": "refunded_by",
@@ -4668,7 +4947,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "User ID of user who created the refund"
+          "description": "User ID of user who created the refund",
+          "semantic": false
         },
         {
           "name": "refunded_payment",
@@ -4677,12 +4957,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "If the payment was refunded via the API"
+          "description": "If the payment was refunded via the API",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "payment_gateways": {
       "entity": "payment_gateways",
+      "kind": "DATA",
       "data_type_name": "PaymentGatewaysSearchData",
       "filter_type_name": "PaymentGatewaysSearchFilter",
       "in_filter_type_name": "PaymentGatewaysInFilter",
@@ -4701,7 +4987,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Payment gateway description on checkout"
+          "description": "Payment gateway description on checkout",
+          "semantic": false
         },
         {
           "name": "enabled",
@@ -4710,7 +4997,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Payment gateway enabled status"
+          "description": "Payment gateway enabled status",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4719,7 +5007,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Payment gateway ID"
+          "description": "Payment gateway ID",
+          "semantic": false
         },
         {
           "name": "method_description",
@@ -4728,7 +5017,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Payment gateway method description"
+          "description": "Payment gateway method description",
+          "semantic": false
         },
         {
           "name": "method_supports",
@@ -4737,7 +5027,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Supported features"
+          "description": "Supported features",
+          "semantic": false
         },
         {
           "name": "method_title",
@@ -4746,7 +5037,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Payment gateway method title"
+          "description": "Payment gateway method title",
+          "semantic": false
         },
         {
           "name": "order",
@@ -4755,7 +5047,8 @@
           "json_type": "null | string | integer",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Payment gateway sort order"
+          "description": "Payment gateway sort order",
+          "semantic": false
         },
         {
           "name": "settings",
@@ -4764,7 +5057,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Payment gateway settings"
+          "description": "Payment gateway settings",
+          "semantic": false
         },
         {
           "name": "title",
@@ -4773,12 +5067,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Payment gateway title on checkout"
+          "description": "Payment gateway title on checkout",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "shipping_methods": {
       "entity": "shipping_methods",
+      "kind": "DATA",
       "data_type_name": "ShippingMethodsSearchData",
       "filter_type_name": "ShippingMethodsSearchFilter",
       "in_filter_type_name": "ShippingMethodsInFilter",
@@ -4797,7 +5097,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Shipping method description"
+          "description": "Shipping method description",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4806,7 +5107,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Method ID"
+          "description": "Method ID",
+          "semantic": false
         },
         {
           "name": "title",
@@ -4815,12 +5117,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Shipping method title"
+          "description": "Shipping method title",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "shipping_zones": {
       "entity": "shipping_zones",
+      "kind": "DATA",
       "data_type_name": "ShippingZonesSearchData",
       "filter_type_name": "ShippingZonesSearchFilter",
       "in_filter_type_name": "ShippingZonesInFilter",
@@ -4839,7 +5147,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -4848,7 +5157,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Shipping zone name"
+          "description": "Shipping zone name",
+          "semantic": false
         },
         {
           "name": "order",
@@ -4857,12 +5167,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Shipping zone order"
+          "description": "Shipping zone order",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "tax_rates": {
       "entity": "tax_rates",
+      "kind": "DATA",
       "data_type_name": "TaxRatesSearchData",
       "filter_type_name": "TaxRatesSearchFilter",
       "in_filter_type_name": "TaxRatesInFilter",
@@ -4881,7 +5197,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "City names"
+          "description": "City names",
+          "semantic": false
         },
         {
           "name": "city",
@@ -4890,7 +5207,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "City name"
+          "description": "City name",
+          "semantic": false
         },
         {
           "name": "class",
@@ -4899,7 +5217,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tax class"
+          "description": "Tax class",
+          "semantic": false
         },
         {
           "name": "compound",
@@ -4908,7 +5227,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this is a compound rate"
+          "description": "Whether this is a compound rate",
+          "semantic": false
         },
         {
           "name": "country",
@@ -4917,7 +5237,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Country ISO 3166 code"
+          "description": "Country ISO 3166 code",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4926,7 +5247,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -4935,7 +5257,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tax rate name"
+          "description": "Tax rate name",
+          "semantic": false
         },
         {
           "name": "order",
@@ -4944,7 +5267,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Order in queries"
+          "description": "Order in queries",
+          "semantic": false
         },
         {
           "name": "postcode",
@@ -4953,7 +5277,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Postcode/ZIP"
+          "description": "Postcode/ZIP",
+          "semantic": false
         },
         {
           "name": "postcodes",
@@ -4962,7 +5287,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Postcodes/ZIPs"
+          "description": "Postcodes/ZIPs",
+          "semantic": false
         },
         {
           "name": "priority",
@@ -4971,7 +5297,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Tax priority"
+          "description": "Tax priority",
+          "semantic": false
         },
         {
           "name": "rate",
@@ -4980,7 +5307,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tax rate"
+          "description": "Tax rate",
+          "semantic": false
         },
         {
           "name": "shipping",
@@ -4989,7 +5317,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Applied to shipping"
+          "description": "Applied to shipping",
+          "semantic": false
         },
         {
           "name": "state",
@@ -4998,12 +5327,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "State code"
+          "description": "State code",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "tax_classes": {
       "entity": "tax_classes",
+      "kind": "DATA",
       "data_type_name": "TaxClassesSearchData",
       "filter_type_name": "TaxClassesSearchFilter",
       "in_filter_type_name": "TaxClassesInFilter",
@@ -5022,7 +5357,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tax class name"
+          "description": "Tax class name",
+          "semantic": false
         },
         {
           "name": "slug",
@@ -5031,9 +5367,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier"
+          "description": "Unique identifier",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

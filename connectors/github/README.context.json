@@ -4377,6 +4377,7 @@
   "search_schemas": {
     "branches": {
       "entity": "branches",
+      "kind": "DATA",
       "data_type_name": "BranchesSearchData",
       "filter_type_name": "BranchesSearchFilter",
       "in_filter_type_name": "BranchesInFilter",
@@ -4395,12 +4396,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Branch name (e.g. `main`, `feature/foo`)"
+          "description": "Branch name (e.g. `main`, `feature/foo`)",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "comments": {
       "entity": "comments",
+      "kind": "DATA",
       "data_type_name": "CommentsSearchData",
       "filter_type_name": "CommentsSearchFilter",
       "in_filter_type_name": "CommentsInFilter",
@@ -4419,7 +4426,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the comment"
+          "description": "GraphQL node ID of the comment",
+          "semantic": false
         },
         {
           "name": "databaseId",
@@ -4428,7 +4436,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "REST API numeric identifier for the comment"
+          "description": "REST API numeric identifier for the comment",
+          "semantic": false
         },
         {
           "name": "body",
@@ -4437,7 +4446,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Markdown body of the comment"
+          "description": "Markdown body of the comment",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -4446,7 +4456,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the comment was created"
+          "description": "ISO 8601 timestamp when the comment was created",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -4455,7 +4466,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the comment was last updated"
+          "description": "ISO 8601 timestamp when the comment was last updated",
+          "semantic": false
         },
         {
           "name": "url",
@@ -4464,12 +4476,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink to the comment on GitHub"
+          "description": "Permalink to the comment on GitHub",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "commits": {
       "entity": "commits",
+      "kind": "DATA",
       "data_type_name": "CommitsSearchData",
       "filter_type_name": "CommitsSearchFilter",
       "in_filter_type_name": "CommitsInFilter",
@@ -4488,7 +4506,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Full Git commit SHA"
+          "description": "Full Git commit SHA",
+          "semantic": false
         },
         {
           "name": "url",
@@ -4497,7 +4516,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink to the commit on GitHub"
+          "description": "Permalink to the commit on GitHub",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -4506,12 +4526,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp of the commit"
+          "description": "ISO 8601 timestamp of the commit",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "directory_content": {
       "entity": "directory_content",
+      "kind": "DATA",
       "data_type_name": "DirectoryContentSearchData",
       "filter_type_name": "DirectoryContentSearchFilter",
       "in_filter_type_name": "DirectoryContentInFilter",
@@ -4522,10 +4548,15 @@
       "query_type_name": "DirectoryContentSearchQuery",
       "condition_prefix": "DirectoryContent",
       "condition_type_name": "DirectoryContentCondition",
-      "fields": []
+      "fields": [],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "discussions": {
       "entity": "discussions",
+      "kind": "DATA",
       "data_type_name": "DiscussionsSearchData",
       "filter_type_name": "DiscussionsSearchFilter",
       "in_filter_type_name": "DiscussionsInFilter",
@@ -4536,10 +4567,15 @@
       "query_type_name": "DiscussionsSearchQuery",
       "condition_prefix": "Discussions",
       "condition_type_name": "DiscussionsCondition",
-      "fields": []
+      "fields": [],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "file_content": {
       "entity": "file_content",
+      "kind": "DATA",
       "data_type_name": "FileContentSearchData",
       "filter_type_name": "FileContentSearchFilter",
       "in_filter_type_name": "FileContentInFilter",
@@ -4550,10 +4586,15 @@
       "query_type_name": "FileContentSearchQuery",
       "condition_prefix": "FileContent",
       "condition_type_name": "FileContentCondition",
-      "fields": []
+      "fields": [],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "issues": {
       "entity": "issues",
+      "kind": "DATA",
       "data_type_name": "IssuesSearchData",
       "filter_type_name": "IssuesSearchFilter",
       "in_filter_type_name": "IssuesInFilter",
@@ -4572,7 +4613,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the issue"
+          "description": "GraphQL node ID of the issue",
+          "semantic": false
         },
         {
           "name": "databaseId",
@@ -4581,7 +4623,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "REST API numeric identifier for the issue"
+          "description": "REST API numeric identifier for the issue",
+          "semantic": false
         },
         {
           "name": "number",
@@ -4590,7 +4633,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Repository-scoped issue number"
+          "description": "Repository-scoped issue number",
+          "semantic": false
         },
         {
           "name": "title",
@@ -4599,7 +4643,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Issue title"
+          "description": "Issue title",
+          "semantic": false
         },
         {
           "name": "state",
@@ -4608,7 +4653,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Issue state in the cache: lowercase `open` or `closed`"
+          "description": "Issue state in the cache: lowercase `open` or `closed`",
+          "semantic": false
         },
         {
           "name": "stateReason",
@@ -4617,7 +4663,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Reason the issue is in its current state (e.g. `completed`, `not_planned`, `reopened`). Cached values are lowercase."
+          "description": "Reason the issue is in its current state (e.g. `completed`, `not_planned`, `reopened`). Cached values are lowercase.",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -4626,7 +4673,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the issue was created"
+          "description": "ISO 8601 timestamp when the issue was created",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -4635,7 +4683,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the issue was last updated"
+          "description": "ISO 8601 timestamp when the issue was last updated",
+          "semantic": false
         },
         {
           "name": "closedAt",
@@ -4644,7 +4693,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the issue was closed, if applicable"
+          "description": "ISO 8601 timestamp when the issue was closed, if applicable",
+          "semantic": false
         },
         {
           "name": "locked",
@@ -4653,7 +4703,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the conversation on the issue is locked"
+          "description": "Whether the conversation on the issue is locked",
+          "semantic": false
         },
         {
           "name": "url",
@@ -4662,12 +4713,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink to the issue on GitHub"
+          "description": "Permalink to the issue on GitHub",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "labels": {
       "entity": "labels",
+      "kind": "DATA",
       "data_type_name": "LabelsSearchData",
       "filter_type_name": "LabelsSearchFilter",
       "in_filter_type_name": "LabelsInFilter",
@@ -4686,7 +4743,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the label"
+          "description": "GraphQL node ID of the label",
+          "semantic": false
         },
         {
           "name": "name",
@@ -4695,7 +4753,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Label name"
+          "description": "Label name",
+          "semantic": false
         },
         {
           "name": "color",
@@ -4704,7 +4763,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Label color as a 6-character hex string without a leading `#`"
+          "description": "Label color as a 6-character hex string without a leading `#`",
+          "semantic": false
         },
         {
           "name": "description",
@@ -4713,7 +4773,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Short description of what the label is used for"
+          "description": "Short description of what the label is used for",
+          "semantic": false
         },
         {
           "name": "url",
@@ -4722,12 +4783,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "API URL to the label resource"
+          "description": "API URL to the label resource",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "milestones": {
       "entity": "milestones",
+      "kind": "DATA",
       "data_type_name": "MilestonesSearchData",
       "filter_type_name": "MilestonesSearchFilter",
       "in_filter_type_name": "MilestonesInFilter",
@@ -4746,7 +4813,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the milestone"
+          "description": "GraphQL node ID of the milestone",
+          "semantic": false
         },
         {
           "name": "number",
@@ -4755,7 +4823,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Repository-scoped milestone number"
+          "description": "Repository-scoped milestone number",
+          "semantic": false
         },
         {
           "name": "title",
@@ -4764,7 +4833,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Milestone title"
+          "description": "Milestone title",
+          "semantic": false
         },
         {
           "name": "description",
@@ -4773,7 +4843,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Milestone description"
+          "description": "Milestone description",
+          "semantic": false
         },
         {
           "name": "state",
@@ -4782,7 +4853,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Milestone state in the cache: lowercase `open` or `closed`"
+          "description": "Milestone state in the cache: lowercase `open` or `closed`",
+          "semantic": false
         },
         {
           "name": "dueOn",
@@ -4791,7 +4863,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp for the milestone's due date, if set"
+          "description": "ISO 8601 timestamp for the milestone's due date, if set",
+          "semantic": false
         },
         {
           "name": "closedAt",
@@ -4800,7 +4873,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the milestone was closed, if applicable"
+          "description": "ISO 8601 timestamp when the milestone was closed, if applicable",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -4809,7 +4883,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the milestone was created"
+          "description": "ISO 8601 timestamp when the milestone was created",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -4818,12 +4893,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the milestone was last updated"
+          "description": "ISO 8601 timestamp when the milestone was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "organizations": {
       "entity": "organizations",
+      "kind": "DATA",
       "data_type_name": "OrganizationsSearchData",
       "filter_type_name": "OrganizationsSearchFilter",
       "in_filter_type_name": "OrganizationsInFilter",
@@ -4842,7 +4923,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the organization"
+          "description": "GraphQL node ID of the organization",
+          "semantic": false
         },
         {
           "name": "databaseId",
@@ -4851,7 +4933,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "REST API numeric identifier for the organization"
+          "description": "REST API numeric identifier for the organization",
+          "semantic": false
         },
         {
           "name": "login",
@@ -4860,7 +4943,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Organization login/handle (unique URL slug)"
+          "description": "Organization login/handle (unique URL slug)",
+          "semantic": false
         },
         {
           "name": "name",
@@ -4869,7 +4953,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Display name of the organization"
+          "description": "Display name of the organization",
+          "semantic": false
         },
         {
           "name": "description",
@@ -4878,7 +4963,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Short public description of the organization"
+          "description": "Short public description of the organization",
+          "semantic": false
         },
         {
           "name": "email",
@@ -4887,7 +4973,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Public contact email for the organization, if set"
+          "description": "Public contact email for the organization, if set",
+          "semantic": false
         },
         {
           "name": "location",
@@ -4896,7 +4983,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Public location of the organization, if set"
+          "description": "Public location of the organization, if set",
+          "semantic": false
         },
         {
           "name": "isVerified",
@@ -4905,7 +4993,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the organization has a verified domain"
+          "description": "Whether the organization has a verified domain",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -4914,12 +5003,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the organization was created"
+          "description": "ISO 8601 timestamp when the organization was created",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "org_repositories": {
       "entity": "org_repositories",
+      "kind": "DATA",
       "data_type_name": "OrgRepositoriesSearchData",
       "filter_type_name": "OrgRepositoriesSearchFilter",
       "in_filter_type_name": "OrgRepositoriesInFilter",
@@ -4930,10 +5025,15 @@
       "query_type_name": "OrgRepositoriesSearchQuery",
       "condition_prefix": "OrgRepositories",
       "condition_type_name": "OrgRepositoriesCondition",
-      "fields": []
+      "fields": [],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "pr_comments": {
       "entity": "pr_comments",
+      "kind": "DATA",
       "data_type_name": "PrCommentsSearchData",
       "filter_type_name": "PrCommentsSearchFilter",
       "in_filter_type_name": "PrCommentsInFilter",
@@ -4944,10 +5044,15 @@
       "query_type_name": "PrCommentsSearchQuery",
       "condition_prefix": "PrComments",
       "condition_type_name": "PrCommentsCondition",
-      "fields": []
+      "fields": [],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "project_items": {
       "entity": "project_items",
+      "kind": "DATA",
       "data_type_name": "ProjectItemsSearchData",
       "filter_type_name": "ProjectItemsSearchFilter",
       "in_filter_type_name": "ProjectItemsInFilter",
@@ -4958,10 +5063,15 @@
       "query_type_name": "ProjectItemsSearchQuery",
       "condition_prefix": "ProjectItems",
       "condition_type_name": "ProjectItemsCondition",
-      "fields": []
+      "fields": [],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "projects": {
       "entity": "projects",
+      "kind": "DATA",
       "data_type_name": "ProjectsSearchData",
       "filter_type_name": "ProjectsSearchFilter",
       "in_filter_type_name": "ProjectsInFilter",
@@ -4980,7 +5090,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the project"
+          "description": "GraphQL node ID of the project",
+          "semantic": false
         },
         {
           "name": "number",
@@ -4989,7 +5100,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Organization- or user-scoped project number"
+          "description": "Organization- or user-scoped project number",
+          "semantic": false
         },
         {
           "name": "title",
@@ -4998,7 +5110,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Project title"
+          "description": "Project title",
+          "semantic": false
         },
         {
           "name": "shortDescription",
@@ -5007,7 +5120,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Short description displayed on the project summary"
+          "description": "Short description displayed on the project summary",
+          "semantic": false
         },
         {
           "name": "url",
@@ -5016,7 +5130,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink to the project on GitHub"
+          "description": "Permalink to the project on GitHub",
+          "semantic": false
         },
         {
           "name": "closed",
@@ -5025,7 +5140,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the project has been closed"
+          "description": "Whether the project has been closed",
+          "semantic": false
         },
         {
           "name": "public",
@@ -5034,7 +5150,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the project is publicly visible"
+          "description": "Whether the project is publicly visible",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5043,7 +5160,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the project was created"
+          "description": "ISO 8601 timestamp when the project was created",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -5052,12 +5170,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the project was last updated"
+          "description": "ISO 8601 timestamp when the project was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "pull_requests": {
       "entity": "pull_requests",
+      "kind": "DATA",
       "data_type_name": "PullRequestsSearchData",
       "filter_type_name": "PullRequestsSearchFilter",
       "in_filter_type_name": "PullRequestsInFilter",
@@ -5076,7 +5200,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the pull request"
+          "description": "GraphQL node ID of the pull request",
+          "semantic": false
         },
         {
           "name": "databaseId",
@@ -5085,7 +5210,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "REST API numeric identifier for the pull request"
+          "description": "REST API numeric identifier for the pull request",
+          "semantic": false
         },
         {
           "name": "number",
@@ -5094,7 +5220,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Repository-scoped pull request number"
+          "description": "Repository-scoped pull request number",
+          "semantic": false
         },
         {
           "name": "title",
@@ -5103,7 +5230,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Pull request title"
+          "description": "Pull request title",
+          "semantic": false
         },
         {
           "name": "state",
@@ -5112,7 +5240,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"
+          "description": "Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)",
+          "semantic": false
         },
         {
           "name": "isDraft",
@@ -5121,7 +5250,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the pull request is still a draft"
+          "description": "Whether the pull request is still a draft",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5130,7 +5260,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the pull request was created"
+          "description": "ISO 8601 timestamp when the pull request was created",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -5139,7 +5270,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the pull request was last updated"
+          "description": "ISO 8601 timestamp when the pull request was last updated",
+          "semantic": false
         },
         {
           "name": "closedAt",
@@ -5148,7 +5280,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the pull request was closed, if applicable"
+          "description": "ISO 8601 timestamp when the pull request was closed, if applicable",
+          "semantic": false
         },
         {
           "name": "mergedAt",
@@ -5157,7 +5290,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the pull request was merged, if applicable"
+          "description": "ISO 8601 timestamp when the pull request was merged, if applicable",
+          "semantic": false
         },
         {
           "name": "url",
@@ -5166,12 +5300,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink to the pull request on GitHub"
+          "description": "Permalink to the pull request on GitHub",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "releases": {
       "entity": "releases",
+      "kind": "DATA",
       "data_type_name": "ReleasesSearchData",
       "filter_type_name": "ReleasesSearchFilter",
       "in_filter_type_name": "ReleasesInFilter",
@@ -5190,7 +5330,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the release"
+          "description": "GraphQL node ID of the release",
+          "semantic": false
         },
         {
           "name": "databaseId",
@@ -5199,7 +5340,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "REST API numeric identifier for the release"
+          "description": "REST API numeric identifier for the release",
+          "semantic": false
         },
         {
           "name": "name",
@@ -5208,7 +5350,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Display name of the release"
+          "description": "Display name of the release",
+          "semantic": false
         },
         {
           "name": "tagName",
@@ -5217,7 +5360,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Git tag the release points at (e.g. `v1.2.3`)"
+          "description": "Git tag the release points at (e.g. `v1.2.3`)",
+          "semantic": false
         },
         {
           "name": "description",
@@ -5226,7 +5370,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Markdown body / release notes"
+          "description": "Markdown body / release notes",
+          "semantic": false
         },
         {
           "name": "publishedAt",
@@ -5235,7 +5380,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the release was published"
+          "description": "ISO 8601 timestamp when the release was published",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5244,7 +5390,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the release was created"
+          "description": "ISO 8601 timestamp when the release was created",
+          "semantic": false
         },
         {
           "name": "isPrerelease",
@@ -5253,7 +5400,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the release is marked as a pre-release"
+          "description": "Whether the release is marked as a pre-release",
+          "semantic": false
         },
         {
           "name": "isDraft",
@@ -5262,7 +5410,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the release is still a draft and not published"
+          "description": "Whether the release is still a draft and not published",
+          "semantic": false
         },
         {
           "name": "url",
@@ -5271,12 +5420,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink to the release on GitHub"
+          "description": "Permalink to the release on GitHub",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "repositories": {
       "entity": "repositories",
+      "kind": "DATA",
       "data_type_name": "RepositoriesSearchData",
       "filter_type_name": "RepositoriesSearchFilter",
       "in_filter_type_name": "RepositoriesInFilter",
@@ -5295,7 +5450,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the repository"
+          "description": "GraphQL node ID of the repository",
+          "semantic": false
         },
         {
           "name": "name",
@@ -5304,7 +5460,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Short repository name (without owner)"
+          "description": "Short repository name (without owner)",
+          "semantic": false
         },
         {
           "name": "nameWithOwner",
@@ -5313,7 +5470,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Fully-qualified `owner/name` identifier for the repository"
+          "description": "Fully-qualified `owner/name` identifier for the repository",
+          "semantic": false
         },
         {
           "name": "description",
@@ -5322,7 +5480,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Short description of the repository"
+          "description": "Short description of the repository",
+          "semantic": false
         },
         {
           "name": "url",
@@ -5331,7 +5490,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Canonical GitHub URL for the repository"
+          "description": "Canonical GitHub URL for the repository",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5340,7 +5500,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the repository was created"
+          "description": "ISO 8601 timestamp when the repository was created",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -5349,7 +5510,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the repository was last updated"
+          "description": "ISO 8601 timestamp when the repository was last updated",
+          "semantic": false
         },
         {
           "name": "pushedAt",
@@ -5358,7 +5520,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp of the most recent push to the repository"
+          "description": "ISO 8601 timestamp of the most recent push to the repository",
+          "semantic": false
         },
         {
           "name": "forkCount",
@@ -5367,7 +5530,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of forks of the repository"
+          "description": "Number of forks of the repository",
+          "semantic": false
         },
         {
           "name": "stargazerCount",
@@ -5376,7 +5540,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of users who have starred the repository"
+          "description": "Number of users who have starred the repository",
+          "semantic": false
         },
         {
           "name": "isPrivate",
@@ -5385,7 +5550,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the repository is private"
+          "description": "Whether the repository is private",
+          "semantic": false
         },
         {
           "name": "isFork",
@@ -5394,7 +5560,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the repository is a fork of another repository"
+          "description": "Whether the repository is a fork of another repository",
+          "semantic": false
         },
         {
           "name": "isArchived",
@@ -5403,12 +5570,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the repository has been archived"
+          "description": "Whether the repository has been archived",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "reviews": {
       "entity": "reviews",
+      "kind": "DATA",
       "data_type_name": "ReviewsSearchData",
       "filter_type_name": "ReviewsSearchFilter",
       "in_filter_type_name": "ReviewsInFilter",
@@ -5427,7 +5600,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the review"
+          "description": "GraphQL node ID of the review",
+          "semantic": false
         },
         {
           "name": "databaseId",
@@ -5436,7 +5610,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "REST API numeric identifier for the review"
+          "description": "REST API numeric identifier for the review",
+          "semantic": false
         },
         {
           "name": "state",
@@ -5445,7 +5620,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Review state in the cache: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"
+          "description": "Review state in the cache: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`",
+          "semantic": false
         },
         {
           "name": "body",
@@ -5454,7 +5630,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Review body text"
+          "description": "Review body text",
+          "semantic": false
         },
         {
           "name": "submittedAt",
@@ -5463,7 +5640,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the review was submitted"
+          "description": "ISO 8601 timestamp when the review was submitted",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5472,7 +5650,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the review was created"
+          "description": "ISO 8601 timestamp when the review was created",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -5481,7 +5660,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the review was last updated"
+          "description": "ISO 8601 timestamp when the review was last updated",
+          "semantic": false
         },
         {
           "name": "url",
@@ -5490,12 +5670,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink to the review on GitHub"
+          "description": "Permalink to the review on GitHub",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "stargazers": {
       "entity": "stargazers",
+      "kind": "DATA",
       "data_type_name": "StargazersSearchData",
       "filter_type_name": "StargazersSearchFilter",
       "in_filter_type_name": "StargazersInFilter",
@@ -5514,12 +5700,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the user starred the repository"
+          "description": "ISO 8601 timestamp when the user starred the repository",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "tags": {
       "entity": "tags",
+      "kind": "DATA",
       "data_type_name": "TagsSearchData",
       "filter_type_name": "TagsSearchFilter",
       "in_filter_type_name": "TagsInFilter",
@@ -5538,12 +5730,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tag name (e.g. `v1.2.3`)"
+          "description": "Tag name (e.g. `v1.2.3`)",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "teams": {
       "entity": "teams",
+      "kind": "DATA",
       "data_type_name": "TeamsSearchData",
       "filter_type_name": "TeamsSearchFilter",
       "in_filter_type_name": "TeamsInFilter",
@@ -5562,7 +5760,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the team"
+          "description": "GraphQL node ID of the team",
+          "semantic": false
         },
         {
           "name": "databaseId",
@@ -5571,7 +5770,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "REST API numeric identifier for the team"
+          "description": "REST API numeric identifier for the team",
+          "semantic": false
         },
         {
           "name": "slug",
@@ -5580,7 +5780,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL-friendly slug for the team within its organization"
+          "description": "URL-friendly slug for the team within its organization",
+          "semantic": false
         },
         {
           "name": "name",
@@ -5589,7 +5790,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Display name of the team"
+          "description": "Display name of the team",
+          "semantic": false
         },
         {
           "name": "description",
@@ -5598,7 +5800,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Short description of the team"
+          "description": "Short description of the team",
+          "semantic": false
         },
         {
           "name": "privacy",
@@ -5607,7 +5810,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Team visibility: `secret` or `closed` (REST API values)"
+          "description": "Team visibility: `secret` or `closed` (REST API values)",
+          "semantic": false
         },
         {
           "name": "url",
@@ -5616,12 +5820,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink to the team on GitHub"
+          "description": "Permalink to the team on GitHub",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "users": {
       "entity": "users",
+      "kind": "DATA",
       "data_type_name": "UsersSearchData",
       "filter_type_name": "UsersSearchFilter",
       "in_filter_type_name": "UsersInFilter",
@@ -5640,7 +5850,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "GraphQL node ID of the user"
+          "description": "GraphQL node ID of the user",
+          "semantic": false
         },
         {
           "name": "databaseId",
@@ -5649,7 +5860,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "REST API numeric identifier for the user"
+          "description": "REST API numeric identifier for the user",
+          "semantic": false
         },
         {
           "name": "login",
@@ -5658,7 +5870,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User login/handle"
+          "description": "User login/handle",
+          "semantic": false
         },
         {
           "name": "url",
@@ -5667,12 +5880,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink to the user's profile on GitHub"
+          "description": "Permalink to the user's profile on GitHub",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "viewer": {
       "entity": "viewer",
+      "kind": "DATA",
       "data_type_name": "ViewerSearchData",
       "filter_type_name": "ViewerSearchFilter",
       "in_filter_type_name": "ViewerInFilter",
@@ -5683,10 +5902,15 @@
       "query_type_name": "ViewerSearchQuery",
       "condition_prefix": "Viewer",
       "condition_type_name": "ViewerCondition",
-      "fields": []
+      "fields": [],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "viewer_repositories": {
       "entity": "viewer_repositories",
+      "kind": "DATA",
       "data_type_name": "ViewerRepositoriesSearchData",
       "filter_type_name": "ViewerRepositoriesSearchFilter",
       "in_filter_type_name": "ViewerRepositoriesInFilter",
@@ -5697,7 +5921,11 @@
       "query_type_name": "ViewerRepositoriesSearchQuery",
       "condition_prefix": "ViewerRepositories",
       "condition_type_name": "ViewerRepositoriesCondition",
-      "fields": []
+      "fields": [],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

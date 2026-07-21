@@ -1877,6 +1877,7 @@
   "search_schemas": {
     "campaigns": {
       "entity": "campaigns",
+      "kind": "DATA",
       "data_type_name": "CampaignsSearchData",
       "filter_type_name": "CampaignsSearchFilter",
       "in_filter_type_name": "CampaignsInFilter",
@@ -1895,7 +1896,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "[A/B Testing](https://mailchimp.com/help/about-ab-testing-campaigns/) options for a campaign."
+          "description": "[A/B Testing](https://mailchimp.com/help/about-ab-testing-campaigns/) options for a campaign.",
+          "semantic": false
         },
         {
           "name": "archive_url",
@@ -1904,7 +1906,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The link to the campaign's archive version in ISO 8601 format."
+          "description": "The link to the campaign's archive version in ISO 8601 format.",
+          "semantic": false
         },
         {
           "name": "content_type",
@@ -1913,7 +1916,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "How the campaign's content is put together."
+          "description": "How the campaign's content is put together.",
+          "semantic": false
         },
         {
           "name": "create_time",
@@ -1922,7 +1926,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the campaign was created in ISO 8601 format."
+          "description": "The date and time the campaign was created in ISO 8601 format.",
+          "semantic": false
         },
         {
           "name": "delivery_status",
@@ -1931,7 +1936,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Updates on campaigns in the process of sending."
+          "description": "Updates on campaigns in the process of sending.",
+          "semantic": false
         },
         {
           "name": "emails_sent",
@@ -1940,7 +1946,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The total number of emails sent for this campaign."
+          "description": "The total number of emails sent for this campaign.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1949,7 +1956,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A string that uniquely identifies this campaign."
+          "description": "A string that uniquely identifies this campaign.",
+          "semantic": false
         },
         {
           "name": "long_archive_url",
@@ -1958,7 +1966,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The original link to the campaign's archive version."
+          "description": "The original link to the campaign's archive version.",
+          "semantic": false
         },
         {
           "name": "needs_block_refresh",
@@ -1967,7 +1976,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Determines if the campaign needs its blocks refreshed by opening the web-based campaign editor. D..."
+          "description": "Determines if the campaign needs its blocks refreshed by opening the web-based campaign editor. D...",
+          "semantic": false
         },
         {
           "name": "parent_campaign_id",
@@ -1976,7 +1986,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "If this campaign is the child of another campaign, this identifies the parent campaign. For Examp..."
+          "description": "If this campaign is the child of another campaign, this identifies the parent campaign. For Examp...",
+          "semantic": false
         },
         {
           "name": "recipients",
@@ -1985,7 +1996,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "List settings for the campaign."
+          "description": "List settings for the campaign.",
+          "semantic": false
         },
         {
           "name": "report_summary",
@@ -1994,7 +2006,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "For sent campaigns, a summary of opens, clicks, and e-commerce data."
+          "description": "For sent campaigns, a summary of opens, clicks, and e-commerce data.",
+          "semantic": false
         },
         {
           "name": "resendable",
@@ -2003,7 +2016,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Determines if the campaign qualifies to be resent to non-openers."
+          "description": "Determines if the campaign qualifies to be resent to non-openers.",
+          "semantic": false
         },
         {
           "name": "rss_opts",
@@ -2012,7 +2026,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "[RSS](https://mailchimp.com/help/share-your-blog-posts-with-mailchimp/) options for a campaign."
+          "description": "[RSS](https://mailchimp.com/help/share-your-blog-posts-with-mailchimp/) options for a campaign.",
+          "semantic": false
         },
         {
           "name": "send_time",
@@ -2021,7 +2036,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time a campaign was sent."
+          "description": "The date and time a campaign was sent.",
+          "semantic": false
         },
         {
           "name": "settings",
@@ -2030,7 +2046,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The settings for your campaign, including subject, from name, reply-to address, and more."
+          "description": "The settings for your campaign, including subject, from name, reply-to address, and more.",
+          "semantic": false
         },
         {
           "name": "social_card",
@@ -2039,7 +2056,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The preview for the campaign, rendered by social networks like Facebook and Twitter. [Learn more]..."
+          "description": "The preview for the campaign, rendered by social networks like Facebook and Twitter. [Learn more]...",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2048,7 +2066,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The current status of the campaign."
+          "description": "The current status of the campaign.",
+          "semantic": false
         },
         {
           "name": "tracking",
@@ -2057,7 +2076,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The tracking options for a campaign."
+          "description": "The tracking options for a campaign.",
+          "semantic": false
         },
         {
           "name": "type",
@@ -2066,7 +2086,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "There are four types of [campaigns](https://mailchimp.com/help/getting-started-with-campaigns/) y..."
+          "description": "There are four types of [campaigns](https://mailchimp.com/help/getting-started-with-campaigns/) y...",
+          "semantic": false
         },
         {
           "name": "variate_settings",
@@ -2075,7 +2096,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The settings specific to A/B test campaigns."
+          "description": "The settings specific to A/B test campaigns.",
+          "semantic": false
         },
         {
           "name": "web_id",
@@ -2084,12 +2106,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The ID used in the Mailchimp web application. View this campaign in your Mailchimp account at `ht..."
+          "description": "The ID used in the Mailchimp web application. View this campaign in your Mailchimp account at `ht...",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "email_activity": {
       "entity": "email_activity",
+      "kind": "DATA",
       "data_type_name": "EmailActivitySearchData",
       "filter_type_name": "EmailActivitySearchFilter",
       "in_filter_type_name": "EmailActivityInFilter",
@@ -2108,7 +2136,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "One of the following actions: 'open', 'click', or 'bounce'"
+          "description": "One of the following actions: 'open', 'click', or 'bounce'",
+          "semantic": false
         },
         {
           "name": "campaign_id",
@@ -2117,7 +2146,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique id for the campaign."
+          "description": "The unique id for the campaign.",
+          "semantic": false
         },
         {
           "name": "email_address",
@@ -2126,7 +2156,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email address for a subscriber."
+          "description": "Email address for a subscriber.",
+          "semantic": false
         },
         {
           "name": "email_id",
@@ -2135,7 +2166,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The MD5 hash of the lowercase version of the list member's email address."
+          "description": "The MD5 hash of the lowercase version of the list member's email address.",
+          "semantic": false
         },
         {
           "name": "ip",
@@ -2144,7 +2176,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The IP address recorded for the action."
+          "description": "The IP address recorded for the action.",
+          "semantic": false
         },
         {
           "name": "list_id",
@@ -2153,7 +2186,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique id for the list."
+          "description": "The unique id for the list.",
+          "semantic": false
         },
         {
           "name": "list_is_active",
@@ -2162,7 +2196,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "The status of the list used, namely if it's deleted or disabled."
+          "description": "The status of the list used, namely if it's deleted or disabled.",
+          "semantic": false
         },
         {
           "name": "timestamp",
@@ -2171,7 +2206,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time recorded for the action in ISO 8601 format."
+          "description": "The date and time recorded for the action in ISO 8601 format.",
+          "semantic": false
         },
         {
           "name": "type",
@@ -2180,7 +2216,8 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "If the action is a 'bounce', the type of bounce received: 'hard', 'soft'."
+          "description": "If the action is a 'bounce', the type of bounce received: 'hard', 'soft'.",
+          "semantic": false
         },
         {
           "name": "url",
@@ -2189,12 +2226,18 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "If the action is a 'click', the URL on which the member clicked."
+          "description": "If the action is a 'click', the URL on which the member clicked.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "lists": {
       "entity": "lists",
+      "kind": "DATA",
       "data_type_name": "ListsSearchData",
       "filter_type_name": "ListsSearchFilter",
       "in_filter_type_name": "ListsInFilter",
@@ -2213,7 +2256,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The list's Email Beamer address."
+          "description": "The list's Email Beamer address.",
+          "semantic": false
         },
         {
           "name": "campaign_defaults",
@@ -2222,7 +2266,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Default values for campaigns created for this list."
+          "description": "Default values for campaigns created for this list.",
+          "semantic": false
         },
         {
           "name": "contact",
@@ -2231,7 +2276,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Contact information displayed in campaign footers to comply with international spam laws."
+          "description": "Contact information displayed in campaign footers to comply with international spam laws.",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -2240,7 +2286,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time that this list was created in ISO 8601 format."
+          "description": "The date and time that this list was created in ISO 8601 format.",
+          "semantic": false
         },
         {
           "name": "double_optin",
@@ -2249,7 +2296,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether or not to require the subscriber to confirm subscription via email."
+          "description": "Whether or not to require the subscriber to confirm subscription via email.",
+          "semantic": false
         },
         {
           "name": "email_type_option",
@@ -2258,7 +2306,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the list supports multiple formats for emails. When set to `true`, subscribers can choose..."
+          "description": "Whether the list supports multiple formats for emails. When set to `true`, subscribers can choose...",
+          "semantic": false
         },
         {
           "name": "has_welcome",
@@ -2267,7 +2316,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether or not this list has a welcome automation connected."
+          "description": "Whether or not this list has a welcome automation connected.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2276,7 +2326,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A string that uniquely identifies this list."
+          "description": "A string that uniquely identifies this list.",
+          "semantic": false
         },
         {
           "name": "list_rating",
@@ -2285,7 +2336,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "An auto-generated activity score for the list (0-5)."
+          "description": "An auto-generated activity score for the list (0-5).",
+          "semantic": false
         },
         {
           "name": "marketing_permissions",
@@ -2294,7 +2346,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether or not the list has marketing permissions (eg. GDPR) enabled."
+          "description": "Whether or not the list has marketing permissions (eg. GDPR) enabled.",
+          "semantic": false
         },
         {
           "name": "modules",
@@ -2303,7 +2356,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Any list-specific modules installed for this list."
+          "description": "Any list-specific modules installed for this list.",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2312,7 +2366,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the list."
+          "description": "The name of the list.",
+          "semantic": false
         },
         {
           "name": "notify_on_subscribe",
@@ -2321,7 +2376,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The email address to send subscribe notifications to."
+          "description": "The email address to send subscribe notifications to.",
+          "semantic": false
         },
         {
           "name": "notify_on_unsubscribe",
@@ -2330,7 +2386,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The email address to send unsubscribe notifications to."
+          "description": "The email address to send unsubscribe notifications to.",
+          "semantic": false
         },
         {
           "name": "permission_reminder",
@@ -2339,7 +2396,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The permission reminder for the list."
+          "description": "The permission reminder for the list.",
+          "semantic": false
         },
         {
           "name": "stats",
@@ -2348,7 +2406,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Stats for the list. Many of these are cached for at least five minutes."
+          "description": "Stats for the list. Many of these are cached for at least five minutes.",
+          "semantic": false
         },
         {
           "name": "subscribe_url_long",
@@ -2357,7 +2416,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The full version of this list's subscribe form (host will vary)."
+          "description": "The full version of this list's subscribe form (host will vary).",
+          "semantic": false
         },
         {
           "name": "subscribe_url_short",
@@ -2366,7 +2426,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Our EepURL shortened version of this list's subscribe form."
+          "description": "Our EepURL shortened version of this list's subscribe form.",
+          "semantic": false
         },
         {
           "name": "use_archive_bar",
@@ -2375,7 +2436,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether campaigns for this list use the Archive Bar in archives by default."
+          "description": "Whether campaigns for this list use the Archive Bar in archives by default.",
+          "semantic": false
         },
         {
           "name": "visibility",
@@ -2384,7 +2446,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Whether this list is public or private."
+          "description": "Whether this list is public or private.",
+          "semantic": false
         },
         {
           "name": "web_id",
@@ -2393,12 +2456,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The ID used in the Mailchimp web application. View this list in your Mailchimp account at `https:..."
+          "description": "The ID used in the Mailchimp web application. View this list in your Mailchimp account at `https:...",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "reports": {
       "entity": "reports",
+      "kind": "DATA",
       "data_type_name": "ReportsSearchData",
       "filter_type_name": "ReportsSearchFilter",
       "in_filter_type_name": "ReportsInFilter",
@@ -2417,7 +2486,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "General stats about different groups of an A/B Split campaign. Does not return information about ..."
+          "description": "General stats about different groups of an A/B Split campaign. Does not return information about ...",
+          "semantic": false
         },
         {
           "name": "abuse_reports",
@@ -2426,7 +2496,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of abuse reports generated for this campaign."
+          "description": "The number of abuse reports generated for this campaign.",
+          "semantic": false
         },
         {
           "name": "bounces",
@@ -2435,7 +2506,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "An object describing the bounce summary for the campaign."
+          "description": "An object describing the bounce summary for the campaign.",
+          "semantic": false
         },
         {
           "name": "campaign_title",
@@ -2444,7 +2516,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The title of the campaign."
+          "description": "The title of the campaign.",
+          "semantic": false
         },
         {
           "name": "clicks",
@@ -2453,7 +2526,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "An object describing the click activity for the campaign."
+          "description": "An object describing the click activity for the campaign.",
+          "semantic": false
         },
         {
           "name": "delivery_status",
@@ -2462,7 +2536,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Updates on campaigns in the process of sending."
+          "description": "Updates on campaigns in the process of sending.",
+          "semantic": false
         },
         {
           "name": "ecommerce",
@@ -2471,7 +2546,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "E-Commerce stats for a campaign."
+          "description": "E-Commerce stats for a campaign.",
+          "semantic": false
         },
         {
           "name": "emails_sent",
@@ -2480,7 +2556,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The total number of emails sent for this campaign."
+          "description": "The total number of emails sent for this campaign.",
+          "semantic": false
         },
         {
           "name": "facebook_likes",
@@ -2489,7 +2566,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "An object describing campaign engagement on Facebook."
+          "description": "An object describing campaign engagement on Facebook.",
+          "semantic": false
         },
         {
           "name": "forwards",
@@ -2498,7 +2576,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "An object describing the forwards and forward activity for the campaign."
+          "description": "An object describing the forwards and forward activity for the campaign.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2507,7 +2586,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A string that uniquely identifies this campaign."
+          "description": "A string that uniquely identifies this campaign.",
+          "semantic": false
         },
         {
           "name": "industry_stats",
@@ -2516,7 +2596,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The average campaign statistics for your industry."
+          "description": "The average campaign statistics for your industry.",
+          "semantic": false
         },
         {
           "name": "list_id",
@@ -2525,7 +2606,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique list id."
+          "description": "The unique list id.",
+          "semantic": false
         },
         {
           "name": "list_is_active",
@@ -2534,7 +2616,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "The status of the list used, namely if it's deleted or disabled."
+          "description": "The status of the list used, namely if it's deleted or disabled.",
+          "semantic": false
         },
         {
           "name": "list_name",
@@ -2543,7 +2626,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the list."
+          "description": "The name of the list.",
+          "semantic": false
         },
         {
           "name": "list_stats",
@@ -2552,7 +2636,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The average campaign statistics for your list. This won't be present if we haven't calculated i..."
+          "description": "The average campaign statistics for your list. This won't be present if we haven't calculated i...",
+          "semantic": false
         },
         {
           "name": "opens",
@@ -2561,7 +2646,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "An object describing the open activity for the campaign."
+          "description": "An object describing the open activity for the campaign.",
+          "semantic": false
         },
         {
           "name": "preview_text",
@@ -2570,7 +2656,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The preview text for the campaign."
+          "description": "The preview text for the campaign.",
+          "semantic": false
         },
         {
           "name": "rss_last_send",
@@ -2579,7 +2666,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "For RSS campaigns, the date and time of the last send in ISO 8601 format."
+          "description": "For RSS campaigns, the date and time of the last send in ISO 8601 format.",
+          "semantic": false
         },
         {
           "name": "send_time",
@@ -2588,7 +2676,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time a campaign was sent in ISO 8601 format."
+          "description": "The date and time a campaign was sent in ISO 8601 format.",
+          "semantic": false
         },
         {
           "name": "share_report",
@@ -2597,7 +2686,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The url and password for the VIP report."
+          "description": "The url and password for the VIP report.",
+          "semantic": false
         },
         {
           "name": "subject_line",
@@ -2606,7 +2696,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The subject line for the campaign."
+          "description": "The subject line for the campaign.",
+          "semantic": false
         },
         {
           "name": "timeseries",
@@ -2615,7 +2706,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "An hourly breakdown of the performance of the campaign over the first 24 hours."
+          "description": "An hourly breakdown of the performance of the campaign over the first 24 hours.",
+          "semantic": false
         },
         {
           "name": "timewarp",
@@ -2624,7 +2716,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "An hourly breakdown of sends, opens, and clicks if a campaign is sent using timewarp."
+          "description": "An hourly breakdown of sends, opens, and clicks if a campaign is sent using timewarp.",
+          "semantic": false
         },
         {
           "name": "type",
@@ -2633,7 +2726,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of campaign (regular, plain-text, ab_split, rss, automation, variate, or auto)."
+          "description": "The type of campaign (regular, plain-text, ab_split, rss, automation, variate, or auto).",
+          "semantic": false
         },
         {
           "name": "unsubscribed",
@@ -2642,12 +2736,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The total number of unsubscribed members for this campaign."
+          "description": "The total number of unsubscribed members for this campaign.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "list_members": {
       "entity": "list_members",
+      "kind": "DATA",
       "data_type_name": "ListMembersSearchData",
       "filter_type_name": "ListMembersSearchFilter",
       "in_filter_type_name": "ListMembersInFilter",
@@ -2666,7 +2766,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The MD5 hash of the lowercase version of the list member's email address"
+          "description": "The MD5 hash of the lowercase version of the list member's email address",
+          "semantic": false
         },
         {
           "name": "email_address",
@@ -2675,7 +2776,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email address for a subscriber"
+          "description": "Email address for a subscriber",
+          "semantic": false
         },
         {
           "name": "unique_email_id",
@@ -2684,7 +2786,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "An identifier for the address across all of Mailchimp"
+          "description": "An identifier for the address across all of Mailchimp",
+          "semantic": false
         },
         {
           "name": "contact_id",
@@ -2693,7 +2796,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "As Mailchimp evolves beyond email, you may eventually have contacts without email addresses"
+          "description": "As Mailchimp evolves beyond email, you may eventually have contacts without email addresses",
+          "semantic": false
         },
         {
           "name": "full_name",
@@ -2702,7 +2806,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The contact's full name"
+          "description": "The contact's full name",
+          "semantic": false
         },
         {
           "name": "web_id",
@@ -2711,7 +2816,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The ID used in the Mailchimp web application"
+          "description": "The ID used in the Mailchimp web application",
+          "semantic": false
         },
         {
           "name": "email_type",
@@ -2720,7 +2826,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of email this member asked to get"
+          "description": "Type of email this member asked to get",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2729,7 +2836,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Subscriber's current status"
+          "description": "Subscriber's current status",
+          "semantic": false
         },
         {
           "name": "unsubscribe_reason",
@@ -2738,7 +2846,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A subscriber's reason for unsubscribing"
+          "description": "A subscriber's reason for unsubscribing",
+          "semantic": false
         },
         {
           "name": "consents_to_one_to_one_messaging",
@@ -2747,7 +2856,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether a contact consents to 1:1 messaging"
+          "description": "Indicates whether a contact consents to 1:1 messaging",
+          "semantic": false
         },
         {
           "name": "merge_fields",
@@ -2756,7 +2866,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "A dictionary of merge fields where the keys are the merge tags"
+          "description": "A dictionary of merge fields where the keys are the merge tags",
+          "semantic": false
         },
         {
           "name": "interests",
@@ -2765,7 +2876,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The key of this object's properties is the ID of the interest in question"
+          "description": "The key of this object's properties is the ID of the interest in question",
+          "semantic": false
         },
         {
           "name": "stats",
@@ -2774,7 +2886,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Open and click rates for this subscriber"
+          "description": "Open and click rates for this subscriber",
+          "semantic": false
         },
         {
           "name": "ip_signup",
@@ -2783,7 +2896,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "IP address the subscriber signed up from"
+          "description": "IP address the subscriber signed up from",
+          "semantic": false
         },
         {
           "name": "timestamp_signup",
@@ -2792,7 +2906,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the subscriber signed up for the list"
+          "description": "The date and time the subscriber signed up for the list",
+          "semantic": false
         },
         {
           "name": "ip_opt",
@@ -2801,7 +2916,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The IP address the subscriber used to confirm their opt-in status"
+          "description": "The IP address the subscriber used to confirm their opt-in status",
+          "semantic": false
         },
         {
           "name": "timestamp_opt",
@@ -2810,7 +2926,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the subscriber confirmed their opt-in status"
+          "description": "The date and time the subscriber confirmed their opt-in status",
+          "semantic": false
         },
         {
           "name": "member_rating",
@@ -2819,7 +2936,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Star rating for this member, between 1 and 5"
+          "description": "Star rating for this member, between 1 and 5",
+          "semantic": false
         },
         {
           "name": "last_changed",
@@ -2828,7 +2946,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the member's info was last changed"
+          "description": "The date and time the member's info was last changed",
+          "semantic": false
         },
         {
           "name": "language",
@@ -2837,7 +2956,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "If set/detected, the subscriber's language"
+          "description": "If set/detected, the subscriber's language",
+          "semantic": false
         },
         {
           "name": "vip",
@@ -2846,7 +2966,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "VIP status for subscriber"
+          "description": "VIP status for subscriber",
+          "semantic": false
         },
         {
           "name": "email_client",
@@ -2855,7 +2976,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The list member's email client"
+          "description": "The list member's email client",
+          "semantic": false
         },
         {
           "name": "location",
@@ -2864,7 +2986,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Subscriber location information"
+          "description": "Subscriber location information",
+          "semantic": false
         },
         {
           "name": "source",
@@ -2873,7 +2996,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The source from which the subscriber was added to this list"
+          "description": "The source from which the subscriber was added to this list",
+          "semantic": false
         },
         {
           "name": "tags_count",
@@ -2882,7 +3006,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of tags applied to this member"
+          "description": "The number of tags applied to this member",
+          "semantic": false
         },
         {
           "name": "tags",
@@ -2891,7 +3016,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Returns up to 50 tags applied to this member"
+          "description": "Returns up to 50 tags applied to this member",
+          "semantic": false
         },
         {
           "name": "list_id",
@@ -2900,12 +3026,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The list id"
+          "description": "The list id",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "automations": {
       "entity": "automations",
+      "kind": "DATA",
       "data_type_name": "AutomationsSearchData",
       "filter_type_name": "AutomationsSearchFilter",
       "in_filter_type_name": "AutomationsInFilter",
@@ -2924,7 +3056,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A string that uniquely identifies an Automation workflow"
+          "description": "A string that uniquely identifies an Automation workflow",
+          "semantic": false
         },
         {
           "name": "create_time",
@@ -2933,7 +3066,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the Automation was created"
+          "description": "The date and time the Automation was created",
+          "semantic": false
         },
         {
           "name": "start_time",
@@ -2942,7 +3076,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the Automation was started"
+          "description": "The date and time the Automation was started",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2951,7 +3086,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The current status of the Automation"
+          "description": "The current status of the Automation",
+          "semantic": false
         },
         {
           "name": "emails_sent",
@@ -2960,7 +3096,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The total number of emails sent for the Automation"
+          "description": "The total number of emails sent for the Automation",
+          "semantic": false
         },
         {
           "name": "recipients",
@@ -2969,7 +3106,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "List settings for the Automation"
+          "description": "List settings for the Automation",
+          "semantic": false
         },
         {
           "name": "settings",
@@ -2978,7 +3116,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The settings for the Automation workflow"
+          "description": "The settings for the Automation workflow",
+          "semantic": false
         },
         {
           "name": "tracking",
@@ -2987,7 +3126,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The tracking options for the Automation"
+          "description": "The tracking options for the Automation",
+          "semantic": false
         },
         {
           "name": "report_summary",
@@ -2996,12 +3136,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "A summary of opens and clicks for sent campaigns"
+          "description": "A summary of opens and clicks for sent campaigns",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "tags": {
       "entity": "tags",
+      "kind": "DATA",
       "data_type_name": "TagsSearchData",
       "filter_type_name": "TagsSearchFilter",
       "in_filter_type_name": "TagsInFilter",
@@ -3020,7 +3166,8 @@
           "json_type": "integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The unique id for the tag"
+          "description": "The unique id for the tag",
+          "semantic": false
         },
         {
           "name": "name",
@@ -3029,12 +3176,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the tag"
+          "description": "The name of the tag",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "interest_categories": {
       "entity": "interest_categories",
+      "kind": "DATA",
       "data_type_name": "InterestCategoriesSearchData",
       "filter_type_name": "InterestCategoriesSearchFilter",
       "in_filter_type_name": "InterestCategoriesInFilter",
@@ -3053,7 +3206,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique list id for the category"
+          "description": "The unique list id for the category",
+          "semantic": false
         },
         {
           "name": "id",
@@ -3062,7 +3216,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The id for the interest category"
+          "description": "The id for the interest category",
+          "semantic": false
         },
         {
           "name": "title",
@@ -3071,7 +3226,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The text description of this category"
+          "description": "The text description of this category",
+          "semantic": false
         },
         {
           "name": "display_order",
@@ -3080,7 +3236,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The order that the categories are displayed in the list"
+          "description": "The order that the categories are displayed in the list",
+          "semantic": false
         },
         {
           "name": "type",
@@ -3089,12 +3246,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Determines how this category's interests appear on signup forms"
+          "description": "Determines how this category's interests appear on signup forms",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "interests": {
       "entity": "interests",
+      "kind": "DATA",
       "data_type_name": "InterestsSearchData",
       "filter_type_name": "InterestsSearchFilter",
       "in_filter_type_name": "InterestsInFilter",
@@ -3113,7 +3276,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The id for the interest category"
+          "description": "The id for the interest category",
+          "semantic": false
         },
         {
           "name": "list_id",
@@ -3122,7 +3286,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID for the list that this interest belongs to"
+          "description": "The ID for the list that this interest belongs to",
+          "semantic": false
         },
         {
           "name": "id",
@@ -3131,7 +3296,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID for the interest"
+          "description": "The ID for the interest",
+          "semantic": false
         },
         {
           "name": "name",
@@ -3140,7 +3306,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the interest"
+          "description": "The name of the interest",
+          "semantic": false
         },
         {
           "name": "subscriber_count",
@@ -3149,7 +3316,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The number of subscribers associated with this interest"
+          "description": "The number of subscribers associated with this interest",
+          "semantic": false
         },
         {
           "name": "display_order",
@@ -3158,12 +3326,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The display order for interests"
+          "description": "The display order for interests",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "segments": {
       "entity": "segments",
+      "kind": "DATA",
       "data_type_name": "SegmentsSearchData",
       "filter_type_name": "SegmentsSearchFilter",
       "in_filter_type_name": "SegmentsInFilter",
@@ -3182,7 +3356,8 @@
           "json_type": "integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The unique id for the segment"
+          "description": "The unique id for the segment",
+          "semantic": false
         },
         {
           "name": "name",
@@ -3191,7 +3366,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the segment"
+          "description": "The name of the segment",
+          "semantic": false
         },
         {
           "name": "member_count",
@@ -3200,7 +3376,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of active subscribers currently included in the segment"
+          "description": "The number of active subscribers currently included in the segment",
+          "semantic": false
         },
         {
           "name": "type",
@@ -3209,7 +3386,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of segment"
+          "description": "The type of segment",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -3218,7 +3396,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the segment was created"
+          "description": "The date and time the segment was created",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -3227,7 +3406,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the segment was last updated"
+          "description": "The date and time the segment was last updated",
+          "semantic": false
         },
         {
           "name": "options",
@@ -3236,7 +3416,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The conditions of the segment"
+          "description": "The conditions of the segment",
+          "semantic": false
         },
         {
           "name": "list_id",
@@ -3245,12 +3426,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The list id"
+          "description": "The list id",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "segment_members": {
       "entity": "segment_members",
+      "kind": "DATA",
       "data_type_name": "SegmentMembersSearchData",
       "filter_type_name": "SegmentMembersSearchFilter",
       "in_filter_type_name": "SegmentMembersInFilter",
@@ -3269,7 +3456,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The MD5 hash of the lowercase version of the list member's email address"
+          "description": "The MD5 hash of the lowercase version of the list member's email address",
+          "semantic": false
         },
         {
           "name": "email_address",
@@ -3278,7 +3466,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email address for a subscriber"
+          "description": "Email address for a subscriber",
+          "semantic": false
         },
         {
           "name": "unique_email_id",
@@ -3287,7 +3476,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "An identifier for the address across all of Mailchimp"
+          "description": "An identifier for the address across all of Mailchimp",
+          "semantic": false
         },
         {
           "name": "email_type",
@@ -3296,7 +3486,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of email this member asked to get"
+          "description": "Type of email this member asked to get",
+          "semantic": false
         },
         {
           "name": "status",
@@ -3305,7 +3496,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Subscriber's current status"
+          "description": "Subscriber's current status",
+          "semantic": false
         },
         {
           "name": "merge_fields",
@@ -3314,7 +3506,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "A dictionary of merge fields where the keys are the merge tags"
+          "description": "A dictionary of merge fields where the keys are the merge tags",
+          "semantic": false
         },
         {
           "name": "interests",
@@ -3323,7 +3516,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The key of this object's properties is the ID of the interest in question"
+          "description": "The key of this object's properties is the ID of the interest in question",
+          "semantic": false
         },
         {
           "name": "stats",
@@ -3332,7 +3526,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Open and click rates for this subscriber"
+          "description": "Open and click rates for this subscriber",
+          "semantic": false
         },
         {
           "name": "ip_signup",
@@ -3341,7 +3536,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "IP address the subscriber signed up from"
+          "description": "IP address the subscriber signed up from",
+          "semantic": false
         },
         {
           "name": "timestamp_signup",
@@ -3350,7 +3546,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the subscriber signed up for the list"
+          "description": "The date and time the subscriber signed up for the list",
+          "semantic": false
         },
         {
           "name": "ip_opt",
@@ -3359,7 +3556,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The IP address the subscriber used to confirm their opt-in status"
+          "description": "The IP address the subscriber used to confirm their opt-in status",
+          "semantic": false
         },
         {
           "name": "timestamp_opt",
@@ -3368,7 +3566,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the subscriber confirmed their opt-in status"
+          "description": "The date and time the subscriber confirmed their opt-in status",
+          "semantic": false
         },
         {
           "name": "member_rating",
@@ -3377,7 +3576,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Star rating for this member, between 1 and 5"
+          "description": "Star rating for this member, between 1 and 5",
+          "semantic": false
         },
         {
           "name": "last_changed",
@@ -3386,7 +3586,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the member's info was last changed"
+          "description": "The date and time the member's info was last changed",
+          "semantic": false
         },
         {
           "name": "language",
@@ -3395,7 +3596,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "If set/detected, the subscriber's language"
+          "description": "If set/detected, the subscriber's language",
+          "semantic": false
         },
         {
           "name": "vip",
@@ -3404,7 +3606,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "VIP status for subscriber"
+          "description": "VIP status for subscriber",
+          "semantic": false
         },
         {
           "name": "email_client",
@@ -3413,7 +3616,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The list member's email client"
+          "description": "The list member's email client",
+          "semantic": false
         },
         {
           "name": "location",
@@ -3422,7 +3626,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Subscriber location information"
+          "description": "Subscriber location information",
+          "semantic": false
         },
         {
           "name": "list_id",
@@ -3431,12 +3636,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The list id"
+          "description": "The list id",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "unsubscribes": {
       "entity": "unsubscribes",
+      "kind": "DATA",
       "data_type_name": "UnsubscribesSearchData",
       "filter_type_name": "UnsubscribesSearchFilter",
       "in_filter_type_name": "UnsubscribesInFilter",
@@ -3455,7 +3666,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The MD5 hash of the lowercase version of the list member's email address"
+          "description": "The MD5 hash of the lowercase version of the list member's email address",
+          "semantic": false
         },
         {
           "name": "email_address",
@@ -3464,7 +3676,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Email address for a subscriber"
+          "description": "Email address for a subscriber",
+          "semantic": false
         },
         {
           "name": "merge_fields",
@@ -3473,7 +3686,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "A dictionary of merge fields where the keys are the merge tags"
+          "description": "A dictionary of merge fields where the keys are the merge tags",
+          "semantic": false
         },
         {
           "name": "vip",
@@ -3482,7 +3696,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "VIP status for subscriber"
+          "description": "VIP status for subscriber",
+          "semantic": false
         },
         {
           "name": "timestamp",
@@ -3491,7 +3706,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the member opted-out"
+          "description": "The date and time the member opted-out",
+          "semantic": false
         },
         {
           "name": "reason",
@@ -3500,7 +3716,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "If available, the reason listed by the member for unsubscribing"
+          "description": "If available, the reason listed by the member for unsubscribing",
+          "semantic": false
         },
         {
           "name": "campaign_id",
@@ -3509,7 +3726,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The campaign id"
+          "description": "The campaign id",
+          "semantic": false
         },
         {
           "name": "list_id",
@@ -3518,7 +3736,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The list id"
+          "description": "The list id",
+          "semantic": false
         },
         {
           "name": "list_is_active",
@@ -3527,9 +3746,14 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "The status of the list used"
+          "description": "The status of the list used",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

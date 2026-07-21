@@ -1619,6 +1619,7 @@
   "search_schemas": {
     "accounts": {
       "entity": "accounts",
+      "kind": "DATA",
       "data_type_name": "AccountsSearchData",
       "filter_type_name": "AccountsSearchFilter",
       "in_filter_type_name": "AccountsInFilter",
@@ -1637,7 +1638,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier for the account"
+          "description": "The unique identifier for the account",
+          "semantic": false
         },
         {
           "name": "friendly_name",
@@ -1646,7 +1648,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A user-defined friendly name for the account"
+          "description": "A user-defined friendly name for the account",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1655,7 +1658,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The current status of the account"
+          "description": "The current status of the account",
+          "semantic": false
         },
         {
           "name": "type",
@@ -1664,7 +1668,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of the account"
+          "description": "The type of the account",
+          "semantic": false
         },
         {
           "name": "owner_account_sid",
@@ -1673,7 +1678,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The SID of the owner account"
+          "description": "The SID of the owner account",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -1682,7 +1688,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp when the account was created"
+          "description": "The timestamp when the account was created",
+          "semantic": false
         },
         {
           "name": "date_updated",
@@ -1691,7 +1698,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp when the account was last updated"
+          "description": "The timestamp when the account was last updated",
+          "semantic": false
         },
         {
           "name": "uri",
@@ -1700,12 +1708,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URI for accessing the account resource"
+          "description": "The URI for accessing the account resource",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "calls": {
       "entity": "calls",
+      "kind": "DATA",
       "data_type_name": "CallsSearchData",
       "filter_type_name": "CallsSearchFilter",
       "in_filter_type_name": "CallsInFilter",
@@ -1724,7 +1738,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier for the call"
+          "description": "The unique identifier for the call",
+          "semantic": false
         },
         {
           "name": "account_sid",
@@ -1733,7 +1748,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier for the account associated with the call"
+          "description": "The unique identifier for the account associated with the call",
+          "semantic": false
         },
         {
           "name": "to",
@@ -1742,7 +1758,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The phone number that received the call"
+          "description": "The phone number that received the call",
+          "semantic": false
         },
         {
           "name": "from",
@@ -1751,7 +1768,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The phone number that made the call"
+          "description": "The phone number that made the call",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1760,7 +1778,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The current status of the call"
+          "description": "The current status of the call",
+          "semantic": false
         },
         {
           "name": "direction",
@@ -1769,7 +1788,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The direction of the call (inbound or outbound)"
+          "description": "The direction of the call (inbound or outbound)",
+          "semantic": false
         },
         {
           "name": "duration",
@@ -1778,7 +1798,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The duration of the call in seconds"
+          "description": "The duration of the call in seconds",
+          "semantic": false
         },
         {
           "name": "price",
@@ -1787,7 +1808,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The cost of the call"
+          "description": "The cost of the call",
+          "semantic": false
         },
         {
           "name": "price_unit",
@@ -1796,7 +1818,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The currency unit of the call cost"
+          "description": "The currency unit of the call cost",
+          "semantic": false
         },
         {
           "name": "start_time",
@@ -1805,7 +1828,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time when the call started"
+          "description": "The date and time when the call started",
+          "semantic": false
         },
         {
           "name": "end_time",
@@ -1814,7 +1838,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time when the call ended"
+          "description": "The date and time when the call ended",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -1823,7 +1848,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time when the call record was created"
+          "description": "The date and time when the call record was created",
+          "semantic": false
         },
         {
           "name": "date_updated",
@@ -1832,12 +1858,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time when the call record was last updated"
+          "description": "The date and time when the call record was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "messages": {
       "entity": "messages",
+      "kind": "DATA",
       "data_type_name": "MessagesSearchData",
       "filter_type_name": "MessagesSearchFilter",
       "in_filter_type_name": "MessagesInFilter",
@@ -1856,7 +1888,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier for this message"
+          "description": "The unique identifier for this message",
+          "semantic": false
         },
         {
           "name": "account_sid",
@@ -1865,7 +1898,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier for the account associated with this message"
+          "description": "The unique identifier for the account associated with this message",
+          "semantic": false
         },
         {
           "name": "to",
@@ -1874,7 +1908,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The phone number or recipient ID the message was sent to"
+          "description": "The phone number or recipient ID the message was sent to",
+          "semantic": false
         },
         {
           "name": "from",
@@ -1883,7 +1918,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The phone number or sender ID that sent the message"
+          "description": "The phone number or sender ID that sent the message",
+          "semantic": false
         },
         {
           "name": "body",
@@ -1892,7 +1928,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The text body of the message"
+          "description": "The text body of the message",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1901,7 +1938,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The status of the message"
+          "description": "The status of the message",
+          "semantic": false
         },
         {
           "name": "direction",
@@ -1910,7 +1948,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The direction of the message"
+          "description": "The direction of the message",
+          "semantic": false
         },
         {
           "name": "price",
@@ -1919,7 +1958,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The cost of the message"
+          "description": "The cost of the message",
+          "semantic": false
         },
         {
           "name": "price_unit",
@@ -1928,7 +1968,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The currency unit used for pricing"
+          "description": "The currency unit used for pricing",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -1937,7 +1978,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time when the message was created"
+          "description": "The date and time when the message was created",
+          "semantic": false
         },
         {
           "name": "date_sent",
@@ -1946,7 +1988,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time when the message was sent"
+          "description": "The date and time when the message was sent",
+          "semantic": false
         },
         {
           "name": "error_code",
@@ -1955,7 +1998,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The error code associated with the message if any"
+          "description": "The error code associated with the message if any",
+          "semantic": false
         },
         {
           "name": "error_message",
@@ -1964,7 +2008,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The error message description if the message failed"
+          "description": "The error message description if the message failed",
+          "semantic": false
         },
         {
           "name": "num_segments",
@@ -1973,7 +2018,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The number of message segments"
+          "description": "The number of message segments",
+          "semantic": false
         },
         {
           "name": "num_media",
@@ -1982,12 +2028,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The number of media files included in the message"
+          "description": "The number of media files included in the message",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "incoming_phone_numbers": {
       "entity": "incoming_phone_numbers",
+      "kind": "DATA",
       "data_type_name": "IncomingPhoneNumbersSearchData",
       "filter_type_name": "IncomingPhoneNumbersSearchFilter",
       "in_filter_type_name": "IncomingPhoneNumbersInFilter",
@@ -2006,7 +2058,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The SID of this phone number"
+          "description": "The SID of this phone number",
+          "semantic": false
         },
         {
           "name": "account_sid",
@@ -2015,7 +2068,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The SID of the account that owns this phone number"
+          "description": "The SID of the account that owns this phone number",
+          "semantic": false
         },
         {
           "name": "phone_number",
@@ -2024,7 +2078,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The phone number in E.164 format"
+          "description": "The phone number in E.164 format",
+          "semantic": false
         },
         {
           "name": "friendly_name",
@@ -2033,7 +2088,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A user-assigned friendly name for this phone number"
+          "description": "A user-assigned friendly name for this phone number",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2042,7 +2098,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the phone number"
+          "description": "Status of the phone number",
+          "semantic": false
         },
         {
           "name": "capabilities",
@@ -2051,7 +2108,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Capabilities of this phone number"
+          "description": "Capabilities of this phone number",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -2060,7 +2118,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the phone number was created"
+          "description": "When the phone number was created",
+          "semantic": false
         },
         {
           "name": "date_updated",
@@ -2069,12 +2128,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the phone number was last updated"
+          "description": "When the phone number was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "recordings": {
       "entity": "recordings",
+      "kind": "DATA",
       "data_type_name": "RecordingsSearchData",
       "filter_type_name": "RecordingsSearchFilter",
       "in_filter_type_name": "RecordingsInFilter",
@@ -2093,7 +2158,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the recording"
+          "description": "The unique identifier of the recording",
+          "semantic": false
         },
         {
           "name": "account_sid",
@@ -2102,7 +2168,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The account SID that owns the recording"
+          "description": "The account SID that owns the recording",
+          "semantic": false
         },
         {
           "name": "call_sid",
@@ -2111,7 +2178,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The SID of the associated call"
+          "description": "The SID of the associated call",
+          "semantic": false
         },
         {
           "name": "duration",
@@ -2120,7 +2188,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Duration in seconds"
+          "description": "Duration in seconds",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2129,7 +2198,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The status of the recording"
+          "description": "The status of the recording",
+          "semantic": false
         },
         {
           "name": "channels",
@@ -2138,7 +2208,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of audio channels"
+          "description": "Number of audio channels",
+          "semantic": false
         },
         {
           "name": "price",
@@ -2147,7 +2218,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The cost of storing the recording"
+          "description": "The cost of storing the recording",
+          "semantic": false
         },
         {
           "name": "price_unit",
@@ -2156,7 +2228,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The currency unit"
+          "description": "The currency unit",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -2165,7 +2238,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the recording was created"
+          "description": "When the recording was created",
+          "semantic": false
         },
         {
           "name": "start_time",
@@ -2174,12 +2248,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the recording started"
+          "description": "When the recording started",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "conferences": {
       "entity": "conferences",
+      "kind": "DATA",
       "data_type_name": "ConferencesSearchData",
       "filter_type_name": "ConferencesSearchFilter",
       "in_filter_type_name": "ConferencesInFilter",
@@ -2198,7 +2278,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the conference"
+          "description": "The unique identifier of the conference",
+          "semantic": false
         },
         {
           "name": "account_sid",
@@ -2207,7 +2288,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The account SID associated with the conference"
+          "description": "The account SID associated with the conference",
+          "semantic": false
         },
         {
           "name": "friendly_name",
@@ -2216,7 +2298,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A friendly name for the conference"
+          "description": "A friendly name for the conference",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2225,7 +2308,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The current status of the conference"
+          "description": "The current status of the conference",
+          "semantic": false
         },
         {
           "name": "region",
@@ -2234,7 +2318,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The region where the conference is hosted"
+          "description": "The region where the conference is hosted",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -2243,7 +2328,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the conference was created"
+          "description": "When the conference was created",
+          "semantic": false
         },
         {
           "name": "date_updated",
@@ -2252,12 +2338,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the conference was last updated"
+          "description": "When the conference was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "usage_records": {
       "entity": "usage_records",
+      "kind": "DATA",
       "data_type_name": "UsageRecordsSearchData",
       "filter_type_name": "UsageRecordsSearchFilter",
       "in_filter_type_name": "UsageRecordsInFilter",
@@ -2276,7 +2368,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The account SID associated with this usage record"
+          "description": "The account SID associated with this usage record",
+          "semantic": false
         },
         {
           "name": "category",
@@ -2285,7 +2378,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The usage category (calls, SMS, recordings, etc.)"
+          "description": "The usage category (calls, SMS, recordings, etc.)",
+          "semantic": false
         },
         {
           "name": "description",
@@ -2294,7 +2388,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A description of the usage record"
+          "description": "A description of the usage record",
+          "semantic": false
         },
         {
           "name": "usage",
@@ -2303,7 +2398,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The total usage value"
+          "description": "The total usage value",
+          "semantic": false
         },
         {
           "name": "usage_unit",
@@ -2312,7 +2408,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unit of measurement for usage"
+          "description": "The unit of measurement for usage",
+          "semantic": false
         },
         {
           "name": "count",
@@ -2321,7 +2418,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The number of units consumed"
+          "description": "The number of units consumed",
+          "semantic": false
         },
         {
           "name": "count_unit",
@@ -2330,7 +2428,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unit of measurement for count"
+          "description": "The unit of measurement for count",
+          "semantic": false
         },
         {
           "name": "price",
@@ -2339,7 +2438,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The total price for consumed units"
+          "description": "The total price for consumed units",
+          "semantic": false
         },
         {
           "name": "price_unit",
@@ -2348,7 +2448,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The currency unit"
+          "description": "The currency unit",
+          "semantic": false
         },
         {
           "name": "start_date",
@@ -2357,7 +2458,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The start date of the usage period"
+          "description": "The start date of the usage period",
+          "semantic": false
         },
         {
           "name": "end_date",
@@ -2366,12 +2468,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The end date of the usage period"
+          "description": "The end date of the usage period",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "addresses": {
       "entity": "addresses",
+      "kind": "DATA",
       "data_type_name": "AddressesSearchData",
       "filter_type_name": "AddressesSearchFilter",
       "in_filter_type_name": "AddressesInFilter",
@@ -2390,7 +2498,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the address"
+          "description": "The unique identifier of the address",
+          "semantic": false
         },
         {
           "name": "account_sid",
@@ -2399,7 +2508,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The account SID associated with this address"
+          "description": "The account SID associated with this address",
+          "semantic": false
         },
         {
           "name": "customer_name",
@@ -2408,7 +2518,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The customer name associated with this address"
+          "description": "The customer name associated with this address",
+          "semantic": false
         },
         {
           "name": "friendly_name",
@@ -2417,7 +2528,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A friendly name for the address"
+          "description": "A friendly name for the address",
+          "semantic": false
         },
         {
           "name": "street",
@@ -2426,7 +2538,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The street address"
+          "description": "The street address",
+          "semantic": false
         },
         {
           "name": "city",
@@ -2435,7 +2548,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The city of the address"
+          "description": "The city of the address",
+          "semantic": false
         },
         {
           "name": "region",
@@ -2444,7 +2558,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The region or state"
+          "description": "The region or state",
+          "semantic": false
         },
         {
           "name": "postal_code",
@@ -2453,7 +2568,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The postal code"
+          "description": "The postal code",
+          "semantic": false
         },
         {
           "name": "iso_country",
@@ -2462,7 +2578,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ISO 3166-1 alpha-2 country code"
+          "description": "The ISO 3166-1 alpha-2 country code",
+          "semantic": false
         },
         {
           "name": "validated",
@@ -2471,7 +2588,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the address has been validated"
+          "description": "Whether the address has been validated",
+          "semantic": false
         },
         {
           "name": "verified",
@@ -2480,12 +2598,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the address has been verified"
+          "description": "Whether the address has been verified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "queues": {
       "entity": "queues",
+      "kind": "DATA",
       "data_type_name": "QueuesSearchData",
       "filter_type_name": "QueuesSearchFilter",
       "in_filter_type_name": "QueuesInFilter",
@@ -2504,7 +2628,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier for the queue"
+          "description": "The unique identifier for the queue",
+          "semantic": false
         },
         {
           "name": "account_sid",
@@ -2513,7 +2638,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The account SID that owns this queue"
+          "description": "The account SID that owns this queue",
+          "semantic": false
         },
         {
           "name": "friendly_name",
@@ -2522,7 +2648,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A friendly name for the queue"
+          "description": "A friendly name for the queue",
+          "semantic": false
         },
         {
           "name": "current_size",
@@ -2531,7 +2658,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Current number of callers waiting"
+          "description": "Current number of callers waiting",
+          "semantic": false
         },
         {
           "name": "max_size",
@@ -2540,7 +2668,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Maximum number of callers allowed"
+          "description": "Maximum number of callers allowed",
+          "semantic": false
         },
         {
           "name": "average_wait_time",
@@ -2549,7 +2678,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Average wait time in seconds"
+          "description": "Average wait time in seconds",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -2558,7 +2688,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the queue was created"
+          "description": "When the queue was created",
+          "semantic": false
         },
         {
           "name": "date_updated",
@@ -2567,12 +2698,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the queue was last updated"
+          "description": "When the queue was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "transcriptions": {
       "entity": "transcriptions",
+      "kind": "DATA",
       "data_type_name": "TranscriptionsSearchData",
       "filter_type_name": "TranscriptionsSearchFilter",
       "in_filter_type_name": "TranscriptionsInFilter",
@@ -2591,7 +2728,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier for the transcription"
+          "description": "The unique identifier for the transcription",
+          "semantic": false
         },
         {
           "name": "account_sid",
@@ -2600,7 +2738,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The account SID"
+          "description": "The account SID",
+          "semantic": false
         },
         {
           "name": "recording_sid",
@@ -2609,7 +2748,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The SID of the associated recording"
+          "description": "The SID of the associated recording",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2618,7 +2758,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The status of the transcription"
+          "description": "The status of the transcription",
+          "semantic": false
         },
         {
           "name": "duration",
@@ -2627,7 +2768,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Duration of the audio recording in seconds"
+          "description": "Duration of the audio recording in seconds",
+          "semantic": false
         },
         {
           "name": "price",
@@ -2636,7 +2778,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The cost of the transcription"
+          "description": "The cost of the transcription",
+          "semantic": false
         },
         {
           "name": "price_unit",
@@ -2645,7 +2788,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The currency unit"
+          "description": "The currency unit",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -2654,7 +2798,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the transcription was created"
+          "description": "When the transcription was created",
+          "semantic": false
         },
         {
           "name": "date_updated",
@@ -2663,12 +2808,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the transcription was last updated"
+          "description": "When the transcription was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "outgoing_caller_ids": {
       "entity": "outgoing_caller_ids",
+      "kind": "DATA",
       "data_type_name": "OutgoingCallerIdsSearchData",
       "filter_type_name": "OutgoingCallerIdsSearchFilter",
       "in_filter_type_name": "OutgoingCallerIdsInFilter",
@@ -2687,7 +2838,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier"
+          "description": "The unique identifier",
+          "semantic": false
         },
         {
           "name": "account_sid",
@@ -2696,7 +2848,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The account SID"
+          "description": "The account SID",
+          "semantic": false
         },
         {
           "name": "phone_number",
@@ -2705,7 +2858,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The phone number"
+          "description": "The phone number",
+          "semantic": false
         },
         {
           "name": "friendly_name",
@@ -2714,7 +2868,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A friendly name"
+          "description": "A friendly name",
+          "semantic": false
         },
         {
           "name": "date_created",
@@ -2723,7 +2878,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the outgoing caller ID was created"
+          "description": "When the outgoing caller ID was created",
+          "semantic": false
         },
         {
           "name": "date_updated",
@@ -2732,9 +2888,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the outgoing caller ID was last updated"
+          "description": "When the outgoing caller ID was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

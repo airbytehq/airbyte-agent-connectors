@@ -3985,6 +3985,7 @@
   "search_schemas": {
     "pages": {
       "entity": "pages",
+      "kind": "DATA",
       "data_type_name": "PagesSearchData",
       "filter_type_name": "PagesSearchFilter",
       "in_filter_type_name": "PagesInFilter",
@@ -4003,7 +4004,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the page is archived or not."
+          "description": "Indicates whether the page is archived or not.",
+          "semantic": false
         },
         {
           "name": "cover",
@@ -4012,7 +4014,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "URL or reference to the page cover image."
+          "description": "URL or reference to the page cover image.",
+          "semantic": false
         },
         {
           "name": "created_by",
@@ -4021,7 +4024,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "User ID or name of the creator of the page."
+          "description": "User ID or name of the creator of the page.",
+          "semantic": false
         },
         {
           "name": "created_time",
@@ -4030,7 +4034,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the page was created."
+          "description": "Date and time when the page was created.",
+          "semantic": false
         },
         {
           "name": "icon",
@@ -4039,7 +4044,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "URL or reference to the page icon."
+          "description": "URL or reference to the page icon.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4048,7 +4054,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier of the page."
+          "description": "Unique identifier of the page.",
+          "semantic": false
         },
         {
           "name": "in_trash",
@@ -4057,7 +4064,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the page is in trash or not."
+          "description": "Indicates whether the page is in trash or not.",
+          "semantic": false
         },
         {
           "name": "last_edited_by",
@@ -4066,7 +4074,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "User ID or name of the last editor of the page."
+          "description": "User ID or name of the last editor of the page.",
+          "semantic": false
         },
         {
           "name": "last_edited_time",
@@ -4075,7 +4084,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the page was last edited."
+          "description": "Date and time when the page was last edited.",
+          "semantic": false
         },
         {
           "name": "object",
@@ -4084,7 +4094,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Type or category of the page object."
+          "description": "Type or category of the page object.",
+          "semantic": false
         },
         {
           "name": "parent",
@@ -4093,7 +4104,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "ID or reference to the parent page."
+          "description": "ID or reference to the parent page.",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -4102,7 +4114,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Custom properties associated with the page."
+          "description": "Custom properties associated with the page.",
+          "semantic": false
         },
         {
           "name": "public_url",
@@ -4111,7 +4124,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Publicly accessible URL of the page."
+          "description": "Publicly accessible URL of the page.",
+          "semantic": false
         },
         {
           "name": "url",
@@ -4120,12 +4134,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL of the page within the service."
+          "description": "URL of the page within the service.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "users": {
       "entity": "users",
+      "kind": "DATA",
       "data_type_name": "UsersSearchData",
       "filter_type_name": "UsersSearchFilter",
       "in_filter_type_name": "UsersInFilter",
@@ -4144,7 +4164,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL of the user's avatar"
+          "description": "URL of the user's avatar",
+          "semantic": false
         },
         {
           "name": "bot",
@@ -4153,7 +4174,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Bot-specific data"
+          "description": "Bot-specific data",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4162,7 +4184,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the user"
+          "description": "Unique identifier for the user",
+          "semantic": false
         },
         {
           "name": "name",
@@ -4171,7 +4194,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User's display name"
+          "description": "User's display name",
+          "semantic": false
         },
         {
           "name": "object",
@@ -4180,7 +4204,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Always user"
+          "description": "Always user",
+          "semantic": false
         },
         {
           "name": "person",
@@ -4189,7 +4214,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Person-specific data"
+          "description": "Person-specific data",
+          "semantic": false
         },
         {
           "name": "type",
@@ -4198,12 +4224,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Type of user (person or bot)"
+          "description": "Type of user (person or bot)",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "data_sources": {
       "entity": "data_sources",
+      "kind": "DATA",
       "data_type_name": "DataSourcesSearchData",
       "filter_type_name": "DataSourcesSearchFilter",
       "in_filter_type_name": "DataSourcesInFilter",
@@ -4222,7 +4254,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the data source is archived or not."
+          "description": "Indicates if the data source is archived or not.",
+          "semantic": false
         },
         {
           "name": "cover",
@@ -4231,7 +4264,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "URL or reference to the cover image of the data source."
+          "description": "URL or reference to the cover image of the data source.",
+          "semantic": false
         },
         {
           "name": "created_by",
@@ -4240,7 +4274,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The user who created the data source."
+          "description": "The user who created the data source.",
+          "semantic": false
         },
         {
           "name": "created_time",
@@ -4249,7 +4284,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp when the data source was created."
+          "description": "The timestamp when the data source was created.",
+          "semantic": false
         },
         {
           "name": "database_parent",
@@ -4258,7 +4294,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The grandparent of the data source (parent of the database)."
+          "description": "The grandparent of the data source (parent of the database).",
+          "semantic": false
         },
         {
           "name": "description",
@@ -4267,7 +4304,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Description text associated with the data source."
+          "description": "Description text associated with the data source.",
+          "semantic": false
         },
         {
           "name": "icon",
@@ -4276,7 +4314,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "URL or reference to the icon of the data source."
+          "description": "URL or reference to the icon of the data source.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4285,7 +4324,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier of the data source."
+          "description": "Unique identifier of the data source.",
+          "semantic": false
         },
         {
           "name": "is_inline",
@@ -4294,7 +4334,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the data source is displayed inline."
+          "description": "Indicates if the data source is displayed inline.",
+          "semantic": false
         },
         {
           "name": "last_edited_by",
@@ -4303,7 +4344,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The user who last edited the data source."
+          "description": "The user who last edited the data source.",
+          "semantic": false
         },
         {
           "name": "last_edited_time",
@@ -4312,7 +4354,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp when the data source was last edited."
+          "description": "The timestamp when the data source was last edited.",
+          "semantic": false
         },
         {
           "name": "object",
@@ -4321,7 +4364,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The type of object (data_source)."
+          "description": "The type of object (data_source).",
+          "semantic": false
         },
         {
           "name": "parent",
@@ -4330,7 +4374,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The parent database of the data source."
+          "description": "The parent database of the data source.",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -4339,7 +4384,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Schema of properties for the data source."
+          "description": "Schema of properties for the data source.",
+          "semantic": false
         },
         {
           "name": "public_url",
@@ -4348,7 +4394,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Public URL to access the data source."
+          "description": "Public URL to access the data source.",
+          "semantic": false
         },
         {
           "name": "title",
@@ -4357,7 +4404,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Title or name of the data source."
+          "description": "Title or name of the data source.",
+          "semantic": false
         },
         {
           "name": "url",
@@ -4366,12 +4414,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL or reference to access the data source."
+          "description": "URL or reference to access the data source.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "blocks": {
       "entity": "blocks",
+      "kind": "DATA",
       "data_type_name": "BlocksSearchData",
       "filter_type_name": "BlocksSearchFilter",
       "in_filter_type_name": "BlocksInFilter",
@@ -4390,7 +4444,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the block is archived or not."
+          "description": "Indicates if the block is archived or not.",
+          "semantic": false
         },
         {
           "name": "bookmark",
@@ -4399,7 +4454,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a bookmark within the block"
+          "description": "Represents a bookmark within the block",
+          "semantic": false
         },
         {
           "name": "breadcrumb",
@@ -4408,7 +4464,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a breadcrumb block."
+          "description": "Represents a breadcrumb block.",
+          "semantic": false
         },
         {
           "name": "bulleted_list_item",
@@ -4417,7 +4474,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents an item in a bulleted list."
+          "description": "Represents an item in a bulleted list.",
+          "semantic": false
         },
         {
           "name": "callout",
@@ -4426,7 +4484,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Describes a callout message or content in the block"
+          "description": "Describes a callout message or content in the block",
+          "semantic": false
         },
         {
           "name": "child_database",
@@ -4435,7 +4494,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a child database block."
+          "description": "Represents a child database block.",
+          "semantic": false
         },
         {
           "name": "child_page",
@@ -4444,7 +4504,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a child page block."
+          "description": "Represents a child page block.",
+          "semantic": false
         },
         {
           "name": "code",
@@ -4453,7 +4514,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Contains code snippets or blocks in the block content"
+          "description": "Contains code snippets or blocks in the block content",
+          "semantic": false
         },
         {
           "name": "column",
@@ -4462,7 +4524,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a column block."
+          "description": "Represents a column block.",
+          "semantic": false
         },
         {
           "name": "column_list",
@@ -4471,7 +4534,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a list of columns."
+          "description": "Represents a list of columns.",
+          "semantic": false
         },
         {
           "name": "created_by",
@@ -4480,7 +4544,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The user who created the block."
+          "description": "The user who created the block.",
+          "semantic": false
         },
         {
           "name": "created_time",
@@ -4489,7 +4554,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp when the block was created."
+          "description": "The timestamp when the block was created.",
+          "semantic": false
         },
         {
           "name": "divider",
@@ -4498,7 +4564,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a divider block."
+          "description": "Represents a divider block.",
+          "semantic": false
         },
         {
           "name": "embed",
@@ -4507,7 +4574,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Contains embedded content such as videos, tweets, etc."
+          "description": "Contains embedded content such as videos, tweets, etc.",
+          "semantic": false
         },
         {
           "name": "equation",
@@ -4516,7 +4584,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents an equation or mathematical formula in the block"
+          "description": "Represents an equation or mathematical formula in the block",
+          "semantic": false
         },
         {
           "name": "file",
@@ -4525,7 +4594,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a file block."
+          "description": "Represents a file block.",
+          "semantic": false
         },
         {
           "name": "has_children",
@@ -4534,7 +4604,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the block has children or not."
+          "description": "Indicates if the block has children or not.",
+          "semantic": false
         },
         {
           "name": "heading_1",
@@ -4543,7 +4614,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a level 1 heading."
+          "description": "Represents a level 1 heading.",
+          "semantic": false
         },
         {
           "name": "heading_2",
@@ -4552,7 +4624,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a level 2 heading."
+          "description": "Represents a level 2 heading.",
+          "semantic": false
         },
         {
           "name": "heading_3",
@@ -4561,7 +4634,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a level 3 heading."
+          "description": "Represents a level 3 heading.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4570,7 +4644,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the block."
+          "description": "The unique identifier of the block.",
+          "semantic": false
         },
         {
           "name": "image",
@@ -4579,7 +4654,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents an image block."
+          "description": "Represents an image block.",
+          "semantic": false
         },
         {
           "name": "last_edited_by",
@@ -4588,7 +4664,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The user who last edited the block."
+          "description": "The user who last edited the block.",
+          "semantic": false
         },
         {
           "name": "last_edited_time",
@@ -4597,7 +4674,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp when the block was last edited."
+          "description": "The timestamp when the block was last edited.",
+          "semantic": false
         },
         {
           "name": "link_preview",
@@ -4606,7 +4684,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Displays a preview of an external link within the block"
+          "description": "Displays a preview of an external link within the block",
+          "semantic": false
         },
         {
           "name": "link_to_page",
@@ -4615,7 +4694,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Provides a link to another page within the block"
+          "description": "Provides a link to another page within the block",
+          "semantic": false
         },
         {
           "name": "numbered_list_item",
@@ -4624,7 +4704,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents an item in a numbered list."
+          "description": "Represents an item in a numbered list.",
+          "semantic": false
         },
         {
           "name": "object",
@@ -4633,7 +4714,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents an object block."
+          "description": "Represents an object block.",
+          "semantic": false
         },
         {
           "name": "paragraph",
@@ -4642,7 +4724,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a paragraph block."
+          "description": "Represents a paragraph block.",
+          "semantic": false
         },
         {
           "name": "parent",
@@ -4651,7 +4734,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The parent block of the current block."
+          "description": "The parent block of the current block.",
+          "semantic": false
         },
         {
           "name": "pdf",
@@ -4660,7 +4744,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a PDF document block."
+          "description": "Represents a PDF document block.",
+          "semantic": false
         },
         {
           "name": "quote",
@@ -4669,7 +4754,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a quote block."
+          "description": "Represents a quote block.",
+          "semantic": false
         },
         {
           "name": "synced_block",
@@ -4678,7 +4764,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a block synced from another source"
+          "description": "Represents a block synced from another source",
+          "semantic": false
         },
         {
           "name": "table",
@@ -4687,7 +4774,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a table within the block"
+          "description": "Represents a table within the block",
+          "semantic": false
         },
         {
           "name": "table_of_contents",
@@ -4696,7 +4784,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Contains information regarding the table of contents"
+          "description": "Contains information regarding the table of contents",
+          "semantic": false
         },
         {
           "name": "table_row",
@@ -4705,7 +4794,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a row in a table within the block"
+          "description": "Represents a row in a table within the block",
+          "semantic": false
         },
         {
           "name": "template",
@@ -4714,7 +4804,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Specifies a template used within the block"
+          "description": "Specifies a template used within the block",
+          "semantic": false
         },
         {
           "name": "to_do",
@@ -4723,7 +4814,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a to-do list or task content"
+          "description": "Represents a to-do list or task content",
+          "semantic": false
         },
         {
           "name": "toggle",
@@ -4732,7 +4824,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a toggle block."
+          "description": "Represents a toggle block.",
+          "semantic": false
         },
         {
           "name": "type",
@@ -4741,7 +4834,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The type of the block."
+          "description": "The type of the block.",
+          "semantic": false
         },
         {
           "name": "unsupported",
@@ -4750,7 +4844,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents an unsupported block."
+          "description": "Represents an unsupported block.",
+          "semantic": false
         },
         {
           "name": "video",
@@ -4759,12 +4854,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Represents a video block."
+          "description": "Represents a video block.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "comments": {
       "entity": "comments",
+      "kind": "DATA",
       "data_type_name": "CommentsSearchData",
       "filter_type_name": "CommentsSearchFilter",
       "in_filter_type_name": "CommentsInFilter",
@@ -4783,7 +4884,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "User who created the comment."
+          "description": "User who created the comment.",
+          "semantic": false
         },
         {
           "name": "created_time",
@@ -4792,7 +4894,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the comment was created."
+          "description": "Date and time when the comment was created.",
+          "semantic": false
         },
         {
           "name": "discussion_id",
@@ -4801,7 +4904,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Discussion thread ID."
+          "description": "Discussion thread ID.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4810,7 +4914,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the comment."
+          "description": "Unique identifier for the comment.",
+          "semantic": false
         },
         {
           "name": "last_edited_time",
@@ -4819,7 +4924,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the comment was last edited."
+          "description": "Date and time when the comment was last edited.",
+          "semantic": false
         },
         {
           "name": "object",
@@ -4828,7 +4934,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Always comment."
+          "description": "Always comment.",
+          "semantic": false
         },
         {
           "name": "parent",
@@ -4837,7 +4944,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Parent of the comment."
+          "description": "Parent of the comment.",
+          "semantic": false
         },
         {
           "name": "rich_text",
@@ -4846,9 +4954,14 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Content of the comment as rich text."
+          "description": "Content of the comment as rich text.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

@@ -1607,6 +1607,7 @@
   "search_schemas": {
     "channels": {
       "entity": "channels",
+      "kind": "DATA",
       "data_type_name": "ChannelsSearchData",
       "filter_type_name": "ChannelsSearchFilter",
       "in_filter_type_name": "ChannelsInFilter",
@@ -1625,7 +1626,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the team context in which the channel exists."
+          "description": "The unique identifier of the team context in which the channel exists.",
+          "semantic": false
         },
         {
           "name": "created",
@@ -1634,7 +1636,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The timestamp when the channel was created."
+          "description": "The timestamp when the channel was created.",
+          "semantic": false
         },
         {
           "name": "creator",
@@ -1643,7 +1646,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID of the user who created the channel."
+          "description": "The ID of the user who created the channel.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1652,7 +1656,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the channel."
+          "description": "The unique identifier of the channel.",
+          "semantic": false
         },
         {
           "name": "is_archived",
@@ -1661,7 +1666,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the channel is archived."
+          "description": "Indicates if the channel is archived.",
+          "semantic": false
         },
         {
           "name": "is_channel",
@@ -1670,7 +1676,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the entity is a channel."
+          "description": "Indicates if the entity is a channel.",
+          "semantic": false
         },
         {
           "name": "is_ext_shared",
@@ -1679,7 +1686,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the channel is externally shared."
+          "description": "Indicates if the channel is externally shared.",
+          "semantic": false
         },
         {
           "name": "is_general",
@@ -1688,7 +1696,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the channel is a general channel in the workspace."
+          "description": "Indicates if the channel is a general channel in the workspace.",
+          "semantic": false
         },
         {
           "name": "is_group",
@@ -1697,7 +1706,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the channel is a group (private channel) rather than a regular channel."
+          "description": "Indicates if the channel is a group (private channel) rather than a regular channel.",
+          "semantic": false
         },
         {
           "name": "is_im",
@@ -1706,7 +1716,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the entity is a direct message (IM) channel."
+          "description": "Indicates if the entity is a direct message (IM) channel.",
+          "semantic": false
         },
         {
           "name": "is_member",
@@ -1715,7 +1726,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the calling user is a member of the channel."
+          "description": "Indicates if the calling user is a member of the channel.",
+          "semantic": false
         },
         {
           "name": "is_mpim",
@@ -1724,7 +1736,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the entity is a multiple person direct message (MPIM) channel."
+          "description": "Indicates if the entity is a multiple person direct message (MPIM) channel.",
+          "semantic": false
         },
         {
           "name": "is_org_shared",
@@ -1733,7 +1746,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the channel is organization-wide shared."
+          "description": "Indicates if the channel is organization-wide shared.",
+          "semantic": false
         },
         {
           "name": "is_pending_ext_shared",
@@ -1742,7 +1756,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the channel is pending external shared."
+          "description": "Indicates if the channel is pending external shared.",
+          "semantic": false
         },
         {
           "name": "is_private",
@@ -1751,7 +1766,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the channel is a private channel."
+          "description": "Indicates if the channel is a private channel.",
+          "semantic": false
         },
         {
           "name": "is_read_only",
@@ -1760,7 +1776,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the channel is read-only."
+          "description": "Indicates if the channel is read-only.",
+          "semantic": false
         },
         {
           "name": "is_shared",
@@ -1769,7 +1786,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the channel is shared."
+          "description": "Indicates if the channel is shared.",
+          "semantic": false
         },
         {
           "name": "last_read",
@@ -1778,7 +1796,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp of the user's last read message in the channel."
+          "description": "The timestamp of the user's last read message in the channel.",
+          "semantic": false
         },
         {
           "name": "locale",
@@ -1787,7 +1806,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The locale of the channel."
+          "description": "The locale of the channel.",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1796,7 +1816,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the channel."
+          "description": "The name of the channel.",
+          "semantic": false
         },
         {
           "name": "name_normalized",
@@ -1805,7 +1826,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The normalized name of the channel."
+          "description": "The normalized name of the channel.",
+          "semantic": false
         },
         {
           "name": "num_members",
@@ -1814,7 +1836,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of members in the channel."
+          "description": "The number of members in the channel.",
+          "semantic": false
         },
         {
           "name": "parent_conversation",
@@ -1823,7 +1846,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The parent conversation of the channel."
+          "description": "The parent conversation of the channel.",
+          "semantic": false
         },
         {
           "name": "pending_connected_team_ids",
@@ -1832,7 +1856,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "The IDs of teams that are pending to be connected to the channel."
+          "description": "The IDs of teams that are pending to be connected to the channel.",
+          "semantic": false
         },
         {
           "name": "pending_shared",
@@ -1841,7 +1866,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "The list of pending shared items of the channel."
+          "description": "The list of pending shared items of the channel.",
+          "semantic": false
         },
         {
           "name": "previous_names",
@@ -1850,7 +1876,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "The previous names of the channel."
+          "description": "The previous names of the channel.",
+          "semantic": false
         },
         {
           "name": "purpose",
@@ -1859,7 +1886,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The purpose of the channel."
+          "description": "The purpose of the channel.",
+          "semantic": false
         },
         {
           "name": "shared_team_ids",
@@ -1868,7 +1896,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "The IDs of teams with which the channel is shared."
+          "description": "The IDs of teams with which the channel is shared.",
+          "semantic": false
         },
         {
           "name": "topic",
@@ -1877,7 +1906,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The topic of the channel."
+          "description": "The topic of the channel.",
+          "semantic": false
         },
         {
           "name": "unlinked",
@@ -1886,7 +1916,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Indicates if the channel is unlinked."
+          "description": "Indicates if the channel is unlinked.",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -1895,12 +1926,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The timestamp when the channel was last updated."
+          "description": "The timestamp when the channel was last updated.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "channel_messages": {
       "entity": "channel_messages",
+      "kind": "DATA",
       "data_type_name": "ChannelMessagesSearchData",
       "filter_type_name": "ChannelMessagesSearchFilter",
       "in_filter_type_name": "ChannelMessagesInFilter",
@@ -1919,7 +1956,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Message type."
+          "description": "Message type.",
+          "semantic": false
         },
         {
           "name": "subtype",
@@ -1928,7 +1966,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Message subtype."
+          "description": "Message subtype.",
+          "semantic": false
         },
         {
           "name": "ts",
@@ -1937,7 +1976,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Message timestamp (unique identifier)."
+          "description": "Message timestamp (unique identifier).",
+          "semantic": false
         },
         {
           "name": "user",
@@ -1946,7 +1986,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User ID who sent the message."
+          "description": "User ID who sent the message.",
+          "semantic": false
         },
         {
           "name": "text",
@@ -1955,7 +1996,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Message text content."
+          "description": "Message text content.",
+          "semantic": false
         },
         {
           "name": "thread_ts",
@@ -1964,7 +2006,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Thread parent timestamp."
+          "description": "Thread parent timestamp.",
+          "semantic": false
         },
         {
           "name": "reply_count",
@@ -1973,7 +2016,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of replies in thread."
+          "description": "Number of replies in thread.",
+          "semantic": false
         },
         {
           "name": "reply_users_count",
@@ -1982,7 +2026,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of unique users who replied."
+          "description": "Number of unique users who replied.",
+          "semantic": false
         },
         {
           "name": "latest_reply",
@@ -1991,7 +2036,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp of latest reply."
+          "description": "Timestamp of latest reply.",
+          "semantic": false
         },
         {
           "name": "reply_users",
@@ -2000,7 +2046,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "User IDs who replied to the thread."
+          "description": "User IDs who replied to the thread.",
+          "semantic": false
         },
         {
           "name": "is_locked",
@@ -2009,7 +2056,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the thread is locked."
+          "description": "Whether the thread is locked.",
+          "semantic": false
         },
         {
           "name": "subscribed",
@@ -2018,7 +2066,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the user is subscribed to the thread."
+          "description": "Whether the user is subscribed to the thread.",
+          "semantic": false
         },
         {
           "name": "reactions",
@@ -2027,7 +2076,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Reactions to the message."
+          "description": "Reactions to the message.",
+          "semantic": false
         },
         {
           "name": "attachments",
@@ -2036,7 +2086,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Message attachments."
+          "description": "Message attachments.",
+          "semantic": false
         },
         {
           "name": "blocks",
@@ -2045,7 +2096,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Block kit blocks."
+          "description": "Block kit blocks.",
+          "semantic": false
         },
         {
           "name": "bot_id",
@@ -2054,7 +2106,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Bot ID if message was sent by a bot."
+          "description": "Bot ID if message was sent by a bot.",
+          "semantic": false
         },
         {
           "name": "bot_profile",
@@ -2063,7 +2116,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Bot profile information."
+          "description": "Bot profile information.",
+          "semantic": false
         },
         {
           "name": "team",
@@ -2072,12 +2126,21 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Team ID."
+          "description": "Team ID.",
+          "semantic": false
         }
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": [
+        "authorName",
+        "authorDisplayName"
       ]
     },
     "threads": {
       "entity": "threads",
+      "kind": "DATA",
       "data_type_name": "ThreadsSearchData",
       "filter_type_name": "ThreadsSearchFilter",
       "in_filter_type_name": "ThreadsInFilter",
@@ -2096,7 +2159,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Message type."
+          "description": "Message type.",
+          "semantic": false
         },
         {
           "name": "subtype",
@@ -2105,7 +2169,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Message subtype."
+          "description": "Message subtype.",
+          "semantic": false
         },
         {
           "name": "ts",
@@ -2114,7 +2179,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Message timestamp (unique identifier)."
+          "description": "Message timestamp (unique identifier).",
+          "semantic": false
         },
         {
           "name": "user",
@@ -2123,7 +2189,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User ID who sent the message."
+          "description": "User ID who sent the message.",
+          "semantic": false
         },
         {
           "name": "text",
@@ -2132,7 +2199,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Message text content."
+          "description": "Message text content.",
+          "semantic": false
         },
         {
           "name": "thread_ts",
@@ -2141,7 +2209,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Thread parent timestamp."
+          "description": "Thread parent timestamp.",
+          "semantic": false
         },
         {
           "name": "parent_user_id",
@@ -2150,7 +2219,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User ID of the parent message author (present in thread replies)."
+          "description": "User ID of the parent message author (present in thread replies).",
+          "semantic": false
         },
         {
           "name": "reply_count",
@@ -2159,7 +2229,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of replies in thread."
+          "description": "Number of replies in thread.",
+          "semantic": false
         },
         {
           "name": "reply_users_count",
@@ -2168,7 +2239,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Number of unique users who replied."
+          "description": "Number of unique users who replied.",
+          "semantic": false
         },
         {
           "name": "latest_reply",
@@ -2177,7 +2249,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp of latest reply."
+          "description": "Timestamp of latest reply.",
+          "semantic": false
         },
         {
           "name": "reply_users",
@@ -2186,7 +2259,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "User IDs who replied to the thread."
+          "description": "User IDs who replied to the thread.",
+          "semantic": false
         },
         {
           "name": "is_locked",
@@ -2195,7 +2269,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the thread is locked."
+          "description": "Whether the thread is locked.",
+          "semantic": false
         },
         {
           "name": "subscribed",
@@ -2204,7 +2279,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the user is subscribed to the thread."
+          "description": "Whether the user is subscribed to the thread.",
+          "semantic": false
         },
         {
           "name": "blocks",
@@ -2213,7 +2289,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Block kit blocks."
+          "description": "Block kit blocks.",
+          "semantic": false
         },
         {
           "name": "bot_id",
@@ -2222,7 +2299,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Bot ID if message was sent by a bot."
+          "description": "Bot ID if message was sent by a bot.",
+          "semantic": false
         },
         {
           "name": "team",
@@ -2231,12 +2309,21 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Team ID."
+          "description": "Team ID.",
+          "semantic": false
         }
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": [
+        "authorName",
+        "authorDisplayName"
       ]
     },
     "users": {
       "entity": "users",
+      "kind": "DATA",
       "data_type_name": "UsersSearchData",
       "filter_type_name": "UsersSearchFilter",
       "in_filter_type_name": "UsersInFilter",
@@ -2255,7 +2342,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The color assigned to the user for visual purposes."
+          "description": "The color assigned to the user for visual purposes.",
+          "semantic": false
         },
         {
           "name": "deleted",
@@ -2264,7 +2352,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the user is deleted or not."
+          "description": "Indicates if the user is deleted or not.",
+          "semantic": false
         },
         {
           "name": "has_2fa",
@@ -2273,7 +2362,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the user has two-factor authentication enabled."
+          "description": "Flag indicating if the user has two-factor authentication enabled.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2282,7 +2372,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the user."
+          "description": "Unique identifier for the user.",
+          "semantic": false
         },
         {
           "name": "is_admin",
@@ -2291,7 +2382,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag specifying if the user is an admin or not."
+          "description": "Flag specifying if the user is an admin or not.",
+          "semantic": false
         },
         {
           "name": "is_app_user",
@@ -2300,7 +2392,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Specifies if the user is an app user."
+          "description": "Specifies if the user is an app user.",
+          "semantic": false
         },
         {
           "name": "is_bot",
@@ -2309,7 +2402,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the user is a bot account."
+          "description": "Indicates if the user is a bot account.",
+          "semantic": false
         },
         {
           "name": "is_email_confirmed",
@@ -2318,7 +2412,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the user's email is confirmed."
+          "description": "Flag indicating if the user's email is confirmed.",
+          "semantic": false
         },
         {
           "name": "is_forgotten",
@@ -2327,7 +2422,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Specifies if the user is marked as forgotten."
+          "description": "Specifies if the user is marked as forgotten.",
+          "semantic": false
         },
         {
           "name": "is_invited_user",
@@ -2336,7 +2432,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the user is invited or not."
+          "description": "Indicates if the user is invited or not.",
+          "semantic": false
         },
         {
           "name": "is_owner",
@@ -2345,7 +2442,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the user is an owner."
+          "description": "Flag indicating if the user is an owner.",
+          "semantic": false
         },
         {
           "name": "is_primary_owner",
@@ -2354,7 +2452,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Specifies if the user is the primary owner."
+          "description": "Specifies if the user is the primary owner.",
+          "semantic": false
         },
         {
           "name": "is_restricted",
@@ -2363,7 +2462,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag specifying if the user is restricted."
+          "description": "Flag specifying if the user is restricted.",
+          "semantic": false
         },
         {
           "name": "is_ultra_restricted",
@@ -2372,7 +2472,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the user has ultra-restricted access."
+          "description": "Indicates if the user has ultra-restricted access.",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2381,7 +2482,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The username of the user."
+          "description": "The username of the user.",
+          "semantic": false
         },
         {
           "name": "profile",
@@ -2390,7 +2492,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "User's profile information containing detailed details."
+          "description": "User's profile information containing detailed details.",
+          "semantic": false
         },
         {
           "name": "real_name",
@@ -2399,7 +2502,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The real name of the user."
+          "description": "The real name of the user.",
+          "semantic": false
         },
         {
           "name": "team_id",
@@ -2408,7 +2512,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the team the user belongs to."
+          "description": "Unique identifier for the team the user belongs to.",
+          "semantic": false
         },
         {
           "name": "tz",
@@ -2417,7 +2522,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timezone of the user."
+          "description": "Timezone of the user.",
+          "semantic": false
         },
         {
           "name": "tz_label",
@@ -2426,7 +2532,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Label representing the timezone of the user."
+          "description": "Label representing the timezone of the user.",
+          "semantic": false
         },
         {
           "name": "tz_offset",
@@ -2435,7 +2542,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Offset of the user's timezone."
+          "description": "Offset of the user's timezone.",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -2444,7 +2552,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp of when the user's information was last updated."
+          "description": "Timestamp of when the user's information was last updated.",
+          "semantic": false
         },
         {
           "name": "who_can_share_contact_card",
@@ -2453,9 +2562,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Specifies who can share the user's contact card."
+          "description": "Specifies who can share the user's contact card.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

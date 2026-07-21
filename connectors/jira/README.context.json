@@ -2658,6 +2658,7 @@
   "search_schemas": {
     "issues": {
       "entity": "issues",
+      "kind": "DATA",
       "data_type_name": "IssuesSearchData",
       "filter_type_name": "IssuesSearchFilter",
       "in_filter_type_name": "IssuesInFilter",
@@ -2676,7 +2677,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details of changelogs associated with the issue"
+          "description": "Details of changelogs associated with the issue",
+          "semantic": false
         },
         {
           "name": "created",
@@ -2685,7 +2687,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp when the issue was created"
+          "description": "The timestamp when the issue was created",
+          "semantic": false
         },
         {
           "name": "editmeta",
@@ -2694,7 +2697,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The metadata for the fields on the issue that can be amended"
+          "description": "The metadata for the fields on the issue that can be amended",
+          "semantic": false
         },
         {
           "name": "expand",
@@ -2703,7 +2707,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Expand options that include additional issue details in the response"
+          "description": "Expand options that include additional issue details in the response",
+          "semantic": false
         },
         {
           "name": "fields",
@@ -2712,7 +2717,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details of various fields associated with the issue"
+          "description": "Details of various fields associated with the issue",
+          "semantic": false
         },
         {
           "name": "fieldsToInclude",
@@ -2721,7 +2727,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Specify the fields to include in the fetched issues data"
+          "description": "Specify the fields to include in the fetched issues data",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2730,7 +2737,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique ID of the issue"
+          "description": "The unique ID of the issue",
+          "semantic": false
         },
         {
           "name": "key",
@@ -2739,7 +2747,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique key of the issue"
+          "description": "The unique key of the issue",
+          "semantic": false
         },
         {
           "name": "names",
@@ -2748,7 +2757,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The ID and name of each field present on the issue"
+          "description": "The ID and name of each field present on the issue",
+          "semantic": false
         },
         {
           "name": "operations",
@@ -2757,7 +2767,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The operations that can be performed on the issue"
+          "description": "The operations that can be performed on the issue",
+          "semantic": false
         },
         {
           "name": "projectId",
@@ -2766,7 +2777,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID of the project containing the issue"
+          "description": "The ID of the project containing the issue",
+          "semantic": false
         },
         {
           "name": "projectKey",
@@ -2775,7 +2787,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The key of the project containing the issue"
+          "description": "The key of the project containing the issue",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -2784,7 +2797,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details of the issue properties identified in the request"
+          "description": "Details of the issue properties identified in the request",
+          "semantic": false
         },
         {
           "name": "renderedFields",
@@ -2793,7 +2807,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The rendered value of each field present on the issue"
+          "description": "The rendered value of each field present on the issue",
+          "semantic": false
         },
         {
           "name": "schema",
@@ -2802,7 +2817,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The schema describing each field present on the issue"
+          "description": "The schema describing each field present on the issue",
+          "semantic": false
         },
         {
           "name": "self",
@@ -2811,7 +2827,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the issue details"
+          "description": "The URL of the issue details",
+          "semantic": false
         },
         {
           "name": "transitions",
@@ -2820,7 +2837,8 @@
           "json_type": "array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "The transitions that can be performed on the issue"
+          "description": "The transitions that can be performed on the issue",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -2829,7 +2847,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp when the issue was last updated"
+          "description": "The timestamp when the issue was last updated",
+          "semantic": false
         },
         {
           "name": "versionedRepresentations",
@@ -2838,12 +2857,18 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The versions of each field on the issue"
+          "description": "The versions of each field on the issue",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "projects": {
       "entity": "projects",
+      "kind": "DATA",
       "data_type_name": "ProjectsSearchData",
       "filter_type_name": "ProjectsSearchFilter",
       "in_filter_type_name": "ProjectsInFilter",
@@ -2862,7 +2887,8 @@
           "json_type": "boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the project is archived"
+          "description": "Whether the project is archived",
+          "semantic": false
         },
         {
           "name": "archivedBy",
@@ -2871,7 +2897,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The user who archived the project"
+          "description": "The user who archived the project",
+          "semantic": false
         },
         {
           "name": "archivedDate",
@@ -2880,7 +2907,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date when the project was archived"
+          "description": "The date when the project was archived",
+          "semantic": false
         },
         {
           "name": "assigneeType",
@@ -2889,7 +2917,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The default assignee when creating issues for this project"
+          "description": "The default assignee when creating issues for this project",
+          "semantic": false
         },
         {
           "name": "avatarUrls",
@@ -2898,7 +2927,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The URLs of the project's avatars"
+          "description": "The URLs of the project's avatars",
+          "semantic": false
         },
         {
           "name": "components",
@@ -2907,7 +2937,8 @@
           "json_type": "array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of the components contained in the project"
+          "description": "List of the components contained in the project",
+          "semantic": false
         },
         {
           "name": "deleted",
@@ -2916,7 +2947,8 @@
           "json_type": "boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the project is marked as deleted"
+          "description": "Whether the project is marked as deleted",
+          "semantic": false
         },
         {
           "name": "deletedBy",
@@ -2925,7 +2957,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The user who marked the project as deleted"
+          "description": "The user who marked the project as deleted",
+          "semantic": false
         },
         {
           "name": "deletedDate",
@@ -2934,7 +2967,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date when the project was marked as deleted"
+          "description": "The date when the project was marked as deleted",
+          "semantic": false
         },
         {
           "name": "description",
@@ -2943,7 +2977,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A brief description of the project"
+          "description": "A brief description of the project",
+          "semantic": false
         },
         {
           "name": "email",
@@ -2952,7 +2987,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "An email address associated with the project"
+          "description": "An email address associated with the project",
+          "semantic": false
         },
         {
           "name": "entityId",
@@ -2961,7 +2997,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the project entity"
+          "description": "The unique identifier of the project entity",
+          "semantic": false
         },
         {
           "name": "expand",
@@ -2970,7 +3007,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Expand options that include additional project details in the response"
+          "description": "Expand options that include additional project details in the response",
+          "semantic": false
         },
         {
           "name": "favourite",
@@ -2979,7 +3017,8 @@
           "json_type": "boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the project is selected as a favorite"
+          "description": "Whether the project is selected as a favorite",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2988,7 +3027,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID of the project"
+          "description": "The ID of the project",
+          "semantic": false
         },
         {
           "name": "insight",
@@ -2997,7 +3037,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Insights about the project"
+          "description": "Insights about the project",
+          "semantic": false
         },
         {
           "name": "isPrivate",
@@ -3006,7 +3047,8 @@
           "json_type": "boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the project is private"
+          "description": "Whether the project is private",
+          "semantic": false
         },
         {
           "name": "issueTypeHierarchy",
@@ -3015,7 +3057,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The issue type hierarchy for the project"
+          "description": "The issue type hierarchy for the project",
+          "semantic": false
         },
         {
           "name": "issueTypes",
@@ -3024,7 +3067,8 @@
           "json_type": "array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of the issue types available in the project"
+          "description": "List of the issue types available in the project",
+          "semantic": false
         },
         {
           "name": "key",
@@ -3033,7 +3077,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The key of the project"
+          "description": "The key of the project",
+          "semantic": false
         },
         {
           "name": "lead",
@@ -3042,7 +3087,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The username of the project lead"
+          "description": "The username of the project lead",
+          "semantic": false
         },
         {
           "name": "name",
@@ -3051,7 +3097,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the project"
+          "description": "The name of the project",
+          "semantic": false
         },
         {
           "name": "permissions",
@@ -3060,7 +3107,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "User permissions on the project"
+          "description": "User permissions on the project",
+          "semantic": false
         },
         {
           "name": "projectCategory",
@@ -3069,7 +3117,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The category the project belongs to"
+          "description": "The category the project belongs to",
+          "semantic": false
         },
         {
           "name": "projectTypeKey",
@@ -3078,7 +3127,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The project type of the project"
+          "description": "The project type of the project",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -3087,7 +3137,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Map of project properties"
+          "description": "Map of project properties",
+          "semantic": false
         },
         {
           "name": "retentionTillDate",
@@ -3096,7 +3147,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date when the project is deleted permanently"
+          "description": "The date when the project is deleted permanently",
+          "semantic": false
         },
         {
           "name": "roles",
@@ -3105,7 +3157,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The name and self URL for each role defined in the project"
+          "description": "The name and self URL for each role defined in the project",
+          "semantic": false
         },
         {
           "name": "self",
@@ -3114,7 +3167,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the project details"
+          "description": "The URL of the project details",
+          "semantic": false
         },
         {
           "name": "simplified",
@@ -3123,7 +3177,8 @@
           "json_type": "boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the project is simplified"
+          "description": "Whether the project is simplified",
+          "semantic": false
         },
         {
           "name": "style",
@@ -3132,7 +3187,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of the project"
+          "description": "The type of the project",
+          "semantic": false
         },
         {
           "name": "url",
@@ -3141,7 +3197,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A link to information about this project"
+          "description": "A link to information about this project",
+          "semantic": false
         },
         {
           "name": "uuid",
@@ -3150,7 +3207,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique ID for next-gen projects"
+          "description": "Unique ID for next-gen projects",
+          "semantic": false
         },
         {
           "name": "versions",
@@ -3159,12 +3217,18 @@
           "json_type": "array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "The versions defined in the project"
+          "description": "The versions defined in the project",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "users": {
       "entity": "users",
+      "kind": "DATA",
       "data_type_name": "UsersSearchData",
       "filter_type_name": "UsersSearchFilter",
       "in_filter_type_name": "UsersInFilter",
@@ -3183,7 +3247,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The account ID of the user, uniquely identifying the user across all Atlassian products"
+          "description": "The account ID of the user, uniquely identifying the user across all Atlassian products",
+          "semantic": false
         },
         {
           "name": "accountType",
@@ -3192,7 +3257,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The user account type (atlassian, app, or customer)"
+          "description": "The user account type (atlassian, app, or customer)",
+          "semantic": false
         },
         {
           "name": "active",
@@ -3201,7 +3267,8 @@
           "json_type": "boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the user is active"
+          "description": "Indicates whether the user is active",
+          "semantic": false
         },
         {
           "name": "applicationRoles",
@@ -3210,7 +3277,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The application roles assigned to the user"
+          "description": "The application roles assigned to the user",
+          "semantic": false
         },
         {
           "name": "avatarUrls",
@@ -3219,7 +3287,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The avatars of the user"
+          "description": "The avatars of the user",
+          "semantic": false
         },
         {
           "name": "displayName",
@@ -3228,7 +3297,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The display name of the user"
+          "description": "The display name of the user",
+          "semantic": false
         },
         {
           "name": "emailAddress",
@@ -3237,7 +3307,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The email address of the user"
+          "description": "The email address of the user",
+          "semantic": false
         },
         {
           "name": "expand",
@@ -3246,7 +3317,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Options to include additional user details in the response"
+          "description": "Options to include additional user details in the response",
+          "semantic": false
         },
         {
           "name": "groups",
@@ -3255,7 +3327,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The groups to which the user belongs"
+          "description": "The groups to which the user belongs",
+          "semantic": false
         },
         {
           "name": "key",
@@ -3264,7 +3337,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deprecated property"
+          "description": "Deprecated property",
+          "semantic": false
         },
         {
           "name": "locale",
@@ -3273,7 +3347,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The locale of the user"
+          "description": "The locale of the user",
+          "semantic": false
         },
         {
           "name": "name",
@@ -3282,7 +3357,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deprecated property"
+          "description": "Deprecated property",
+          "semantic": false
         },
         {
           "name": "self",
@@ -3291,7 +3367,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the user"
+          "description": "The URL of the user",
+          "semantic": false
         },
         {
           "name": "timeZone",
@@ -3300,12 +3377,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The time zone specified in the user's profile"
+          "description": "The time zone specified in the user's profile",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "issue_comments": {
       "entity": "issue_comments",
+      "kind": "DATA",
       "data_type_name": "IssueCommentsSearchData",
       "filter_type_name": "IssueCommentsSearchFilter",
       "in_filter_type_name": "IssueCommentsInFilter",
@@ -3324,7 +3407,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The ID of the user who created the comment"
+          "description": "The ID of the user who created the comment",
+          "semantic": false
         },
         {
           "name": "body",
@@ -3333,7 +3417,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The comment text in Atlassian Document Format"
+          "description": "The comment text in Atlassian Document Format",
+          "semantic": false
         },
         {
           "name": "created",
@@ -3342,7 +3427,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time at which the comment was created"
+          "description": "The date and time at which the comment was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -3351,7 +3437,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID of the comment"
+          "description": "The ID of the comment",
+          "semantic": false
         },
         {
           "name": "issueId",
@@ -3360,7 +3447,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Id of the related issue"
+          "description": "Id of the related issue",
+          "semantic": false
         },
         {
           "name": "jsdPublic",
@@ -3369,7 +3457,8 @@
           "json_type": "boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the comment is visible in Jira Service Desk"
+          "description": "Whether the comment is visible in Jira Service Desk",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -3378,7 +3467,8 @@
           "json_type": "array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "A list of comment properties"
+          "description": "A list of comment properties",
+          "semantic": false
         },
         {
           "name": "renderedBody",
@@ -3387,7 +3477,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The rendered version of the comment"
+          "description": "The rendered version of the comment",
+          "semantic": false
         },
         {
           "name": "self",
@@ -3396,7 +3487,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the comment"
+          "description": "The URL of the comment",
+          "semantic": false
         },
         {
           "name": "updateAuthor",
@@ -3405,7 +3497,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The ID of the user who updated the comment last"
+          "description": "The ID of the user who updated the comment last",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -3414,7 +3507,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time at which the comment was updated last"
+          "description": "The date and time at which the comment was updated last",
+          "semantic": false
         },
         {
           "name": "visibility",
@@ -3423,12 +3517,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The group or role to which this item is visible"
+          "description": "The group or role to which this item is visible",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "issue_fields": {
       "entity": "issue_fields",
+      "kind": "DATA",
       "data_type_name": "IssueFieldsSearchData",
       "filter_type_name": "IssueFieldsSearchFilter",
       "in_filter_type_name": "IssueFieldsInFilter",
@@ -3447,7 +3547,8 @@
           "json_type": "array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "The names that can be used to reference the field in an advanced search"
+          "description": "The names that can be used to reference the field in an advanced search",
+          "semantic": false
         },
         {
           "name": "custom",
@@ -3456,7 +3557,8 @@
           "json_type": "boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the field is a custom field"
+          "description": "Whether the field is a custom field",
+          "semantic": false
         },
         {
           "name": "id",
@@ -3465,7 +3567,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID of the field"
+          "description": "The ID of the field",
+          "semantic": false
         },
         {
           "name": "key",
@@ -3474,7 +3577,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The key of the field"
+          "description": "The key of the field",
+          "semantic": false
         },
         {
           "name": "name",
@@ -3483,7 +3587,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the field"
+          "description": "The name of the field",
+          "semantic": false
         },
         {
           "name": "navigable",
@@ -3492,7 +3597,8 @@
           "json_type": "boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the field can be used as a column on the issue navigator"
+          "description": "Whether the field can be used as a column on the issue navigator",
+          "semantic": false
         },
         {
           "name": "orderable",
@@ -3501,7 +3607,8 @@
           "json_type": "boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the content of the field can be used to order lists"
+          "description": "Whether the content of the field can be used to order lists",
+          "semantic": false
         },
         {
           "name": "schema",
@@ -3510,7 +3617,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The data schema for the field"
+          "description": "The data schema for the field",
+          "semantic": false
         },
         {
           "name": "scope",
@@ -3519,7 +3627,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The scope of the field"
+          "description": "The scope of the field",
+          "semantic": false
         },
         {
           "name": "searchable",
@@ -3528,7 +3637,8 @@
           "json_type": "boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the content of the field can be searched"
+          "description": "Whether the content of the field can be searched",
+          "semantic": false
         },
         {
           "name": "untranslatedName",
@@ -3537,12 +3647,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The untranslated name of the field"
+          "description": "The untranslated name of the field",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "issue_worklogs": {
       "entity": "issue_worklogs",
+      "kind": "DATA",
       "data_type_name": "IssueWorklogsSearchData",
       "filter_type_name": "IssueWorklogsSearchFilter",
       "in_filter_type_name": "IssueWorklogsInFilter",
@@ -3561,7 +3677,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details of the user who created the worklog"
+          "description": "Details of the user who created the worklog",
+          "semantic": false
         },
         {
           "name": "comment",
@@ -3570,7 +3687,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "A comment about the worklog in Atlassian Document Format"
+          "description": "A comment about the worklog in Atlassian Document Format",
+          "semantic": false
         },
         {
           "name": "created",
@@ -3579,7 +3697,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The datetime on which the worklog was created"
+          "description": "The datetime on which the worklog was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -3588,7 +3707,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID of the worklog record"
+          "description": "The ID of the worklog record",
+          "semantic": false
         },
         {
           "name": "issueId",
@@ -3597,7 +3717,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID of the issue this worklog is for"
+          "description": "The ID of the issue this worklog is for",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -3606,7 +3727,8 @@
           "json_type": "array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Details of properties for the worklog"
+          "description": "Details of properties for the worklog",
+          "semantic": false
         },
         {
           "name": "self",
@@ -3615,7 +3737,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the worklog item"
+          "description": "The URL of the worklog item",
+          "semantic": false
         },
         {
           "name": "started",
@@ -3624,7 +3747,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The datetime on which the worklog effort was started"
+          "description": "The datetime on which the worklog effort was started",
+          "semantic": false
         },
         {
           "name": "timeSpent",
@@ -3633,7 +3757,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The time spent working on the issue as days, hours, or minutes"
+          "description": "The time spent working on the issue as days, hours, or minutes",
+          "semantic": false
         },
         {
           "name": "timeSpentSeconds",
@@ -3642,7 +3767,8 @@
           "json_type": "integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The time in seconds spent working on the issue"
+          "description": "The time in seconds spent working on the issue",
+          "semantic": false
         },
         {
           "name": "updateAuthor",
@@ -3651,7 +3777,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details of the user who last updated the worklog"
+          "description": "Details of the user who last updated the worklog",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -3660,7 +3787,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The datetime on which the worklog was last updated"
+          "description": "The datetime on which the worklog was last updated",
+          "semantic": false
         },
         {
           "name": "visibility",
@@ -3669,9 +3797,14 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details about any restrictions in the visibility of the worklog"
+          "description": "Details about any restrictions in the visibility of the worklog",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

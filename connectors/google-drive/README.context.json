@@ -1830,6 +1830,7 @@
   "search_schemas": {
     "files": {
       "entity": "files",
+      "kind": "FILES",
       "data_type_name": "FilesSearchData",
       "filter_type_name": "FilesSearchFilter",
       "in_filter_type_name": "FilesInFilter",
@@ -1848,7 +1849,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier of the file in Google Drive."
+          "description": "Unique identifier of the file in Google Drive.",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1857,7 +1859,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp of the last modification to the file."
+          "description": "Timestamp of the last modification to the file.",
+          "semantic": false
         },
         {
           "name": "file_name",
@@ -1866,7 +1869,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the file."
+          "description": "Name of the file.",
+          "semantic": false
         },
         {
           "name": "file_path",
@@ -1875,7 +1879,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Full path of the file within the synced Drive folder."
+          "description": "Full path of the file within the synced Drive folder.",
+          "semantic": false
         },
         {
           "name": "mime_type",
@@ -1884,7 +1889,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "MIME type of the file."
+          "description": "MIME type of the file.",
+          "semantic": false
         },
         {
           "name": "content",
@@ -1893,9 +1899,42 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Extracted text content of the file."
+          "description": "Extracted text content of the file.",
+          "semantic": true
         }
-      ]
+      ],
+      "semantic_fields": [
+        {
+          "name": "content",
+          "description": "Extracted text content of the file.",
+          "context_max_chars": 2048,
+          "content_type": "document"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "file_name",
+          "type": "string"
+        },
+        {
+          "name": "file_path",
+          "type": "string"
+        },
+        {
+          "name": "mime_type",
+          "type": "string"
+        }
+      ],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

@@ -4852,6 +4852,7 @@
   "search_schemas": {
     "companies": {
       "entity": "companies",
+      "kind": "DATA",
       "data_type_name": "CompaniesSearchData",
       "filter_type_name": "CompaniesSearchFilter",
       "in_filter_type_name": "CompaniesInFilter",
@@ -4870,7 +4871,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the company has been deleted and moved to the recycling bin"
+          "description": "Indicates whether the company has been deleted and moved to the recycling bin",
+          "semantic": false
         },
         {
           "name": "contacts",
@@ -4879,7 +4881,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Associated contact records linked to this company"
+          "description": "Associated contact records linked to this company",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -4888,7 +4891,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the company record was created"
+          "description": "Timestamp when the company record was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -4897,7 +4901,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the company record"
+          "description": "Unique identifier for the company record",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -4906,7 +4911,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Object containing all property values for the company"
+          "description": "Object containing all property values for the company",
+          "semantic": false
         },
         {
           "name": "properties.createdate",
@@ -4915,7 +4921,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date the company was created"
+          "description": "Date the company was created",
+          "semantic": false
         },
         {
           "name": "properties.domain",
@@ -4924,7 +4931,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Company domain name"
+          "description": "Company domain name",
+          "semantic": false
         },
         {
           "name": "properties.hs_lastmodifieddate",
@@ -4933,7 +4941,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last modified date of the company"
+          "description": "Last modified date of the company",
+          "semantic": false
         },
         {
           "name": "properties.hs_object_id",
@@ -4942,7 +4951,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HubSpot object ID"
+          "description": "HubSpot object ID",
+          "semantic": false
         },
         {
           "name": "properties.hubspot_owner_id",
@@ -4951,7 +4961,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the HubSpot owner assigned to this company"
+          "description": "ID of the HubSpot owner assigned to this company",
+          "semantic": false
         },
         {
           "name": "properties.name",
@@ -4960,7 +4971,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Company name"
+          "description": "Company name",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -4969,12 +4981,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the company record was last modified"
+          "description": "Timestamp when the company record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "contacts": {
       "entity": "contacts",
+      "kind": "DATA",
       "data_type_name": "ContactsSearchData",
       "filter_type_name": "ContactsSearchFilter",
       "in_filter_type_name": "ContactsInFilter",
@@ -4993,7 +5011,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Boolean flag indicating whether the contact has been archived or deleted"
+          "description": "Boolean flag indicating whether the contact has been archived or deleted",
+          "semantic": false
         },
         {
           "name": "companies",
@@ -5002,7 +5021,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Associated company records linked to this contact"
+          "description": "Associated company records linked to this contact",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5011,7 +5031,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the contact was first created in the system"
+          "description": "Timestamp indicating when the contact was first created in the system",
+          "semantic": false
         },
         {
           "name": "id",
@@ -5020,7 +5041,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the contact record"
+          "description": "Unique identifier for the contact record",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -5029,7 +5051,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Key-value object storing all contact properties and their values."
+          "description": "Key-value object storing all contact properties and their values.",
+          "semantic": false
         },
         {
           "name": "properties.associatedcompanyid",
@@ -5038,7 +5061,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the associated company"
+          "description": "ID of the associated company",
+          "semantic": false
         },
         {
           "name": "properties.createdate",
@@ -5047,7 +5071,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date the contact was created"
+          "description": "Date the contact was created",
+          "semantic": false
         },
         {
           "name": "properties.email",
@@ -5056,7 +5081,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Contact email address"
+          "description": "Contact email address",
+          "semantic": false
         },
         {
           "name": "properties.firstname",
@@ -5065,7 +5091,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Contact first name"
+          "description": "Contact first name",
+          "semantic": false
         },
         {
           "name": "properties.hs_object_id",
@@ -5074,7 +5101,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HubSpot object ID"
+          "description": "HubSpot object ID",
+          "semantic": false
         },
         {
           "name": "properties.hubspot_owner_id",
@@ -5083,7 +5111,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the HubSpot owner assigned to this contact"
+          "description": "ID of the HubSpot owner assigned to this contact",
+          "semantic": false
         },
         {
           "name": "properties.lastmodifieddate",
@@ -5092,7 +5121,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last modified date of the contact"
+          "description": "Last modified date of the contact",
+          "semantic": false
         },
         {
           "name": "properties.lastname",
@@ -5101,7 +5131,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Contact last name"
+          "description": "Contact last name",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -5110,12 +5141,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the contact record was last modified"
+          "description": "Timestamp indicating when the contact record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "deals": {
       "entity": "deals",
+      "kind": "DATA",
       "data_type_name": "DealsSearchData",
       "filter_type_name": "DealsSearchFilter",
       "in_filter_type_name": "DealsInFilter",
@@ -5134,7 +5171,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the deal has been deleted and moved to the recycling bin"
+          "description": "Indicates whether the deal has been deleted and moved to the recycling bin",
+          "semantic": false
         },
         {
           "name": "companies",
@@ -5143,7 +5181,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Collection of company records associated with the deal"
+          "description": "Collection of company records associated with the deal",
+          "semantic": false
         },
         {
           "name": "contacts",
@@ -5152,7 +5191,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Collection of contact records associated with the deal"
+          "description": "Collection of contact records associated with the deal",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5161,7 +5201,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the deal record was originally created"
+          "description": "Timestamp when the deal record was originally created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -5170,7 +5211,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the deal record"
+          "description": "Unique identifier for the deal record",
+          "semantic": false
         },
         {
           "name": "line_items",
@@ -5179,7 +5221,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Collection of product line items associated with the deal"
+          "description": "Collection of product line items associated with the deal",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -5188,7 +5231,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Key-value object containing all deal properties and custom fields"
+          "description": "Key-value object containing all deal properties and custom fields",
+          "semantic": false
         },
         {
           "name": "properties.amount",
@@ -5197,7 +5241,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deal amount"
+          "description": "Deal amount",
+          "semantic": false
         },
         {
           "name": "properties.closedate",
@@ -5206,7 +5251,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Expected close date of the deal"
+          "description": "Expected close date of the deal",
+          "semantic": false
         },
         {
           "name": "properties.createdate",
@@ -5215,7 +5261,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date the deal was created"
+          "description": "Date the deal was created",
+          "semantic": false
         },
         {
           "name": "properties.dealname",
@@ -5224,7 +5271,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deal name"
+          "description": "Deal name",
+          "semantic": false
         },
         {
           "name": "properties.dealstage",
@@ -5233,7 +5281,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current deal stage"
+          "description": "Current deal stage",
+          "semantic": false
         },
         {
           "name": "properties.hs_lastmodifieddate",
@@ -5242,7 +5291,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last modified date of the deal"
+          "description": "Last modified date of the deal",
+          "semantic": false
         },
         {
           "name": "properties.hs_object_id",
@@ -5251,7 +5301,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HubSpot object ID"
+          "description": "HubSpot object ID",
+          "semantic": false
         },
         {
           "name": "properties.hubspot_owner_id",
@@ -5260,7 +5311,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the HubSpot owner assigned to this deal"
+          "description": "ID of the HubSpot owner assigned to this deal",
+          "semantic": false
         },
         {
           "name": "properties.pipeline",
@@ -5269,7 +5321,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Deal pipeline"
+          "description": "Deal pipeline",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -5278,12 +5331,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the deal record was last modified"
+          "description": "Timestamp when the deal record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "tickets": {
       "entity": "tickets",
+      "kind": "DATA",
       "data_type_name": "TicketsSearchData",
       "filter_type_name": "TicketsSearchFilter",
       "in_filter_type_name": "TicketsInFilter",
@@ -5302,7 +5361,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the ticket has been deleted and moved to the recycling bin"
+          "description": "Indicates whether the ticket has been deleted and moved to the recycling bin",
+          "semantic": false
         },
         {
           "name": "companies",
@@ -5311,7 +5371,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Collection of company records associated with the ticket"
+          "description": "Collection of company records associated with the ticket",
+          "semantic": false
         },
         {
           "name": "contacts",
@@ -5320,7 +5381,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Collection of contact records associated with the ticket"
+          "description": "Collection of contact records associated with the ticket",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5329,7 +5391,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the ticket record was originally created"
+          "description": "Timestamp when the ticket record was originally created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -5338,7 +5401,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the ticket record"
+          "description": "Unique identifier for the ticket record",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -5347,7 +5411,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Object containing all property values for the ticket"
+          "description": "Object containing all property values for the ticket",
+          "semantic": false
         },
         {
           "name": "properties.content",
@@ -5356,7 +5421,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ticket content/description"
+          "description": "Ticket content/description",
+          "semantic": false
         },
         {
           "name": "properties.createdate",
@@ -5365,7 +5431,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date the ticket was created"
+          "description": "Date the ticket was created",
+          "semantic": false
         },
         {
           "name": "properties.hs_lastmodifieddate",
@@ -5374,7 +5441,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last modified date of the ticket"
+          "description": "Last modified date of the ticket",
+          "semantic": false
         },
         {
           "name": "properties.hs_object_id",
@@ -5383,7 +5451,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HubSpot object ID"
+          "description": "HubSpot object ID",
+          "semantic": false
         },
         {
           "name": "properties.hs_pipeline",
@@ -5392,7 +5461,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ticket pipeline"
+          "description": "Ticket pipeline",
+          "semantic": false
         },
         {
           "name": "properties.hs_pipeline_stage",
@@ -5401,7 +5471,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current pipeline stage of the ticket"
+          "description": "Current pipeline stage of the ticket",
+          "semantic": false
         },
         {
           "name": "properties.hs_ticket_category",
@@ -5410,7 +5481,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ticket category"
+          "description": "Ticket category",
+          "semantic": false
         },
         {
           "name": "properties.hs_ticket_priority",
@@ -5419,7 +5491,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ticket priority level"
+          "description": "Ticket priority level",
+          "semantic": false
         },
         {
           "name": "properties.subject",
@@ -5428,7 +5501,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Ticket subject line"
+          "description": "Ticket subject line",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -5437,12 +5511,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the ticket record was last modified"
+          "description": "Timestamp when the ticket record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "notes": {
       "entity": "notes",
+      "kind": "DATA",
       "data_type_name": "NotesSearchData",
       "filter_type_name": "NotesSearchFilter",
       "in_filter_type_name": "NotesInFilter",
@@ -5461,7 +5541,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the note has been archived"
+          "description": "Indicates whether the note has been archived",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5470,7 +5551,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the note was created"
+          "description": "Timestamp when the note was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -5479,7 +5561,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the note record"
+          "description": "Unique identifier for the note record",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -5488,7 +5571,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Object containing all property values for the note"
+          "description": "Object containing all property values for the note",
+          "semantic": false
         },
         {
           "name": "properties.hs_createdate",
@@ -5497,7 +5581,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date the note was created"
+          "description": "Date the note was created",
+          "semantic": false
         },
         {
           "name": "properties.hs_lastmodifieddate",
@@ -5506,7 +5591,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last modified date of the note"
+          "description": "Last modified date of the note",
+          "semantic": false
         },
         {
           "name": "properties.hs_note_body",
@@ -5515,7 +5601,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The body content of the note (supports HTML)"
+          "description": "The body content of the note (supports HTML)",
+          "semantic": false
         },
         {
           "name": "properties.hs_object_id",
@@ -5524,7 +5611,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HubSpot object ID"
+          "description": "HubSpot object ID",
+          "semantic": false
         },
         {
           "name": "properties.hs_timestamp",
@@ -5533,7 +5621,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the note activity occurred"
+          "description": "Timestamp when the note activity occurred",
+          "semantic": false
         },
         {
           "name": "properties.hubspot_owner_id",
@@ -5542,7 +5631,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the note owner"
+          "description": "ID of the note owner",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -5551,12 +5641,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the note record was last modified"
+          "description": "Timestamp when the note record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "calls": {
       "entity": "calls",
+      "kind": "DATA",
       "data_type_name": "CallsSearchData",
       "filter_type_name": "CallsSearchFilter",
       "in_filter_type_name": "CallsInFilter",
@@ -5575,7 +5671,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the call has been archived"
+          "description": "Indicates whether the call has been archived",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5584,7 +5681,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the call was created"
+          "description": "Timestamp when the call was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -5593,7 +5691,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the call record"
+          "description": "Unique identifier for the call record",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -5602,7 +5701,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Object containing all property values for the call"
+          "description": "Object containing all property values for the call",
+          "semantic": false
         },
         {
           "name": "properties.hs_call_body",
@@ -5611,7 +5711,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description or notes about the call"
+          "description": "Description or notes about the call",
+          "semantic": false
         },
         {
           "name": "properties.hs_call_direction",
@@ -5620,7 +5721,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Direction of the call (INBOUND or OUTBOUND)"
+          "description": "Direction of the call (INBOUND or OUTBOUND)",
+          "semantic": false
         },
         {
           "name": "properties.hs_call_duration",
@@ -5629,7 +5731,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Duration of the call in milliseconds"
+          "description": "Duration of the call in milliseconds",
+          "semantic": false
         },
         {
           "name": "properties.hs_call_status",
@@ -5638,7 +5741,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER)"
+          "description": "Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER)",
+          "semantic": false
         },
         {
           "name": "properties.hs_call_title",
@@ -5647,7 +5751,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Title or subject of the call"
+          "description": "Title or subject of the call",
+          "semantic": false
         },
         {
           "name": "properties.hs_createdate",
@@ -5656,7 +5761,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date the call was created"
+          "description": "Date the call was created",
+          "semantic": false
         },
         {
           "name": "properties.hs_lastmodifieddate",
@@ -5665,7 +5771,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last modified date of the call"
+          "description": "Last modified date of the call",
+          "semantic": false
         },
         {
           "name": "properties.hs_object_id",
@@ -5674,7 +5781,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HubSpot object ID"
+          "description": "HubSpot object ID",
+          "semantic": false
         },
         {
           "name": "properties.hs_timestamp",
@@ -5683,7 +5791,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the call activity occurred"
+          "description": "Timestamp when the call activity occurred",
+          "semantic": false
         },
         {
           "name": "properties.hubspot_owner_id",
@@ -5692,7 +5801,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the call owner"
+          "description": "ID of the call owner",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -5701,12 +5811,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the call record was last modified"
+          "description": "Timestamp when the call record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "emails": {
       "entity": "emails",
+      "kind": "DATA",
       "data_type_name": "EmailsSearchData",
       "filter_type_name": "EmailsSearchFilter",
       "in_filter_type_name": "EmailsInFilter",
@@ -5725,7 +5841,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the email has been archived"
+          "description": "Indicates whether the email has been archived",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5734,7 +5851,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the email was created"
+          "description": "Timestamp when the email was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -5743,7 +5861,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the email record"
+          "description": "Unique identifier for the email record",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -5752,7 +5871,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Object containing all property values for the email"
+          "description": "Object containing all property values for the email",
+          "semantic": false
         },
         {
           "name": "properties.hs_createdate",
@@ -5761,7 +5881,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date the email was created"
+          "description": "Date the email was created",
+          "semantic": false
         },
         {
           "name": "properties.hs_email_direction",
@@ -5770,7 +5891,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)"
+          "description": "Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)",
+          "semantic": false
         },
         {
           "name": "properties.hs_email_status",
@@ -5779,7 +5901,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)"
+          "description": "Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)",
+          "semantic": false
         },
         {
           "name": "properties.hs_email_subject",
@@ -5788,7 +5911,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Subject line of the email"
+          "description": "Subject line of the email",
+          "semantic": false
         },
         {
           "name": "properties.hs_email_text",
@@ -5797,7 +5921,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Plain text body of the email"
+          "description": "Plain text body of the email",
+          "semantic": false
         },
         {
           "name": "properties.hs_lastmodifieddate",
@@ -5806,7 +5931,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last modified date of the email"
+          "description": "Last modified date of the email",
+          "semantic": false
         },
         {
           "name": "properties.hs_object_id",
@@ -5815,7 +5941,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HubSpot object ID"
+          "description": "HubSpot object ID",
+          "semantic": false
         },
         {
           "name": "properties.hs_timestamp",
@@ -5824,7 +5951,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the email activity occurred"
+          "description": "Timestamp when the email activity occurred",
+          "semantic": false
         },
         {
           "name": "properties.hubspot_owner_id",
@@ -5833,7 +5961,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the email owner"
+          "description": "ID of the email owner",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -5842,12 +5971,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the email record was last modified"
+          "description": "Timestamp when the email record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "meetings": {
       "entity": "meetings",
+      "kind": "DATA",
       "data_type_name": "MeetingsSearchData",
       "filter_type_name": "MeetingsSearchFilter",
       "in_filter_type_name": "MeetingsInFilter",
@@ -5866,7 +6001,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the meeting has been archived"
+          "description": "Indicates whether the meeting has been archived",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -5875,7 +6011,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the meeting was created"
+          "description": "Timestamp when the meeting was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -5884,7 +6021,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the meeting record"
+          "description": "Unique identifier for the meeting record",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -5893,7 +6031,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Object containing all property values for the meeting"
+          "description": "Object containing all property values for the meeting",
+          "semantic": false
         },
         {
           "name": "properties.hs_createdate",
@@ -5902,7 +6041,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date the meeting was created"
+          "description": "Date the meeting was created",
+          "semantic": false
         },
         {
           "name": "properties.hs_lastmodifieddate",
@@ -5911,7 +6051,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last modified date of the meeting"
+          "description": "Last modified date of the meeting",
+          "semantic": false
         },
         {
           "name": "properties.hs_meeting_body",
@@ -5920,7 +6061,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description or notes about the meeting"
+          "description": "Description or notes about the meeting",
+          "semantic": false
         },
         {
           "name": "properties.hs_meeting_end_time",
@@ -5929,7 +6071,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "End time of the meeting"
+          "description": "End time of the meeting",
+          "semantic": false
         },
         {
           "name": "properties.hs_meeting_location",
@@ -5938,7 +6081,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Location of the meeting"
+          "description": "Location of the meeting",
+          "semantic": false
         },
         {
           "name": "properties.hs_meeting_outcome",
@@ -5947,7 +6091,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Outcome of the meeting (e.g., SCHEDULED, COMPLETED, NO_SHOW, CANCELED)"
+          "description": "Outcome of the meeting (e.g., SCHEDULED, COMPLETED, NO_SHOW, CANCELED)",
+          "semantic": false
         },
         {
           "name": "properties.hs_meeting_start_time",
@@ -5956,7 +6101,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start time of the meeting"
+          "description": "Start time of the meeting",
+          "semantic": false
         },
         {
           "name": "properties.hs_meeting_title",
@@ -5965,7 +6111,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Title of the meeting"
+          "description": "Title of the meeting",
+          "semantic": false
         },
         {
           "name": "properties.hs_object_id",
@@ -5974,7 +6121,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HubSpot object ID"
+          "description": "HubSpot object ID",
+          "semantic": false
         },
         {
           "name": "properties.hs_timestamp",
@@ -5983,7 +6131,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the meeting activity occurred"
+          "description": "Timestamp when the meeting activity occurred",
+          "semantic": false
         },
         {
           "name": "properties.hubspot_owner_id",
@@ -5992,7 +6141,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the meeting owner"
+          "description": "ID of the meeting owner",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -6001,12 +6151,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the meeting record was last modified"
+          "description": "Timestamp when the meeting record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "tasks": {
       "entity": "tasks",
+      "kind": "DATA",
       "data_type_name": "TasksSearchData",
       "filter_type_name": "TasksSearchFilter",
       "in_filter_type_name": "TasksInFilter",
@@ -6025,7 +6181,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the task has been archived"
+          "description": "Indicates whether the task has been archived",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -6034,7 +6191,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the task was created"
+          "description": "Timestamp when the task was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -6043,7 +6201,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the task record"
+          "description": "Unique identifier for the task record",
+          "semantic": false
         },
         {
           "name": "properties",
@@ -6052,7 +6211,8 @@
           "json_type": "object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Object containing all property values for the task"
+          "description": "Object containing all property values for the task",
+          "semantic": false
         },
         {
           "name": "properties.hs_createdate",
@@ -6061,7 +6221,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date the task was created"
+          "description": "Date the task was created",
+          "semantic": false
         },
         {
           "name": "properties.hs_lastmodifieddate",
@@ -6070,7 +6231,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last modified date of the task"
+          "description": "Last modified date of the task",
+          "semantic": false
         },
         {
           "name": "properties.hs_object_id",
@@ -6079,7 +6241,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "HubSpot object ID"
+          "description": "HubSpot object ID",
+          "semantic": false
         },
         {
           "name": "properties.hs_task_body",
@@ -6088,7 +6251,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Description or notes for the task"
+          "description": "Description or notes for the task",
+          "semantic": false
         },
         {
           "name": "properties.hs_task_priority",
@@ -6097,7 +6261,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Priority of the task (LOW, MEDIUM, HIGH)"
+          "description": "Priority of the task (LOW, MEDIUM, HIGH)",
+          "semantic": false
         },
         {
           "name": "properties.hs_task_status",
@@ -6106,7 +6271,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)"
+          "description": "Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)",
+          "semantic": false
         },
         {
           "name": "properties.hs_task_subject",
@@ -6115,7 +6281,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Subject or title of the task"
+          "description": "Subject or title of the task",
+          "semantic": false
         },
         {
           "name": "properties.hs_task_type",
@@ -6124,7 +6291,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of the task (TODO, CALL, EMAIL)"
+          "description": "Type of the task (TODO, CALL, EMAIL)",
+          "semantic": false
         },
         {
           "name": "properties.hs_timestamp",
@@ -6133,7 +6301,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Due date / timestamp for the task"
+          "description": "Due date / timestamp for the task",
+          "semantic": false
         },
         {
           "name": "properties.hubspot_owner_id",
@@ -6142,7 +6311,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the task owner"
+          "description": "ID of the task owner",
+          "semantic": false
         },
         {
           "name": "updatedAt",
@@ -6151,9 +6321,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the task record was last modified"
+          "description": "Timestamp when the task record was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

@@ -1109,6 +1109,7 @@
   "search_schemas": {
     "sites": {
       "entity": "sites",
+      "kind": "DATA",
       "data_type_name": "SitesSearchData",
       "filter_type_name": "SitesSearchFilter",
       "in_filter_type_name": "SitesInFilter",
@@ -1127,7 +1128,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The user's permission level for the site (owner, full, restricted, etc.)"
+          "description": "The user's permission level for the site (owner, full, restricted, etc.)",
+          "semantic": false
         },
         {
           "name": "siteUrl",
@@ -1136,12 +1138,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the site data being fetched"
+          "description": "The URL of the site data being fetched",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "sitemaps": {
       "entity": "sitemaps",
+      "kind": "DATA",
       "data_type_name": "SitemapsSearchData",
       "filter_type_name": "SitemapsSearchFilter",
       "in_filter_type_name": "SitemapsInFilter",
@@ -1160,7 +1168,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Data related to the sitemap contents"
+          "description": "Data related to the sitemap contents",
+          "semantic": false
         },
         {
           "name": "errors",
@@ -1169,7 +1178,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Errors encountered while processing the sitemaps"
+          "description": "Errors encountered while processing the sitemaps",
+          "semantic": false
         },
         {
           "name": "isPending",
@@ -1178,7 +1188,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the sitemap is pending for processing"
+          "description": "Flag indicating if the sitemap is pending for processing",
+          "semantic": false
         },
         {
           "name": "isSitemapsIndex",
@@ -1187,7 +1198,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the data represents a sitemap index"
+          "description": "Flag indicating if the data represents a sitemap index",
+          "semantic": false
         },
         {
           "name": "lastDownloaded",
@@ -1196,7 +1208,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the sitemap was last downloaded"
+          "description": "Timestamp when the sitemap was last downloaded",
+          "semantic": false
         },
         {
           "name": "lastSubmitted",
@@ -1205,7 +1218,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the sitemap was last submitted"
+          "description": "Timestamp when the sitemap was last submitted",
+          "semantic": false
         },
         {
           "name": "path",
@@ -1214,7 +1228,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Path to the sitemap file"
+          "description": "Path to the sitemap file",
+          "semantic": false
         },
         {
           "name": "type",
@@ -1223,7 +1238,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of the sitemap"
+          "description": "Type of the sitemap",
+          "semantic": false
         },
         {
           "name": "warnings",
@@ -1232,12 +1248,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Warnings encountered while processing the sitemaps"
+          "description": "Warnings encountered while processing the sitemaps",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "search_analytics_all_fields": {
       "entity": "search_analytics_all_fields",
+      "kind": "DATA",
       "data_type_name": "SearchAnalyticsAllFieldsSearchData",
       "filter_type_name": "SearchAnalyticsAllFieldsSearchFilter",
       "in_filter_type_name": "SearchAnalyticsAllFieldsInFilter",
@@ -1256,7 +1278,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of times users clicked on the search result for a specific query"
+          "description": "The number of times users clicked on the search result for a specific query",
+          "semantic": false
         },
         {
           "name": "country",
@@ -1265,7 +1288,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The country from which the search query originated"
+          "description": "The country from which the search query originated",
+          "semantic": false
         },
         {
           "name": "ctr",
@@ -1274,7 +1298,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Click-through rate, calculated as clicks divided by impressions"
+          "description": "Click-through rate, calculated as clicks divided by impressions",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1283,7 +1308,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date when the search query occurred"
+          "description": "The date when the search query occurred",
+          "semantic": false
         },
         {
           "name": "device",
@@ -1292,7 +1318,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of device used by the user (e.g., desktop, mobile)"
+          "description": "The type of device used by the user (e.g., desktop, mobile)",
+          "semantic": false
         },
         {
           "name": "impressions",
@@ -1301,7 +1328,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of times a search result appeared in response to a query"
+          "description": "The number of times a search result appeared in response to a query",
+          "semantic": false
         },
         {
           "name": "page",
@@ -1310,7 +1338,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The page URL that appeared in the search results"
+          "description": "The page URL that appeared in the search results",
+          "semantic": false
         },
         {
           "name": "position",
@@ -1319,7 +1348,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The average position of the search result on the search engine results page"
+          "description": "The average position of the search result on the search engine results page",
+          "semantic": false
         },
         {
           "name": "query",
@@ -1328,7 +1358,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The search query entered by the user"
+          "description": "The search query entered by the user",
+          "semantic": false
         },
         {
           "name": "search_type",
@@ -1337,7 +1368,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of search (e.g., web, image, video) that triggered the search result"
+          "description": "The type of search (e.g., web, image, video) that triggered the search result",
+          "semantic": false
         },
         {
           "name": "site_url",
@@ -1346,12 +1378,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the site from which the data originates"
+          "description": "The URL of the site from which the data originates",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "search_analytics_by_country": {
       "entity": "search_analytics_by_country",
+      "kind": "DATA",
       "data_type_name": "SearchAnalyticsByCountrySearchData",
       "filter_type_name": "SearchAnalyticsByCountrySearchFilter",
       "in_filter_type_name": "SearchAnalyticsByCountryInFilter",
@@ -1370,7 +1408,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of times users clicked on the search result for a specific country"
+          "description": "The number of times users clicked on the search result for a specific country",
+          "semantic": false
         },
         {
           "name": "country",
@@ -1379,7 +1418,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The country for which the search analytics data is being reported"
+          "description": "The country for which the search analytics data is being reported",
+          "semantic": false
         },
         {
           "name": "ctr",
@@ -1388,7 +1428,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The click-through rate for a specific country"
+          "description": "The click-through rate for a specific country",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1397,7 +1438,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date for which the search analytics data is being reported"
+          "description": "The date for which the search analytics data is being reported",
+          "semantic": false
         },
         {
           "name": "impressions",
@@ -1406,7 +1448,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The total number of times a search result was shown for a specific country"
+          "description": "The total number of times a search result was shown for a specific country",
+          "semantic": false
         },
         {
           "name": "position",
@@ -1415,7 +1458,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The average position at which the site's search result appeared for a specific country"
+          "description": "The average position at which the site's search result appeared for a specific country",
+          "semantic": false
         },
         {
           "name": "search_type",
@@ -1424,7 +1468,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of search for which the data is being reported"
+          "description": "The type of search for which the data is being reported",
+          "semantic": false
         },
         {
           "name": "site_url",
@@ -1433,12 +1478,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the site for which the search analytics data is being reported"
+          "description": "The URL of the site for which the search analytics data is being reported",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "search_analytics_by_date": {
       "entity": "search_analytics_by_date",
+      "kind": "DATA",
       "data_type_name": "SearchAnalyticsByDateSearchData",
       "filter_type_name": "SearchAnalyticsByDateSearchFilter",
       "in_filter_type_name": "SearchAnalyticsByDateInFilter",
@@ -1457,7 +1508,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The total number of clicks on the specific date"
+          "description": "The total number of clicks on the specific date",
+          "semantic": false
         },
         {
           "name": "ctr",
@@ -1466,7 +1518,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The click-through rate for the specific date"
+          "description": "The click-through rate for the specific date",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1475,7 +1528,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date for which the search analytics data is being reported"
+          "description": "The date for which the search analytics data is being reported",
+          "semantic": false
         },
         {
           "name": "impressions",
@@ -1484,7 +1538,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of impressions on the specific date"
+          "description": "The number of impressions on the specific date",
+          "semantic": false
         },
         {
           "name": "position",
@@ -1493,7 +1548,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The average position in search results for the specific date"
+          "description": "The average position in search results for the specific date",
+          "semantic": false
         },
         {
           "name": "search_type",
@@ -1502,7 +1558,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of search query that generated the data"
+          "description": "The type of search query that generated the data",
+          "semantic": false
         },
         {
           "name": "site_url",
@@ -1511,12 +1568,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the site for which the search analytics data is being reported"
+          "description": "The URL of the site for which the search analytics data is being reported",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "search_analytics_by_device": {
       "entity": "search_analytics_by_device",
+      "kind": "DATA",
       "data_type_name": "SearchAnalyticsByDeviceSearchData",
       "filter_type_name": "SearchAnalyticsByDeviceSearchFilter",
       "in_filter_type_name": "SearchAnalyticsByDeviceInFilter",
@@ -1535,7 +1598,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The total number of clicks by device type"
+          "description": "The total number of clicks by device type",
+          "semantic": false
         },
         {
           "name": "ctr",
@@ -1544,7 +1608,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Click-through rate by device type"
+          "description": "Click-through rate by device type",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1553,7 +1618,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date for which the search analytics data is provided"
+          "description": "The date for which the search analytics data is provided",
+          "semantic": false
         },
         {
           "name": "device",
@@ -1562,7 +1628,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of device used by the user (e.g., desktop, mobile)"
+          "description": "The type of device used by the user (e.g., desktop, mobile)",
+          "semantic": false
         },
         {
           "name": "impressions",
@@ -1571,7 +1638,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The total number of impressions by device type"
+          "description": "The total number of impressions by device type",
+          "semantic": false
         },
         {
           "name": "position",
@@ -1580,7 +1648,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The average position in search results by device type"
+          "description": "The average position in search results by device type",
+          "semantic": false
         },
         {
           "name": "search_type",
@@ -1589,7 +1658,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of search performed"
+          "description": "The type of search performed",
+          "semantic": false
         },
         {
           "name": "site_url",
@@ -1598,12 +1668,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the site for which search analytics data is being provided"
+          "description": "The URL of the site for which search analytics data is being provided",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "search_analytics_by_page": {
       "entity": "search_analytics_by_page",
+      "kind": "DATA",
       "data_type_name": "SearchAnalyticsByPageSearchData",
       "filter_type_name": "SearchAnalyticsByPageSearchFilter",
       "in_filter_type_name": "SearchAnalyticsByPageInFilter",
@@ -1622,7 +1698,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of clicks for a specific page"
+          "description": "The number of clicks for a specific page",
+          "semantic": false
         },
         {
           "name": "ctr",
@@ -1631,7 +1708,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Click-through rate for the page"
+          "description": "Click-through rate for the page",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1640,7 +1718,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date for which the search analytics data is reported"
+          "description": "The date for which the search analytics data is reported",
+          "semantic": false
         },
         {
           "name": "impressions",
@@ -1649,7 +1728,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of impressions for the page"
+          "description": "The number of impressions for the page",
+          "semantic": false
         },
         {
           "name": "page",
@@ -1658,7 +1738,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the specific page being analyzed"
+          "description": "The URL of the specific page being analyzed",
+          "semantic": false
         },
         {
           "name": "position",
@@ -1667,7 +1748,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The average position at which the page appeared in search results"
+          "description": "The average position at which the page appeared in search results",
+          "semantic": false
         },
         {
           "name": "search_type",
@@ -1676,7 +1758,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of search query that led to the page being displayed"
+          "description": "The type of search query that led to the page being displayed",
+          "semantic": false
         },
         {
           "name": "site_url",
@@ -1685,12 +1768,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the site for which the search analytics data is being reported"
+          "description": "The URL of the site for which the search analytics data is being reported",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "search_analytics_by_query": {
       "entity": "search_analytics_by_query",
+      "kind": "DATA",
       "data_type_name": "SearchAnalyticsByQuerySearchData",
       "filter_type_name": "SearchAnalyticsByQuerySearchFilter",
       "in_filter_type_name": "SearchAnalyticsByQueryInFilter",
@@ -1709,7 +1798,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of clicks for the specific query"
+          "description": "The number of clicks for the specific query",
+          "semantic": false
         },
         {
           "name": "ctr",
@@ -1718,7 +1808,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The click-through rate for the specific query"
+          "description": "The click-through rate for the specific query",
+          "semantic": false
         },
         {
           "name": "date",
@@ -1727,7 +1818,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date for which the search analytics data is recorded"
+          "description": "The date for which the search analytics data is recorded",
+          "semantic": false
         },
         {
           "name": "impressions",
@@ -1736,7 +1828,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The number of impressions for the specific query"
+          "description": "The number of impressions for the specific query",
+          "semantic": false
         },
         {
           "name": "position",
@@ -1745,7 +1838,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The average position for the specific query"
+          "description": "The average position for the specific query",
+          "semantic": false
         },
         {
           "name": "query",
@@ -1754,7 +1848,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The search query for which the data is recorded"
+          "description": "The search query for which the data is recorded",
+          "semantic": false
         },
         {
           "name": "search_type",
@@ -1763,7 +1858,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of search result for the specific query"
+          "description": "The type of search result for the specific query",
+          "semantic": false
         },
         {
           "name": "site_url",
@@ -1772,9 +1868,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The URL of the site for which the search analytics data is captured"
+          "description": "The URL of the site for which the search analytics data is captured",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

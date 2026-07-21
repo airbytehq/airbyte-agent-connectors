@@ -691,6 +691,7 @@
   "search_schemas": {
     "agents": {
       "entity": "agents",
+      "kind": "DATA",
       "data_type_name": "AgentsSearchData",
       "filter_type_name": "AgentsSearchFilter",
       "in_filter_type_name": "AgentsInFilter",
@@ -709,7 +710,8 @@
           "json_type": "integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique agent identifier"
+          "description": "Unique agent identifier",
+          "semantic": false
         },
         {
           "name": "email",
@@ -718,7 +720,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Agent email address"
+          "description": "Agent email address",
+          "semantic": false
         },
         {
           "name": "display_name",
@@ -727,7 +730,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Agent display name"
+          "description": "Agent display name",
+          "semantic": false
         },
         {
           "name": "first_name",
@@ -736,7 +740,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Agent first name"
+          "description": "Agent first name",
+          "semantic": false
         },
         {
           "name": "last_name",
@@ -745,7 +750,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Agent last name"
+          "description": "Agent last name",
+          "semantic": false
         },
         {
           "name": "enabled",
@@ -754,7 +760,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether agent is enabled"
+          "description": "Whether agent is enabled",
+          "semantic": false
         },
         {
           "name": "role_id",
@@ -763,7 +770,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Agent role ID"
+          "description": "Agent role ID",
+          "semantic": false
         },
         {
           "name": "departments",
@@ -772,7 +780,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Department IDs agent belongs to"
+          "description": "Department IDs agent belongs to",
+          "semantic": false
         },
         {
           "name": "create_date",
@@ -781,12 +790,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When agent was created"
+          "description": "When agent was created",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "chats": {
       "entity": "chats",
+      "kind": "DATA",
       "data_type_name": "ChatsSearchData",
       "filter_type_name": "ChatsSearchFilter",
       "in_filter_type_name": "ChatsInFilter",
@@ -805,7 +820,8 @@
           "json_type": "string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique chat identifier"
+          "description": "Unique chat identifier",
+          "semantic": false
         },
         {
           "name": "timestamp",
@@ -814,7 +830,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Chat start timestamp"
+          "description": "Chat start timestamp",
+          "semantic": false
         },
         {
           "name": "update_timestamp",
@@ -823,7 +840,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Last update timestamp"
+          "description": "Last update timestamp",
+          "semantic": false
         },
         {
           "name": "department_id",
@@ -832,7 +850,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Department ID"
+          "description": "Department ID",
+          "semantic": false
         },
         {
           "name": "department_name",
@@ -841,7 +860,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Department name"
+          "description": "Department name",
+          "semantic": false
         },
         {
           "name": "duration",
@@ -850,7 +870,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Chat duration in seconds"
+          "description": "Chat duration in seconds",
+          "semantic": false
         },
         {
           "name": "rating",
@@ -859,7 +880,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Satisfaction rating"
+          "description": "Satisfaction rating",
+          "semantic": false
         },
         {
           "name": "missed",
@@ -868,7 +890,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether chat was missed"
+          "description": "Whether chat was missed",
+          "semantic": false
         },
         {
           "name": "agent_ids",
@@ -877,12 +900,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "IDs of agents in chat"
+          "description": "IDs of agents in chat",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "departments": {
       "entity": "departments",
+      "kind": "DATA",
       "data_type_name": "DepartmentsSearchData",
       "filter_type_name": "DepartmentsSearchFilter",
       "in_filter_type_name": "DepartmentsInFilter",
@@ -901,7 +930,8 @@
           "json_type": "integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Department ID"
+          "description": "Department ID",
+          "semantic": false
         },
         {
           "name": "name",
@@ -910,7 +940,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Department name"
+          "description": "Department name",
+          "semantic": false
         },
         {
           "name": "enabled",
@@ -919,7 +950,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether department is enabled"
+          "description": "Whether department is enabled",
+          "semantic": false
         },
         {
           "name": "members",
@@ -928,12 +960,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Agent IDs in department"
+          "description": "Agent IDs in department",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "shortcuts": {
       "entity": "shortcuts",
+      "kind": "DATA",
       "data_type_name": "ShortcutsSearchData",
       "filter_type_name": "ShortcutsSearchFilter",
       "in_filter_type_name": "ShortcutsInFilter",
@@ -952,7 +990,8 @@
           "json_type": "integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Shortcut ID"
+          "description": "Shortcut ID",
+          "semantic": false
         },
         {
           "name": "name",
@@ -961,7 +1000,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Shortcut name/trigger"
+          "description": "Shortcut name/trigger",
+          "semantic": false
         },
         {
           "name": "message",
@@ -970,7 +1010,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Shortcut message content"
+          "description": "Shortcut message content",
+          "semantic": false
         },
         {
           "name": "tags",
@@ -979,12 +1020,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Tags applied when shortcut is used"
+          "description": "Tags applied when shortcut is used",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "triggers": {
       "entity": "triggers",
+      "kind": "DATA",
       "data_type_name": "TriggersSearchData",
       "filter_type_name": "TriggersSearchFilter",
       "in_filter_type_name": "TriggersInFilter",
@@ -1003,7 +1050,8 @@
           "json_type": "integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Trigger ID"
+          "description": "Trigger ID",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1012,7 +1060,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Trigger name"
+          "description": "Trigger name",
+          "semantic": false
         },
         {
           "name": "enabled",
@@ -1021,9 +1070,14 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether trigger is enabled"
+          "description": "Whether trigger is enabled",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

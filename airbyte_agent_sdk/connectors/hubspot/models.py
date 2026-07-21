@@ -206,13 +206,6 @@ class TicketsList(BaseModel):
     paging: Paging | None = Field(default=None)
     total: int | None = Field(default=None)
 
-class SchemaLabels(BaseModel):
-    """Display labels"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    singular: str | None = Field(default=None)
-    plural: str | None = Field(default=None)
-
 class SchemaPropertiesItemModificationmetadata(BaseModel):
     """Nested schema for SchemaPropertiesItem.modificationMetadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -265,6 +258,13 @@ class SchemaAssociationsItem(BaseModel):
     max_from_object_ids: int | None = Field(default=None, alias="maxFromObjectIds")
     created_at: str | None | None = Field(default=None, alias="createdAt")
     updated_at: str | None | None = Field(default=None, alias="updatedAt")
+
+class SchemaLabels(BaseModel):
+    """Display labels"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    singular: str | None = Field(default=None)
+    plural: str | None = Field(default=None)
 
 class Schema(BaseModel):
     """Custom object schema definition"""
@@ -567,14 +567,12 @@ class TicketUpdateParams(BaseModel):
 
     properties: TicketUpdateParamsProperties
 
-class AssociationResultResultsItemAssociationspec(BaseModel):
-    """Details about the association type"""
+class AssociationResultResultsItemTo(BaseModel):
+    """The target record of the association"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    association_category: str | None = Field(default=None, alias="associationCategory", description="Category of the association (HUBSPOT_DEFINED or USER_DEFINED)")
-    """Category of the association (HUBSPOT_DEFINED or USER_DEFINED)"""
-    association_type_id: int | None = Field(default=None, alias="associationTypeId", description="Numeric ID of the association type")
-    """Numeric ID of the association type"""
+    id: str | None = Field(default=None, description="ID of the target record")
+    """ID of the target record"""
 
 class AssociationResultResultsItemFrom(BaseModel):
     """The source record of the association"""
@@ -583,12 +581,14 @@ class AssociationResultResultsItemFrom(BaseModel):
     id: str | None = Field(default=None, description="ID of the source record")
     """ID of the source record"""
 
-class AssociationResultResultsItemTo(BaseModel):
-    """The target record of the association"""
+class AssociationResultResultsItemAssociationspec(BaseModel):
+    """Details about the association type"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: str | None = Field(default=None, description="ID of the target record")
-    """ID of the target record"""
+    association_category: str | None = Field(default=None, alias="associationCategory", description="Category of the association (HUBSPOT_DEFINED or USER_DEFINED)")
+    """Category of the association (HUBSPOT_DEFINED or USER_DEFINED)"""
+    association_type_id: int | None = Field(default=None, alias="associationTypeId", description="Numeric ID of the association type")
+    """Numeric ID of the association type"""
 
 class AssociationResultResultsItem(BaseModel):
     """Nested schema for AssociationResult.results_item"""
@@ -692,17 +692,6 @@ class Note(BaseModel):
     archived_at: str | None = Field(default=None, alias="archivedAt")
     associations: dict[str, Any] | None = Field(default=None)
 
-class NoteCreateParamsProperties(BaseModel):
-    """Note properties to set"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    hs_note_body: str = Field(description="The body content of the note (supports HTML)")
-    """The body content of the note (supports HTML)"""
-    hs_timestamp: str = Field(description="Required. Timestamp when the note activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.")
-    """Required. Timestamp when the note activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one."""
-    hubspot_owner_id: str | None = Field(default=None, description="ID of the HubSpot owner to assign to this note")
-    """ID of the HubSpot owner to assign to this note"""
-
 class NoteCreateParamsAssociationsItemTo(BaseModel):
     """Nested schema for NoteCreateParamsAssociationsItem.to"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -725,6 +714,17 @@ class NoteCreateParamsAssociationsItem(BaseModel):
 
     to: NoteCreateParamsAssociationsItemTo | None = Field(default=None)
     types: list[NoteCreateParamsAssociationsItemTypesItem] | None = Field(default=None)
+
+class NoteCreateParamsProperties(BaseModel):
+    """Note properties to set"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    hs_note_body: str = Field(description="The body content of the note (supports HTML)")
+    """The body content of the note (supports HTML)"""
+    hs_timestamp: str = Field(description="Required. Timestamp when the note activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.")
+    """Required. Timestamp when the note activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one."""
+    hubspot_owner_id: str | None = Field(default=None, description="ID of the HubSpot owner to assign to this note")
+    """ID of the HubSpot owner to assign to this note"""
 
 class NoteCreateParams(BaseModel):
     """Parameters for creating a new note"""
@@ -936,6 +936,13 @@ class Email(BaseModel):
     archived_at: str | None = Field(default=None, alias="archivedAt")
     associations: dict[str, Any] | None = Field(default=None)
 
+class EmailCreateParamsAssociationsItemTo(BaseModel):
+    """Nested schema for EmailCreateParamsAssociationsItem.to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="ID of the record to associate with")
+    """ID of the record to associate with"""
+
 class EmailCreateParamsAssociationsItemTypesItem(BaseModel):
     """Nested schema for EmailCreateParamsAssociationsItem.types_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -944,13 +951,6 @@ class EmailCreateParamsAssociationsItemTypesItem(BaseModel):
     """Association category (e.g., HUBSPOT_DEFINED)"""
     association_type_id: int | None = Field(default=None, alias="associationTypeId", description="Association type ID (e.g., 198 for email-to-contact, 186 for email-to-company, 210 for email-to-deal, 224 for email-to-ticket)")
     """Association type ID (e.g., 198 for email-to-contact, 186 for email-to-company, 210 for email-to-deal, 224 for email-to-ticket)"""
-
-class EmailCreateParamsAssociationsItemTo(BaseModel):
-    """Nested schema for EmailCreateParamsAssociationsItem.to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None, description="ID of the record to associate with")
-    """ID of the record to associate with"""
 
 class EmailCreateParamsAssociationsItem(BaseModel):
     """Nested schema for EmailCreateParams.associations_item"""
@@ -1063,13 +1063,6 @@ class Meeting(BaseModel):
     archived_at: str | None = Field(default=None, alias="archivedAt")
     associations: dict[str, Any] | None = Field(default=None)
 
-class MeetingCreateParamsAssociationsItemTo(BaseModel):
-    """Nested schema for MeetingCreateParamsAssociationsItem.to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None, description="ID of the record to associate with")
-    """ID of the record to associate with"""
-
 class MeetingCreateParamsAssociationsItemTypesItem(BaseModel):
     """Nested schema for MeetingCreateParamsAssociationsItem.types_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1078,6 +1071,13 @@ class MeetingCreateParamsAssociationsItemTypesItem(BaseModel):
     """Association category (e.g., HUBSPOT_DEFINED)"""
     association_type_id: int | None = Field(default=None, alias="associationTypeId", description="Association type ID (e.g., 200 for meeting-to-contact, 188 for meeting-to-company, 212 for meeting-to-deal, 226 for meeting-to-ticket)")
     """Association type ID (e.g., 200 for meeting-to-contact, 188 for meeting-to-company, 212 for meeting-to-deal, 226 for meeting-to-ticket)"""
+
+class MeetingCreateParamsAssociationsItemTo(BaseModel):
+    """Nested schema for MeetingCreateParamsAssociationsItem.to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="ID of the record to associate with")
+    """ID of the record to associate with"""
 
 class MeetingCreateParamsAssociationsItem(BaseModel):
     """Nested schema for MeetingCreateParams.associations_item"""

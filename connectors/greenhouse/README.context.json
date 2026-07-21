@@ -1281,6 +1281,7 @@
   "search_schemas": {
     "applications": {
       "entity": "applications",
+      "kind": "DATA",
       "data_type_name": "ApplicationsSearchData",
       "filter_type_name": "ApplicationsSearchFilter",
       "in_filter_type_name": "ApplicationsInFilter",
@@ -1299,7 +1300,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Answers provided in the application."
+          "description": "Answers provided in the application.",
+          "semantic": false
         },
         {
           "name": "applied_at",
@@ -1308,7 +1310,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the candidate applied."
+          "description": "Timestamp when the candidate applied.",
+          "semantic": false
         },
         {
           "name": "attachments",
@@ -1317,7 +1320,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Attachments uploaded with the application."
+          "description": "Attachments uploaded with the application.",
+          "semantic": false
         },
         {
           "name": "candidate_id",
@@ -1326,7 +1330,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the candidate."
+          "description": "Unique identifier for the candidate.",
+          "semantic": false
         },
         {
           "name": "credited_to",
@@ -1335,7 +1340,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Information about the employee who credited the application."
+          "description": "Information about the employee who credited the application.",
+          "semantic": false
         },
         {
           "name": "current_stage",
@@ -1344,7 +1350,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Current stage of the application process."
+          "description": "Current stage of the application process.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1353,7 +1360,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the application."
+          "description": "Unique identifier for the application.",
+          "semantic": false
         },
         {
           "name": "job_post_id",
@@ -1362,7 +1370,8 @@
           "json_type": "integer | null",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "jobs",
@@ -1371,7 +1380,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Jobs applied for by the candidate."
+          "description": "Jobs applied for by the candidate.",
+          "semantic": false
         },
         {
           "name": "last_activity_at",
@@ -1380,7 +1390,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp of the last activity on the application."
+          "description": "Timestamp of the last activity on the application.",
+          "semantic": false
         },
         {
           "name": "location",
@@ -1389,7 +1400,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Location related to the application."
+          "description": "Location related to the application.",
+          "semantic": false
         },
         {
           "name": "prospect",
@@ -1398,7 +1410,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Status of the application prospect."
+          "description": "Status of the application prospect.",
+          "semantic": false
         },
         {
           "name": "prospect_detail",
@@ -1407,7 +1420,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details related to the application prospect."
+          "description": "Details related to the application prospect.",
+          "semantic": false
         },
         {
           "name": "prospective_department",
@@ -1416,7 +1430,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Prospective department for the candidate."
+          "description": "Prospective department for the candidate.",
+          "semantic": false
         },
         {
           "name": "prospective_office",
@@ -1425,7 +1440,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Prospective office for the candidate."
+          "description": "Prospective office for the candidate.",
+          "semantic": false
         },
         {
           "name": "rejected_at",
@@ -1434,7 +1450,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the application was rejected."
+          "description": "Timestamp when the application was rejected.",
+          "semantic": false
         },
         {
           "name": "rejection_details",
@@ -1443,7 +1460,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details related to the application rejection."
+          "description": "Details related to the application rejection.",
+          "semantic": false
         },
         {
           "name": "rejection_reason",
@@ -1452,7 +1470,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Reason for the application rejection."
+          "description": "Reason for the application rejection.",
+          "semantic": false
         },
         {
           "name": "source",
@@ -1461,7 +1480,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Source of the application."
+          "description": "Source of the application.",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1470,12 +1490,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the application."
+          "description": "Status of the application.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "candidates": {
       "entity": "candidates",
+      "kind": "DATA",
       "data_type_name": "CandidatesSearchData",
       "filter_type_name": "CandidatesSearchFilter",
       "in_filter_type_name": "CandidatesInFilter",
@@ -1494,7 +1520,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Candidate's addresses"
+          "description": "Candidate's addresses",
+          "semantic": false
         },
         {
           "name": "application_ids",
@@ -1503,7 +1530,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of application IDs"
+          "description": "List of application IDs",
+          "semantic": false
         },
         {
           "name": "applications",
@@ -1512,7 +1540,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "An array of all applications made by candidates."
+          "description": "An array of all applications made by candidates.",
+          "semantic": false
         },
         {
           "name": "attachments",
@@ -1521,7 +1550,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Attachments related to the candidate"
+          "description": "Attachments related to the candidate",
+          "semantic": false
         },
         {
           "name": "can_email",
@@ -1530,7 +1560,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if candidate can be emailed"
+          "description": "Indicates if candidate can be emailed",
+          "semantic": false
         },
         {
           "name": "company",
@@ -1539,7 +1570,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Company where the candidate is associated"
+          "description": "Company where the candidate is associated",
+          "semantic": false
         },
         {
           "name": "coordinator",
@@ -1548,7 +1580,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Coordinator assigned to the candidate"
+          "description": "Coordinator assigned to the candidate",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1557,7 +1590,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time of creation"
+          "description": "Date and time of creation",
+          "semantic": false
         },
         {
           "name": "custom_fields",
@@ -1566,7 +1600,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Custom fields associated with the candidate"
+          "description": "Custom fields associated with the candidate",
+          "semantic": false
         },
         {
           "name": "educations",
@@ -1575,7 +1610,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of candidate's educations"
+          "description": "List of candidate's educations",
+          "semantic": false
         },
         {
           "name": "email_addresses",
@@ -1584,7 +1620,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Candidate's email addresses"
+          "description": "Candidate's email addresses",
+          "semantic": false
         },
         {
           "name": "employments",
@@ -1593,7 +1630,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of candidate's employments"
+          "description": "List of candidate's employments",
+          "semantic": false
         },
         {
           "name": "first_name",
@@ -1602,7 +1640,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Candidate's first name"
+          "description": "Candidate's first name",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1611,7 +1650,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Candidate's ID"
+          "description": "Candidate's ID",
+          "semantic": false
         },
         {
           "name": "is_private",
@@ -1620,7 +1660,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the candidate's data is private"
+          "description": "Indicates if the candidate's data is private",
+          "semantic": false
         },
         {
           "name": "keyed_custom_fields",
@@ -1629,7 +1670,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Keyed custom fields associated with the candidate"
+          "description": "Keyed custom fields associated with the candidate",
+          "semantic": false
         },
         {
           "name": "last_activity",
@@ -1638,7 +1680,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Details of the last activity related to the candidate"
+          "description": "Details of the last activity related to the candidate",
+          "semantic": false
         },
         {
           "name": "last_name",
@@ -1647,7 +1690,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Candidate's last name"
+          "description": "Candidate's last name",
+          "semantic": false
         },
         {
           "name": "phone_numbers",
@@ -1656,7 +1700,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Candidate's phone numbers"
+          "description": "Candidate's phone numbers",
+          "semantic": false
         },
         {
           "name": "photo_url",
@@ -1665,7 +1710,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL of the candidate's profile photo"
+          "description": "URL of the candidate's profile photo",
+          "semantic": false
         },
         {
           "name": "recruiter",
@@ -1674,7 +1720,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Recruiter assigned to the candidate"
+          "description": "Recruiter assigned to the candidate",
+          "semantic": false
         },
         {
           "name": "social_media_addresses",
@@ -1683,7 +1730,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Candidate's social media addresses"
+          "description": "Candidate's social media addresses",
+          "semantic": false
         },
         {
           "name": "tags",
@@ -1692,7 +1740,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Tags associated with the candidate"
+          "description": "Tags associated with the candidate",
+          "semantic": false
         },
         {
           "name": "title",
@@ -1701,7 +1750,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Candidate's title (e.g., Mr., Mrs., Dr.)"
+          "description": "Candidate's title (e.g., Mr., Mrs., Dr.)",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1710,7 +1760,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time of last update"
+          "description": "Date and time of last update",
+          "semantic": false
         },
         {
           "name": "website_addresses",
@@ -1719,12 +1770,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of candidate's website addresses"
+          "description": "List of candidate's website addresses",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "departments": {
       "entity": "departments",
+      "kind": "DATA",
       "data_type_name": "DepartmentsSearchData",
       "filter_type_name": "DepartmentsSearchFilter",
       "in_filter_type_name": "DepartmentsInFilter",
@@ -1743,7 +1800,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "External IDs of child departments associated with this department."
+          "description": "External IDs of child departments associated with this department.",
+          "semantic": false
         },
         {
           "name": "child_ids",
@@ -1752,7 +1810,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Unique IDs of child departments associated with this department."
+          "description": "Unique IDs of child departments associated with this department.",
+          "semantic": false
         },
         {
           "name": "external_id",
@@ -1761,7 +1820,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "External ID of this department."
+          "description": "External ID of this department.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1770,7 +1830,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique ID of this department."
+          "description": "Unique ID of this department.",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1779,7 +1840,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the department."
+          "description": "Name of the department.",
+          "semantic": false
         },
         {
           "name": "parent_department_external_id",
@@ -1788,7 +1850,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "External ID of the parent department of this department."
+          "description": "External ID of the parent department of this department.",
+          "semantic": false
         },
         {
           "name": "parent_id",
@@ -1797,12 +1860,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique ID of the parent department of this department."
+          "description": "Unique ID of the parent department of this department.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "job_posts": {
       "entity": "job_posts",
+      "kind": "DATA",
       "data_type_name": "JobPostsSearchData",
       "filter_type_name": "JobPostsSearchFilter",
       "in_filter_type_name": "JobPostsInFilter",
@@ -1821,7 +1890,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the job post is active or not."
+          "description": "Flag indicating if the job post is active or not.",
+          "semantic": false
         },
         {
           "name": "content",
@@ -1830,7 +1900,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Content or description of the job post."
+          "description": "Content or description of the job post.",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1839,7 +1910,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the job post was created."
+          "description": "Date and time when the job post was created.",
+          "semantic": false
         },
         {
           "name": "demographic_question_set_id",
@@ -1848,7 +1920,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "ID of the demographic question set associated with the job post."
+          "description": "ID of the demographic question set associated with the job post.",
+          "semantic": false
         },
         {
           "name": "external",
@@ -1857,7 +1930,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the job post is external or not."
+          "description": "Flag indicating if the job post is external or not.",
+          "semantic": false
         },
         {
           "name": "first_published_at",
@@ -1866,7 +1940,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the job post was first published."
+          "description": "Date and time when the job post was first published.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1875,7 +1950,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier of the job post."
+          "description": "Unique identifier of the job post.",
+          "semantic": false
         },
         {
           "name": "internal",
@@ -1884,7 +1960,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the job post is internal or not."
+          "description": "Flag indicating if the job post is internal or not.",
+          "semantic": false
         },
         {
           "name": "internal_content",
@@ -1893,7 +1970,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Internal content or description of the job post."
+          "description": "Internal content or description of the job post.",
+          "semantic": false
         },
         {
           "name": "job_id",
@@ -1902,7 +1980,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "ID of the job associated with the job post."
+          "description": "ID of the job associated with the job post.",
+          "semantic": false
         },
         {
           "name": "live",
@@ -1911,7 +1990,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the job post is live or not."
+          "description": "Flag indicating if the job post is live or not.",
+          "semantic": false
         },
         {
           "name": "location",
@@ -1920,7 +2000,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details about the job post location."
+          "description": "Details about the job post location.",
+          "semantic": false
         },
         {
           "name": "questions",
@@ -1929,7 +2010,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of questions related to the job post."
+          "description": "List of questions related to the job post.",
+          "semantic": false
         },
         {
           "name": "title",
@@ -1938,7 +2020,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Title or headline of the job post."
+          "description": "Title or headline of the job post.",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1947,12 +2030,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the job post was last updated."
+          "description": "Date and time when the job post was last updated.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "jobs": {
       "entity": "jobs",
+      "kind": "DATA",
       "data_type_name": "JobsSearchData",
       "filter_type_name": "JobsSearchFilter",
       "in_filter_type_name": "JobsInFilter",
@@ -1971,7 +2060,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the job was closed"
+          "description": "The date and time the job was closed",
+          "semantic": false
         },
         {
           "name": "confidential",
@@ -1980,7 +2070,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the job details are confidential"
+          "description": "Indicates if the job details are confidential",
+          "semantic": false
         },
         {
           "name": "copied_from_id",
@@ -1989,7 +2080,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The ID of the job from which this job was copied"
+          "description": "The ID of the job from which this job was copied",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1998,7 +2090,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the job was created"
+          "description": "The date and time the job was created",
+          "semantic": false
         },
         {
           "name": "custom_fields",
@@ -2007,7 +2100,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Custom fields related to the job"
+          "description": "Custom fields related to the job",
+          "semantic": false
         },
         {
           "name": "departments",
@@ -2016,7 +2110,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Departments associated with the job"
+          "description": "Departments associated with the job",
+          "semantic": false
         },
         {
           "name": "hiring_team",
@@ -2025,7 +2120,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Members of the hiring team for the job"
+          "description": "Members of the hiring team for the job",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2034,7 +2130,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique ID of the job"
+          "description": "Unique ID of the job",
+          "semantic": false
         },
         {
           "name": "is_template",
@@ -2043,7 +2140,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the job is a template"
+          "description": "Indicates if the job is a template",
+          "semantic": false
         },
         {
           "name": "keyed_custom_fields",
@@ -2052,7 +2150,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Keyed custom fields related to the job"
+          "description": "Keyed custom fields related to the job",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2061,7 +2160,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the job"
+          "description": "Name of the job",
+          "semantic": false
         },
         {
           "name": "notes",
@@ -2070,7 +2170,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Additional notes or comments about the job"
+          "description": "Additional notes or comments about the job",
+          "semantic": false
         },
         {
           "name": "offices",
@@ -2079,7 +2180,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Offices associated with the job"
+          "description": "Offices associated with the job",
+          "semantic": false
         },
         {
           "name": "opened_at",
@@ -2088,7 +2190,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the job was opened"
+          "description": "The date and time the job was opened",
+          "semantic": false
         },
         {
           "name": "openings",
@@ -2097,7 +2200,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Openings associated with the job"
+          "description": "Openings associated with the job",
+          "semantic": false
         },
         {
           "name": "requisition_id",
@@ -2106,7 +2210,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID associated with the job requisition"
+          "description": "ID associated with the job requisition",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2115,7 +2220,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current status of the job"
+          "description": "Current status of the job",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2124,12 +2230,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the job was last updated"
+          "description": "The date and time the job was last updated",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "offers": {
       "entity": "offers",
+      "kind": "DATA",
       "data_type_name": "OffersSearchData",
       "filter_type_name": "OffersSearchFilter",
       "in_filter_type_name": "OffersInFilter",
@@ -2148,7 +2260,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the application associated with the offer"
+          "description": "Unique identifier for the application associated with the offer",
+          "semantic": false
         },
         {
           "name": "candidate_id",
@@ -2157,7 +2270,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the candidate associated with the offer"
+          "description": "Unique identifier for the candidate associated with the offer",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -2166,7 +2280,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the offer was created"
+          "description": "Timestamp indicating when the offer was created",
+          "semantic": false
         },
         {
           "name": "custom_fields",
@@ -2175,7 +2290,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Additional custom fields related to the offer"
+          "description": "Additional custom fields related to the offer",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2184,7 +2300,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the offer"
+          "description": "Unique identifier for the offer",
+          "semantic": false
         },
         {
           "name": "job_id",
@@ -2193,7 +2310,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the job associated with the offer"
+          "description": "Unique identifier for the job associated with the offer",
+          "semantic": false
         },
         {
           "name": "keyed_custom_fields",
@@ -2202,7 +2320,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Keyed custom fields associated with the offer"
+          "description": "Keyed custom fields associated with the offer",
+          "semantic": false
         },
         {
           "name": "opening",
@@ -2211,7 +2330,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Details about the job opening"
+          "description": "Details about the job opening",
+          "semantic": false
         },
         {
           "name": "resolved_at",
@@ -2220,7 +2340,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the offer was resolved"
+          "description": "Timestamp indicating when the offer was resolved",
+          "semantic": false
         },
         {
           "name": "sent_at",
@@ -2229,7 +2350,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the offer was sent"
+          "description": "Timestamp indicating when the offer was sent",
+          "semantic": false
         },
         {
           "name": "starts_at",
@@ -2238,7 +2360,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the offer starts"
+          "description": "Timestamp indicating when the offer starts",
+          "semantic": false
         },
         {
           "name": "status",
@@ -2247,7 +2370,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the offer"
+          "description": "Status of the offer",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2256,7 +2380,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the offer was last updated"
+          "description": "Timestamp indicating when the offer was last updated",
+          "semantic": false
         },
         {
           "name": "version",
@@ -2265,12 +2390,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Version of the offer data"
+          "description": "Version of the offer data",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "offices": {
       "entity": "offices",
+      "kind": "DATA",
       "data_type_name": "OfficesSearchData",
       "filter_type_name": "OfficesSearchFilter",
       "in_filter_type_name": "OfficesInFilter",
@@ -2289,7 +2420,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "IDs of child offices associated with this office"
+          "description": "IDs of child offices associated with this office",
+          "semantic": false
         },
         {
           "name": "child_office_external_ids",
@@ -2298,7 +2430,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "External IDs of child offices associated with this office"
+          "description": "External IDs of child offices associated with this office",
+          "semantic": false
         },
         {
           "name": "external_id",
@@ -2307,7 +2440,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for this office in the external system"
+          "description": "Unique identifier for this office in the external system",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2316,7 +2450,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for this office in the API system"
+          "description": "Unique identifier for this office in the API system",
+          "semantic": false
         },
         {
           "name": "location",
@@ -2325,7 +2460,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Location details of this office"
+          "description": "Location details of this office",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2334,7 +2470,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the office"
+          "description": "Name of the office",
+          "semantic": false
         },
         {
           "name": "parent_id",
@@ -2343,7 +2480,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "ID of the parent office, if this office is a branch office"
+          "description": "ID of the parent office, if this office is a branch office",
+          "semantic": false
         },
         {
           "name": "parent_office_external_id",
@@ -2352,7 +2490,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "External ID of the parent office in the external system"
+          "description": "External ID of the parent office in the external system",
+          "semantic": false
         },
         {
           "name": "primary_contact_user_id",
@@ -2361,12 +2500,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "User ID of the primary contact person for this office"
+          "description": "User ID of the primary contact person for this office",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "sources": {
       "entity": "sources",
+      "kind": "DATA",
       "data_type_name": "SourcesSearchData",
       "filter_type_name": "SourcesSearchFilter",
       "in_filter_type_name": "SourcesInFilter",
@@ -2385,7 +2530,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The unique identifier for the source."
+          "description": "The unique identifier for the source.",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2394,7 +2540,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the source."
+          "description": "The name of the source.",
+          "semantic": false
         },
         {
           "name": "type",
@@ -2403,12 +2550,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Type of the data source"
+          "description": "Type of the data source",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "users": {
       "entity": "users",
+      "kind": "DATA",
       "data_type_name": "UsersSearchData",
       "filter_type_name": "UsersSearchFilter",
       "in_filter_type_name": "UsersInFilter",
@@ -2427,7 +2580,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time when the user account was created."
+          "description": "The date and time when the user account was created.",
+          "semantic": false
         },
         {
           "name": "departments",
@@ -2436,7 +2590,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of departments associated with users"
+          "description": "List of departments associated with users",
+          "semantic": false
         },
         {
           "name": "disabled",
@@ -2445,7 +2600,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the user account is disabled."
+          "description": "Indicates whether the user account is disabled.",
+          "semantic": false
         },
         {
           "name": "emails",
@@ -2454,7 +2610,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Email addresses of the users"
+          "description": "Email addresses of the users",
+          "semantic": false
         },
         {
           "name": "employee_id",
@@ -2463,7 +2620,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Employee identifier for the user."
+          "description": "Employee identifier for the user.",
+          "semantic": false
         },
         {
           "name": "first_name",
@@ -2472,7 +2630,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The first name of the user."
+          "description": "The first name of the user.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -2481,7 +2640,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the user."
+          "description": "Unique identifier for the user.",
+          "semantic": false
         },
         {
           "name": "last_name",
@@ -2490,7 +2650,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The last name of the user."
+          "description": "The last name of the user.",
+          "semantic": false
         },
         {
           "name": "linked_candidate_ids",
@@ -2499,7 +2660,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "IDs of candidates linked to the user."
+          "description": "IDs of candidates linked to the user.",
+          "semantic": false
         },
         {
           "name": "name",
@@ -2508,7 +2670,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The full name of the user."
+          "description": "The full name of the user.",
+          "semantic": false
         },
         {
           "name": "offices",
@@ -2517,7 +2680,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of office locations where users are based"
+          "description": "List of office locations where users are based",
+          "semantic": false
         },
         {
           "name": "primary_email_address",
@@ -2526,7 +2690,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The primary email address of the user."
+          "description": "The primary email address of the user.",
+          "semantic": false
         },
         {
           "name": "site_admin",
@@ -2535,7 +2700,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the user is a site administrator."
+          "description": "Indicates whether the user is a site administrator.",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -2544,9 +2710,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time when the user account was last updated."
+          "description": "The date and time when the user account was last updated.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

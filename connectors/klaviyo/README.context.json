@@ -682,6 +682,7 @@
   "search_schemas": {
     "profiles": {
       "entity": "profiles",
+      "kind": "DATA",
       "data_type_name": "ProfilesSearchData",
       "filter_type_name": "ProfilesSearchFilter",
       "in_filter_type_name": "ProfilesInFilter",
@@ -700,7 +701,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -709,7 +711,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "links",
@@ -718,7 +721,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "relationships",
@@ -727,7 +731,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "segments",
@@ -736,7 +741,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "type",
@@ -745,7 +751,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -754,12 +761,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "events": {
       "entity": "events",
+      "kind": "DATA",
       "data_type_name": "EventsSearchData",
       "filter_type_name": "EventsSearchFilter",
       "in_filter_type_name": "EventsInFilter",
@@ -778,7 +791,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "datetime",
@@ -787,7 +801,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -796,7 +811,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "links",
@@ -805,7 +821,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "relationships",
@@ -814,7 +831,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "type",
@@ -823,12 +841,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "email_templates": {
       "entity": "email_templates",
+      "kind": "DATA",
       "data_type_name": "EmailTemplatesSearchData",
       "filter_type_name": "EmailTemplatesSearchFilter",
       "in_filter_type_name": "EmailTemplatesInFilter",
@@ -847,7 +871,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -856,7 +881,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "links",
@@ -865,7 +891,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "type",
@@ -874,7 +901,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -883,12 +911,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "campaigns": {
       "entity": "campaigns",
+      "kind": "DATA",
       "data_type_name": "CampaignsSearchData",
       "filter_type_name": "CampaignsSearchFilter",
       "in_filter_type_name": "CampaignsInFilter",
@@ -907,7 +941,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -916,7 +951,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "links",
@@ -925,7 +961,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "relationships",
@@ -934,7 +971,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "type",
@@ -943,7 +981,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -952,12 +991,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "flows": {
       "entity": "flows",
+      "kind": "DATA",
       "data_type_name": "FlowsSearchData",
       "filter_type_name": "FlowsSearchFilter",
       "in_filter_type_name": "FlowsInFilter",
@@ -976,7 +1021,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -985,7 +1031,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "links",
@@ -994,7 +1041,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "relationships",
@@ -1003,7 +1051,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "type",
@@ -1012,7 +1061,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -1021,12 +1071,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "metrics": {
       "entity": "metrics",
+      "kind": "DATA",
       "data_type_name": "MetricsSearchData",
       "filter_type_name": "MetricsSearchFilter",
       "in_filter_type_name": "MetricsInFilter",
@@ -1045,7 +1101,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1054,7 +1111,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "links",
@@ -1063,7 +1121,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "relationships",
@@ -1072,7 +1131,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "type",
@@ -1081,7 +1141,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -1090,12 +1151,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "lists": {
       "entity": "lists",
+      "kind": "DATA",
       "data_type_name": "ListsSearchData",
       "filter_type_name": "ListsSearchFilter",
       "in_filter_type_name": "ListsInFilter",
@@ -1114,7 +1181,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1123,7 +1191,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "links",
@@ -1132,7 +1201,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "relationships",
@@ -1141,7 +1211,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "type",
@@ -1150,7 +1221,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -1159,9 +1231,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": ""
+          "description": "",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

@@ -321,6 +321,7 @@
   "search_schemas": {
     "annotations": {
       "entity": "annotations",
+      "kind": "DATA",
       "data_type_name": "AnnotationsSearchData",
       "filter_type_name": "AnnotationsSearchFilter",
       "in_filter_type_name": "AnnotationsInFilter",
@@ -339,7 +340,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date when the annotation was made"
+          "description": "The date when the annotation was made",
+          "semantic": false
         },
         {
           "name": "details",
@@ -348,7 +350,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Additional details or information related to the annotation"
+          "description": "Additional details or information related to the annotation",
+          "semantic": false
         },
         {
           "name": "id",
@@ -357,7 +360,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The unique identifier for the annotation"
+          "description": "The unique identifier for the annotation",
+          "semantic": false
         },
         {
           "name": "label",
@@ -366,12 +370,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The label assigned to the annotation"
+          "description": "The label assigned to the annotation",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "cohorts": {
       "entity": "cohorts",
+      "kind": "DATA",
       "data_type_name": "CohortsSearchData",
       "filter_type_name": "CohortsSearchFilter",
       "in_filter_type_name": "CohortsInFilter",
@@ -390,7 +400,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The unique identifier of the application"
+          "description": "The unique identifier of the application",
+          "semantic": false
         },
         {
           "name": "archived",
@@ -399,7 +410,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the cohort data is archived"
+          "description": "Indicates if the cohort data is archived",
+          "semantic": false
         },
         {
           "name": "chart_id",
@@ -408,7 +420,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The identifier of the chart associated with the cohort"
+          "description": "The identifier of the chart associated with the cohort",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -417,7 +430,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The timestamp when the cohort was created"
+          "description": "The timestamp when the cohort was created",
+          "semantic": false
         },
         {
           "name": "definition",
@@ -426,7 +440,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The specific definition or criteria for the cohort"
+          "description": "The specific definition or criteria for the cohort",
+          "semantic": false
         },
         {
           "name": "description",
@@ -435,7 +450,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A brief explanation or summary of the cohort"
+          "description": "A brief explanation or summary of the cohort",
+          "semantic": false
         },
         {
           "name": "edit_id",
@@ -444,7 +460,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID for editing purposes or version control"
+          "description": "The ID for editing purposes or version control",
+          "semantic": false
         },
         {
           "name": "finished",
@@ -453,7 +470,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the cohort data has been finalized"
+          "description": "Indicates if the cohort data has been finalized",
+          "semantic": false
         },
         {
           "name": "hidden",
@@ -462,7 +480,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag to determine if the cohort is hidden from view"
+          "description": "Flag to determine if the cohort is hidden from view",
+          "semantic": false
         },
         {
           "name": "id",
@@ -471,7 +490,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier for the cohort"
+          "description": "The unique identifier for the cohort",
+          "semantic": false
         },
         {
           "name": "is_official_content",
@@ -480,7 +500,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the cohort data is official content"
+          "description": "Indicates if the cohort data is official content",
+          "semantic": false
         },
         {
           "name": "is_predictive",
@@ -489,7 +510,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag to indicate if the cohort is predictive"
+          "description": "Flag to indicate if the cohort is predictive",
+          "semantic": false
         },
         {
           "name": "lastComputed",
@@ -498,7 +520,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp of the last computation of cohort data"
+          "description": "Timestamp of the last computation of cohort data",
+          "semantic": false
         },
         {
           "name": "lastMod",
@@ -507,7 +530,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp of the last modification made to the cohort"
+          "description": "Timestamp of the last modification made to the cohort",
+          "semantic": false
         },
         {
           "name": "last_viewed",
@@ -516,7 +540,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Timestamp when the cohort was last viewed"
+          "description": "Timestamp when the cohort was last viewed",
+          "semantic": false
         },
         {
           "name": "location_id",
@@ -525,7 +550,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Identifier of the location associated with the cohort"
+          "description": "Identifier of the location associated with the cohort",
+          "semantic": false
         },
         {
           "name": "metadata",
@@ -534,7 +560,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Additional information or data related to the cohort"
+          "description": "Additional information or data related to the cohort",
+          "semantic": false
         },
         {
           "name": "name",
@@ -543,7 +570,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name or title of the cohort"
+          "description": "The name or title of the cohort",
+          "semantic": false
         },
         {
           "name": "owners",
@@ -552,7 +580,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "The owners or administrators of the cohort"
+          "description": "The owners or administrators of the cohort",
+          "semantic": false
         },
         {
           "name": "popularity",
@@ -561,7 +590,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Popularity rank or score of the cohort"
+          "description": "Popularity rank or score of the cohort",
+          "semantic": false
         },
         {
           "name": "published",
@@ -570,7 +600,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Status indicating if the cohort data is published"
+          "description": "Status indicating if the cohort data is published",
+          "semantic": false
         },
         {
           "name": "shortcut_ids",
@@ -579,7 +610,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Identifiers of any shortcuts associated with the cohort"
+          "description": "Identifiers of any shortcuts associated with the cohort",
+          "semantic": false
         },
         {
           "name": "size",
@@ -588,7 +620,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Size or scale of the cohort data"
+          "description": "Size or scale of the cohort data",
+          "semantic": false
         },
         {
           "name": "type",
@@ -597,7 +630,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type or category of the cohort"
+          "description": "The type or category of the cohort",
+          "semantic": false
         },
         {
           "name": "view_count",
@@ -606,7 +640,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The total count of views on the cohort data"
+          "description": "The total count of views on the cohort data",
+          "semantic": false
         },
         {
           "name": "viewers",
@@ -615,12 +650,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Users or viewers who have access to the cohort data"
+          "description": "Users or viewers who have access to the cohort data",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "events_list": {
       "entity": "events_list",
+      "kind": "DATA",
       "data_type_name": "EventsListSearchData",
       "filter_type_name": "EventsListSearchFilter",
       "in_filter_type_name": "EventsListInFilter",
@@ -639,7 +680,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the event is auto-hidden"
+          "description": "Whether the event is auto-hidden",
+          "semantic": false
         },
         {
           "name": "clusters_hidden",
@@ -648,7 +690,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the event is hidden from clusters"
+          "description": "Whether the event is hidden from clusters",
+          "semantic": false
         },
         {
           "name": "deleted",
@@ -657,7 +700,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the event is deleted"
+          "description": "Whether the event is deleted",
+          "semantic": false
         },
         {
           "name": "display",
@@ -666,7 +710,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Display name of the event"
+          "description": "Display name of the event",
+          "semantic": false
         },
         {
           "name": "flow_hidden",
@@ -675,7 +720,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the event is hidden from Pathfinder"
+          "description": "Whether the event is hidden from Pathfinder",
+          "semantic": false
         },
         {
           "name": "hidden",
@@ -684,7 +730,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the event is hidden"
+          "description": "Whether the event is hidden",
+          "semantic": false
         },
         {
           "name": "id",
@@ -693,7 +740,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Unique identifier for the event type"
+          "description": "Unique identifier for the event type",
+          "semantic": false
         },
         {
           "name": "in_waitroom",
@@ -702,7 +750,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the event is in the waitroom"
+          "description": "Whether the event is in the waitroom",
+          "semantic": false
         },
         {
           "name": "name",
@@ -711,7 +760,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the event type"
+          "description": "Name of the event type",
+          "semantic": false
         },
         {
           "name": "non_active",
@@ -720,7 +770,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the event is marked as inactive"
+          "description": "Whether the event is marked as inactive",
+          "semantic": false
         },
         {
           "name": "timeline_hidden",
@@ -729,7 +780,8 @@
           "json_type": "null | boolean | number",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the event is hidden from the timeline"
+          "description": "Whether the event is hidden from the timeline",
+          "semantic": false
         },
         {
           "name": "totals",
@@ -738,7 +790,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Total number of times the event occurred this week"
+          "description": "Total number of times the event occurred this week",
+          "semantic": false
         },
         {
           "name": "totals_delta",
@@ -747,7 +800,8 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "Change in totals from the previous period"
+          "description": "Change in totals from the previous period",
+          "semantic": false
         },
         {
           "name": "value",
@@ -756,12 +810,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Raw event name in the data"
+          "description": "Raw event name in the data",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "active_users": {
       "entity": "active_users",
+      "kind": "DATA",
       "data_type_name": "ActiveUsersSearchData",
       "filter_type_name": "ActiveUsersSearchFilter",
       "in_filter_type_name": "ActiveUsersInFilter",
@@ -780,7 +840,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date for which the active user data is reported"
+          "description": "The date for which the active user data is reported",
+          "semantic": false
         },
         {
           "name": "statistics",
@@ -789,12 +850,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The statistics related to the active users for the given date"
+          "description": "The statistics related to the active users for the given date",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "average_session_length": {
       "entity": "average_session_length",
+      "kind": "DATA",
       "data_type_name": "AverageSessionLengthSearchData",
       "filter_type_name": "AverageSessionLengthSearchFilter",
       "in_filter_type_name": "AverageSessionLengthInFilter",
@@ -813,7 +880,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date on which the session occurred"
+          "description": "The date on which the session occurred",
+          "semantic": false
         },
         {
           "name": "length",
@@ -822,9 +890,14 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "The duration of the session in seconds"
+          "description": "The duration of the session in seconds",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

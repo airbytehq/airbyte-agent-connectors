@@ -1472,6 +1472,7 @@
   "search_schemas": {
     "users": {
       "entity": "users",
+      "kind": "DATA",
       "data_type_name": "UsersSearchData",
       "filter_type_name": "UsersSearchFilter",
       "in_filter_type_name": "UsersInFilter",
@@ -1490,7 +1491,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the user is currently active or not"
+          "description": "Indicates if the user is currently active or not",
+          "semantic": false
         },
         {
           "name": "created",
@@ -1499,7 +1501,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp denoting when the user account was created"
+          "description": "The timestamp denoting when the user account was created",
+          "semantic": false
         },
         {
           "name": "emailAddress",
@@ -1508,7 +1511,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The primary email address associated with the user"
+          "description": "The primary email address associated with the user",
+          "semantic": false
         },
         {
           "name": "emailAliases",
@@ -1517,7 +1521,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Additional email addresses that can be used to reach the user"
+          "description": "Additional email addresses that can be used to reach the user",
+          "semantic": false
         },
         {
           "name": "extension",
@@ -1526,7 +1531,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The phone extension number for the user"
+          "description": "The phone extension number for the user",
+          "semantic": false
         },
         {
           "name": "firstName",
@@ -1535,7 +1541,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The first name of the user"
+          "description": "The first name of the user",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1544,7 +1551,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the user"
+          "description": "Unique identifier for the user",
+          "semantic": false
         },
         {
           "name": "lastName",
@@ -1553,7 +1561,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The last name of the user"
+          "description": "The last name of the user",
+          "semantic": false
         },
         {
           "name": "managerId",
@@ -1562,7 +1571,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The ID of the user's manager"
+          "description": "The ID of the user's manager",
+          "semantic": false
         },
         {
           "name": "meetingConsentPageUrl",
@@ -1571,7 +1581,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL for the consent page related to meetings"
+          "description": "URL for the consent page related to meetings",
+          "semantic": false
         },
         {
           "name": "personalMeetingUrls",
@@ -1580,7 +1591,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "URLs for personal meeting rooms assigned to the user"
+          "description": "URLs for personal meeting rooms assigned to the user",
+          "semantic": false
         },
         {
           "name": "phoneNumber",
@@ -1589,7 +1601,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The phone number associated with the user"
+          "description": "The phone number associated with the user",
+          "semantic": false
         },
         {
           "name": "settings",
@@ -1598,7 +1611,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "User-specific settings and configurations"
+          "description": "User-specific settings and configurations",
+          "semantic": false
         },
         {
           "name": "spokenLanguages",
@@ -1607,7 +1621,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Languages spoken by the user"
+          "description": "Languages spoken by the user",
+          "semantic": false
         },
         {
           "name": "title",
@@ -1616,7 +1631,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The job title or position of the user"
+          "description": "The job title or position of the user",
+          "semantic": false
         },
         {
           "name": "trustedEmailAddress",
@@ -1625,12 +1641,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "An email address that is considered trusted for the user"
+          "description": "An email address that is considered trusted for the user",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "calls": {
       "entity": "calls",
+      "kind": "DATA",
       "data_type_name": "CallsSearchData",
       "filter_type_name": "CallsSearchFilter",
       "in_filter_type_name": "CallsInFilter",
@@ -1649,7 +1671,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the calendar event associated with the call."
+          "description": "Unique identifier for the calendar event associated with the call.",
+          "semantic": false
         },
         {
           "name": "clientUniqueId",
@@ -1658,7 +1681,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the client related to the call."
+          "description": "Unique identifier for the client related to the call.",
+          "semantic": false
         },
         {
           "name": "customData",
@@ -1667,7 +1691,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Custom data associated with the call."
+          "description": "Custom data associated with the call.",
+          "semantic": false
         },
         {
           "name": "direction",
@@ -1676,7 +1701,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Direction of the call (inbound/outbound)."
+          "description": "Direction of the call (inbound/outbound).",
+          "semantic": false
         },
         {
           "name": "duration",
@@ -1685,7 +1711,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Duration of the call in seconds."
+          "description": "Duration of the call in seconds.",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1694,7 +1721,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the call."
+          "description": "Unique identifier for the call.",
+          "semantic": false
         },
         {
           "name": "isPrivate",
@@ -1703,7 +1731,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the call is private or not."
+          "description": "Indicates if the call is private or not.",
+          "semantic": false
         },
         {
           "name": "language",
@@ -1712,7 +1741,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Language used in the call."
+          "description": "Language used in the call.",
+          "semantic": false
         },
         {
           "name": "media",
@@ -1721,7 +1751,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Media type used for communication (voice, video, etc.)."
+          "description": "Media type used for communication (voice, video, etc.).",
+          "semantic": false
         },
         {
           "name": "meetingUrl",
@@ -1730,7 +1761,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL for accessing the meeting associated with the call."
+          "description": "URL for accessing the meeting associated with the call.",
+          "semantic": false
         },
         {
           "name": "primaryUserId",
@@ -1739,7 +1771,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the primary user involved in the call."
+          "description": "Unique identifier for the primary user involved in the call.",
+          "semantic": false
         },
         {
           "name": "purpose",
@@ -1748,7 +1781,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Purpose or topic of the call."
+          "description": "Purpose or topic of the call.",
+          "semantic": false
         },
         {
           "name": "scheduled",
@@ -1757,7 +1791,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Scheduled date and time of the call."
+          "description": "Scheduled date and time of the call.",
+          "semantic": false
         },
         {
           "name": "scope",
@@ -1766,7 +1801,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Scope or extent of the call."
+          "description": "Scope or extent of the call.",
+          "semantic": false
         },
         {
           "name": "sdrDisposition",
@@ -1775,7 +1811,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Disposition set by the sales development representative."
+          "description": "Disposition set by the sales development representative.",
+          "semantic": false
         },
         {
           "name": "started",
@@ -1784,7 +1821,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Start date and time of the call."
+          "description": "Start date and time of the call.",
+          "semantic": false
         },
         {
           "name": "system",
@@ -1793,7 +1831,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "System information related to the call."
+          "description": "System information related to the call.",
+          "semantic": false
         },
         {
           "name": "title",
@@ -1802,7 +1841,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Title or headline of the call."
+          "description": "Title or headline of the call.",
+          "semantic": false
         },
         {
           "name": "url",
@@ -1811,7 +1851,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL associated with the call."
+          "description": "URL associated with the call.",
+          "semantic": false
         },
         {
           "name": "workspaceId",
@@ -1820,12 +1861,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Identifier for the workspace to which the call belongs."
+          "description": "Identifier for the workspace to which the call belongs.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "calls_extensive": {
       "entity": "calls_extensive",
+      "kind": "DATA",
       "data_type_name": "CallsExtensiveSearchData",
       "filter_type_name": "CallsExtensiveSearchFilter",
       "in_filter_type_name": "CallsExtensiveInFilter",
@@ -1844,7 +1891,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the call (from metaData.id)."
+          "description": "Unique identifier for the call (from metaData.id).",
+          "semantic": false
         },
         {
           "name": "startdatetime",
@@ -1853,7 +1901,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Datetime for extensive calls."
+          "description": "Datetime for extensive calls.",
+          "semantic": false
         },
         {
           "name": "collaboration",
@@ -1862,7 +1911,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Collaboration information added to the call"
+          "description": "Collaboration information added to the call",
+          "semantic": false
         },
         {
           "name": "content",
@@ -1871,7 +1921,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Analysis of the interaction content."
+          "description": "Analysis of the interaction content.",
+          "semantic": false
         },
         {
           "name": "context",
@@ -1880,7 +1931,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "A list of the agenda of each part of the call."
+          "description": "A list of the agenda of each part of the call.",
+          "semantic": false
         },
         {
           "name": "interaction",
@@ -1889,7 +1941,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Metrics collected around the interaction during the call."
+          "description": "Metrics collected around the interaction during the call.",
+          "semantic": false
         },
         {
           "name": "media",
@@ -1898,7 +1951,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The media urls of the call."
+          "description": "The media urls of the call.",
+          "semantic": false
         },
         {
           "name": "metaData",
@@ -1907,7 +1961,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "call's metadata."
+          "description": "call's metadata.",
+          "semantic": false
         },
         {
           "name": "parties",
@@ -1916,12 +1971,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "A list of the call's participants"
+          "description": "A list of the call's participants",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "settings_scorecards": {
       "entity": "settings_scorecards",
+      "kind": "DATA",
       "data_type_name": "SettingsScorecardsSearchData",
       "filter_type_name": "SettingsScorecardsSearchFilter",
       "in_filter_type_name": "SettingsScorecardsInFilter",
@@ -1940,7 +2001,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp when the scorecard was created"
+          "description": "The timestamp when the scorecard was created",
+          "semantic": false
         },
         {
           "name": "enabled",
@@ -1949,7 +2011,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the scorecard is enabled or disabled"
+          "description": "Indicates if the scorecard is enabled or disabled",
+          "semantic": false
         },
         {
           "name": "questions",
@@ -1958,7 +2021,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "An array of questions related to the scorecard"
+          "description": "An array of questions related to the scorecard",
+          "semantic": false
         },
         {
           "name": "scorecardId",
@@ -1967,7 +2031,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the scorecard"
+          "description": "The unique identifier of the scorecard",
+          "semantic": false
         },
         {
           "name": "scorecardName",
@@ -1976,7 +2041,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the scorecard"
+          "description": "The name of the scorecard",
+          "semantic": false
         },
         {
           "name": "updated",
@@ -1985,7 +2051,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The timestamp when the scorecard was last updated"
+          "description": "The timestamp when the scorecard was last updated",
+          "semantic": false
         },
         {
           "name": "updaterUserId",
@@ -1994,7 +2061,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The user ID of the person who last updated the scorecard"
+          "description": "The user ID of the person who last updated the scorecard",
+          "semantic": false
         },
         {
           "name": "workspaceId",
@@ -2003,12 +2071,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the workspace associated with the scorecard"
+          "description": "The unique identifier of the workspace associated with the scorecard",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "stats_activity_scorecards": {
       "entity": "stats_activity_scorecards",
+      "kind": "DATA",
       "data_type_name": "StatsActivityScorecardsSearchData",
       "filter_type_name": "StatsActivityScorecardsSearchFilter",
       "in_filter_type_name": "StatsActivityScorecardsInFilter",
@@ -2027,7 +2101,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the answered scorecard instance."
+          "description": "Unique identifier for the answered scorecard instance.",
+          "semantic": false
         },
         {
           "name": "answers",
@@ -2036,7 +2111,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Contains the answered questions in the scorecards"
+          "description": "Contains the answered questions in the scorecards",
+          "semantic": false
         },
         {
           "name": "callId",
@@ -2045,7 +2121,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the call associated with the answered scorecard."
+          "description": "Unique identifier for the call associated with the answered scorecard.",
+          "semantic": false
         },
         {
           "name": "callStartTime",
@@ -2054,7 +2131,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating the start time of the call."
+          "description": "Timestamp indicating the start time of the call.",
+          "semantic": false
         },
         {
           "name": "reviewTime",
@@ -2063,7 +2141,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the review of the answered scorecard was completed."
+          "description": "Timestamp indicating when the review of the answered scorecard was completed.",
+          "semantic": false
         },
         {
           "name": "reviewedUserId",
@@ -2072,7 +2151,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the user whose performance was reviewed."
+          "description": "Unique identifier for the user whose performance was reviewed.",
+          "semantic": false
         },
         {
           "name": "reviewerUserId",
@@ -2081,7 +2161,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the user who performed the review."
+          "description": "Unique identifier for the user who performed the review.",
+          "semantic": false
         },
         {
           "name": "scorecardId",
@@ -2090,7 +2171,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the scorecard template used."
+          "description": "Unique identifier for the scorecard template used.",
+          "semantic": false
         },
         {
           "name": "scorecardName",
@@ -2099,7 +2181,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name or title of the scorecard template used."
+          "description": "Name or title of the scorecard template used.",
+          "semantic": false
         },
         {
           "name": "visibilityType",
@@ -2108,12 +2191,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type indicating the visibility permissions for the answered scorecard."
+          "description": "Type indicating the visibility permissions for the answered scorecard.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "call_transcripts": {
       "entity": "call_transcripts",
+      "kind": "DATA",
       "data_type_name": "CallTranscriptsSearchData",
       "filter_type_name": "CallTranscriptsSearchFilter",
       "in_filter_type_name": "CallTranscriptsInFilter",
@@ -2132,7 +2221,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for the call."
+          "description": "Unique identifier for the call.",
+          "semantic": false
         },
         {
           "name": "started",
@@ -2141,7 +2231,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp the call started. Filterable for narrowing transcript search by call time."
+          "description": "Timestamp the call started. Filterable for narrowing transcript search by call time.",
+          "semantic": false
         },
         {
           "name": "transcript",
@@ -2150,8 +2241,42 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Gong transcript speaker turns."
+          "description": "Gong transcript speaker turns.",
+          "semantic": true
         }
+      ],
+      "semantic_fields": [
+        {
+          "name": "transcript",
+          "description": "Gong transcript speaker turns.",
+          "context_max_chars": 2048,
+          "content_type": "json"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "callId",
+          "type": "string"
+        },
+        {
+          "name": "started",
+          "type": "string"
+        }
+      ],
+      "semantic_metadata_fields": [
+        {
+          "name": "speakerId",
+          "type": "string"
+        },
+        {
+          "name": "topic",
+          "type": "string"
+        }
+      ],
+      "enrichment_outputs": [
+        "speakerName",
+        "speakerTitle",
+        "speakerAffiliation"
       ]
     }
   }

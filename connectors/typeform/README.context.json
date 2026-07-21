@@ -576,6 +576,7 @@
   "search_schemas": {
     "forms": {
       "entity": "forms",
+      "kind": "DATA",
       "data_type_name": "FormsSearchData",
       "filter_type_name": "FormsSearchFilter",
       "in_filter_type_name": "FormsInFilter",
@@ -594,7 +595,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Links to related resources"
+          "description": "Links to related resources",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -603,7 +605,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the form was created"
+          "description": "Date and time when the form was created",
+          "semantic": false
         },
         {
           "name": "fields",
@@ -612,7 +615,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of fields within the form"
+          "description": "List of fields within the form",
+          "semantic": false
         },
         {
           "name": "id",
@@ -621,7 +625,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier of the form"
+          "description": "Unique identifier of the form",
+          "semantic": false
         },
         {
           "name": "last_updated_at",
@@ -630,7 +635,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the form was last updated"
+          "description": "Date and time when the form was last updated",
+          "semantic": false
         },
         {
           "name": "logic",
@@ -639,7 +645,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Logic rules or conditions applied to the form fields"
+          "description": "Logic rules or conditions applied to the form fields",
+          "semantic": false
         },
         {
           "name": "published_at",
@@ -648,7 +655,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the form was published"
+          "description": "Date and time when the form was published",
+          "semantic": false
         },
         {
           "name": "settings",
@@ -657,7 +665,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Settings and configurations for the form"
+          "description": "Settings and configurations for the form",
+          "semantic": false
         },
         {
           "name": "thankyou_screens",
@@ -666,7 +675,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Thank you screen configurations"
+          "description": "Thank you screen configurations",
+          "semantic": false
         },
         {
           "name": "theme",
@@ -675,7 +685,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Theme settings for the form"
+          "description": "Theme settings for the form",
+          "semantic": false
         },
         {
           "name": "title",
@@ -684,7 +695,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Title of the form"
+          "description": "Title of the form",
+          "semantic": false
         },
         {
           "name": "type",
@@ -693,7 +705,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of the form"
+          "description": "Type of the form",
+          "semantic": false
         },
         {
           "name": "welcome_screens",
@@ -702,7 +715,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Welcome screen configurations"
+          "description": "Welcome screen configurations",
+          "semantic": false
         },
         {
           "name": "workspace",
@@ -711,12 +725,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Workspace details where the form belongs"
+          "description": "Workspace details where the form belongs",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "responses": {
       "entity": "responses",
+      "kind": "DATA",
       "data_type_name": "ResponsesSearchData",
       "filter_type_name": "ResponsesSearchFilter",
       "in_filter_type_name": "ResponsesInFilter",
@@ -735,7 +755,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Response data for each question in the form"
+          "description": "Response data for each question in the form",
+          "semantic": false
         },
         {
           "name": "calculated",
@@ -744,7 +765,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Calculated data related to the response"
+          "description": "Calculated data related to the response",
+          "semantic": false
         },
         {
           "name": "form_id",
@@ -753,7 +775,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the form"
+          "description": "ID of the form",
+          "semantic": false
         },
         {
           "name": "hidden",
@@ -762,7 +785,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Hidden fields in the response"
+          "description": "Hidden fields in the response",
+          "semantic": false
         },
         {
           "name": "landed_at",
@@ -771,7 +795,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the respondent landed on the form"
+          "description": "Timestamp when the respondent landed on the form",
+          "semantic": false
         },
         {
           "name": "landing_id",
@@ -780,7 +805,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the landing page"
+          "description": "ID of the landing page",
+          "semantic": false
         },
         {
           "name": "metadata",
@@ -789,7 +815,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Metadata related to the response"
+          "description": "Metadata related to the response",
+          "semantic": false
         },
         {
           "name": "response_id",
@@ -798,7 +825,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the response"
+          "description": "ID of the response",
+          "semantic": false
         },
         {
           "name": "response_type",
@@ -807,7 +835,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of the response"
+          "description": "Type of the response",
+          "semantic": false
         },
         {
           "name": "submitted_at",
@@ -816,7 +845,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the response was submitted"
+          "description": "Timestamp when the response was submitted",
+          "semantic": false
         },
         {
           "name": "token",
@@ -825,7 +855,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Token associated with the response"
+          "description": "Token associated with the response",
+          "semantic": false
         },
         {
           "name": "variables",
@@ -834,12 +865,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Variables associated with the response"
+          "description": "Variables associated with the response",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "webhooks": {
       "entity": "webhooks",
+      "kind": "DATA",
       "data_type_name": "WebhooksSearchData",
       "filter_type_name": "WebhooksSearchFilter",
       "in_filter_type_name": "WebhooksInFilter",
@@ -858,7 +895,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the webhook was created"
+          "description": "Timestamp when the webhook was created",
+          "semantic": false
         },
         {
           "name": "enabled",
@@ -867,7 +905,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the webhook is currently enabled"
+          "description": "Whether the webhook is currently enabled",
+          "semantic": false
         },
         {
           "name": "form_id",
@@ -876,7 +915,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the form associated with the webhook"
+          "description": "ID of the form associated with the webhook",
+          "semantic": false
         },
         {
           "name": "id",
@@ -885,7 +925,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier of the webhook"
+          "description": "Unique identifier of the webhook",
+          "semantic": false
         },
         {
           "name": "tag",
@@ -894,7 +935,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tag to categorize or label the webhook"
+          "description": "Tag to categorize or label the webhook",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -903,7 +945,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the webhook was last updated"
+          "description": "Timestamp when the webhook was last updated",
+          "semantic": false
         },
         {
           "name": "url",
@@ -912,7 +955,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL where webhook data is sent"
+          "description": "URL where webhook data is sent",
+          "semantic": false
         },
         {
           "name": "verify_ssl",
@@ -921,12 +965,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether SSL verification is enforced"
+          "description": "Whether SSL verification is enforced",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "workspaces": {
       "entity": "workspaces",
+      "kind": "DATA",
       "data_type_name": "WorkspacesSearchData",
       "filter_type_name": "WorkspacesSearchFilter",
       "in_filter_type_name": "WorkspacesInFilter",
@@ -945,7 +995,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Account ID associated with the workspace"
+          "description": "Account ID associated with the workspace",
+          "semantic": false
         },
         {
           "name": "default",
@@ -954,7 +1005,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this is the default workspace"
+          "description": "Whether this is the default workspace",
+          "semantic": false
         },
         {
           "name": "forms",
@@ -963,7 +1015,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Information about forms in the workspace"
+          "description": "Information about forms in the workspace",
+          "semantic": false
         },
         {
           "name": "id",
@@ -972,7 +1025,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier of the workspace"
+          "description": "Unique identifier of the workspace",
+          "semantic": false
         },
         {
           "name": "name",
@@ -981,7 +1035,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the workspace"
+          "description": "Name of the workspace",
+          "semantic": false
         },
         {
           "name": "self",
@@ -990,7 +1045,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Self-referential link"
+          "description": "Self-referential link",
+          "semantic": false
         },
         {
           "name": "shared",
@@ -999,12 +1055,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether this workspace is shared"
+          "description": "Whether this workspace is shared",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "images": {
       "entity": "images",
+      "kind": "DATA",
       "data_type_name": "ImagesSearchData",
       "filter_type_name": "ImagesSearchFilter",
       "in_filter_type_name": "ImagesInFilter",
@@ -1023,7 +1085,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Average color of the image"
+          "description": "Average color of the image",
+          "semantic": false
         },
         {
           "name": "file_name",
@@ -1032,7 +1095,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the image file"
+          "description": "Name of the image file",
+          "semantic": false
         },
         {
           "name": "has_alpha",
@@ -1041,7 +1105,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the image has an alpha channel"
+          "description": "Whether the image has an alpha channel",
+          "semantic": false
         },
         {
           "name": "height",
@@ -1050,7 +1115,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Height of the image in pixels"
+          "description": "Height of the image in pixels",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1059,7 +1125,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier of the image"
+          "description": "Unique identifier of the image",
+          "semantic": false
         },
         {
           "name": "media_type",
@@ -1068,7 +1135,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "MIME type of the image"
+          "description": "MIME type of the image",
+          "semantic": false
         },
         {
           "name": "src",
@@ -1077,7 +1145,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL to access the image"
+          "description": "URL to access the image",
+          "semantic": false
         },
         {
           "name": "width",
@@ -1086,12 +1155,18 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Width of the image in pixels"
+          "description": "Width of the image in pixels",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "themes": {
       "entity": "themes",
+      "kind": "DATA",
       "data_type_name": "ThemesSearchData",
       "filter_type_name": "ThemesSearchFilter",
       "in_filter_type_name": "ThemesInFilter",
@@ -1110,7 +1185,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Background settings for the theme"
+          "description": "Background settings for the theme",
+          "semantic": false
         },
         {
           "name": "colors",
@@ -1119,7 +1195,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Color settings"
+          "description": "Color settings",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1128,7 +1205,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the theme was created"
+          "description": "Timestamp when the theme was created",
+          "semantic": false
         },
         {
           "name": "fields",
@@ -1137,7 +1215,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Field display settings"
+          "description": "Field display settings",
+          "semantic": false
         },
         {
           "name": "font",
@@ -1146,7 +1225,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Font used in the theme"
+          "description": "Font used in the theme",
+          "semantic": false
         },
         {
           "name": "has_transparent_button",
@@ -1155,7 +1235,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Whether the theme has a transparent button"
+          "description": "Whether the theme has a transparent button",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1164,7 +1245,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier of the theme"
+          "description": "Unique identifier of the theme",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1173,7 +1255,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the theme"
+          "description": "Name of the theme",
+          "semantic": false
         },
         {
           "name": "rounded_corners",
@@ -1182,7 +1265,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Rounded corners setting"
+          "description": "Rounded corners setting",
+          "semantic": false
         },
         {
           "name": "screens",
@@ -1191,7 +1275,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Screen display settings"
+          "description": "Screen display settings",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1200,7 +1285,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the theme was last updated"
+          "description": "Timestamp when the theme was last updated",
+          "semantic": false
         },
         {
           "name": "visibility",
@@ -1209,9 +1295,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Visibility setting of the theme"
+          "description": "Visibility setting of the theme",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

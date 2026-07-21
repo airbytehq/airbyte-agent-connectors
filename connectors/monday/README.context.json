@@ -509,6 +509,7 @@
   "search_schemas": {
     "activity_logs": {
       "entity": "activity_logs",
+      "kind": "DATA",
       "data_type_name": "ActivityLogsSearchData",
       "filter_type_name": "ActivityLogsSearchFilter",
       "in_filter_type_name": "ActivityLogsInFilter",
@@ -527,7 +528,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Board ID the activity belongs to"
+          "description": "Board ID the activity belongs to",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -536,7 +538,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the activity occurred"
+          "description": "When the activity occurred",
+          "semantic": false
         },
         {
           "name": "created_at_int",
@@ -545,7 +548,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "When the activity occurred (Unix timestamp)"
+          "description": "When the activity occurred (Unix timestamp)",
+          "semantic": false
         },
         {
           "name": "data",
@@ -554,7 +558,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Event data (JSON string)"
+          "description": "Event data (JSON string)",
+          "semantic": false
         },
         {
           "name": "entity",
@@ -563,7 +568,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Entity type that was affected"
+          "description": "Entity type that was affected",
+          "semantic": false
         },
         {
           "name": "event",
@@ -572,7 +578,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Event type"
+          "description": "Event type",
+          "semantic": false
         },
         {
           "name": "id",
@@ -581,7 +588,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique activity log identifier"
+          "description": "Unique activity log identifier",
+          "semantic": false
         },
         {
           "name": "pulse_id",
@@ -590,7 +598,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Item (pulse) ID the activity belongs to"
+          "description": "Item (pulse) ID the activity belongs to",
+          "semantic": false
         },
         {
           "name": "user_id",
@@ -599,12 +608,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who performed the action"
+          "description": "ID of the user who performed the action",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "boards": {
       "entity": "boards",
+      "kind": "DATA",
       "data_type_name": "BoardsSearchData",
       "filter_type_name": "BoardsSearchFilter",
       "in_filter_type_name": "BoardsInFilter",
@@ -623,7 +638,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Board kind (public, private, share)"
+          "description": "Board kind (public, private, share)",
+          "semantic": false
         },
         {
           "name": "columns",
@@ -632,7 +648,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Board columns"
+          "description": "Board columns",
+          "semantic": false
         },
         {
           "name": "communication",
@@ -641,7 +658,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Board communication value"
+          "description": "Board communication value",
+          "semantic": false
         },
         {
           "name": "creator",
@@ -650,7 +668,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Board creator"
+          "description": "Board creator",
+          "semantic": false
         },
         {
           "name": "description",
@@ -659,7 +678,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Board description"
+          "description": "Board description",
+          "semantic": false
         },
         {
           "name": "groups",
@@ -668,7 +688,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Board groups"
+          "description": "Board groups",
+          "semantic": false
         },
         {
           "name": "id",
@@ -677,7 +698,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique board identifier"
+          "description": "Unique board identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -686,7 +708,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Board name"
+          "description": "Board name",
+          "semantic": false
         },
         {
           "name": "owners",
@@ -695,7 +718,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Board owners"
+          "description": "Board owners",
+          "semantic": false
         },
         {
           "name": "permissions",
@@ -704,7 +728,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Board permissions"
+          "description": "Board permissions",
+          "semantic": false
         },
         {
           "name": "state",
@@ -713,7 +738,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Board state (active, archived, deleted)"
+          "description": "Board state (active, archived, deleted)",
+          "semantic": false
         },
         {
           "name": "subscribers",
@@ -722,7 +748,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Board subscribers"
+          "description": "Board subscribers",
+          "semantic": false
         },
         {
           "name": "tags",
@@ -731,7 +758,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Board tags"
+          "description": "Board tags",
+          "semantic": false
         },
         {
           "name": "top_group",
@@ -740,7 +768,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Top group on the board"
+          "description": "Top group on the board",
+          "semantic": false
         },
         {
           "name": "type",
@@ -749,7 +778,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Board type"
+          "description": "Board type",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -758,7 +788,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the board was last updated"
+          "description": "When the board was last updated",
+          "semantic": false
         },
         {
           "name": "updated_at_int",
@@ -767,7 +798,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "When the board was last updated (Unix timestamp)"
+          "description": "When the board was last updated (Unix timestamp)",
+          "semantic": false
         },
         {
           "name": "updates",
@@ -776,7 +808,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Board updates"
+          "description": "Board updates",
+          "semantic": false
         },
         {
           "name": "views",
@@ -785,7 +818,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Board views"
+          "description": "Board views",
+          "semantic": false
         },
         {
           "name": "workspace",
@@ -794,12 +828,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Workspace the board belongs to"
+          "description": "Workspace the board belongs to",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "items": {
       "entity": "items",
+      "kind": "DATA",
       "data_type_name": "ItemsSearchData",
       "filter_type_name": "ItemsSearchFilter",
       "in_filter_type_name": "ItemsInFilter",
@@ -818,7 +858,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Files attached to the item"
+          "description": "Files attached to the item",
+          "semantic": false
         },
         {
           "name": "board",
@@ -827,7 +868,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Board the item belongs to"
+          "description": "Board the item belongs to",
+          "semantic": false
         },
         {
           "name": "column_values",
@@ -836,7 +878,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Item column values"
+          "description": "Item column values",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -845,7 +888,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the item was created"
+          "description": "When the item was created",
+          "semantic": false
         },
         {
           "name": "creator_id",
@@ -854,7 +898,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created the item"
+          "description": "ID of the user who created the item",
+          "semantic": false
         },
         {
           "name": "group",
@@ -863,7 +908,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Group the item belongs to"
+          "description": "Group the item belongs to",
+          "semantic": false
         },
         {
           "name": "id",
@@ -872,7 +918,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique item identifier"
+          "description": "Unique item identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -881,7 +928,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Item name"
+          "description": "Item name",
+          "semantic": false
         },
         {
           "name": "parent_item",
@@ -890,7 +938,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Parent item (for subitems)"
+          "description": "Parent item (for subitems)",
+          "semantic": false
         },
         {
           "name": "state",
@@ -899,7 +948,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Item state (active, archived, deleted)"
+          "description": "Item state (active, archived, deleted)",
+          "semantic": false
         },
         {
           "name": "subscribers",
@@ -908,7 +958,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Item subscribers"
+          "description": "Item subscribers",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -917,7 +968,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the item was last updated"
+          "description": "When the item was last updated",
+          "semantic": false
         },
         {
           "name": "updated_at_int",
@@ -926,7 +978,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "When the item was last updated (Unix timestamp)"
+          "description": "When the item was last updated (Unix timestamp)",
+          "semantic": false
         },
         {
           "name": "updates",
@@ -935,12 +988,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Item updates"
+          "description": "Item updates",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "tags": {
       "entity": "tags",
+      "kind": "DATA",
       "data_type_name": "TagsSearchData",
       "filter_type_name": "TagsSearchFilter",
       "in_filter_type_name": "TagsInFilter",
@@ -959,7 +1018,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tag color"
+          "description": "Tag color",
+          "semantic": false
         },
         {
           "name": "id",
@@ -968,7 +1028,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique tag identifier"
+          "description": "Unique tag identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -977,12 +1038,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Tag name"
+          "description": "Tag name",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "teams": {
       "entity": "teams",
+      "kind": "DATA",
       "data_type_name": "TeamsSearchData",
       "filter_type_name": "TeamsSearchFilter",
       "in_filter_type_name": "TeamsInFilter",
@@ -1001,7 +1068,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique team identifier"
+          "description": "Unique team identifier",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1010,7 +1078,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Team name"
+          "description": "Team name",
+          "semantic": false
         },
         {
           "name": "picture_url",
@@ -1019,7 +1088,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Team picture URL"
+          "description": "Team picture URL",
+          "semantic": false
         },
         {
           "name": "users",
@@ -1028,12 +1098,18 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Team members"
+          "description": "Team members",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "updates": {
       "entity": "updates",
+      "kind": "DATA",
       "data_type_name": "UpdatesSearchData",
       "filter_type_name": "UpdatesSearchFilter",
       "in_filter_type_name": "UpdatesInFilter",
@@ -1052,7 +1128,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Files attached to this update"
+          "description": "Files attached to this update",
+          "semantic": false
         },
         {
           "name": "body",
@@ -1061,7 +1138,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Update body (HTML)"
+          "description": "Update body (HTML)",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1070,7 +1148,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the update was created"
+          "description": "When the update was created",
+          "semantic": false
         },
         {
           "name": "creator_id",
@@ -1079,7 +1158,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created the update"
+          "description": "ID of the user who created the update",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1088,7 +1168,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique update identifier"
+          "description": "Unique update identifier",
+          "semantic": false
         },
         {
           "name": "item_id",
@@ -1097,7 +1178,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the item this update belongs to"
+          "description": "ID of the item this update belongs to",
+          "semantic": false
         },
         {
           "name": "replies",
@@ -1106,7 +1188,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Replies to this update"
+          "description": "Replies to this update",
+          "semantic": false
         },
         {
           "name": "text_body",
@@ -1115,7 +1198,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Update body (plain text)"
+          "description": "Update body (plain text)",
+          "semantic": false
         },
         {
           "name": "updated_at",
@@ -1124,12 +1208,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the update was last modified"
+          "description": "When the update was last modified",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "users": {
       "entity": "users",
+      "kind": "DATA",
       "data_type_name": "UsersSearchData",
       "filter_type_name": "UsersSearchFilter",
       "in_filter_type_name": "UsersInFilter",
@@ -1148,7 +1238,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User's birthday"
+          "description": "User's birthday",
+          "semantic": false
         },
         {
           "name": "country_code",
@@ -1157,7 +1248,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User's country code"
+          "description": "User's country code",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1166,7 +1258,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the user was created"
+          "description": "When the user was created",
+          "semantic": false
         },
         {
           "name": "email",
@@ -1175,7 +1268,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User's email address"
+          "description": "User's email address",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1184,7 +1278,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique user identifier"
+          "description": "Unique user identifier",
+          "semantic": false
         },
         {
           "name": "location",
@@ -1193,7 +1288,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User's location"
+          "description": "User's location",
+          "semantic": false
         },
         {
           "name": "mobile_phone",
@@ -1202,7 +1298,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User's mobile phone number"
+          "description": "User's mobile phone number",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1211,7 +1308,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User's display name"
+          "description": "User's display name",
+          "semantic": false
         },
         {
           "name": "phone",
@@ -1220,7 +1318,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User's phone number"
+          "description": "User's phone number",
+          "semantic": false
         },
         {
           "name": "time_zone_identifier",
@@ -1229,7 +1328,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User's timezone identifier"
+          "description": "User's timezone identifier",
+          "semantic": false
         },
         {
           "name": "title",
@@ -1238,7 +1338,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User's job title"
+          "description": "User's job title",
+          "semantic": false
         },
         {
           "name": "url",
@@ -1247,7 +1348,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "User's Monday.com profile URL"
+          "description": "User's Monday.com profile URL",
+          "semantic": false
         },
         {
           "name": "utc_hours_diff",
@@ -1256,12 +1358,18 @@
           "json_type": "null | number",
           "example_value_json": "0.0",
           "json_example_value": 0.0,
-          "description": "UTC hours difference for the user's timezone (Float under API 2026-07)"
+          "description": "UTC hours difference for the user's timezone (Float under API 2026-07)",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "workspaces": {
       "entity": "workspaces",
+      "kind": "DATA",
       "data_type_name": "WorkspacesSearchData",
       "filter_type_name": "WorkspacesSearchFilter",
       "in_filter_type_name": "WorkspacesInFilter",
@@ -1280,7 +1388,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Account product info"
+          "description": "Account product info",
+          "semantic": false
         },
         {
           "name": "created_at",
@@ -1289,7 +1398,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "When the workspace was created"
+          "description": "When the workspace was created",
+          "semantic": false
         },
         {
           "name": "description",
@@ -1298,7 +1408,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Workspace description"
+          "description": "Workspace description",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1307,7 +1418,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique workspace identifier"
+          "description": "Unique workspace identifier",
+          "semantic": false
         },
         {
           "name": "kind",
@@ -1316,7 +1428,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Workspace kind (open, closed)"
+          "description": "Workspace kind (open, closed)",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1325,7 +1438,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Workspace name"
+          "description": "Workspace name",
+          "semantic": false
         },
         {
           "name": "owners_subscribers",
@@ -1334,7 +1448,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Owner subscribers"
+          "description": "Owner subscribers",
+          "semantic": false
         },
         {
           "name": "settings",
@@ -1343,7 +1458,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Workspace settings"
+          "description": "Workspace settings",
+          "semantic": false
         },
         {
           "name": "state",
@@ -1352,7 +1468,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Workspace state"
+          "description": "Workspace state",
+          "semantic": false
         },
         {
           "name": "team_owners_subscribers",
@@ -1361,7 +1478,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Team owner subscribers"
+          "description": "Team owner subscribers",
+          "semantic": false
         },
         {
           "name": "teams_subscribers",
@@ -1370,7 +1488,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Team subscribers"
+          "description": "Team subscribers",
+          "semantic": false
         },
         {
           "name": "users_subscribers",
@@ -1379,9 +1498,14 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "User subscribers"
+          "description": "User subscribers",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }

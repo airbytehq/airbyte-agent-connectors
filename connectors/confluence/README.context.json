@@ -921,6 +921,7 @@
   "search_schemas": {
     "audit": {
       "entity": "audit",
+      "kind": "DATA",
       "data_type_name": "AuditSearchData",
       "filter_type_name": "AuditSearchFilter",
       "in_filter_type_name": "AuditInFilter",
@@ -939,7 +940,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The object that was affected by the audit event."
+          "description": "The object that was affected by the audit event.",
+          "semantic": false
         },
         {
           "name": "associatedObjects",
@@ -948,7 +950,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Any associated objects related to the audit event."
+          "description": "Any associated objects related to the audit event.",
+          "semantic": false
         },
         {
           "name": "author",
@@ -957,7 +960,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "The user who triggered the audit event."
+          "description": "The user who triggered the audit event.",
+          "semantic": false
         },
         {
           "name": "category",
@@ -966,7 +970,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The category under which the audit event falls."
+          "description": "The category under which the audit event falls.",
+          "semantic": false
         },
         {
           "name": "changedValues",
@@ -975,7 +980,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Details of the values that were changed during the audit event."
+          "description": "Details of the values that were changed during the audit event.",
+          "semantic": false
         },
         {
           "name": "creationDate",
@@ -984,7 +990,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The date and time when the audit event was created."
+          "description": "The date and time when the audit event was created.",
+          "semantic": false
         },
         {
           "name": "description",
@@ -993,7 +1000,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A detailed description of the audit event."
+          "description": "A detailed description of the audit event.",
+          "semantic": false
         },
         {
           "name": "remoteAddress",
@@ -1002,7 +1010,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The IP address from which the audit event originated."
+          "description": "The IP address from which the audit event originated.",
+          "semantic": false
         },
         {
           "name": "summary",
@@ -1011,7 +1020,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "A brief summary or title describing the audit event."
+          "description": "A brief summary or title describing the audit event.",
+          "semantic": false
         },
         {
           "name": "superAdmin",
@@ -1020,7 +1030,8 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the user triggering the audit event is a super admin."
+          "description": "Indicates if the user triggering the audit event is a super admin.",
+          "semantic": false
         },
         {
           "name": "sysAdmin",
@@ -1029,12 +1040,18 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the user triggering the audit event is a system admin."
+          "description": "Indicates if the user triggering the audit event is a system admin.",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "blog_posts": {
       "entity": "blog_posts",
+      "kind": "DATA",
       "data_type_name": "BlogPostsSearchData",
       "filter_type_name": "BlogPostsSearchFilter",
       "in_filter_type_name": "BlogPostsInFilter",
@@ -1053,7 +1070,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Links related to the blog post"
+          "description": "Links related to the blog post",
+          "semantic": false
         },
         {
           "name": "authorId",
@@ -1062,7 +1080,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created the blog post"
+          "description": "ID of the user who created the blog post",
+          "semantic": false
         },
         {
           "name": "body",
@@ -1071,7 +1090,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Blog post body content"
+          "description": "Blog post body content",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -1080,7 +1100,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the blog post was created"
+          "description": "Timestamp when the blog post was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1089,7 +1110,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique blog post identifier"
+          "description": "Unique blog post identifier",
+          "semantic": false
         },
         {
           "name": "spaceId",
@@ -1098,7 +1120,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the space containing this blog post"
+          "description": "ID of the space containing this blog post",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1107,7 +1130,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Blog post status (current, draft, trashed)"
+          "description": "Blog post status (current, draft, trashed)",
+          "semantic": false
         },
         {
           "name": "title",
@@ -1116,7 +1140,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Blog post title"
+          "description": "Blog post title",
+          "semantic": false
         },
         {
           "name": "version",
@@ -1125,12 +1150,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Version information"
+          "description": "Version information",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "groups": {
       "entity": "groups",
+      "kind": "DATA",
       "data_type_name": "GroupsSearchData",
       "filter_type_name": "GroupsSearchFilter",
       "in_filter_type_name": "GroupsInFilter",
@@ -1149,7 +1180,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Links related to the group"
+          "description": "Links related to the group",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1158,7 +1190,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The unique identifier of the group"
+          "description": "The unique identifier of the group",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1167,7 +1200,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the group"
+          "description": "The name of the group",
+          "semantic": false
         },
         {
           "name": "type",
@@ -1176,12 +1210,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The type of group"
+          "description": "The type of group",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "pages": {
       "entity": "pages",
+      "kind": "DATA",
       "data_type_name": "PagesSearchData",
       "filter_type_name": "PagesSearchFilter",
       "in_filter_type_name": "PagesInFilter",
@@ -1200,7 +1240,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Links related to the page"
+          "description": "Links related to the page",
+          "semantic": false
         },
         {
           "name": "authorId",
@@ -1209,7 +1250,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created the page"
+          "description": "ID of the user who created the page",
+          "semantic": false
         },
         {
           "name": "body",
@@ -1218,7 +1260,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Page body content"
+          "description": "Page body content",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -1227,7 +1270,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the page was created"
+          "description": "Timestamp when the page was created",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1236,7 +1280,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique page identifier"
+          "description": "Unique page identifier",
+          "semantic": false
         },
         {
           "name": "lastOwnerId",
@@ -1245,7 +1290,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the previous page owner"
+          "description": "ID of the previous page owner",
+          "semantic": false
         },
         {
           "name": "ownerId",
@@ -1254,7 +1300,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the current page owner"
+          "description": "ID of the current page owner",
+          "semantic": false
         },
         {
           "name": "parentId",
@@ -1263,7 +1310,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the parent page"
+          "description": "ID of the parent page",
+          "semantic": false
         },
         {
           "name": "parentType",
@@ -1272,7 +1320,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Type of the parent (page or space)"
+          "description": "Type of the parent (page or space)",
+          "semantic": false
         },
         {
           "name": "position",
@@ -1281,7 +1330,8 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Position of the page among siblings"
+          "description": "Position of the page among siblings",
+          "semantic": false
         },
         {
           "name": "spaceId",
@@ -1290,7 +1340,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the space containing this page"
+          "description": "ID of the space containing this page",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1299,7 +1350,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Page status (current, archived, trashed, draft)"
+          "description": "Page status (current, archived, trashed, draft)",
+          "semantic": false
         },
         {
           "name": "title",
@@ -1308,7 +1360,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Page title"
+          "description": "Page title",
+          "semantic": false
         },
         {
           "name": "version",
@@ -1317,12 +1370,18 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Version information"
+          "description": "Version information",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     },
     "spaces": {
       "entity": "spaces",
+      "kind": "DATA",
       "data_type_name": "SpacesSearchData",
       "filter_type_name": "SpacesSearchFilter",
       "in_filter_type_name": "SpacesInFilter",
@@ -1341,7 +1400,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Links related to the space"
+          "description": "Links related to the space",
+          "semantic": false
         },
         {
           "name": "authorId",
@@ -1350,7 +1410,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the user who created the space"
+          "description": "ID of the user who created the space",
+          "semantic": false
         },
         {
           "name": "createdAt",
@@ -1359,7 +1420,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the space was created"
+          "description": "Timestamp when the space was created",
+          "semantic": false
         },
         {
           "name": "description",
@@ -1368,7 +1430,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Space description in various formats"
+          "description": "Space description in various formats",
+          "semantic": false
         },
         {
           "name": "homepageId",
@@ -1377,7 +1440,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID of the space homepage"
+          "description": "ID of the space homepage",
+          "semantic": false
         },
         {
           "name": "icon",
@@ -1386,7 +1450,8 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Space icon information"
+          "description": "Space icon information",
+          "semantic": false
         },
         {
           "name": "id",
@@ -1395,7 +1460,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique space identifier"
+          "description": "Unique space identifier",
+          "semantic": false
         },
         {
           "name": "key",
@@ -1404,7 +1470,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Space key"
+          "description": "Space key",
+          "semantic": false
         },
         {
           "name": "name",
@@ -1413,7 +1480,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Space name"
+          "description": "Space name",
+          "semantic": false
         },
         {
           "name": "status",
@@ -1422,7 +1490,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Space status (current or archived)"
+          "description": "Space status (current or archived)",
+          "semantic": false
         },
         {
           "name": "type",
@@ -1431,9 +1500,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Space type (global or personal)"
+          "description": "Space type (global or personal)",
+          "semantic": false
         }
-      ]
+      ],
+      "semantic_fields": [],
+      "semantic_entity_fields": [],
+      "semantic_metadata_fields": [],
+      "enrichment_outputs": []
     }
   }
 }
