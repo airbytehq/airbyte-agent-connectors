@@ -196,7 +196,7 @@ class HubspotConnector:
 
     connector_name = "hubspot"
     connector_version = "0.1.20"
-    sdk_version = "0.1.291"
+    sdk_version = "0.1.292"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

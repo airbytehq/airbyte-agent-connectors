@@ -52,14 +52,6 @@ class User(BaseModel):
     permission_id: str | None = Field(default=None, alias="permissionId")
     email_address: str | None = Field(default=None, alias="emailAddress")
 
-class FileShortcutdetails(BaseModel):
-    """Shortcut file details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    target_id: str | None | None = Field(default=None, alias="targetId")
-    target_mime_type: str | None | None = Field(default=None, alias="targetMimeType")
-    target_resource_key: str | None | None = Field(default=None, alias="targetResourceKey")
-
 class FileVideomediametadata(BaseModel):
     """Additional metadata about video media"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -78,29 +70,11 @@ class FileContentrestrictionsItem(BaseModel):
     restriction_time: str | None | None = Field(default=None, alias="restrictionTime")
     type_: str | None | None = Field(default=None, alias="type")
 
-class FileLinksharemetadata(BaseModel):
-    """Contains details about the link URLs"""
+class FileLabelinfo(BaseModel):
+    """An overview of the labels on the file"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    security_update_eligible: bool | None | None = Field(default=None, alias="securityUpdateEligible")
-    security_update_enabled: bool | None | None = Field(default=None, alias="securityUpdateEnabled")
-
-class FileCapabilities(BaseModel):
-    """Capabilities the current user has on this file"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    can_edit: bool | None | None = Field(default=None, alias="canEdit")
-    can_comment: bool | None | None = Field(default=None, alias="canComment")
-    can_share: bool | None | None = Field(default=None, alias="canShare")
-    can_copy: bool | None | None = Field(default=None, alias="canCopy")
-    can_download: bool | None | None = Field(default=None, alias="canDownload")
-    can_delete: bool | None | None = Field(default=None, alias="canDelete")
-    can_rename: bool | None | None = Field(default=None, alias="canRename")
-    can_trash: bool | None | None = Field(default=None, alias="canTrash")
-    can_read_revisions: bool | None | None = Field(default=None, alias="canReadRevisions")
-    can_add_children: bool | None | None = Field(default=None, alias="canAddChildren")
-    can_list_children: bool | None | None = Field(default=None, alias="canListChildren")
-    can_remove_children: bool | None | None = Field(default=None, alias="canRemoveChildren")
+    labels: list[dict[str, Any]] | None | None = Field(default=None)
 
 class FileImagemediametadataLocation(BaseModel):
     """Nested schema for FileImagemediametadata.location"""
@@ -136,11 +110,37 @@ class FileImagemediametadata(BaseModel):
     lens: str | None | None = Field(default=None)
     location: FileImagemediametadataLocation | None | None = Field(default=None)
 
-class FileLabelinfo(BaseModel):
-    """An overview of the labels on the file"""
+class FileShortcutdetails(BaseModel):
+    """Shortcut file details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    labels: list[dict[str, Any]] | None | None = Field(default=None)
+    target_id: str | None | None = Field(default=None, alias="targetId")
+    target_mime_type: str | None | None = Field(default=None, alias="targetMimeType")
+    target_resource_key: str | None | None = Field(default=None, alias="targetResourceKey")
+
+class FileCapabilities(BaseModel):
+    """Capabilities the current user has on this file"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    can_edit: bool | None | None = Field(default=None, alias="canEdit")
+    can_comment: bool | None | None = Field(default=None, alias="canComment")
+    can_share: bool | None | None = Field(default=None, alias="canShare")
+    can_copy: bool | None | None = Field(default=None, alias="canCopy")
+    can_download: bool | None | None = Field(default=None, alias="canDownload")
+    can_delete: bool | None | None = Field(default=None, alias="canDelete")
+    can_rename: bool | None | None = Field(default=None, alias="canRename")
+    can_trash: bool | None | None = Field(default=None, alias="canTrash")
+    can_read_revisions: bool | None | None = Field(default=None, alias="canReadRevisions")
+    can_add_children: bool | None | None = Field(default=None, alias="canAddChildren")
+    can_list_children: bool | None | None = Field(default=None, alias="canListChildren")
+    can_remove_children: bool | None | None = Field(default=None, alias="canRemoveChildren")
+
+class FileLinksharemetadata(BaseModel):
+    """Contains details about the link URLs"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    security_update_eligible: bool | None | None = Field(default=None, alias="securityUpdateEligible")
+    security_update_enabled: bool | None | None = Field(default=None, alias="securityUpdateEnabled")
 
 class File(BaseModel):
     """The metadata for a file"""
@@ -311,20 +311,20 @@ class DrivesListResponse(BaseModel):
     next_page_token: str | None = Field(default=None, alias="nextPageToken")
     drives: list[Drive] | None = Field(default=None)
 
-class PermissionTeamdrivepermissiondetailsItem(BaseModel):
-    """Nested schema for Permission.teamDrivePermissionDetails_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    team_drive_permission_type: str | None | None = Field(default=None, alias="teamDrivePermissionType")
-    role: str | None | None = Field(default=None)
-    inherited_from: str | None | None = Field(default=None, alias="inheritedFrom")
-    inherited: bool | None | None = Field(default=None)
-
 class PermissionPermissiondetailsItem(BaseModel):
     """Nested schema for Permission.permissionDetails_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     permission_type: str | None | None = Field(default=None, alias="permissionType")
+    role: str | None | None = Field(default=None)
+    inherited_from: str | None | None = Field(default=None, alias="inheritedFrom")
+    inherited: bool | None | None = Field(default=None)
+
+class PermissionTeamdrivepermissiondetailsItem(BaseModel):
+    """Nested schema for Permission.teamDrivePermissionDetails_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    team_drive_permission_type: str | None | None = Field(default=None, alias="teamDrivePermissionType")
     role: str | None | None = Field(default=None)
     inherited_from: str | None | None = Field(default=None, alias="inheritedFrom")
     inherited: bool | None | None = Field(default=None)
@@ -470,14 +470,6 @@ class StartPageToken(BaseModel):
     kind: str | None = Field(default=None)
     start_page_token: str | None = Field(default=None, alias="startPageToken")
 
-class AboutTeamdrivethemesItem(BaseModel):
-    """Nested schema for About.teamDriveThemes_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    background_image_link: str | None | None = Field(default=None, alias="backgroundImageLink")
-    color_rgb: str | None | None = Field(default=None, alias="colorRgb")
-
 class AboutStoragequota(BaseModel):
     """The user's storage quota limits and usage"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -490,6 +482,14 @@ class AboutStoragequota(BaseModel):
     """The usage by all files in Google Drive"""
     usage_in_drive_trash: str | None | None = Field(default=None, alias="usageInDriveTrash", description="The usage by trashed files in Google Drive")
     """The usage by trashed files in Google Drive"""
+
+class AboutTeamdrivethemesItem(BaseModel):
+    """Nested schema for About.teamDriveThemes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    background_image_link: str | None | None = Field(default=None, alias="backgroundImageLink")
+    color_rgb: str | None | None = Field(default=None, alias="colorRgb")
 
 class AboutDrivethemesItem(BaseModel):
     """Nested schema for About.driveThemes_item"""
