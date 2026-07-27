@@ -10,8 +10,8 @@ info:
     Supports OAuth2 authentication with automatic token refresh.
   x-airbyte-connector-name: snapchat-marketing
   x-airbyte-connector-definition-id: 200330b2-ea62-4d11-ac6d-cfe3e3f8ab2b
-  x-airbyte-replication-version: "1.5.40"
-  x-airbyte-replication-compatibility: ">=1.5.40, <2.0.0"
+  x-airbyte-replication-version: "1.5.43"
+  x-airbyte-replication-compatibility: ">=1.5.43, <2.0.0"
   x-airbyte-external-documentation-urls:
   - type: api_reference
     title: Snapchat Marketing API Documentation

@@ -11,8 +11,8 @@ info:
     token for authentication. All data retrieval is read-only.
   x-airbyte-connector-name: google-ads
   x-airbyte-connector-definition-id: 253487c0-2246-43ba-a21f-5116b20a2c50
-  x-airbyte-replication-version: "6.0.0"
-  x-airbyte-replication-compatibility: ">=6.0.0, <7.0.0"
+  x-airbyte-replication-version: "6.1.0"
+  x-airbyte-replication-compatibility: ">=6.1.0, <7.0.0"
   x-airbyte-external-documentation-urls:
     - title: Google Ads API Reference
       type: api_reference

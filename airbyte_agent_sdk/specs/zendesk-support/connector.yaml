@@ -10,8 +10,8 @@ info:
     for customer support analytics and service performance insights.
   x-airbyte-connector-name: zendesk-support
   x-airbyte-connector-definition-id: 79c1aa37-dae3-42ae-b333-d1c105477715
-  x-airbyte-replication-version: "5.2.12"
-  x-airbyte-replication-compatibility: ">=5.2.12, <6.0.0"
+  x-airbyte-replication-version: "5.4.3"
+  x-airbyte-replication-compatibility: ">=5.4.3, <6.0.0"
   x-airbyte-external-documentation-urls:
   - type: api_reference
     title: Zendesk Support API Documentation

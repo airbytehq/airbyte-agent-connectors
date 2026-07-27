@@ -10,8 +10,8 @@ info:
     solution that helps teams track time, manage projects, and streamline invoicing.
   x-airbyte-connector-name: harvest
   x-airbyte-connector-definition-id: fe2b4084-3386-4d3b-9ad6-308f61a6f1e6
-  x-airbyte-replication-version: "1.2.42"
-  x-airbyte-replication-compatibility: ">=1.2.42, <2.0.0"
+  x-airbyte-replication-version: "1.2.45"
+  x-airbyte-replication-compatibility: ">=1.2.45, <2.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Harvest API V2 Documentation

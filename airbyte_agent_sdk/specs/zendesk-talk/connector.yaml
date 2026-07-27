@@ -9,8 +9,8 @@ info:
     for Zendesk Talk voice support channels.
   x-airbyte-connector-name: zendesk-talk
   x-airbyte-connector-definition-id: c8630570-086d-4a40-99ae-ea5b18673071
-  x-airbyte-replication-version: "2.0.15"
-  x-airbyte-replication-compatibility: ">=2.0.15, <3.0.0"
+  x-airbyte-replication-version: "2.0.19"
+  x-airbyte-replication-compatibility: ">=2.0.19, <3.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Zendesk Talk API Documentation

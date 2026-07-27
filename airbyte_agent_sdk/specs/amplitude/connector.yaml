@@ -10,8 +10,8 @@ info:
     Authentication uses HTTP Basic with your Amplitude API key and secret key.
   x-airbyte-connector-name: amplitude
   x-airbyte-connector-definition-id: fa9f58c6-2d03-4237-aaa4-07d75e0c1396
-  x-airbyte-replication-version: "0.7.32"
-  x-airbyte-replication-compatibility: ">=0.7.32, <1.0.0"
+  x-airbyte-replication-version: "0.7.35"
+  x-airbyte-replication-compatibility: ">=0.7.35, <1.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Amplitude Analytics APIs

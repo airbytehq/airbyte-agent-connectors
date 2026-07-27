@@ -10,8 +10,8 @@ info:
     broken down by date, country, device, page, and query dimensions.
   x-airbyte-connector-name: google-search-console
   x-airbyte-connector-definition-id: eb4c9e00-db83-4d63-a386-39cfa91012a8
-  x-airbyte-replication-version: "2.1.2"
-  x-airbyte-replication-compatibility: ">=2.1.2, <3.0.0"
+  x-airbyte-replication-version: "2.1.5"
+  x-airbyte-replication-compatibility: ">=2.1.5, <3.0.0"
   x-airbyte-external-documentation-urls:
   - type: api_reference
     title: Google Search Console API Documentation
