@@ -10,6 +10,7 @@ from __future__ import annotations
 from airbyte_agent_sdk.types import (
     Action,
     AuthConfig,
+    AuthOption,
     AuthType,
     ConnectorModel,
     EndpointDefinition,
@@ -38,45 +39,76 @@ from uuid import (
 GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('3cc2eafd-84aa-4dca-93af-322d9dfeec1a'),
     name='google-analytics-data-api',
-    version='1.0.5',
+    version='1.1.0',
     base_url='https://analyticsdata.googleapis.com/v1beta',
     auth=AuthConfig(
-        type=AuthType.OAUTH2,
-        config={
-            'header': 'Authorization',
-            'prefix': 'Bearer',
-            'refresh_url': 'https://oauth2.googleapis.com/token',
-        },
-        user_config_spec=AuthConfigSpec(
-            title='OAuth 2.0 Authentication',
-            type='object',
-            required=['client_id', 'client_secret', 'refresh_token'],
-            properties={
-                'client_id': AuthConfigFieldSpec(
-                    title='Client ID',
-                    description='OAuth 2.0 Client ID from Google Cloud Console',
+        options=[
+            AuthOption(
+                scheme_name='oauth2',
+                type=AuthType.OAUTH2,
+                config={
+                    'header': 'Authorization',
+                    'prefix': 'Bearer',
+                    'refresh_url': 'https://oauth2.googleapis.com/token',
+                },
+                user_config_spec=AuthConfigSpec(
+                    title='OAuth 2.0 Authentication',
+                    type='object',
+                    required=['client_id', 'client_secret', 'refresh_token'],
+                    properties={
+                        'client_id': AuthConfigFieldSpec(
+                            title='Client ID',
+                            description='OAuth 2.0 Client ID from Google Cloud Console',
+                        ),
+                        'client_secret': AuthConfigFieldSpec(
+                            title='Client Secret',
+                            description='OAuth 2.0 Client Secret from Google Cloud Console',
+                        ),
+                        'refresh_token': AuthConfigFieldSpec(
+                            title='Refresh Token',
+                            description='OAuth 2.0 Refresh Token for obtaining new access tokens',
+                        ),
+                    },
+                    auth_mapping={
+                        'client_id': '${client_id}',
+                        'client_secret': '${client_secret}',
+                        'refresh_token': '${refresh_token}',
+                    },
+                    replication_auth_key_mapping={
+                        'credentials.client_id': 'client_id',
+                        'credentials.client_secret': 'client_secret',
+                        'credentials.refresh_token': 'refresh_token',
+                    },
+                    replication_auth_key_constants={'credentials.auth_type': 'Client'},
                 ),
-                'client_secret': AuthConfigFieldSpec(
-                    title='Client Secret',
-                    description='OAuth 2.0 Client Secret from Google Cloud Console',
+            ),
+            AuthOption(
+                scheme_name='serviceAccount',
+                type=AuthType.OAUTH2,
+                config={
+                    'header': 'Authorization',
+                    'prefix': 'Bearer',
+                    'refresh_url': 'https://oauth2.googleapis.com/token',
+                    'grant_type': 'jwt_bearer',
+                    'scopes': ['https://www.googleapis.com/auth/analytics.readonly'],
+                },
+                user_config_spec=AuthConfigSpec(
+                    title='Service Account Key Authentication',
+                    type='object',
+                    required=['credentials_json'],
+                    properties={
+                        'credentials_json': AuthConfigFieldSpec(
+                            title='Service Account JSON Key',
+                            description='The JSON key linked to the service account used for authorization. For steps on obtaining this key, refer to https://docs.airbyte.com/integrations/sources/google-analytics-data-api/#setup-guide',
+                            airbyte_secret=True,
+                        ),
+                    },
+                    auth_mapping={'credentials_json': '${credentials_json}'},
+                    replication_auth_key_mapping={'credentials.credentials_json': 'credentials_json'},
+                    replication_auth_key_constants={'credentials.auth_type': 'Service'},
                 ),
-                'refresh_token': AuthConfigFieldSpec(
-                    title='Refresh Token',
-                    description='OAuth 2.0 Refresh Token for obtaining new access tokens',
-                ),
-            },
-            auth_mapping={
-                'client_id': '${client_id}',
-                'client_secret': '${client_secret}',
-                'refresh_token': '${refresh_token}',
-            },
-            replication_auth_key_mapping={
-                'credentials.client_id': 'client_id',
-                'credentials.client_secret': 'client_secret',
-                'credentials.refresh_token': 'refresh_token',
-            },
-            replication_auth_key_constants={'credentials.auth_type': 'Client'},
-        ),
+            ),
+        ],
     ),
     entities=[
         EntityDefinition(
@@ -131,6 +163,7 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                         'properties': {
                             'dateRanges': {
                                 'type': 'array',
+                                'description': 'Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
@@ -144,10 +177,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'dimensions': {
                                 'type': 'array',
+                                'description': 'GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API dimension name (e.g., date, country, deviceCategory)'},
                                     },
                                 },
                                 'default': [
@@ -156,10 +190,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'metrics': {
                                 'type': 'array',
+                                'description': 'GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API metric name (e.g., totalUsers, sessions, bounceRate)'},
                                     },
                                 },
                                 'default': [
@@ -173,9 +208,21 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                                     {'name': 'bounceRate'},
                                 ],
                             },
-                            'keepEmptyRows': {'type': 'boolean', 'default': False},
-                            'returnPropertyQuota': {'type': 'boolean', 'default': True},
-                            'limit': {'type': 'integer', 'default': 100000},
+                            'keepEmptyRows': {
+                                'type': 'boolean',
+                                'description': 'If false, rows whose metrics are all zero are omitted from the response.',
+                                'default': False,
+                            },
+                            'returnPropertyQuota': {
+                                'type': 'boolean',
+                                'description': "Whether to include the Analytics property's current quota state in the response.",
+                                'default': True,
+                            },
+                            'limit': {
+                                'type': 'integer',
+                                'description': 'Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).',
+                                'default': 100000,
+                            },
                         },
                     },
                     response_schema={
@@ -348,6 +395,7 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                         'properties': {
                             'dateRanges': {
                                 'type': 'array',
+                                'description': 'Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
@@ -361,10 +409,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'dimensions': {
                                 'type': 'array',
+                                'description': 'GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API dimension name (e.g., date, country, deviceCategory)'},
                                     },
                                 },
                                 'default': [
@@ -373,19 +422,32 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'metrics': {
                                 'type': 'array',
+                                'description': 'GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API metric name (e.g., totalUsers, sessions, bounceRate)'},
                                     },
                                 },
                                 'default': [
                                     {'name': 'active1DayUsers'},
                                 ],
                             },
-                            'keepEmptyRows': {'type': 'boolean', 'default': False},
-                            'returnPropertyQuota': {'type': 'boolean', 'default': True},
-                            'limit': {'type': 'integer', 'default': 100000},
+                            'keepEmptyRows': {
+                                'type': 'boolean',
+                                'description': 'If false, rows whose metrics are all zero are omitted from the response.',
+                                'default': False,
+                            },
+                            'returnPropertyQuota': {
+                                'type': 'boolean',
+                                'description': "Whether to include the Analytics property's current quota state in the response.",
+                                'default': True,
+                            },
+                            'limit': {
+                                'type': 'integer',
+                                'description': 'Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).',
+                                'default': 100000,
+                            },
                         },
                     },
                     response_schema={
@@ -558,6 +620,7 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                         'properties': {
                             'dateRanges': {
                                 'type': 'array',
+                                'description': 'Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
@@ -571,10 +634,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'dimensions': {
                                 'type': 'array',
+                                'description': 'GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API dimension name (e.g., date, country, deviceCategory)'},
                                     },
                                 },
                                 'default': [
@@ -583,19 +647,32 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'metrics': {
                                 'type': 'array',
+                                'description': 'GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API metric name (e.g., totalUsers, sessions, bounceRate)'},
                                     },
                                 },
                                 'default': [
                                     {'name': 'active7DayUsers'},
                                 ],
                             },
-                            'keepEmptyRows': {'type': 'boolean', 'default': False},
-                            'returnPropertyQuota': {'type': 'boolean', 'default': True},
-                            'limit': {'type': 'integer', 'default': 100000},
+                            'keepEmptyRows': {
+                                'type': 'boolean',
+                                'description': 'If false, rows whose metrics are all zero are omitted from the response.',
+                                'default': False,
+                            },
+                            'returnPropertyQuota': {
+                                'type': 'boolean',
+                                'description': "Whether to include the Analytics property's current quota state in the response.",
+                                'default': True,
+                            },
+                            'limit': {
+                                'type': 'integer',
+                                'description': 'Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).',
+                                'default': 100000,
+                            },
                         },
                     },
                     response_schema={
@@ -768,6 +845,7 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                         'properties': {
                             'dateRanges': {
                                 'type': 'array',
+                                'description': 'Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
@@ -781,10 +859,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'dimensions': {
                                 'type': 'array',
+                                'description': 'GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API dimension name (e.g., date, country, deviceCategory)'},
                                     },
                                 },
                                 'default': [
@@ -793,19 +872,32 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'metrics': {
                                 'type': 'array',
+                                'description': 'GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API metric name (e.g., totalUsers, sessions, bounceRate)'},
                                     },
                                 },
                                 'default': [
                                     {'name': 'active28DayUsers'},
                                 ],
                             },
-                            'keepEmptyRows': {'type': 'boolean', 'default': False},
-                            'returnPropertyQuota': {'type': 'boolean', 'default': True},
-                            'limit': {'type': 'integer', 'default': 100000},
+                            'keepEmptyRows': {
+                                'type': 'boolean',
+                                'description': 'If false, rows whose metrics are all zero are omitted from the response.',
+                                'default': False,
+                            },
+                            'returnPropertyQuota': {
+                                'type': 'boolean',
+                                'description': "Whether to include the Analytics property's current quota state in the response.",
+                                'default': True,
+                            },
+                            'limit': {
+                                'type': 'integer',
+                                'description': 'Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).',
+                                'default': 100000,
+                            },
                         },
                     },
                     response_schema={
@@ -987,6 +1079,7 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                         'properties': {
                             'dateRanges': {
                                 'type': 'array',
+                                'description': 'Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
@@ -1000,10 +1093,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'dimensions': {
                                 'type': 'array',
+                                'description': 'GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API dimension name (e.g., date, country, deviceCategory)'},
                                     },
                                 },
                                 'default': [
@@ -1014,10 +1108,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'metrics': {
                                 'type': 'array',
+                                'description': 'GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API metric name (e.g., totalUsers, sessions, bounceRate)'},
                                     },
                                 },
                                 'default': [
@@ -1031,9 +1126,21 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                                     {'name': 'bounceRate'},
                                 ],
                             },
-                            'keepEmptyRows': {'type': 'boolean', 'default': False},
-                            'returnPropertyQuota': {'type': 'boolean', 'default': True},
-                            'limit': {'type': 'integer', 'default': 100000},
+                            'keepEmptyRows': {
+                                'type': 'boolean',
+                                'description': 'If false, rows whose metrics are all zero are omitted from the response.',
+                                'default': False,
+                            },
+                            'returnPropertyQuota': {
+                                'type': 'boolean',
+                                'description': "Whether to include the Analytics property's current quota state in the response.",
+                                'default': True,
+                            },
+                            'limit': {
+                                'type': 'integer',
+                                'description': 'Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).',
+                                'default': 100000,
+                            },
                         },
                     },
                     response_schema={
@@ -1209,6 +1316,7 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                         'properties': {
                             'dateRanges': {
                                 'type': 'array',
+                                'description': 'Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
@@ -1222,10 +1330,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'dimensions': {
                                 'type': 'array',
+                                'description': 'GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API dimension name (e.g., date, country, deviceCategory)'},
                                     },
                                 },
                                 'default': [
@@ -1236,10 +1345,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'metrics': {
                                 'type': 'array',
+                                'description': 'GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API metric name (e.g., totalUsers, sessions, bounceRate)'},
                                     },
                                 },
                                 'default': [
@@ -1247,9 +1357,21 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                                     {'name': 'bounceRate'},
                                 ],
                             },
-                            'keepEmptyRows': {'type': 'boolean', 'default': False},
-                            'returnPropertyQuota': {'type': 'boolean', 'default': True},
-                            'limit': {'type': 'integer', 'default': 100000},
+                            'keepEmptyRows': {
+                                'type': 'boolean',
+                                'description': 'If false, rows whose metrics are all zero are omitted from the response.',
+                                'default': False,
+                            },
+                            'returnPropertyQuota': {
+                                'type': 'boolean',
+                                'description': "Whether to include the Analytics property's current quota state in the response.",
+                                'default': True,
+                            },
+                            'limit': {
+                                'type': 'integer',
+                                'description': 'Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).',
+                                'default': 100000,
+                            },
                         },
                     },
                     response_schema={
@@ -1432,6 +1554,7 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                         'properties': {
                             'dateRanges': {
                                 'type': 'array',
+                                'description': 'Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
@@ -1445,10 +1568,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'dimensions': {
                                 'type': 'array',
+                                'description': 'GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API dimension name (e.g., date, country, deviceCategory)'},
                                     },
                                 },
                                 'default': [
@@ -1460,10 +1584,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'metrics': {
                                 'type': 'array',
+                                'description': 'GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API metric name (e.g., totalUsers, sessions, bounceRate)'},
                                     },
                                 },
                                 'default': [
@@ -1477,9 +1602,21 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                                     {'name': 'bounceRate'},
                                 ],
                             },
-                            'keepEmptyRows': {'type': 'boolean', 'default': False},
-                            'returnPropertyQuota': {'type': 'boolean', 'default': True},
-                            'limit': {'type': 'integer', 'default': 100000},
+                            'keepEmptyRows': {
+                                'type': 'boolean',
+                                'description': 'If false, rows whose metrics are all zero are omitted from the response.',
+                                'default': False,
+                            },
+                            'returnPropertyQuota': {
+                                'type': 'boolean',
+                                'description': "Whether to include the Analytics property's current quota state in the response.",
+                                'default': True,
+                            },
+                            'limit': {
+                                'type': 'integer',
+                                'description': 'Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).',
+                                'default': 100000,
+                            },
                         },
                     },
                     response_schema={
@@ -1662,6 +1799,7 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                         'properties': {
                             'dateRanges': {
                                 'type': 'array',
+                                'description': 'Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
@@ -1675,10 +1813,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'dimensions': {
                                 'type': 'array',
+                                'description': 'GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API dimension name (e.g., date, country, deviceCategory)'},
                                     },
                                 },
                                 'default': [
@@ -1690,10 +1829,11 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'metrics': {
                                 'type': 'array',
+                                'description': 'GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.',
                                 'items': {
                                     'type': 'object',
                                     'properties': {
-                                        'name': {'type': 'string'},
+                                        'name': {'type': 'string', 'description': 'GA4 API metric name (e.g., totalUsers, sessions, bounceRate)'},
                                     },
                                 },
                                 'default': [
@@ -1707,9 +1847,21 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                                     {'name': 'bounceRate'},
                                 ],
                             },
-                            'keepEmptyRows': {'type': 'boolean', 'default': False},
-                            'returnPropertyQuota': {'type': 'boolean', 'default': True},
-                            'limit': {'type': 'integer', 'default': 100000},
+                            'keepEmptyRows': {
+                                'type': 'boolean',
+                                'description': 'If false, rows whose metrics are all zero are omitted from the response.',
+                                'default': False,
+                            },
+                            'returnPropertyQuota': {
+                                'type': 'boolean',
+                                'description': "Whether to include the Analytics property's current quota state in the response.",
+                                'default': True,
+                            },
+                            'limit': {
+                                'type': 'integer',
+                                'description': 'Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).',
+                                'default': 100000,
+                            },
                         },
                     },
                     response_schema={

@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import base64
+import json
 import logging
+import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Literal, TypedDict
 
 import httpx
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from jinja2 import Template
 
 from airbyte_agent_sdk.secrets import SecretStr
@@ -50,6 +54,66 @@ def extract_secret_value(value: SecretStr | str | None) -> str:
     if isinstance(value, SecretStr):
         return value.get_secret_value()
     return str(value) if value else ""
+
+
+def _base64url_encode(data: bytes) -> str:
+    """Encode bytes as unpadded base64url (RFC 7515 JWT segment encoding)."""
+    return base64.urlsafe_b64encode(data).rstrip(b"=").decode("ascii")
+
+
+def build_jwt_bearer_assertion(credentials_json: str, scopes: list[str], audience: str) -> str:
+    """Build a signed RS256 JWT assertion for the RFC 7523 jwt-bearer grant.
+
+    Used by service account authentication flows (e.g., Google service account
+    keys) where the client proves its identity by signing a JWT with the
+    service account's private key instead of presenting a refresh token.
+
+    Args:
+        credentials_json: Service account key as a JSON string. Must contain
+            'client_email' (JWT issuer) and 'private_key' (PEM RSA key).
+        scopes: OAuth scopes for the assertion's 'scope' claim
+        audience: Token endpoint URL for the 'aud' claim
+
+    Returns:
+        Signed JWT string (header.payload.signature)
+
+    Raises:
+        AuthenticationError: If credentials_json is malformed, missing required
+            fields, or its private key cannot be loaded as an RSA PEM key
+    """
+    try:
+        credentials = json.loads(credentials_json)
+    except json.JSONDecodeError as e:
+        raise AuthenticationError("Invalid 'credentials_json': not valid JSON") from e
+    if not isinstance(credentials, dict):
+        raise AuthenticationError("Invalid 'credentials_json': expected a JSON object")
+
+    client_email = credentials.get("client_email")
+    private_key_pem = credentials.get("private_key")
+    if not client_email or not private_key_pem:
+        raise AuthenticationError("Invalid 'credentials_json': missing 'client_email' or 'private_key'")
+
+    try:
+        private_key = serialization.load_pem_private_key(private_key_pem.encode("utf-8"), password=None)
+    except (ValueError, TypeError) as e:
+        raise AuthenticationError("Invalid 'credentials_json': 'private_key' is not a loadable PEM private key") from e
+    if not isinstance(private_key, rsa.RSAPrivateKey):
+        raise AuthenticationError("Invalid 'credentials_json': 'private_key' must be an RSA private key")
+
+    now = int(time.time())
+    header = {"alg": "RS256", "typ": "JWT"}
+    claims = {
+        "iss": client_email,
+        "scope": " ".join(scopes),
+        "aud": audience,
+        "iat": now,
+        "exp": now + 3600,
+    }
+    header_segment = _base64url_encode(json.dumps(header, separators=(",", ":")).encode("utf-8"))
+    claims_segment = _base64url_encode(json.dumps(claims, separators=(",", ":")).encode("utf-8"))
+    signing_input = f"{header_segment}.{claims_segment}"
+    signature = private_key.sign(signing_input.encode("ascii"), padding.PKCS1v15(), hashes.SHA256())
+    return f"{signing_input}.{_base64url_encode(signature)}"
 
 
 # TypedDict definitions for auth strategy configurations and secrets
@@ -114,6 +178,10 @@ class BasicAuthSecrets(TypedDict):
 # Type aliases for OAuth2 configuration options
 AuthStyle = Literal["basic", "body", "none"]
 BodyFormat = Literal["form", "json"]
+GrantType = Literal["refresh_token", "jwt_bearer"]
+
+# RFC 7523 grant type for JWT-bearer token requests (service account flows)
+JWT_BEARER_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer"
 
 
 class OAuth2AuthConfig(TypedDict, total=False):
@@ -144,6 +212,16 @@ class OAuth2AuthConfig(TypedDict, total=False):
             - "form": application/x-www-form-urlencoded (default, RFC 6749 standard)
             - "json": application/json (some APIs prefer this)
             Default: "form"
+
+        grant_type: OAuth2 grant used to obtain access tokens
+            - "refresh_token": standard refresh-token grant (default)
+            - "jwt_bearer": RFC 7523 JWT-bearer grant for service accounts
+              (e.g., Google service account keys). Requires 'credentials_json'
+              in secrets and 'scopes' in config.
+            Default: "refresh_token"
+
+        scopes: OAuth scopes for the JWT-bearer assertion's 'scope' claim.
+            Only used when grant_type is "jwt_bearer".
 
         subdomain: Template variable for multi-tenant APIs (e.g., Zendesk)
             Used in refresh_url templates like "https://{{subdomain}}.example.com"
@@ -189,6 +267,8 @@ class OAuth2AuthConfig(TypedDict, total=False):
     refresh_url: str
     auth_style: AuthStyle
     body_format: BodyFormat
+    grant_type: GrantType
+    scopes: list[str]
     subdomain: str
     additional_headers: dict[str, str]
 
@@ -249,6 +329,11 @@ class OAuth2RefreshSecrets(OAuth2AuthSecrets, total=False):
             Usually "Bearer" per RFC 6750.
             Some APIs use different types like "Token" or "MAC".
 
+        credentials_json (optional): Service account key JSON string.
+            Required for the "jwt_bearer" grant type. Must contain
+            'client_email' and 'private_key' fields (Google service
+            account key format).
+
     Examples:
         Full refresh capability:
             {
@@ -276,6 +361,7 @@ class OAuth2RefreshSecrets(OAuth2AuthSecrets, total=False):
     client_id: SecretStr | str
     client_secret: SecretStr | str
     token_type: str
+    credentials_json: SecretStr | str
 
 
 @dataclass
@@ -637,12 +723,13 @@ class OAuth2AuthStrategy(AuthStrategy):
         # Get access token from secrets
         access_token = secrets.get("access_token")
         if not access_token:
-            # Provide helpful error for refresh-token-only scenario
-            if secrets.get("refresh_token"):
+            # Provide helpful error for refresh-token-only / service-account scenario
+            if secrets.get("refresh_token") or secrets.get("credentials_json"):
                 raise AuthenticationError(
                     "Missing 'access_token' in secrets. "
-                    "When using refresh-token-only mode, ensure HTTPClient.request() "
-                    "is called (it handles proactive token refresh automatically)."
+                    "When using refresh-token-only or service-account mode, ensure "
+                    "HTTPClient.request() is called (it handles proactive token "
+                    "refresh automatically)."
                 )
             raise AuthenticationError("Missing 'access_token' in secrets")
 
@@ -667,19 +754,24 @@ class OAuth2AuthStrategy(AuthStrategy):
 
         Validates that either:
         1. access_token is present, OR
-        2. refresh_token is present (for refresh-token-only mode)
+        2. refresh_token is present (for refresh-token-only mode), OR
+        3. credentials_json is present (for service-account jwt-bearer mode)
 
         Args:
             secrets: OAuth2 credentials to validate
 
         Raises:
-            AuthenticationError: If neither access_token nor refresh_token is present
+            AuthenticationError: If no usable credential is present
         """
         has_access_token = bool(secrets.get("access_token"))
         has_refresh_token = bool(secrets.get("refresh_token"))
+        has_credentials_json = bool(secrets.get("credentials_json"))
 
-        if not has_access_token and not has_refresh_token:
-            raise AuthenticationError("Missing OAuth2 credentials. Provide either 'access_token' or 'refresh_token' (for refresh-token-only mode).")
+        if not has_access_token and not has_refresh_token and not has_credentials_json:
+            raise AuthenticationError(
+                "Missing OAuth2 credentials. Provide 'access_token', 'refresh_token' "
+                "(for refresh-token-only mode), or 'credentials_json' (for service-account mode)."
+            )
 
     def can_refresh(self, secrets: OAuth2RefreshSecrets) -> bool:
         """Check if token refresh is possible.
@@ -688,9 +780,9 @@ class OAuth2AuthStrategy(AuthStrategy):
             secrets: OAuth2 credentials (including optional refresh fields)
 
         Returns:
-            True if refresh_token is available, False otherwise
+            True if refresh_token or credentials_json is available, False otherwise
         """
-        return bool(secrets.get("refresh_token"))
+        return bool(secrets.get("refresh_token") or secrets.get("credentials_json"))
 
     async def handle_auth_error(
         self,
@@ -754,10 +846,10 @@ class OAuth2AuthStrategy(AuthStrategy):
 
         Returns True if:
         - access_token is missing (None, empty, or not present)
-        - refresh_token is present
+        - refresh_token or credentials_json is present
 
-        This indicates "refresh-token-only" mode where we need to obtain
-        an access_token before making API requests.
+        This indicates "refresh-token-only" or service-account mode where we
+        need to obtain an access_token before making API requests.
 
         Args:
             secrets: OAuth2 credentials
@@ -766,9 +858,9 @@ class OAuth2AuthStrategy(AuthStrategy):
             True if proactive refresh should be attempted, False otherwise
         """
         has_access_token = bool(secrets.get("access_token"))
-        has_refresh_token = bool(secrets.get("refresh_token"))
+        has_refresh_source = bool(secrets.get("refresh_token") or secrets.get("credentials_json"))
 
-        return not has_access_token and has_refresh_token
+        return not has_access_token and has_refresh_source
 
     async def ensure_credentials(
         self,
@@ -906,12 +998,16 @@ class OAuth2TokenRefresher:
 
         Args:
             config: OAuth2 configuration
-            secrets: OAuth2 credentials (must include refresh_token)
+            secrets: OAuth2 credentials (refresh_token, or credentials_json
+                for the jwt_bearer grant)
 
         Raises:
-            AuthenticationError: If refresh_token or refresh_url is missing
+            AuthenticationError: If required credentials or refresh_url are missing
         """
-        if not secrets.get("refresh_token"):
+        if config.get("grant_type") == "jwt_bearer":
+            if not secrets.get("credentials_json"):
+                raise AuthenticationError("Missing 'credentials_json' in secrets")
+        elif not secrets.get("refresh_token"):
             raise AuthenticationError("Missing 'refresh_token' in secrets")
 
         if not config.get("refresh_url"):
@@ -970,12 +1066,16 @@ class OAuth2TokenRefresher:
         """Build headers and body for the token refresh request.
 
         Args:
-            config: OAuth2 configuration with auth_style
-            secrets: OAuth2 credentials (including refresh_token and client credentials)
+            config: OAuth2 configuration with auth_style (and grant_type)
+            secrets: OAuth2 credentials (refresh_token and client credentials,
+                or credentials_json for the jwt_bearer grant)
 
         Returns:
             Tuple of (headers dict, body params dict)
         """
+        if config.get("grant_type") == "jwt_bearer":
+            return self._build_jwt_bearer_request(config, secrets)
+
         auth_style = config.get("auth_style", "body")
 
         # Extract secret values once
@@ -1000,6 +1100,48 @@ class OAuth2TokenRefresher:
             body_params["client_secret"] = client_secret_value
 
         return headers, body_params
+
+    def _build_jwt_bearer_request(
+        self,
+        config: OAuth2AuthConfig,
+        secrets: OAuth2RefreshSecrets,
+    ) -> tuple[dict[str, str], dict[str, str]]:
+        """Build headers and body for an RFC 7523 jwt-bearer token request.
+
+        Signs a JWT assertion with the service account private key from
+        credentials_json. No client credentials are sent — the signed
+        assertion itself authenticates the client.
+
+        Args:
+            config: OAuth2 configuration with refresh_url and scopes
+            secrets: OAuth2 credentials including credentials_json
+
+        Returns:
+            Tuple of (headers dict, body params dict)
+
+        Raises:
+            AuthenticationError: If scopes are missing or credentials_json is invalid
+        """
+        scopes = list(config.get("scopes") or [])
+        if not scopes:
+            raise AuthenticationError("Missing 'scopes' in config: the jwt_bearer grant requires at least one OAuth scope")
+
+        credentials_json_value = extract_secret_value(
+            secrets["credentials_json"]  # Already validated
+        )
+        # The assertion audience is the token endpoint itself
+        audience = self._render_refresh_url(config, secrets)
+        assertion = build_jwt_bearer_assertion(
+            credentials_json=credentials_json_value,
+            scopes=scopes,
+            audience=audience,
+        )
+
+        body_params = {
+            "grant_type": JWT_BEARER_GRANT_TYPE,
+            "assertion": assertion,
+        }
+        return {}, body_params
 
     def _build_auth_headers(
         self,

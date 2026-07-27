@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "airbyte-agent-sdk"
-version = "0.1.292"
+version = "0.1.293"
 description = "Airbyte Agent SDK: typed connectors that give AI agents access to 50+ third-party APIs"
 authors = [{ name = "Airbyte", email = "contact@airbyte.io" }]
 readme = "README.md"
@@ -12,6 +12,7 @@ requires-python = ">=3.11"
 dependencies = [
     "cryptography>=48.0.1,<49.0.0",
     "httpx>=0.28.1",
+    "cryptography>=42.0.0",
     "pydantic>=2.12.0",
     "pyyaml>=6.0,<7.0.0",
     "python-dotenv>=1.2.2",

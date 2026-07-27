@@ -66,7 +66,7 @@ EXPECTED_AUTH_MAPPING_KEYS: dict[AuthType, set[str]] = {
     AuthType.BEARER: {"token"},
     AuthType.BASIC: {"username", "password"},
     AuthType.API_KEY: {"api_key"},
-    AuthType.OAUTH2: {"access_token", "refresh_token", "client_id", "client_secret"},
+    AuthType.OAUTH2: {"access_token", "refresh_token", "client_id", "client_secret", "credentials_json"},
 }
 
 
@@ -852,7 +852,7 @@ def _select_oauth2_flow(flows: Any) -> Any:
     return None
 
 
-def _parse_oauth2_config(scheme: Any) -> dict[str, str]:
+def _parse_oauth2_config(scheme: Any) -> dict[str, Any]:
     """Parse OAuth2 authentication configuration from OpenAPI scheme.
 
     Extracts configuration from standard OAuth2 flows and custom x-airbyte-token-refresh
@@ -868,8 +868,10 @@ def _parse_oauth2_config(scheme: Any) -> dict[str, str]:
         - refresh_url: Token refresh endpoint (from flows)
         - auth_style: How to send credentials (from x-airbyte-token-refresh)
         - body_format: Request encoding (from x-airbyte-token-refresh)
+        - grant_type: Token grant to use (from x-airbyte-token-refresh)
+        - scopes: OAuth scopes for the jwt_bearer assertion (from flows)
     """
-    config: dict[str, str] = {
+    config: dict[str, Any] = {
         "header": "Authorization",
         "prefix": "Bearer",
     }
@@ -904,6 +906,25 @@ def _parse_oauth2_config(scheme: Any) -> dict[str, str]:
         prefix = x_token_refresh.get("prefix")
         if prefix is not None:
             config["prefix"] = prefix
+
+        grant_type = x_token_refresh.get("grant_type")
+        if grant_type:
+            if grant_type not in ("refresh_token", "jwt_bearer"):
+                raise InvalidOpenAPIError(
+                    f"x-airbyte-token-refresh grant_type '{grant_type}' is not supported. Supported values: refresh_token, jwt_bearer"
+                )
+            config["grant_type"] = grant_type
+
+    # The jwt_bearer grant signs an assertion whose 'scope' claim comes from the flow's scopes
+    if config.get("grant_type") == "jwt_bearer":
+        scopes: list[str] = []
+        if scheme.flows:
+            flow = _select_oauth2_flow(scheme.flows)
+            if flow:
+                scopes = list(getattr(flow, "scopes", None) or {})
+        if not scopes:
+            raise InvalidOpenAPIError("OAuth2 scheme with grant_type 'jwt_bearer' must declare at least one scope on its flow")
+        config["scopes"] = scopes
 
     # Extract token_extract fields from x-airbyte-token-extract extension
     x_token_extract = getattr(scheme, "x_airbyte_token_extract", None)

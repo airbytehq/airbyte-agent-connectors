@@ -3,7 +3,7 @@
   "class_name": "GoogleAnalyticsDataApiConnector",
   "package_name": "airbyte_agent_sdk.connectors.google_analytics_data_api",
   "install_package": "airbyte-agent-sdk",
-  "yaml_version": "1.0.5",
+  "yaml_version": "1.1.0",
   "api_reference_url": "https://developers.google.com/analytics/devguides/reporting/data/v1/rest",
   "auth_example": "GoogleAnalyticsDataApiAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\")",
   "auth_import": ", GoogleAnalyticsDataApiAuthConfig",
@@ -37,10 +37,26 @@
             "description": "OAuth 2.0 Refresh Token for obtaining new access tokens"
           }
         ],
-        "type_suffix": "Oauth20Authentication"
+        "type_suffix": "Oauth20Authentication",
+        "scheme_name": "oauth2"
+      },
+      {
+        "title": "Service Account Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "credentials_json",
+            "type": "str",
+            "required": true,
+            "title": "Service Account JSON Key",
+            "description": "The JSON key linked to the service account used for authorization. For steps on obtaining this key, refer to https://docs.airbyte.com/integrations/sources/google-analytics-data-api/#setup-guide"
+          }
+        ],
+        "type_suffix": "ServiceAccountKeyAuthentication",
+        "scheme_name": "serviceAccount"
       }
     ],
-    "is_multi_auth": false
+    "is_multi_auth": true
   },
   "replication_config": {
     "type_name": "GoogleAnalyticsDataApiReplicationConfig",
@@ -58,7 +74,7 @@
       }
     ]
   },
-  "custom_description": "Google Analytics 4 (GA4) Data API connector for accessing website and app analytics data.\nThis connector provides access to pre-configured analytics reports including website overview,\nactive users, traffic sources, page performance, device breakdowns, and geographic locations.\nReports are retrieved via the GA4 Data API v1beta using configurable date ranges and\nproperty IDs. Requires OAuth2 authentication with Google Analytics read-only scope.\n",
+  "custom_description": "Google Analytics 4 (GA4) Data API connector for accessing website and app analytics data.\nThis connector provides access to pre-configured analytics reports including website overview,\nactive users, traffic sources, page performance, device breakdowns, and geographic locations.\nReports are retrieved via the GA4 Data API v1beta using configurable date ranges and\nproperty IDs. Supports OAuth2 and service account key authentication with Google\nAnalytics read-only scope.\n",
   "supported_questions": "- Show me the website overview report\n- List daily active users\n- Show weekly active user trends\n- Get the four-weekly active users report\n- List traffic sources\n- Show me page performance metrics\n- Get device breakdown data\n- List user locations\n- What are the top traffic sources by sessions?\n- Which pages have the highest bounce rate?\n- What devices do most users browse from?\n- Which countries send the most traffic?\n- How has daily active users changed over the last month?",
   "unsupported_questions": "- Create a new GA4 property\n- Delete analytics data\n- Modify tracking configurations\n- Run a custom report with arbitrary dimensions\n- Access real-time analytics data",
   "first_operation": {
@@ -74,6 +90,7 @@
         "type": "list[WebsiteOverviewListParamsDaterangesItem]",
         "schema": {
           "type": "array",
+          "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.",
           "items": {
             "type": "object",
             "properties": {
@@ -95,7 +112,7 @@
           ]
         },
         "required": false,
-        "description": ""
+        "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days."
       },
       {
         "name": "dimensions",
@@ -103,11 +120,13 @@
         "type": "list[WebsiteOverviewListParamsDimensionsItem]",
         "schema": {
           "type": "array",
+          "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string"
+                "type": "string",
+                "description": "GA4 API dimension name (e.g., date, country, deviceCategory)"
               }
             }
           },
@@ -118,7 +137,7 @@
           ]
         },
         "required": false,
-        "description": ""
+        "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report."
       },
       {
         "name": "metrics",
@@ -126,11 +145,13 @@
         "type": "list[WebsiteOverviewListParamsMetricsItem]",
         "schema": {
           "type": "array",
+          "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string"
+                "type": "string",
+                "description": "GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"
               }
             }
           },
@@ -162,7 +183,7 @@
           ]
         },
         "required": false,
-        "description": ""
+        "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report."
       },
       {
         "name": "keepEmptyRows",
@@ -170,10 +191,11 @@
         "type": "bool",
         "schema": {
           "type": "boolean",
+          "description": "If false, rows whose metrics are all zero are omitted from the response.",
           "default": false
         },
         "required": false,
-        "description": ""
+        "description": "If false, rows whose metrics are all zero are omitted from the response."
       },
       {
         "name": "returnPropertyQuota",
@@ -181,10 +203,11 @@
         "type": "bool",
         "schema": {
           "type": "boolean",
+          "description": "Whether to include the Analytics property's current quota state in the response.",
           "default": true
         },
         "required": false,
-        "description": ""
+        "description": "Whether to include the Analytics property's current quota state in the response."
       },
       {
         "name": "limit",
@@ -192,10 +215,11 @@
         "type": "int",
         "schema": {
           "type": "integer",
+          "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).",
           "default": 100000
         },
         "required": false,
-        "description": ""
+        "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows)."
       },
       {
         "name": "property_id",
@@ -245,6 +269,7 @@
             "type": "list[WebsiteOverviewListParamsDaterangesItem]",
             "schema": {
               "type": "array",
+              "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.",
               "items": {
                 "type": "object",
                 "properties": {
@@ -266,7 +291,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days."
           },
           {
             "name": "dimensions",
@@ -274,11 +299,13 @@
             "type": "list[WebsiteOverviewListParamsDimensionsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API dimension name (e.g., date, country, deviceCategory)"
                   }
                 }
               },
@@ -289,7 +316,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "metrics",
@@ -297,11 +324,13 @@
             "type": "list[WebsiteOverviewListParamsMetricsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"
                   }
                 }
               },
@@ -333,7 +362,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "keepEmptyRows",
@@ -341,10 +370,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "If false, rows whose metrics are all zero are omitted from the response.",
               "default": false
             },
             "required": false,
-            "description": ""
+            "description": "If false, rows whose metrics are all zero are omitted from the response."
           },
           {
             "name": "returnPropertyQuota",
@@ -352,10 +382,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "Whether to include the Analytics property's current quota state in the response.",
               "default": true
             },
             "required": false,
-            "description": ""
+            "description": "Whether to include the Analytics property's current quota state in the response."
           },
           {
             "name": "limit",
@@ -363,10 +394,11 @@
             "type": "int",
             "schema": {
               "type": "integer",
+              "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).",
               "default": 100000
             },
             "required": false,
-            "description": ""
+            "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows)."
           },
           {
             "name": "property_id",
@@ -416,6 +448,7 @@
             "type": "list[DailyActiveUsersListParamsDaterangesItem]",
             "schema": {
               "type": "array",
+              "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.",
               "items": {
                 "type": "object",
                 "properties": {
@@ -437,7 +470,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days."
           },
           {
             "name": "dimensions",
@@ -445,11 +478,13 @@
             "type": "list[DailyActiveUsersListParamsDimensionsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API dimension name (e.g., date, country, deviceCategory)"
                   }
                 }
               },
@@ -460,7 +495,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "metrics",
@@ -468,11 +503,13 @@
             "type": "list[DailyActiveUsersListParamsMetricsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"
                   }
                 }
               },
@@ -483,7 +520,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "keepEmptyRows",
@@ -491,10 +528,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "If false, rows whose metrics are all zero are omitted from the response.",
               "default": false
             },
             "required": false,
-            "description": ""
+            "description": "If false, rows whose metrics are all zero are omitted from the response."
           },
           {
             "name": "returnPropertyQuota",
@@ -502,10 +540,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "Whether to include the Analytics property's current quota state in the response.",
               "default": true
             },
             "required": false,
-            "description": ""
+            "description": "Whether to include the Analytics property's current quota state in the response."
           },
           {
             "name": "limit",
@@ -513,10 +552,11 @@
             "type": "int",
             "schema": {
               "type": "integer",
+              "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).",
               "default": 100000
             },
             "required": false,
-            "description": ""
+            "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows)."
           },
           {
             "name": "property_id",
@@ -566,6 +606,7 @@
             "type": "list[WeeklyActiveUsersListParamsDaterangesItem]",
             "schema": {
               "type": "array",
+              "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.",
               "items": {
                 "type": "object",
                 "properties": {
@@ -587,7 +628,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days."
           },
           {
             "name": "dimensions",
@@ -595,11 +636,13 @@
             "type": "list[WeeklyActiveUsersListParamsDimensionsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API dimension name (e.g., date, country, deviceCategory)"
                   }
                 }
               },
@@ -610,7 +653,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "metrics",
@@ -618,11 +661,13 @@
             "type": "list[WeeklyActiveUsersListParamsMetricsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"
                   }
                 }
               },
@@ -633,7 +678,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "keepEmptyRows",
@@ -641,10 +686,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "If false, rows whose metrics are all zero are omitted from the response.",
               "default": false
             },
             "required": false,
-            "description": ""
+            "description": "If false, rows whose metrics are all zero are omitted from the response."
           },
           {
             "name": "returnPropertyQuota",
@@ -652,10 +698,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "Whether to include the Analytics property's current quota state in the response.",
               "default": true
             },
             "required": false,
-            "description": ""
+            "description": "Whether to include the Analytics property's current quota state in the response."
           },
           {
             "name": "limit",
@@ -663,10 +710,11 @@
             "type": "int",
             "schema": {
               "type": "integer",
+              "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).",
               "default": 100000
             },
             "required": false,
-            "description": ""
+            "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows)."
           },
           {
             "name": "property_id",
@@ -716,6 +764,7 @@
             "type": "list[FourWeeklyActiveUsersListParamsDaterangesItem]",
             "schema": {
               "type": "array",
+              "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.",
               "items": {
                 "type": "object",
                 "properties": {
@@ -737,7 +786,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days."
           },
           {
             "name": "dimensions",
@@ -745,11 +794,13 @@
             "type": "list[FourWeeklyActiveUsersListParamsDimensionsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API dimension name (e.g., date, country, deviceCategory)"
                   }
                 }
               },
@@ -760,7 +811,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "metrics",
@@ -768,11 +819,13 @@
             "type": "list[FourWeeklyActiveUsersListParamsMetricsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"
                   }
                 }
               },
@@ -783,7 +836,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "keepEmptyRows",
@@ -791,10 +844,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "If false, rows whose metrics are all zero are omitted from the response.",
               "default": false
             },
             "required": false,
-            "description": ""
+            "description": "If false, rows whose metrics are all zero are omitted from the response."
           },
           {
             "name": "returnPropertyQuota",
@@ -802,10 +856,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "Whether to include the Analytics property's current quota state in the response.",
               "default": true
             },
             "required": false,
-            "description": ""
+            "description": "Whether to include the Analytics property's current quota state in the response."
           },
           {
             "name": "limit",
@@ -813,10 +868,11 @@
             "type": "int",
             "schema": {
               "type": "integer",
+              "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).",
               "default": 100000
             },
             "required": false,
-            "description": ""
+            "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows)."
           },
           {
             "name": "property_id",
@@ -866,6 +922,7 @@
             "type": "list[TrafficSourcesListParamsDaterangesItem]",
             "schema": {
               "type": "array",
+              "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.",
               "items": {
                 "type": "object",
                 "properties": {
@@ -887,7 +944,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days."
           },
           {
             "name": "dimensions",
@@ -895,11 +952,13 @@
             "type": "list[TrafficSourcesListParamsDimensionsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API dimension name (e.g., date, country, deviceCategory)"
                   }
                 }
               },
@@ -916,7 +975,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "metrics",
@@ -924,11 +983,13 @@
             "type": "list[TrafficSourcesListParamsMetricsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"
                   }
                 }
               },
@@ -960,7 +1021,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "keepEmptyRows",
@@ -968,10 +1029,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "If false, rows whose metrics are all zero are omitted from the response.",
               "default": false
             },
             "required": false,
-            "description": ""
+            "description": "If false, rows whose metrics are all zero are omitted from the response."
           },
           {
             "name": "returnPropertyQuota",
@@ -979,10 +1041,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "Whether to include the Analytics property's current quota state in the response.",
               "default": true
             },
             "required": false,
-            "description": ""
+            "description": "Whether to include the Analytics property's current quota state in the response."
           },
           {
             "name": "limit",
@@ -990,10 +1053,11 @@
             "type": "int",
             "schema": {
               "type": "integer",
+              "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).",
               "default": 100000
             },
             "required": false,
-            "description": ""
+            "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows)."
           },
           {
             "name": "property_id",
@@ -1043,6 +1107,7 @@
             "type": "list[PagesListParamsDaterangesItem]",
             "schema": {
               "type": "array",
+              "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.",
               "items": {
                 "type": "object",
                 "properties": {
@@ -1064,7 +1129,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days."
           },
           {
             "name": "dimensions",
@@ -1072,11 +1137,13 @@
             "type": "list[PagesListParamsDimensionsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API dimension name (e.g., date, country, deviceCategory)"
                   }
                 }
               },
@@ -1093,7 +1160,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "metrics",
@@ -1101,11 +1168,13 @@
             "type": "list[PagesListParamsMetricsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"
                   }
                 }
               },
@@ -1119,7 +1188,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "keepEmptyRows",
@@ -1127,10 +1196,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "If false, rows whose metrics are all zero are omitted from the response.",
               "default": false
             },
             "required": false,
-            "description": ""
+            "description": "If false, rows whose metrics are all zero are omitted from the response."
           },
           {
             "name": "returnPropertyQuota",
@@ -1138,10 +1208,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "Whether to include the Analytics property's current quota state in the response.",
               "default": true
             },
             "required": false,
-            "description": ""
+            "description": "Whether to include the Analytics property's current quota state in the response."
           },
           {
             "name": "limit",
@@ -1149,10 +1220,11 @@
             "type": "int",
             "schema": {
               "type": "integer",
+              "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).",
               "default": 100000
             },
             "required": false,
-            "description": ""
+            "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows)."
           },
           {
             "name": "property_id",
@@ -1202,6 +1274,7 @@
             "type": "list[DevicesListParamsDaterangesItem]",
             "schema": {
               "type": "array",
+              "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.",
               "items": {
                 "type": "object",
                 "properties": {
@@ -1223,7 +1296,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days."
           },
           {
             "name": "dimensions",
@@ -1231,11 +1304,13 @@
             "type": "list[DevicesListParamsDimensionsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API dimension name (e.g., date, country, deviceCategory)"
                   }
                 }
               },
@@ -1255,7 +1330,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "metrics",
@@ -1263,11 +1338,13 @@
             "type": "list[DevicesListParamsMetricsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"
                   }
                 }
               },
@@ -1299,7 +1376,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "keepEmptyRows",
@@ -1307,10 +1384,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "If false, rows whose metrics are all zero are omitted from the response.",
               "default": false
             },
             "required": false,
-            "description": ""
+            "description": "If false, rows whose metrics are all zero are omitted from the response."
           },
           {
             "name": "returnPropertyQuota",
@@ -1318,10 +1396,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "Whether to include the Analytics property's current quota state in the response.",
               "default": true
             },
             "required": false,
-            "description": ""
+            "description": "Whether to include the Analytics property's current quota state in the response."
           },
           {
             "name": "limit",
@@ -1329,10 +1408,11 @@
             "type": "int",
             "schema": {
               "type": "integer",
+              "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).",
               "default": 100000
             },
             "required": false,
-            "description": ""
+            "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows)."
           },
           {
             "name": "property_id",
@@ -1382,6 +1462,7 @@
             "type": "list[LocationsListParamsDaterangesItem]",
             "schema": {
               "type": "array",
+              "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.",
               "items": {
                 "type": "object",
                 "properties": {
@@ -1403,7 +1484,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days."
           },
           {
             "name": "dimensions",
@@ -1411,11 +1492,13 @@
             "type": "list[LocationsListParamsDimensionsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API dimension name (e.g., date, country, deviceCategory)"
                   }
                 }
               },
@@ -1435,7 +1518,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 dimensions to group results by. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "metrics",
@@ -1443,11 +1526,13 @@
             "type": "list[LocationsListParamsMetricsItem]",
             "schema": {
               "type": "array",
+              "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.",
               "items": {
                 "type": "object",
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"
                   }
                 }
               },
@@ -1479,7 +1564,7 @@
               ]
             },
             "required": false,
-            "description": ""
+            "description": "GA4 metrics to aggregate. Defaults match the equivalent Data Replication report."
           },
           {
             "name": "keepEmptyRows",
@@ -1487,10 +1572,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "If false, rows whose metrics are all zero are omitted from the response.",
               "default": false
             },
             "required": false,
-            "description": ""
+            "description": "If false, rows whose metrics are all zero are omitted from the response."
           },
           {
             "name": "returnPropertyQuota",
@@ -1498,10 +1584,11 @@
             "type": "bool",
             "schema": {
               "type": "boolean",
+              "description": "Whether to include the Analytics property's current quota state in the response.",
               "default": true
             },
             "required": false,
-            "description": ""
+            "description": "Whether to include the Analytics property's current quota state in the response."
           },
           {
             "name": "limit",
@@ -1509,10 +1596,11 @@
             "type": "int",
             "schema": {
               "type": "integer",
+              "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).",
               "default": 100000
             },
             "required": false,
-            "description": ""
+            "description": "Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows)."
           },
           {
             "name": "property_id",

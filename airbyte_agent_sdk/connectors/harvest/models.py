@@ -271,14 +271,14 @@ class TasksList(BaseModel):
     previous_page: int | None = Field(default=None)
     links: PaginationLinks | None = Field(default=None)
 
-class TimeEntryInvoice(BaseModel):
-    """The invoice associated with the time entry"""
+class TimeEntryProject(BaseModel):
+    """The project associated with the time entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: int | None | None = Field(default=None, description="Invoice ID")
-    """Invoice ID"""
-    number: str | None | None = Field(default=None, description="Invoice number")
-    """Invoice number"""
+    id: int | None | None = Field(default=None, description="Project ID")
+    """Project ID"""
+    name: str | None | None = Field(default=None, description="Project name")
+    """Project name"""
 
 class TimeEntryClient(BaseModel):
     """The client associated with the time entry"""
@@ -289,14 +289,14 @@ class TimeEntryClient(BaseModel):
     name: str | None | None = Field(default=None, description="Client name")
     """Client name"""
 
-class TimeEntryProject(BaseModel):
-    """The project associated with the time entry"""
+class TimeEntryInvoice(BaseModel):
+    """The invoice associated with the time entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: int | None | None = Field(default=None, description="Project ID")
-    """Project ID"""
-    name: str | None | None = Field(default=None, description="Project name")
-    """Project name"""
+    id: int | None | None = Field(default=None, description="Invoice ID")
+    """Invoice ID"""
+    number: str | None | None = Field(default=None, description="Invoice number")
+    """Invoice number"""
 
 class TimeEntryTask(BaseModel):
     """The task associated with the time entry"""

@@ -2,13 +2,14 @@ openapi: 3.1.0
 
 info:
   title: Google Analytics Data API Connector
-  version: 1.0.5
+  version: 1.1.0
   description: |
     Google Analytics 4 (GA4) Data API connector for accessing website and app analytics data.
     This connector provides access to pre-configured analytics reports including website overview,
     active users, traffic sources, page performance, device breakdowns, and geographic locations.
     Reports are retrieved via the GA4 Data API v1beta using configurable date ranges and
-    property IDs. Requires OAuth2 authentication with Google Analytics read-only scope.
+    property IDs. Supports OAuth2 and service account key authentication with Google
+    Analytics read-only scope.
   x-airbyte-connector-name: google-analytics-data-api
   x-airbyte-connector-definition-id: 3cc2eafd-84aa-4dca-93af-322d9dfeec1a
   x-airbyte-replication-version: "2.9.41"
@@ -336,6 +337,7 @@ servers:
 
 security:
   - oauth2: []
+  - serviceAccount: []
 
 paths:
   "/properties/{property_id}:runReport:website_overview":
@@ -671,6 +673,35 @@ components:
         replication_auth_key_constants:
           credentials.auth_type: "Client"
 
+    serviceAccount:
+      type: oauth2
+      description: Service account key authentication for Google Analytics
+      flows:
+        clientCredentials:
+          tokenUrl: https://oauth2.googleapis.com/token
+          refreshUrl: https://oauth2.googleapis.com/token
+          scopes:
+            https://www.googleapis.com/auth/analytics.readonly: Read-only access to Google Analytics data
+      x-airbyte-token-refresh:
+        grant_type: jwt_bearer
+      x-airbyte-auth-config:
+        title: Service Account Key Authentication
+        type: object
+        required:
+          - credentials_json
+        properties:
+          credentials_json:
+            type: string
+            title: Service Account JSON Key
+            description: The JSON key linked to the service account used for authorization. For steps on obtaining this key, refer to https://docs.airbyte.com/integrations/sources/google-analytics-data-api/#setup-guide
+            airbyte_secret: true
+        auth_mapping:
+          credentials_json: "${credentials_json}"
+        replication_auth_key_mapping:
+          credentials.credentials_json: "credentials_json"
+        replication_auth_key_constants:
+          credentials.auth_type: "Service"
+
   schemas:
     DimensionValue:
       type: object
@@ -852,6 +883,7 @@ components:
       properties:
         dateRanges:
           type: array
+          description: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
           items:
             type: object
             properties:
@@ -866,20 +898,24 @@ components:
               endDate: "today"
         dimensions:
           type: array
+          description: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API dimension name (e.g., date, country, deviceCategory)
           default:
             - name: date
         metrics:
           type: array
+          description: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API metric name (e.g., totalUsers, sessions, bounceRate)
           default:
             - name: totalUsers
             - name: newUsers
@@ -891,12 +927,15 @@ components:
             - name: bounceRate
         keepEmptyRows:
           type: boolean
+          description: If false, rows whose metrics are all zero are omitted from the response.
           default: false
         returnPropertyQuota:
           type: boolean
+          description: Whether to include the Analytics property's current quota state in the response.
           default: true
         limit:
           type: integer
+          description: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
           default: 100000
 
     DailyActiveUsersRequest:
@@ -905,6 +944,7 @@ components:
       properties:
         dateRanges:
           type: array
+          description: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
           items:
             type: object
             properties:
@@ -919,30 +959,37 @@ components:
               endDate: "today"
         dimensions:
           type: array
+          description: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API dimension name (e.g., date, country, deviceCategory)
           default:
             - name: date
         metrics:
           type: array
+          description: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API metric name (e.g., totalUsers, sessions, bounceRate)
           default:
             - name: active1DayUsers
         keepEmptyRows:
           type: boolean
+          description: If false, rows whose metrics are all zero are omitted from the response.
           default: false
         returnPropertyQuota:
           type: boolean
+          description: Whether to include the Analytics property's current quota state in the response.
           default: true
         limit:
           type: integer
+          description: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
           default: 100000
 
     WeeklyActiveUsersRequest:
@@ -951,6 +998,7 @@ components:
       properties:
         dateRanges:
           type: array
+          description: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
           items:
             type: object
             properties:
@@ -965,30 +1013,37 @@ components:
               endDate: "today"
         dimensions:
           type: array
+          description: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API dimension name (e.g., date, country, deviceCategory)
           default:
             - name: date
         metrics:
           type: array
+          description: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API metric name (e.g., totalUsers, sessions, bounceRate)
           default:
             - name: active7DayUsers
         keepEmptyRows:
           type: boolean
+          description: If false, rows whose metrics are all zero are omitted from the response.
           default: false
         returnPropertyQuota:
           type: boolean
+          description: Whether to include the Analytics property's current quota state in the response.
           default: true
         limit:
           type: integer
+          description: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
           default: 100000
 
     FourWeeklyActiveUsersRequest:
@@ -997,6 +1052,7 @@ components:
       properties:
         dateRanges:
           type: array
+          description: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
           items:
             type: object
             properties:
@@ -1011,30 +1067,37 @@ components:
               endDate: "today"
         dimensions:
           type: array
+          description: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API dimension name (e.g., date, country, deviceCategory)
           default:
             - name: date
         metrics:
           type: array
+          description: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API metric name (e.g., totalUsers, sessions, bounceRate)
           default:
             - name: active28DayUsers
         keepEmptyRows:
           type: boolean
+          description: If false, rows whose metrics are all zero are omitted from the response.
           default: false
         returnPropertyQuota:
           type: boolean
+          description: Whether to include the Analytics property's current quota state in the response.
           default: true
         limit:
           type: integer
+          description: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
           default: 100000
 
     TrafficSourcesRequest:
@@ -1043,6 +1106,7 @@ components:
       properties:
         dateRanges:
           type: array
+          description: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
           items:
             type: object
             properties:
@@ -1057,22 +1121,26 @@ components:
               endDate: "today"
         dimensions:
           type: array
+          description: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API dimension name (e.g., date, country, deviceCategory)
           default:
             - name: date
             - name: sessionSource
             - name: sessionMedium
         metrics:
           type: array
+          description: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API metric name (e.g., totalUsers, sessions, bounceRate)
           default:
             - name: totalUsers
             - name: newUsers
@@ -1084,12 +1152,15 @@ components:
             - name: bounceRate
         keepEmptyRows:
           type: boolean
+          description: If false, rows whose metrics are all zero are omitted from the response.
           default: false
         returnPropertyQuota:
           type: boolean
+          description: Whether to include the Analytics property's current quota state in the response.
           default: true
         limit:
           type: integer
+          description: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
           default: 100000
 
     PagesRequest:
@@ -1098,6 +1169,7 @@ components:
       properties:
         dateRanges:
           type: array
+          description: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
           items:
             type: object
             properties:
@@ -1112,33 +1184,40 @@ components:
               endDate: "today"
         dimensions:
           type: array
+          description: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API dimension name (e.g., date, country, deviceCategory)
           default:
             - name: date
             - name: hostName
             - name: pagePathPlusQueryString
         metrics:
           type: array
+          description: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API metric name (e.g., totalUsers, sessions, bounceRate)
           default:
             - name: screenPageViews
             - name: bounceRate
         keepEmptyRows:
           type: boolean
+          description: If false, rows whose metrics are all zero are omitted from the response.
           default: false
         returnPropertyQuota:
           type: boolean
+          description: Whether to include the Analytics property's current quota state in the response.
           default: true
         limit:
           type: integer
+          description: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
           default: 100000
 
     DevicesRequest:
@@ -1147,6 +1226,7 @@ components:
       properties:
         dateRanges:
           type: array
+          description: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
           items:
             type: object
             properties:
@@ -1161,11 +1241,13 @@ components:
               endDate: "today"
         dimensions:
           type: array
+          description: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API dimension name (e.g., date, country, deviceCategory)
           default:
             - name: date
             - name: deviceCategory
@@ -1173,11 +1255,13 @@ components:
             - name: browser
         metrics:
           type: array
+          description: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API metric name (e.g., totalUsers, sessions, bounceRate)
           default:
             - name: totalUsers
             - name: newUsers
@@ -1189,12 +1273,15 @@ components:
             - name: bounceRate
         keepEmptyRows:
           type: boolean
+          description: If false, rows whose metrics are all zero are omitted from the response.
           default: false
         returnPropertyQuota:
           type: boolean
+          description: Whether to include the Analytics property's current quota state in the response.
           default: true
         limit:
           type: integer
+          description: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
           default: 100000
 
     LocationsRequest:
@@ -1203,6 +1290,7 @@ components:
       properties:
         dateRanges:
           type: array
+          description: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
           items:
             type: object
             properties:
@@ -1217,11 +1305,13 @@ components:
               endDate: "today"
         dimensions:
           type: array
+          description: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API dimension name (e.g., date, country, deviceCategory)
           default:
             - name: region
             - name: country
@@ -1229,11 +1319,13 @@ components:
             - name: date
         metrics:
           type: array
+          description: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
           items:
             type: object
             properties:
               name:
                 type: string
+                description: GA4 API metric name (e.g., totalUsers, sessions, bounceRate)
           default:
             - name: totalUsers
             - name: newUsers
@@ -1245,10 +1337,13 @@ components:
             - name: bounceRate
         keepEmptyRows:
           type: boolean
+          description: If false, rows whose metrics are all zero are omitted from the response.
           default: false
         returnPropertyQuota:
           type: boolean
+          description: Whether to include the Analytics property's current quota state in the response.
           default: true
         limit:
           type: integer
+          description: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
           default: 100000

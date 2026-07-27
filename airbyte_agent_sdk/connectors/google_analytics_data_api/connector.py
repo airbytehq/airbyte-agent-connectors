@@ -69,6 +69,7 @@ from .types import (
     LocationsSearchFilter,
     LocationsSearchQuery,
 )
+from .models import GoogleAnalyticsDataApiOauth20AuthenticationAuthConfig, GoogleAnalyticsDataApiServiceAccountKeyAuthenticationAuthConfig
 from .models import GoogleAnalyticsDataApiAuthConfig
 if TYPE_CHECKING:
     from .models import GoogleAnalyticsDataApiReplicationConfig
@@ -121,8 +122,8 @@ class GoogleAnalyticsDataApiConnector:
     """
 
     connector_name = "google-analytics-data-api"
-    connector_version = "1.0.5"
-    sdk_version = "0.1.292"
+    connector_version = "1.1.0"
+    sdk_version = "0.1.293"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -150,7 +151,7 @@ class GoogleAnalyticsDataApiConnector:
     }
 
     # Accepted auth_config types for isinstance validation
-    _ACCEPTED_AUTH_TYPES = (GoogleAnalyticsDataApiAuthConfig, AirbyteAuthConfig)
+    _ACCEPTED_AUTH_TYPES = (GoogleAnalyticsDataApiOauth20AuthenticationAuthConfig, GoogleAnalyticsDataApiServiceAccountKeyAuthenticationAuthConfig, AirbyteAuthConfig)
 
     def __init__(
         self,
@@ -232,9 +233,18 @@ class GoogleAnalyticsDataApiConnector:
             # Build config_values dict from server variables
             config_values = None
 
+            # Multi-auth connector: detect auth scheme from auth_config type
+            auth_scheme: str | None = None
+            if auth_config:
+                if isinstance(auth_config, GoogleAnalyticsDataApiOauth20AuthenticationAuthConfig):
+                    auth_scheme = "oauth2"
+                if isinstance(auth_config, GoogleAnalyticsDataApiServiceAccountKeyAuthenticationAuthConfig):
+                    auth_scheme = "serviceAccount"
+
             self._executor = LocalExecutor(
                 model=GoogleAnalyticsDataApiConnectorModel,
                 auth_config=auth_config.model_dump() if auth_config else None,
+                auth_scheme=auth_scheme,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )
@@ -805,12 +815,12 @@ class WebsiteOverviewQuery:
         Returns website overview metrics including total users, new users, sessions, bounce rate, page views, and average session duration by date.
 
         Args:
-            date_ranges: Parameter dateRanges
-            dimensions: Parameter dimensions
-            metrics: Parameter metrics
-            keep_empty_rows: Parameter keepEmptyRows
-            return_property_quota: Parameter returnPropertyQuota
-            limit: Parameter limit
+            date_ranges: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
+            dimensions: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
+            metrics: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
+            keep_empty_rows: If false, rows whose metrics are all zero are omitted from the response.
+            return_property_quota: Whether to include the Analytics property's current quota state in the response.
+            limit: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
             property_id: GA4 property ID
             **kwargs: Additional parameters
 
@@ -927,12 +937,12 @@ class DailyActiveUsersQuery:
         Returns daily active user counts (1-day active users) by date.
 
         Args:
-            date_ranges: Parameter dateRanges
-            dimensions: Parameter dimensions
-            metrics: Parameter metrics
-            keep_empty_rows: Parameter keepEmptyRows
-            return_property_quota: Parameter returnPropertyQuota
-            limit: Parameter limit
+            date_ranges: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
+            dimensions: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
+            metrics: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
+            keep_empty_rows: If false, rows whose metrics are all zero are omitted from the response.
+            return_property_quota: Whether to include the Analytics property's current quota state in the response.
+            limit: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
             property_id: GA4 property ID
             **kwargs: Additional parameters
 
@@ -1042,12 +1052,12 @@ class WeeklyActiveUsersQuery:
         Returns weekly active user counts (7-day active users) by date.
 
         Args:
-            date_ranges: Parameter dateRanges
-            dimensions: Parameter dimensions
-            metrics: Parameter metrics
-            keep_empty_rows: Parameter keepEmptyRows
-            return_property_quota: Parameter returnPropertyQuota
-            limit: Parameter limit
+            date_ranges: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
+            dimensions: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
+            metrics: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
+            keep_empty_rows: If false, rows whose metrics are all zero are omitted from the response.
+            return_property_quota: Whether to include the Analytics property's current quota state in the response.
+            limit: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
             property_id: GA4 property ID
             **kwargs: Additional parameters
 
@@ -1157,12 +1167,12 @@ class FourWeeklyActiveUsersQuery:
         Returns 28-day active user counts by date.
 
         Args:
-            date_ranges: Parameter dateRanges
-            dimensions: Parameter dimensions
-            metrics: Parameter metrics
-            keep_empty_rows: Parameter keepEmptyRows
-            return_property_quota: Parameter returnPropertyQuota
-            limit: Parameter limit
+            date_ranges: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
+            dimensions: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
+            metrics: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
+            keep_empty_rows: If false, rows whose metrics are all zero are omitted from the response.
+            return_property_quota: Whether to include the Analytics property's current quota state in the response.
+            limit: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
             property_id: GA4 property ID
             **kwargs: Additional parameters
 
@@ -1272,12 +1282,12 @@ class TrafficSourcesQuery:
         Returns traffic source metrics broken down by session source, session medium, and date, including users, sessions, bounce rate, and page views.
 
         Args:
-            date_ranges: Parameter dateRanges
-            dimensions: Parameter dimensions
-            metrics: Parameter metrics
-            keep_empty_rows: Parameter keepEmptyRows
-            return_property_quota: Parameter returnPropertyQuota
-            limit: Parameter limit
+            date_ranges: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
+            dimensions: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
+            metrics: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
+            keep_empty_rows: If false, rows whose metrics are all zero are omitted from the response.
+            return_property_quota: Whether to include the Analytics property's current quota state in the response.
+            limit: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
             property_id: GA4 property ID
             **kwargs: Additional parameters
 
@@ -1396,12 +1406,12 @@ class PagesQuery:
         Returns page-level metrics including page views and bounce rate, broken down by host name, page path, and date.
 
         Args:
-            date_ranges: Parameter dateRanges
-            dimensions: Parameter dimensions
-            metrics: Parameter metrics
-            keep_empty_rows: Parameter keepEmptyRows
-            return_property_quota: Parameter returnPropertyQuota
-            limit: Parameter limit
+            date_ranges: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
+            dimensions: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
+            metrics: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
+            keep_empty_rows: If false, rows whose metrics are all zero are omitted from the response.
+            return_property_quota: Whether to include the Analytics property's current quota state in the response.
+            limit: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
             property_id: GA4 property ID
             **kwargs: Additional parameters
 
@@ -1514,12 +1524,12 @@ class DevicesQuery:
         Returns device-related metrics broken down by device category, operating system, browser, and date, including users, sessions, and page views.
 
         Args:
-            date_ranges: Parameter dateRanges
-            dimensions: Parameter dimensions
-            metrics: Parameter metrics
-            keep_empty_rows: Parameter keepEmptyRows
-            return_property_quota: Parameter returnPropertyQuota
-            limit: Parameter limit
+            date_ranges: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
+            dimensions: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
+            metrics: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
+            keep_empty_rows: If false, rows whose metrics are all zero are omitted from the response.
+            return_property_quota: Whether to include the Analytics property's current quota state in the response.
+            limit: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
             property_id: GA4 property ID
             **kwargs: Additional parameters
 
@@ -1639,12 +1649,12 @@ class LocationsQuery:
         Returns geographic metrics broken down by region, country, city, and date, including users, sessions, bounce rate, and page views.
 
         Args:
-            date_ranges: Parameter dateRanges
-            dimensions: Parameter dimensions
-            metrics: Parameter metrics
-            keep_empty_rows: Parameter keepEmptyRows
-            return_property_quota: Parameter returnPropertyQuota
-            limit: Parameter limit
+            date_ranges: Date ranges of data to read, in YYYY-MM-DD or relative format (e.g., 30daysAgo, today). Defaults to the last 30 days.
+            dimensions: GA4 dimensions to group results by. Defaults match the equivalent Data Replication report.
+            metrics: GA4 metrics to aggregate. Defaults match the equivalent Data Replication report.
+            keep_empty_rows: If false, rows whose metrics are all zero are omitted from the response.
+            return_property_quota: Whether to include the Analytics property's current quota state in the response.
+            limit: Maximum number of rows to return (the GA4 API caps a single request at 250,000 rows).
             property_id: GA4 property ID
             **kwargs: Additional parameters
 

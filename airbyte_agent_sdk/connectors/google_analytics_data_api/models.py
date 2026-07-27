@@ -10,9 +10,9 @@ from __future__ import annotations
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Any
 
-# Authentication configuration
+# Authentication configuration - multiple options available
 
-class GoogleAnalyticsDataApiAuthConfig(BaseModel):
+class GoogleAnalyticsDataApiOauth20AuthenticationAuthConfig(BaseModel):
     """OAuth 2.0 Authentication"""
 
     model_config = ConfigDict(extra="forbid")
@@ -23,6 +23,16 @@ class GoogleAnalyticsDataApiAuthConfig(BaseModel):
     """OAuth 2.0 Client Secret from Google Cloud Console"""
     refresh_token: str
     """OAuth 2.0 Refresh Token for obtaining new access tokens"""
+
+class GoogleAnalyticsDataApiServiceAccountKeyAuthenticationAuthConfig(BaseModel):
+    """Service Account Key Authentication"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    credentials_json: str
+    """The JSON key linked to the service account used for authorization. For steps on obtaining this key, refer to https://docs.airbyte.com/integrations/sources/google-analytics-data-api/#setup-guide"""
+
+GoogleAnalyticsDataApiAuthConfig = GoogleAnalyticsDataApiOauth20AuthenticationAuthConfig | GoogleAnalyticsDataApiServiceAccountKeyAuthenticationAuthConfig
 
 # Replication configuration
 
@@ -68,22 +78,24 @@ class MetricHeader(BaseModel):
     name: str | None = Field(default=None)
     type_: str | None = Field(default=None, alias="type")
 
+class RunReportResponseMetadata(BaseModel):
+    """Nested schema for RunReportResponse.metadata"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="currencyCode", description="The currency code used in this report")
+    """The currency code used in this report"""
+    time_zone: str | None = Field(default=None, alias="timeZone", description="The property's current timezone")
+    """The property's current timezone"""
+
+class RunReportResponsePropertyquotaTokensperprojectperhour(BaseModel):
+    """Nested schema for RunReportResponsePropertyquota.tokensPerProjectPerHour"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    consumed: int | None = Field(default=None)
+    remaining: int | None = Field(default=None)
+
 class RunReportResponsePropertyquotaPotentiallythresholdedrequestsperhour(BaseModel):
     """Nested schema for RunReportResponsePropertyquota.potentiallyThresholdedRequestsPerHour"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    consumed: int | None = Field(default=None)
-    remaining: int | None = Field(default=None)
-
-class RunReportResponsePropertyquotaConcurrentrequests(BaseModel):
-    """Nested schema for RunReportResponsePropertyquota.concurrentRequests"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    consumed: int | None = Field(default=None)
-    remaining: int | None = Field(default=None)
-
-class RunReportResponsePropertyquotaTokensperday(BaseModel):
-    """Nested schema for RunReportResponsePropertyquota.tokensPerDay"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     consumed: int | None = Field(default=None)
@@ -96,8 +108,8 @@ class RunReportResponsePropertyquotaTokensperhour(BaseModel):
     consumed: int | None = Field(default=None)
     remaining: int | None = Field(default=None)
 
-class RunReportResponsePropertyquotaTokensperprojectperhour(BaseModel):
-    """Nested schema for RunReportResponsePropertyquota.tokensPerProjectPerHour"""
+class RunReportResponsePropertyquotaTokensperday(BaseModel):
+    """Nested schema for RunReportResponsePropertyquota.tokensPerDay"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     consumed: int | None = Field(default=None)
@@ -105,6 +117,13 @@ class RunReportResponsePropertyquotaTokensperprojectperhour(BaseModel):
 
 class RunReportResponsePropertyquotaServererrorsperprojectperhour(BaseModel):
     """Nested schema for RunReportResponsePropertyquota.serverErrorsPerProjectPerHour"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    consumed: int | None = Field(default=None)
+    remaining: int | None = Field(default=None)
+
+class RunReportResponsePropertyquotaConcurrentrequests(BaseModel):
+    """Nested schema for RunReportResponsePropertyquota.concurrentRequests"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     consumed: int | None = Field(default=None)
@@ -120,15 +139,6 @@ class RunReportResponsePropertyquota(BaseModel):
     server_errors_per_project_per_hour: RunReportResponsePropertyquotaServererrorsperprojectperhour | None = Field(default=None, alias="serverErrorsPerProjectPerHour")
     potentially_thresholded_requests_per_hour: RunReportResponsePropertyquotaPotentiallythresholdedrequestsperhour | None = Field(default=None, alias="potentiallyThresholdedRequestsPerHour")
     tokens_per_project_per_hour: RunReportResponsePropertyquotaTokensperprojectperhour | None = Field(default=None, alias="tokensPerProjectPerHour")
-
-class RunReportResponseMetadata(BaseModel):
-    """Nested schema for RunReportResponse.metadata"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: str | None = Field(default=None, alias="currencyCode", description="The currency code used in this report")
-    """The currency code used in this report"""
-    time_zone: str | None = Field(default=None, alias="timeZone", description="The property's current timezone")
-    """The property's current timezone"""
 
 class RunReportResponse(BaseModel):
     """Response from the runReport endpoint"""
@@ -146,7 +156,15 @@ class WebsiteOverviewRequestMetricsItem(BaseModel):
     """Nested schema for WebsiteOverviewRequest.metrics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None)
+    name: str | None = Field(default=None, description="GA4 API metric name (e.g., totalUsers, sessions, bounceRate)")
+    """GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"""
+
+class WebsiteOverviewRequestDimensionsItem(BaseModel):
+    """Nested schema for WebsiteOverviewRequest.dimensions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="GA4 API dimension name (e.g., date, country, deviceCategory)")
+    """GA4 API dimension name (e.g., date, country, deviceCategory)"""
 
 class WebsiteOverviewRequestDaterangesItem(BaseModel):
     """Nested schema for WebsiteOverviewRequest.dateRanges_item"""
@@ -156,12 +174,6 @@ class WebsiteOverviewRequestDaterangesItem(BaseModel):
     """Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"""
     end_date: str | None = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
-
-class WebsiteOverviewRequestDimensionsItem(BaseModel):
-    """Nested schema for WebsiteOverviewRequest.dimensions_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
 
 class WebsiteOverviewRequest(BaseModel):
     """Request body for website overview report"""
@@ -174,6 +186,20 @@ class WebsiteOverviewRequest(BaseModel):
     return_property_quota: bool | None = Field(default=None, alias="returnPropertyQuota")
     limit: int | None = Field(default=None)
 
+class DailyActiveUsersRequestDimensionsItem(BaseModel):
+    """Nested schema for DailyActiveUsersRequest.dimensions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="GA4 API dimension name (e.g., date, country, deviceCategory)")
+    """GA4 API dimension name (e.g., date, country, deviceCategory)"""
+
+class DailyActiveUsersRequestMetricsItem(BaseModel):
+    """Nested schema for DailyActiveUsersRequest.metrics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="GA4 API metric name (e.g., totalUsers, sessions, bounceRate)")
+    """GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"""
+
 class DailyActiveUsersRequestDaterangesItem(BaseModel):
     """Nested schema for DailyActiveUsersRequest.dateRanges_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -182,18 +208,6 @@ class DailyActiveUsersRequestDaterangesItem(BaseModel):
     """Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"""
     end_date: str | None = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
-
-class DailyActiveUsersRequestMetricsItem(BaseModel):
-    """Nested schema for DailyActiveUsersRequest.metrics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-
-class DailyActiveUsersRequestDimensionsItem(BaseModel):
-    """Nested schema for DailyActiveUsersRequest.dimensions_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
 
 class DailyActiveUsersRequest(BaseModel):
     """Request body for daily active users report"""
@@ -219,13 +233,15 @@ class WeeklyActiveUsersRequestDimensionsItem(BaseModel):
     """Nested schema for WeeklyActiveUsersRequest.dimensions_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None)
+    name: str | None = Field(default=None, description="GA4 API dimension name (e.g., date, country, deviceCategory)")
+    """GA4 API dimension name (e.g., date, country, deviceCategory)"""
 
 class WeeklyActiveUsersRequestMetricsItem(BaseModel):
     """Nested schema for WeeklyActiveUsersRequest.metrics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None)
+    name: str | None = Field(default=None, description="GA4 API metric name (e.g., totalUsers, sessions, bounceRate)")
+    """GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"""
 
 class WeeklyActiveUsersRequest(BaseModel):
     """Request body for weekly active users report"""
@@ -251,13 +267,15 @@ class FourWeeklyActiveUsersRequestMetricsItem(BaseModel):
     """Nested schema for FourWeeklyActiveUsersRequest.metrics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None)
+    name: str | None = Field(default=None, description="GA4 API metric name (e.g., totalUsers, sessions, bounceRate)")
+    """GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"""
 
 class FourWeeklyActiveUsersRequestDimensionsItem(BaseModel):
     """Nested schema for FourWeeklyActiveUsersRequest.dimensions_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None)
+    name: str | None = Field(default=None, description="GA4 API dimension name (e.g., date, country, deviceCategory)")
+    """GA4 API dimension name (e.g., date, country, deviceCategory)"""
 
 class FourWeeklyActiveUsersRequest(BaseModel):
     """Request body for four-weekly active users report"""
@@ -269,12 +287,6 @@ class FourWeeklyActiveUsersRequest(BaseModel):
     keep_empty_rows: bool | None = Field(default=None, alias="keepEmptyRows")
     return_property_quota: bool | None = Field(default=None, alias="returnPropertyQuota")
     limit: int | None = Field(default=None)
-
-class TrafficSourcesRequestMetricsItem(BaseModel):
-    """Nested schema for TrafficSourcesRequest.metrics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
 
 class TrafficSourcesRequestDaterangesItem(BaseModel):
     """Nested schema for TrafficSourcesRequest.dateRanges_item"""
@@ -289,7 +301,15 @@ class TrafficSourcesRequestDimensionsItem(BaseModel):
     """Nested schema for TrafficSourcesRequest.dimensions_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None)
+    name: str | None = Field(default=None, description="GA4 API dimension name (e.g., date, country, deviceCategory)")
+    """GA4 API dimension name (e.g., date, country, deviceCategory)"""
+
+class TrafficSourcesRequestMetricsItem(BaseModel):
+    """Nested schema for TrafficSourcesRequest.metrics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="GA4 API metric name (e.g., totalUsers, sessions, bounceRate)")
+    """GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"""
 
 class TrafficSourcesRequest(BaseModel):
     """Request body for traffic sources report"""
@@ -302,6 +322,20 @@ class TrafficSourcesRequest(BaseModel):
     return_property_quota: bool | None = Field(default=None, alias="returnPropertyQuota")
     limit: int | None = Field(default=None)
 
+class PagesRequestMetricsItem(BaseModel):
+    """Nested schema for PagesRequest.metrics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="GA4 API metric name (e.g., totalUsers, sessions, bounceRate)")
+    """GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"""
+
+class PagesRequestDimensionsItem(BaseModel):
+    """Nested schema for PagesRequest.dimensions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="GA4 API dimension name (e.g., date, country, deviceCategory)")
+    """GA4 API dimension name (e.g., date, country, deviceCategory)"""
+
 class PagesRequestDaterangesItem(BaseModel):
     """Nested schema for PagesRequest.dateRanges_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -310,18 +344,6 @@ class PagesRequestDaterangesItem(BaseModel):
     """Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"""
     end_date: str | None = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
-
-class PagesRequestDimensionsItem(BaseModel):
-    """Nested schema for PagesRequest.dimensions_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-
-class PagesRequestMetricsItem(BaseModel):
-    """Nested schema for PagesRequest.metrics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
 
 class PagesRequest(BaseModel):
     """Request body for pages report"""
@@ -334,11 +356,12 @@ class PagesRequest(BaseModel):
     return_property_quota: bool | None = Field(default=None, alias="returnPropertyQuota")
     limit: int | None = Field(default=None)
 
-class DevicesRequestDimensionsItem(BaseModel):
-    """Nested schema for DevicesRequest.dimensions_item"""
+class DevicesRequestMetricsItem(BaseModel):
+    """Nested schema for DevicesRequest.metrics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None)
+    name: str | None = Field(default=None, description="GA4 API metric name (e.g., totalUsers, sessions, bounceRate)")
+    """GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"""
 
 class DevicesRequestDaterangesItem(BaseModel):
     """Nested schema for DevicesRequest.dateRanges_item"""
@@ -349,11 +372,12 @@ class DevicesRequestDaterangesItem(BaseModel):
     end_date: str | None = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
 
-class DevicesRequestMetricsItem(BaseModel):
-    """Nested schema for DevicesRequest.metrics_item"""
+class DevicesRequestDimensionsItem(BaseModel):
+    """Nested schema for DevicesRequest.dimensions_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None)
+    name: str | None = Field(default=None, description="GA4 API dimension name (e.g., date, country, deviceCategory)")
+    """GA4 API dimension name (e.g., date, country, deviceCategory)"""
 
 class DevicesRequest(BaseModel):
     """Request body for devices report"""
@@ -366,17 +390,19 @@ class DevicesRequest(BaseModel):
     return_property_quota: bool | None = Field(default=None, alias="returnPropertyQuota")
     limit: int | None = Field(default=None)
 
-class LocationsRequestDimensionsItem(BaseModel):
-    """Nested schema for LocationsRequest.dimensions_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-
 class LocationsRequestMetricsItem(BaseModel):
     """Nested schema for LocationsRequest.metrics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None)
+    name: str | None = Field(default=None, description="GA4 API metric name (e.g., totalUsers, sessions, bounceRate)")
+    """GA4 API metric name (e.g., totalUsers, sessions, bounceRate)"""
+
+class LocationsRequestDimensionsItem(BaseModel):
+    """Nested schema for LocationsRequest.dimensions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="GA4 API dimension name (e.g., date, country, deviceCategory)")
+    """GA4 API dimension name (e.g., date, country, deviceCategory)"""
 
 class LocationsRequestDaterangesItem(BaseModel):
     """Nested schema for LocationsRequest.dateRanges_item"""
