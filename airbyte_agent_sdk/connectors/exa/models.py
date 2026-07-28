@@ -57,23 +57,6 @@ class SearchRequest(BaseModel):
     contents: SearchRequestContents | None = Field(default=None)
     moderation: bool | None = Field(default=None)
 
-class SearchResult(BaseModel):
-    """SearchResult type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    title: str | None = Field(default=None)
-    url: str | None = Field(default=None)
-    id: str | None = Field(default=None)
-    published_date: str | None = Field(default=None, alias="publishedDate")
-    author: str | None = Field(default=None)
-    image: str | None = Field(default=None)
-    favicon: str | None = Field(default=None)
-    text: str | None = Field(default=None)
-    highlights: list[str] | None = Field(default=None)
-    highlight_scores: list[float] | None = Field(default=None, alias="highlightScores")
-    summary: str | None = Field(default=None)
-    score: float | None = Field(default=None)
-
 class CostDollarsContents(BaseModel):
     """Cost breakdown for contents retrieval."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -95,6 +78,23 @@ class CostDollars(BaseModel):
     total: float | None = Field(default=None)
     search: CostDollarsSearch | None = Field(default=None)
     contents: CostDollarsContents | None = Field(default=None)
+
+class SearchResult(BaseModel):
+    """SearchResult type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    published_date: str | None = Field(default=None, alias="publishedDate")
+    author: str | None = Field(default=None)
+    image: str | None = Field(default=None)
+    favicon: str | None = Field(default=None)
+    text: str | None = Field(default=None)
+    highlights: list[str] | None = Field(default=None)
+    highlight_scores: list[float] | None = Field(default=None, alias="highlightScores")
+    summary: str | None = Field(default=None)
+    score: float | None = Field(default=None)
 
 class SearchResponse(BaseModel):
     """SearchResponse type definition"""
