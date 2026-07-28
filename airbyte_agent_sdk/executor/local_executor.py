@@ -946,6 +946,8 @@ class LocalExecutor:
 
         check_entity, check_action, params = check_op
 
+        endpoint = self._operation_index.get((check_entity, check_action))
+
         # Find the standard handler to execute the operation
         standard_handler = next(
             (h for h in self._operation_handlers if isinstance(h, _StandardOperationHandler)),
@@ -962,6 +964,8 @@ class LocalExecutor:
             )
 
         try:
+            if endpoint is not None:
+                self._inject_probe_defaults(endpoint, params)
             await standard_handler.execute_operation(check_entity, check_action, params)
             return ExecutionResult(
                 success=True,
@@ -1033,6 +1037,37 @@ class LocalExecutor:
             error=error,
         )
 
+    def _inject_probe_defaults(self, endpoint: EndpointDefinition, params: dict[str, Any]) -> None:
+        """Injects query-param defaults from schema so that required params
+        (e.g. Salesforce SOQL `q`, LinkedIn's `q=search` finder) are included
+        in the probe request without needing explicit configuration.
+        """
+        replication_constants = self._get_replication_constants()
+        for param_name, schema in endpoint.query_params_schema.items():
+            if param_name in params:
+                continue
+            probe_default = schema.get("x-airbyte-probe-default")
+            if probe_default is None:
+                probe_default = schema.get("default")
+            if probe_default is not None:
+                params[param_name] = (
+                    _evaluate_probe_default(probe_default, replication_constants) if isinstance(probe_default, str) else probe_default
+                )
+
+        for header_name, header_schema in endpoint.header_params_schema.items():
+            if header_name in params:
+                continue
+            probe_default = header_schema.get("x-airbyte-probe-default")
+            if probe_default is not None:
+                params[header_name] = (
+                    _evaluate_probe_default(probe_default, replication_constants) if isinstance(probe_default, str) else probe_default
+                )
+
+        for field_name, probe_default in endpoint.request_body_probe_defaults.items():
+            if field_name in params:
+                continue
+            params[field_name] = _evaluate_probe_default(probe_default, replication_constants) if isinstance(probe_default, str) else probe_default
+
     async def _probe_entity(
         self,
         entity_name: str,
@@ -1056,52 +1091,7 @@ class LocalExecutor:
             }
         try:
             params = {"limit": 1} if action == Action.LIST else {}
-            # Inject query-param probe defaults from schema so that required
-            # params (e.g. Salesforce SOQL `q`) are included in the probe
-            # request without needing explicit configuration.
-            #
-            # Precedence: explicit `params` > `x-airbyte-probe-default` > `default`.
-            # `x-airbyte-probe-default` is consulted first so a connector author
-            # can declare a synthetic probe-time value distinct from the
-            # runtime `default`. Defaults may contain Jinja `{{ }}` expressions
-            # (e.g. dynamic dates) which are evaluated at probe time.
-            replication_constants = self._get_replication_constants()
-            for param_name, schema in endpoint.query_params_schema.items():
-                if param_name in params:
-                    continue
-                probe_default = schema.get("x-airbyte-probe-default")
-                if probe_default is None:
-                    probe_default = schema.get("default")
-                if probe_default is not None:
-                    params[param_name] = (
-                        _evaluate_probe_default(probe_default, replication_constants) if isinstance(probe_default, str) else probe_default
-                    )
-            # Mirror for header params. `default` is already applied at runtime by
-            # `_extract_header_params`, so the probe loop only needs to handle
-            # `x-airbyte-probe-default`. Writing it into `params` lets
-            # `_extract_header_params` pick it up as if user-supplied.
-            for header_name, header_schema in endpoint.header_params_schema.items():
-                if header_name in params:
-                    continue
-                probe_default = header_schema.get("x-airbyte-probe-default")
-                if probe_default is not None:
-                    params[header_name] = (
-                        _evaluate_probe_default(probe_default, replication_constants) if isinstance(probe_default, str) else probe_default
-                    )
-            # Inject body-field probe defaults from `x-airbyte-probe-default`.
-            # Note the asymmetry vs query params: there is no fallback to the
-            # body field's `default` here, because `default` on body fields is
-            # owned by `_build_request_body` for runtime use and must not gain
-            # probe-time semantics. Probe defaults are written into `params`,
-            # not a body dict, so the downstream `_extract_body(...)` picks
-            # them up as if user-supplied. This is the structural guarantee
-            # that keeps probe defaults out of agent runtime calls.
-            for field_name, probe_default in endpoint.request_body_probe_defaults.items():
-                if field_name in params:
-                    continue
-                params[field_name] = (
-                    _evaluate_probe_default(probe_default, replication_constants) if isinstance(probe_default, str) else probe_default
-                )
+            self._inject_probe_defaults(endpoint, params)
             # Collect all params that need resolution: path params, entity-
             # relationship foreign_keys, and query params with matching config
             # keys (so config values can override schema defaults).
@@ -1490,6 +1480,26 @@ class LocalExecutor:
                 merged[param_name] = scoping_value
 
         return merged if merged is not None else params
+
+    @staticmethod
+    def _encode_restli_query_string(query_params: dict[str, Any]) -> str:
+        """Encode query params per Rest.li 2.0 protocol semantics.
+
+        Rest.li structured values (e.g. ``dateRange=(start:(year:2023,...))`` or
+        ``campaigns=List(urn%3Ali%3AsponsoredCampaign%3A123)``) require their
+        parens/colons/commas to stay literal, and URNs inside them arrive
+        pre-encoded so ``%`` must not be re-encoded. A value is treated as
+        structured when it starts with ``(`` or ``List(``.
+        """
+        pairs = []
+        for key, value in query_params.items():
+            text = str(value)
+            if text.startswith("(") or text.startswith("List("):
+                encoded = quote(text, safe="():,%")
+            else:
+                encoded = quote(text, safe=",")
+            pairs.append(f"{quote(str(key), safe='')}={encoded}")
+        return "&".join(pairs)
 
     def _build_path(self, path_template: str, params: dict[str, Any]) -> str:
         """Build path by replacing {param} placeholders with URL-encoded values.
@@ -2749,6 +2759,10 @@ class _StandardOperationHandler:
                 extra_headers = request_kwargs.pop("headers", None)
                 if extra_headers:
                     header_params = {**(header_params or {}), **extra_headers}
+
+                if query_params and header_params and any(h.lower() == "x-restli-protocol-version" for h in header_params):
+                    path = f"{path}?{LocalExecutor._encode_restli_query_string(query_params)}"
+                    query_params = {}
 
                 # Execute async HTTP request
                 response_data, response_headers = await self.ctx.http_client.request(

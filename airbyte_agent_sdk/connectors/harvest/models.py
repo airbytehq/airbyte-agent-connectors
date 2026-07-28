@@ -639,6 +639,15 @@ class UserAssignmentsList(BaseModel):
     previous_page: int | None = Field(default=None)
     links: PaginationLinks | None = Field(default=None)
 
+class TaskAssignmentTask(BaseModel):
+    """The task associated with the assignment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None, description="Task ID")
+    """Task ID"""
+    name: str | None | None = Field(default=None, description="Task name")
+    """Task name"""
+
 class TaskAssignmentProject(BaseModel):
     """The project associated with the assignment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -649,15 +658,6 @@ class TaskAssignmentProject(BaseModel):
     """Project name"""
     code: str | None | None = Field(default=None, description="Project code")
     """Project code"""
-
-class TaskAssignmentTask(BaseModel):
-    """The task associated with the assignment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None, description="Task ID")
-    """Task ID"""
-    name: str | None | None = Field(default=None, description="Task name")
-    """Task name"""
 
 class TaskAssignment(BaseModel):
     """A Harvest task assignment linking a task to a project"""

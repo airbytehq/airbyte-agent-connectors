@@ -1596,16 +1596,6 @@ class OrderCancelResponse(BaseModel):
 
     data: OrderCancelResponseData | None = Field(default=None)
 
-class DraftOrderCreateParamsInputShippingaddress(BaseModel):
-    """Nested schema for DraftOrderCreateParamsInput.shippingAddress"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address1: str | None = Field(default=None)
-    city: str | None = Field(default=None)
-    province_code: str | None = Field(default=None, alias="provinceCode")
-    zip: str | None = Field(default=None)
-    country_code: str | None = Field(default=None, alias="countryCode")
-
 class DraftOrderCreateParamsInputLineitemsItem(BaseModel):
     """Nested schema for DraftOrderCreateParamsInput.lineItems_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1618,6 +1608,16 @@ class DraftOrderCreateParamsInputLineitemsItem(BaseModel):
     """Custom title"""
     original_unit_price: str | None = Field(default=None, alias="originalUnitPrice", description="Unit price")
     """Unit price"""
+
+class DraftOrderCreateParamsInputShippingaddress(BaseModel):
+    """Nested schema for DraftOrderCreateParamsInput.shippingAddress"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address1: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province_code: str | None = Field(default=None, alias="provinceCode")
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
 
 class DraftOrderCreateParamsInput(BaseModel):
     """DraftOrderInput object"""
