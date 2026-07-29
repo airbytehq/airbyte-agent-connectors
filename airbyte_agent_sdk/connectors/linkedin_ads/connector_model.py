@@ -10,6 +10,7 @@ from __future__ import annotations
 from airbyte_agent_sdk.types import (
     Action,
     AuthConfig,
+    AuthOption,
     AuthType,
     ConnectorModel,
     EndpointDefinition,
@@ -39,53 +40,83 @@ from uuid import (
 LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('137ece28-5434-455c-8f34-69dc3782f451'),
     name='linkedin-ads',
-    version='1.0.6',
+    version='1.2.0',
     base_url='https://api.linkedin.com/rest',
     auth=AuthConfig(
-        type=AuthType.OAUTH2,
-        config={
-            'header': 'Authorization',
-            'prefix': 'Bearer',
-            'refresh_url': 'https://www.linkedin.com/oauth/v2/accessToken',
-            'auth_style': 'body',
-            'body_format': 'form',
-        },
-        user_config_spec=AuthConfigSpec(
-            title='OAuth 2.0 Authentication',
-            type='object',
-            required=['refresh_token', 'client_id', 'client_secret'],
-            properties={
-                'refresh_token': AuthConfigFieldSpec(
-                    title='Refresh Token',
-                    description='OAuth 2.0 refresh token for automatic renewal',
+        options=[
+            AuthOption(
+                scheme_name='oauth2',
+                type=AuthType.OAUTH2,
+                config={
+                    'header': 'Authorization',
+                    'prefix': 'Bearer',
+                    'refresh_url': 'https://www.linkedin.com/oauth/v2/accessToken',
+                    'auth_style': 'body',
+                    'body_format': 'form',
+                },
+                user_config_spec=AuthConfigSpec(
+                    title='OAuth 2.0 Authentication',
+                    type='object',
+                    required=['refresh_token', 'client_id', 'client_secret'],
+                    properties={
+                        'refresh_token': AuthConfigFieldSpec(
+                            title='Refresh Token',
+                            description='OAuth 2.0 refresh token for automatic renewal',
+                        ),
+                        'client_id': AuthConfigFieldSpec(
+                            title='Client ID',
+                            description='OAuth 2.0 application client ID',
+                        ),
+                        'client_secret': AuthConfigFieldSpec(
+                            title='Client Secret',
+                            description='OAuth 2.0 application client secret',
+                        ),
+                    },
+                    auth_mapping={
+                        'refresh_token': '${refresh_token}',
+                        'client_id': '${client_id}',
+                        'client_secret': '${client_secret}',
+                    },
+                    replication_auth_key_mapping={
+                        'credentials.client_id': 'client_id',
+                        'credentials.client_secret': 'client_secret',
+                        'credentials.refresh_token': 'refresh_token',
+                    },
+                    replication_auth_key_constants={'credentials.auth_method': 'oAuth2.0'},
                 ),
-                'client_id': AuthConfigFieldSpec(
-                    title='Client ID',
-                    description='OAuth 2.0 application client ID',
+            ),
+            AuthOption(
+                scheme_name='bearerAuth',
+                type=AuthType.BEARER,
+                config={'header': 'Authorization', 'prefix': 'Bearer'},
+                user_config_spec=AuthConfigSpec(
+                    title='Access Token Authentication',
+                    type='object',
+                    required=['access_token'],
+                    properties={
+                        'access_token': AuthConfigFieldSpec(
+                            title='Access Token',
+                            description='The access token generated for your developer application',
+                        ),
+                    },
+                    auth_mapping={'token': '${access_token}'},
+                    replication_auth_key_mapping={'credentials.access_token': 'access_token'},
+                    replication_auth_key_constants={'credentials.auth_method': 'access_token'},
                 ),
-                'client_secret': AuthConfigFieldSpec(
-                    title='Client Secret',
-                    description='OAuth 2.0 application client secret',
-                ),
-            },
-            auth_mapping={
-                'refresh_token': '${refresh_token}',
-                'client_id': '${client_id}',
-                'client_secret': '${client_secret}',
-            },
-            replication_auth_key_mapping={
-                'credentials.client_id': 'client_id',
-                'credentials.client_secret': 'client_secret',
-                'credentials.refresh_token': 'refresh_token',
-            },
-            replication_auth_key_constants={'credentials.auth_method': 'oAuth2.0'},
-        ),
+            ),
+        ],
     ),
     entities=[
         EntityDefinition(
             name='accounts',
             stream_name='accounts',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -113,7 +144,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                     },
                     response_schema={
@@ -239,9 +270,59 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.elements',
-                    record_transform={'account_urn': 'urn:li:sponsoredAccount:{{ record.id }}'},
+                    record_transform={'account_urn': 'urn:li:sponsoredAccount:{{ record.id }}', 'owner_param': '(sponsoredAccount:urn:li:sponsoredAccount:{{ record.id }})'},
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
                     preferred_for_check=True,
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/adAccounts',
+                    action=Action.CREATE,
+                    description='Creates a new ad account. Only type BUSINESS can be created via the API (ENTERPRISE accounts cannot). Requires the rw_ads OAuth scope. The new account ID is returned in the x-restli-id response header.\n',
+                    body_fields=[
+                        'name',
+                        'type',
+                        'currency',
+                        'reference',
+                        'test',
+                    ],
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Fields for creating an ad account',
+                        'properties': {
+                            'name': {'type': 'string', 'description': 'Ad account name'},
+                            'type': {
+                                'type': 'string',
+                                'description': 'Account type; only BUSINESS accounts can be created via the API',
+                                'enum': ['BUSINESS'],
+                            },
+                            'currency': {'type': 'string', 'description': 'ISO 4217 currency code, e.g. USD (defaults to USD)'},
+                            'reference': {'type': 'string', 'description': 'Optional owning organization URN, e.g. urn:li:organization:123456'},
+                            'test': {'type': 'boolean', 'description': 'Whether to create a test account'},
+                        },
+                        'required': ['name', 'type'],
+                        'additionalProperties': True,
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': "Rest.li create responses have an empty JSON body; the created entity ID or URN is returned in the x-restli-id response header (surfaced via the operation's meta extractor as created_id).\n",
+                        'additionalProperties': True,
+                    },
+                    meta_extractor={'created_id': '@header.x-restli-id'},
+                    untested=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -257,7 +338,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                     },
                     response_schema={
@@ -367,6 +448,80 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                             'search_strategy': 'List all accessible accounts',
                         },
                     },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/adAccounts/{id}',
+                    action=Action.UPDATE,
+                    description='Partially updates an ad account using the Rest.li PARTIAL_UPDATE pattern: the body wraps the fields to change in patch.$set. Requires the rw_ads OAuth scope; most account fields require the ACCOUNT_BILLING_ADMIN role. To soft-delete a non-DRAFT account, set status to PENDING_DELETION here (billing admin only).\n',
+                    body_fields=['patch'],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'integer', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version', 'X-RestLi-Method'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                        'X-RestLi-Method': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'PARTIAL_UPDATE',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Rest.li partial update envelope shared by all LinkedIn Ads update operations. Wrap the fields to change in patch.$set. Setting an array field replaces the entire array, so include all existing elements you want to keep.\n',
+                        'properties': {
+                            'patch': {
+                                'type': 'object',
+                                'required': ['$set'],
+                                'properties': {
+                                    '$set': {
+                                        'type': 'object',
+                                        'description': 'Map of field names to their new values',
+                                        'additionalProperties': True,
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['patch'],
+                    },
+                    untested=True,
+                    no_content_response=True,
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/adAccounts/{id}',
+                    action=Action.DELETE,
+                    description='Hard-deletes an ad account. Only accounts in DRAFT status accept a true DELETE; for non-DRAFT accounts use the update operation to set status to PENDING_DELETION. Both forms require the ACCOUNT_BILLING_ADMIN role and the rw_ads OAuth scope.\n',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'integer', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    untested=True,
+                    no_content_response=True,
                 ),
             },
             entity_schema={
@@ -488,7 +643,12 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='account_users',
             stream_name='account_users',
-            actions=[Action.LIST],
+            actions=[
+                Action.LIST,
+                Action.UPDATE,
+                Action.CREATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -527,7 +687,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                     },
                     response_schema={
@@ -594,16 +754,160 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                                     },
                                 },
                             },
-                            'metadata': {
+                            'paging': {
                                 'type': 'object',
                                 'properties': {
-                                    'nextPageToken': {'type': 'string'},
+                                    'start': {'type': 'integer'},
+                                    'count': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
                                 },
                             },
                         },
                     },
                     record_extractor='$.elements',
-                    meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
+                    meta_extractor={
+                        'start': '$.paging.start',
+                        'count': '$.paging.count',
+                        'total': '$.paging.total',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/adAccountUsers/(account={account},user={user})',
+                    action=Action.UPDATE,
+                    description='Partially updates an account user\'s role using the Rest.li PARTIAL_UPDATE pattern: the body wraps the fields to change in patch.$set (e.g. {"patch": {"$set": {"role": "CAMPAIGN_MANAGER"}}}). Pass the raw account and user URNs as parameters; they are URL-encoded automatically. Requires the rw_ads OAuth scope and the ACCOUNT_BILLING_ADMIN or ACCOUNT_MANAGER role.\n',
+                    body_fields=['patch'],
+                    path_params=['account', 'user'],
+                    path_params_schema={
+                        'account': {'type': 'string', 'required': True},
+                        'user': {'type': 'string', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version', 'X-RestLi-Method'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                        'X-RestLi-Method': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'PARTIAL_UPDATE',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Rest.li partial update envelope shared by all LinkedIn Ads update operations. Wrap the fields to change in patch.$set. Setting an array field replaces the entire array, so include all existing elements you want to keep.\n',
+                        'properties': {
+                            'patch': {
+                                'type': 'object',
+                                'required': ['$set'],
+                                'properties': {
+                                    '$set': {
+                                        'type': 'object',
+                                        'description': 'Map of field names to their new values',
+                                        'additionalProperties': True,
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['patch'],
+                    },
+                    untested=True,
+                    no_content_response=True,
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='PUT',
+                    path='/adAccountUsers/(account={account},user={user})',
+                    action=Action.CREATE,
+                    description='Grants a user a role on an ad account. Note the non-standard Rest.li compound-key shape: this is a PUT (not POST) keyed by both the account and user URNs. Pass the raw URNs as parameters; they are URL-encoded automatically. Requires the rw_ads OAuth scope and the ACCOUNT_BILLING_ADMIN or ACCOUNT_MANAGER role.\n',
+                    body_fields=['role'],
+                    path_params=['account', 'user'],
+                    path_params_schema={
+                        'account': {'type': 'string', 'required': True},
+                        'user': {'type': 'string', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Role grant for an ad account user',
+                        'properties': {
+                            'role': {
+                                'type': 'string',
+                                'description': 'Role to grant on the ad account',
+                                'enum': [
+                                    'ACCOUNT_BILLING_ADMIN',
+                                    'ACCOUNT_MANAGER',
+                                    'CAMPAIGN_MANAGER',
+                                    'CREATIVE_MANAGER',
+                                    'VIEWER',
+                                ],
+                            },
+                        },
+                        'required': ['role'],
+                        'additionalProperties': True,
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': "Rest.li create responses have an empty JSON body; the created entity ID or URN is returned in the x-restli-id response header (surfaced via the operation's meta extractor as created_id).\n",
+                        'additionalProperties': True,
+                    },
+                    untested=True,
+                    no_content_response=True,
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/adAccountUsers/(account={account},user={user})',
+                    action=Action.DELETE,
+                    description="Removes a user's role from an ad account. Pass the raw account and user URNs as parameters; they are URL-encoded automatically. Requires the rw_ads OAuth scope and the ACCOUNT_BILLING_ADMIN or ACCOUNT_MANAGER role.\n",
+                    path_params=['account', 'user'],
+                    path_params_schema={
+                        'account': {'type': 'string', 'required': True},
+                        'user': {'type': 'string', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    untested=True,
+                    no_content_response=True,
                 ),
             },
             entity_schema={
@@ -684,7 +988,13 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='campaigns',
             stream_name='campaigns',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -716,7 +1026,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                         'X-Restli-Protocol-Version': {
                             'type': 'string',
@@ -946,6 +1256,128 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     record_transform={'campaign_analytics_param': 'List(urn:li:sponsoredCampaign:{{ record.id }})'},
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/adAccounts/{account_id}/adCampaigns',
+                    action=Action.CREATE,
+                    description='Creates a new campaign in the ad account. Requires the rw_ads OAuth scope and an ad-account role of CAMPAIGN_MANAGER or higher (VIEWER is read-only). The new campaign ID is returned in the x-restli-id response header. Commonly required fields beyond account and name include type, costType, unitCost or dailyBudget, locale, and targetingCriteria; LinkedIn returns a descriptive 400 when a required field is missing.\n',
+                    body_fields=[
+                        'account',
+                        'name',
+                        'politicalIntent',
+                        'campaignGroup',
+                        'type',
+                        'objectiveType',
+                        'status',
+                        'costType',
+                        'dailyBudget',
+                        'unitCost',
+                        'locale',
+                        'runSchedule',
+                        'targetingCriteria',
+                        'audienceExpansionEnabled',
+                        'offsiteDeliveryEnabled',
+                        'creativeSelection',
+                    ],
+                    path_params=['account_id'],
+                    path_params_schema={
+                        'account_id': {'type': 'integer', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Fields for creating a campaign',
+                        'properties': {
+                            'account': {'type': 'string', 'description': 'Sponsored account URN; must match the account_id path parameter, e.g. urn:li:sponsoredAccount:123456'},
+                            'name': {'type': 'string', 'description': 'Campaign name'},
+                            'politicalIntent': {
+                                'type': 'string',
+                                'description': 'Whether the campaign contains political content; LinkedIn requires this on create',
+                                'enum': ['NOT_POLITICAL', 'POLITICAL'],
+                            },
+                            'campaignGroup': {'type': 'string', 'description': 'Campaign group URN, e.g. urn:li:sponsoredCampaignGroup:123456'},
+                            'type': {
+                                'type': 'string',
+                                'description': 'Campaign format',
+                                'enum': [
+                                    'TEXT_AD',
+                                    'SPONSORED_UPDATES',
+                                    'SPONSORED_INMAILS',
+                                    'DYNAMIC',
+                                ],
+                            },
+                            'objectiveType': {'type': 'string', 'description': 'Campaign objective, e.g. BRAND_AWARENESS, WEBSITE_VISIT, LEAD_GENERATION, WEBSITE_CONVERSION, VIDEO_VIEW, ENGAGEMENT, JOB_APPLICANT'},
+                            'status': {
+                                'type': 'string',
+                                'description': 'Initial campaign status',
+                                'enum': ['ACTIVE', 'PAUSED', 'DRAFT'],
+                            },
+                            'costType': {'type': 'string', 'description': 'Bidding cost type, e.g. CPM, CPC, CPV'},
+                            'dailyBudget': {
+                                'type': 'object',
+                                'description': 'Daily budget',
+                                'properties': {
+                                    'amount': {'type': 'string'},
+                                    'currencyCode': {'type': 'string'},
+                                },
+                            },
+                            'unitCost': {
+                                'type': 'object',
+                                'description': 'Bid amount per unit (per click, per impression, etc.)',
+                                'properties': {
+                                    'amount': {'type': 'string'},
+                                    'currencyCode': {'type': 'string'},
+                                },
+                            },
+                            'locale': {
+                                'type': 'object',
+                                'description': 'Campaign locale',
+                                'properties': {
+                                    'country': {'type': 'string'},
+                                    'language': {'type': 'string'},
+                                },
+                            },
+                            'runSchedule': {
+                                'type': 'object',
+                                'description': 'Scheduled run window (epoch milliseconds)',
+                                'properties': {
+                                    'start': {'type': 'integer'},
+                                    'end': {'type': 'integer'},
+                                },
+                            },
+                            'targetingCriteria': {'type': 'object', 'description': 'Audience targeting criteria (include/exclude clauses)'},
+                            'audienceExpansionEnabled': {'type': 'boolean', 'description': 'Whether audience expansion is enabled'},
+                            'offsiteDeliveryEnabled': {'type': 'boolean', 'description': 'Whether ads may be served on the LinkedIn Audience Network'},
+                            'creativeSelection': {'type': 'string', 'description': 'Creative rotation strategy, e.g. ROUND_ROBIN, OPTIMIZED'},
+                        },
+                        'required': [
+                            'account',
+                            'name',
+                            'runSchedule',
+                            'offsiteDeliveryEnabled',
+                            'politicalIntent',
+                        ],
+                        'additionalProperties': True,
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': "Rest.li create responses have an empty JSON body; the created entity ID or URN is returned in the x-restli-id response header (surfaced via the operation's meta extractor as created_id).\n",
+                        'additionalProperties': True,
+                    },
+                    meta_extractor={'created_id': '@header.x-restli-id'},
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/adAccounts/{account_id}/adCampaigns/{id}',
@@ -961,7 +1393,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                         'X-Restli-Protocol-Version': {
                             'type': 'string',
@@ -1172,6 +1604,80 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                             'search_strategy': 'Search by name or filter by status',
                         },
                     },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/adAccounts/{account_id}/adCampaigns/{id}',
+                    action=Action.UPDATE,
+                    description='Partially updates a campaign using the Rest.li PARTIAL_UPDATE pattern: the body wraps the fields to change in patch.$set. Requires the rw_ads OAuth scope and a CAMPAIGN_MANAGER or higher ad-account role. Note that $set on an array field (e.g. targetingCriteria lists) replaces the whole array, so re-send all existing elements. To soft-delete a non-DRAFT campaign, set status to PENDING_DELETION here.\n',
+                    body_fields=['patch'],
+                    path_params=['account_id', 'id'],
+                    path_params_schema={
+                        'account_id': {'type': 'integer', 'required': True},
+                        'id': {'type': 'integer', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version', 'X-RestLi-Method'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                        'X-RestLi-Method': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'PARTIAL_UPDATE',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Rest.li partial update envelope shared by all LinkedIn Ads update operations. Wrap the fields to change in patch.$set. Setting an array field replaces the entire array, so include all existing elements you want to keep.\n',
+                        'properties': {
+                            'patch': {
+                                'type': 'object',
+                                'required': ['$set'],
+                                'properties': {
+                                    '$set': {
+                                        'type': 'object',
+                                        'description': 'Map of field names to their new values',
+                                        'additionalProperties': True,
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['patch'],
+                    },
+                    no_content_response=True,
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/adAccounts/{account_id}/adCampaigns/{id}',
+                    action=Action.DELETE,
+                    description='Hard-deletes a campaign. Only campaigns in DRAFT status accept a true DELETE; for non-DRAFT campaigns LinkedIn requires a soft delete instead - use the update operation to set status to PENDING_DELETION. Requires the rw_ads OAuth scope and a CAMPAIGN_MANAGER or higher ad-account role.\n',
+                    path_params=['account_id', 'id'],
+                    path_params_schema={
+                        'account_id': {'type': 'integer', 'required': True},
+                        'id': {'type': 'integer', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    no_content_response=True,
                 ),
             },
             entity_schema={
@@ -1397,7 +1903,13 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='campaign_groups',
             stream_name='campaign_groups',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1429,7 +1941,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                         'X-Restli-Protocol-Version': {
                             'type': 'string',
@@ -1547,6 +2059,25 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                                     },
                                 },
                             },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'start': {'type': 'integer'},
+                                    'count': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
                             'metadata': {
                                 'type': 'object',
                                 'properties': {
@@ -1557,6 +2088,75 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.elements',
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/adAccounts/{account_id}/adCampaignGroups',
+                    action=Action.CREATE,
+                    description='Creates a new campaign group in the ad account. Requires the rw_ads OAuth scope and a CAMPAIGN_MANAGER or higher ad-account role. The new campaign group ID is returned in the x-restli-id response header. runSchedule.start is required when creating with ACTIVE status.\n',
+                    body_fields=[
+                        'account',
+                        'name',
+                        'status',
+                        'runSchedule',
+                        'totalBudget',
+                        'objectiveType',
+                    ],
+                    path_params=['account_id'],
+                    path_params_schema={
+                        'account_id': {'type': 'integer', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Fields for creating a campaign group',
+                        'properties': {
+                            'account': {'type': 'string', 'description': 'Sponsored account URN; must match the account_id path parameter, e.g. urn:li:sponsoredAccount:123456'},
+                            'name': {'type': 'string', 'description': 'Campaign group name'},
+                            'status': {
+                                'type': 'string',
+                                'description': 'Initial status',
+                                'enum': ['ACTIVE', 'DRAFT'],
+                            },
+                            'runSchedule': {
+                                'type': 'object',
+                                'description': 'Scheduled run window (epoch milliseconds)',
+                                'properties': {
+                                    'start': {'type': 'integer'},
+                                    'end': {'type': 'integer'},
+                                },
+                            },
+                            'totalBudget': {
+                                'type': 'object',
+                                'description': "Total budget across the group's lifetime",
+                                'properties': {
+                                    'amount': {'type': 'string'},
+                                    'currencyCode': {'type': 'string'},
+                                },
+                            },
+                            'objectiveType': {'type': 'string', 'description': 'Objective shared by campaigns in this group'},
+                        },
+                        'required': ['account', 'name', 'runSchedule'],
+                        'additionalProperties': True,
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': "Rest.li create responses have an empty JSON body; the created entity ID or URN is returned in the x-restli-id response header (surfaced via the operation's meta extractor as created_id).\n",
+                        'additionalProperties': True,
+                    },
+                    meta_extractor={'created_id': '@header.x-restli-id'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1573,7 +2173,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                         'X-Restli-Protocol-Version': {
                             'type': 'string',
@@ -1684,6 +2284,80 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                             'search_strategy': 'Search by name',
                         },
                     },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/adAccounts/{account_id}/adCampaignGroups/{id}',
+                    action=Action.UPDATE,
+                    description='Partially updates a campaign group using the Rest.li PARTIAL_UPDATE pattern: the body wraps the fields to change in patch.$set. Requires the rw_ads OAuth scope and a CAMPAIGN_MANAGER or higher ad-account role. $set on an array field replaces the whole array, so re-send all existing elements. To soft-delete a non-DRAFT campaign group, set status to PENDING_DELETION here.\n',
+                    body_fields=['patch'],
+                    path_params=['account_id', 'id'],
+                    path_params_schema={
+                        'account_id': {'type': 'integer', 'required': True},
+                        'id': {'type': 'integer', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version', 'X-RestLi-Method'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                        'X-RestLi-Method': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'PARTIAL_UPDATE',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Rest.li partial update envelope shared by all LinkedIn Ads update operations. Wrap the fields to change in patch.$set. Setting an array field replaces the entire array, so include all existing elements you want to keep.\n',
+                        'properties': {
+                            'patch': {
+                                'type': 'object',
+                                'required': ['$set'],
+                                'properties': {
+                                    '$set': {
+                                        'type': 'object',
+                                        'description': 'Map of field names to their new values',
+                                        'additionalProperties': True,
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['patch'],
+                    },
+                    no_content_response=True,
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/adAccounts/{account_id}/adCampaignGroups/{id}',
+                    action=Action.DELETE,
+                    description='Hard-deletes a campaign group. Only campaign groups in DRAFT status accept a true DELETE; for non-DRAFT campaign groups LinkedIn requires a soft delete instead - use the update operation to set status to PENDING_DELETION. Requires the rw_ads OAuth scope and a CAMPAIGN_MANAGER or higher ad-account role.\n',
+                    path_params=['account_id', 'id'],
+                    path_params_schema={
+                        'account_id': {'type': 'integer', 'required': True},
+                        'id': {'type': 'integer', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    no_content_response=True,
                 ),
             },
             entity_schema={
@@ -1809,7 +2483,13 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='creatives',
             stream_name='creatives',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1841,7 +2521,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                         'X-RestLi-Method': {
                             'type': 'string',
@@ -1962,6 +2642,62 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     record_transform={'creative_analytics_param': 'List({{ record.id }})'},
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/adAccounts/{account_id}/creatives',
+                    action=Action.CREATE,
+                    description="Creates a new creative in the ad account. Requires the rw_ads OAuth scope and a CREATIVE_MANAGER or higher ad-account role. The new creative URN is returned in the x-restli-id response header. The creative's content must reference existing assets (e.g. a post URN in content.reference for sponsored content).\n",
+                    body_fields=[
+                        'campaign',
+                        'content',
+                        'intendedStatus',
+                        'name',
+                    ],
+                    path_params=['account_id'],
+                    path_params_schema={
+                        'account_id': {'type': 'integer', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Fields for creating a creative',
+                        'properties': {
+                            'campaign': {'type': 'string', 'description': 'Campaign URN the creative belongs to, e.g. urn:li:sponsoredCampaign:123456'},
+                            'content': {
+                                'type': 'object',
+                                'description': 'Creative content. For sponsored content, reference an existing post URN via content.reference; other formats (textAd, spotlight, jobs) use their own sub-objects per the LinkedIn Creatives API documentation.\n',
+                                'additionalProperties': True,
+                            },
+                            'intendedStatus': {
+                                'type': 'string',
+                                'description': 'Desired serving status',
+                                'enum': ['ACTIVE', 'PAUSED', 'DRAFT'],
+                            },
+                            'name': {'type': 'string', 'description': 'Creative name'},
+                        },
+                        'required': ['campaign'],
+                        'additionalProperties': True,
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': "Rest.li create responses have an empty JSON body; the created entity ID or URN is returned in the x-restli-id response header (surfaced via the operation's meta extractor as created_id).\n",
+                        'additionalProperties': True,
+                    },
+                    meta_extractor={'created_id': '@header.x-restli-id'},
+                    untested=True,
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/adAccounts/{account_id}/creatives/{id}',
@@ -1977,7 +2713,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                     },
                     response_schema={
@@ -2075,6 +2811,87 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     untested=True,
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/adAccounts/{account_id}/creatives/{id}',
+                    action=Action.UPDATE,
+                    description='Partially updates a creative using the Rest.li PARTIAL_UPDATE pattern: the body wraps the fields to change in patch.$set. Only a limited set of creative fields is mutable (e.g. intendedStatus, name, leadgenCallToAction). Requires the rw_ads OAuth scope and a CREATIVE_MANAGER or higher ad-account role. To soft-delete a non-draft creative, set intendedStatus to PENDING_DELETION here.\n',
+                    body_fields=['patch'],
+                    path_params=['account_id', 'id'],
+                    path_params_schema={
+                        'account_id': {'type': 'integer', 'required': True},
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version', 'X-RestLi-Method'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                        'X-RestLi-Method': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'PARTIAL_UPDATE',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Rest.li partial update envelope shared by all LinkedIn Ads update operations. Wrap the fields to change in patch.$set. Setting an array field replaces the entire array, so include all existing elements you want to keep.\n',
+                        'properties': {
+                            'patch': {
+                                'type': 'object',
+                                'required': ['$set'],
+                                'properties': {
+                                    '$set': {
+                                        'type': 'object',
+                                        'description': 'Map of field names to their new values',
+                                        'additionalProperties': True,
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['patch'],
+                    },
+                    untested=True,
+                    no_content_response=True,
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/adAccounts/{account_id}/creatives/{id}',
+                    action=Action.DELETE,
+                    description='Hard-deletes a creative. Only creatives in DRAFT intendedStatus (or linked to a draft campaign, or with failed video uploads) accept a true DELETE; LinkedIn uniquely requires the X-RestLi-Method DELETE header on this call. For other creatives, soft-delete via the update operation by setting intendedStatus to PENDING_DELETION. Requires the rw_ads OAuth scope and a CREATIVE_MANAGER or higher ad-account role.\n',
+                    path_params=['account_id', 'id'],
+                    path_params_schema={
+                        'account_id': {'type': 'integer', 'required': True},
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version', 'X-RestLi-Method'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                        'X-RestLi-Method': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'DELETE',
+                        },
+                    },
+                    untested=True,
+                    no_content_response=True,
                 ),
             },
             entity_schema={
@@ -2191,7 +3008,12 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='conversions',
             stream_name='conversions',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -2230,7 +3052,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                         'X-Restli-Protocol-Version': {
                             'type': 'string',
@@ -2267,6 +3089,10 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                                         'attributionType': {
                                             'type': ['null', 'string'],
                                             'description': 'Attribution type for the conversion',
+                                        },
+                                        'ownershipType': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Ownership type of the conversion rule (e.g. OWNED)',
                                         },
                                         'conversionMethod': {
                                             'type': ['null', 'string'],
@@ -2357,12 +3183,103 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                                     'total': {'type': 'integer'},
                                     'count': {'type': 'integer'},
                                     'start': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
                                 },
                             },
                         },
                     },
                     record_extractor='$.elements',
                     meta_extractor={'total': '$.paging.total'},
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/conversions',
+                    action=Action.CREATE,
+                    description='Creates a new conversion tracking rule. Conversions API write access is gated behind a separate LinkedIn partner approval - the rw_conversions OAuth scope alone is not sufficient until access is granted. The new conversion ID is returned in the x-restli-id response header. Set autoAssociationType to ALL_CAMPAIGNS to associate the rule with every campaign in the account automatically.\n',
+                    body_fields=[
+                        'account',
+                        'name',
+                        'type',
+                        'attributionType',
+                        'postClickAttributionWindowSize',
+                        'viewThroughAttributionWindowSize',
+                        'enabled',
+                        'urlMatchRuleExpression',
+                        'value',
+                    ],
+                    query_params=['autoAssociationType'],
+                    query_params_schema={
+                        'autoAssociationType': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': ['ALL_CAMPAIGNS'],
+                        },
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Fields for creating a conversion tracking rule',
+                        'properties': {
+                            'account': {'type': 'string', 'description': 'Sponsored account URN, e.g. urn:li:sponsoredAccount:123456'},
+                            'name': {'type': 'string', 'description': 'Conversion rule name'},
+                            'type': {'type': 'string', 'description': 'Conversion category, e.g. LEAD, PURCHASE, SIGN_UP, DOWNLOAD, ADD_TO_CART, INSTALL, KEY_PAGE_VIEW, OTHER'},
+                            'attributionType': {
+                                'type': 'string',
+                                'description': 'How conversions are attributed to campaigns',
+                                'enum': ['LAST_TOUCH_BY_CAMPAIGN', 'LAST_TOUCH_BY_CONVERSION'],
+                            },
+                            'postClickAttributionWindowSize': {'type': 'integer', 'description': 'Post-click attribution window in days (1, 7, 30, or 90)'},
+                            'viewThroughAttributionWindowSize': {'type': 'integer', 'description': 'View-through attribution window in days (1, 7, or 30)'},
+                            'enabled': {'type': 'boolean', 'description': 'Whether the rule is active'},
+                            'urlMatchRuleExpression': {
+                                'type': 'array',
+                                'description': 'URL match rules for page-based conversion tracking',
+                                'items': {
+                                    'type': 'array',
+                                    'items': {'type': 'object', 'additionalProperties': True},
+                                },
+                            },
+                            'value': {
+                                'type': 'object',
+                                'description': 'Monetary value assigned to each conversion',
+                                'properties': {
+                                    'amount': {'type': 'string'},
+                                    'currencyCode': {'type': 'string'},
+                                },
+                            },
+                        },
+                        'required': ['account', 'name', 'type'],
+                        'additionalProperties': True,
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': "Rest.li create responses have an empty JSON body; the created entity ID or URN is returned in the x-restli-id response header (surfaced via the operation's meta extractor as created_id).\n",
+                        'additionalProperties': True,
+                    },
+                    meta_extractor={'created_id': '@header.x-restli-id'},
+                    untested=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2378,7 +3295,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                         'X-Restli-Protocol-Version': {
                             'type': 'string',
@@ -2409,6 +3326,10 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                             'attributionType': {
                                 'type': ['null', 'string'],
                                 'description': 'Attribution type for the conversion',
+                            },
+                            'ownershipType': {
+                                'type': ['null', 'string'],
+                                'description': 'Ownership type of the conversion rule (e.g. OWNED)',
                             },
                             'conversionMethod': {
                                 'type': ['null', 'string'],
@@ -2494,6 +3415,59 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     untested=True,
                 ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/conversions/{id}',
+                    action=Action.UPDATE,
+                    description='Partially updates a conversion rule using the Rest.li PARTIAL_UPDATE pattern: the body wraps the fields to change in patch.$set. The account query parameter is required. Conversion rules have no hard delete - to retire one, soft-disable it here with {"patch": {"$set": {"enabled": false}}}. Conversions API write access is gated behind a separate LinkedIn partner approval.\n',
+                    body_fields=['patch'],
+                    query_params=['account'],
+                    query_params_schema={
+                        'account': {'type': 'string', 'required': True},
+                    },
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'integer', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version', 'X-RestLi-Method'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                        'X-RestLi-Method': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'PARTIAL_UPDATE',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Rest.li partial update envelope shared by all LinkedIn Ads update operations. Wrap the fields to change in patch.$set. Setting an array field replaces the entire array, so include all existing elements you want to keep.\n',
+                        'properties': {
+                            'patch': {
+                                'type': 'object',
+                                'required': ['$set'],
+                                'properties': {
+                                    '$set': {
+                                        'type': 'object',
+                                        'description': 'Map of field names to their new values',
+                                        'additionalProperties': True,
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['patch'],
+                    },
+                    untested=True,
+                    no_content_response=True,
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -2518,6 +3492,10 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     'attributionType': {
                         'type': ['null', 'string'],
                         'description': 'Attribution type for the conversion',
+                    },
+                    'ownershipType': {
+                        'type': ['null', 'string'],
+                        'description': 'Ownership type of the conversion rule (e.g. OWNED)',
                     },
                     'conversionMethod': {
                         'type': ['null', 'string'],
@@ -2620,6 +3598,163 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
         EntityDefinition(
+            name='conversion_events',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/conversionEvents',
+                    action=Action.CREATE,
+                    description="Streams offline conversion events to LinkedIn (Conversions API event ingestion). This is a write-only Rest.li BATCH_CREATE: the body's elements array accepts up to 5,000 events per request. Each event references a conversion rule URN (urn:lla:llaPartnerConversion:{id}) and identifies the converting user by hashed email or other supported ID types. Conversions API access is gated behind a separate LinkedIn partner approval.\n",
+                    body_fields=['elements'],
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version', 'X-RestLi-Method'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                        'X-RestLi-Method': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'BATCH_CREATE',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Batch of offline conversion events (Rest.li BATCH_CREATE, max 5,000 per request)',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'maxItems': 5000,
+                                'description': 'Conversion events to ingest',
+                                'items': {
+                                    'type': 'object',
+                                    'required': ['conversion', 'conversionHappenedAt'],
+                                    'properties': {
+                                        'conversion': {'type': 'string', 'description': 'Conversion rule URN, e.g. urn:lla:llaPartnerConversion:123456'},
+                                        'conversionHappenedAt': {'type': 'integer', 'description': 'Epoch milliseconds when the conversion occurred'},
+                                        'user': {
+                                            'type': 'object',
+                                            'description': 'Identifies the converting user (hashed email or other supported ID types)',
+                                            'properties': {
+                                                'userIds': {
+                                                    'type': 'array',
+                                                    'items': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'idType': {'type': 'string', 'description': 'e.g. SHA256_EMAIL, LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID'},
+                                                            'idValue': {'type': 'string'},
+                                                        },
+                                                    },
+                                                },
+                                                'userInfo': {'type': 'object', 'additionalProperties': True},
+                                            },
+                                        },
+                                        'conversionValue': {
+                                            'type': 'object',
+                                            'description': 'Monetary value of this conversion',
+                                            'properties': {
+                                                'amount': {'type': 'string'},
+                                                'currencyCode': {'type': 'string'},
+                                            },
+                                        },
+                                        'eventId': {'type': 'string', 'description': 'Optional unique event ID for deduplication'},
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                        },
+                        'required': ['elements'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': "Rest.li create responses have an empty JSON body; the created entity ID or URN is returned in the x-restli-id response header (surfaced via the operation's meta extractor as created_id).\n",
+                        'additionalProperties': True,
+                    },
+                    untested=True,
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='campaign_conversions',
+            actions=[Action.CREATE, Action.DELETE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='PUT',
+                    path='/campaignConversions/(campaign={campaign_urn},conversion={conversion_urn})',
+                    action=Action.CREATE,
+                    description='Creates a campaign-to-conversion association using the Rest.li compound-key PUT pattern. Pass the raw campaign URN (urn:li:sponsoredCampaign:{id}) and conversion URN (urn:lla:llaPartnerConversion:{id}); they are URL-encoded automatically. Conversions API access is gated behind a separate LinkedIn partner approval.\n',
+                    body_fields=['campaign', 'conversion'],
+                    path_params=['campaign_urn', 'conversion_urn'],
+                    path_params_schema={
+                        'campaign_urn': {'type': 'string', 'required': True},
+                        'conversion_urn': {'type': 'string', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Campaign-to-conversion association record; may be empty since the key carries both URNs',
+                        'properties': {
+                            'campaign': {'type': 'string', 'description': 'Campaign URN, e.g. urn:li:sponsoredCampaign:123456'},
+                            'conversion': {'type': 'string', 'description': 'Conversion rule URN, e.g. urn:lla:llaPartnerConversion:123456'},
+                        },
+                        'additionalProperties': True,
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': "Rest.li create responses have an empty JSON body; the created entity ID or URN is returned in the x-restli-id response header (surfaced via the operation's meta extractor as created_id).\n",
+                        'additionalProperties': True,
+                    },
+                    untested=True,
+                    no_content_response=True,
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/campaignConversions/(campaign={campaign_urn},conversion={conversion_urn})',
+                    action=Action.DELETE,
+                    description='Deletes a campaign-to-conversion association by its compound key. Pass the raw campaign and conversion URNs; they are URL-encoded automatically. Conversions API access is gated behind a separate LinkedIn partner approval.\n',
+                    path_params=['campaign_urn', 'conversion_urn'],
+                    path_params_schema={
+                        'campaign_urn': {'type': 'string', 'required': True},
+                        'conversion_urn': {'type': 'string', 'required': True},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    untested=True,
+                    no_content_response=True,
+                ),
+            },
+        ),
+        EntityDefinition(
             name='ad_campaign_analytics',
             actions=[Action.LIST],
             endpoints={
@@ -2669,7 +3804,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                         'X-Restli-Protocol-Version': {
                             'type': 'string',
@@ -2935,6 +4070,18 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                                 'properties': {
                                     'count': {'type': 'integer'},
                                     'start': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -3003,7 +4150,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'LinkedIn-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '202601',
+                            'default': '202606',
                         },
                         'X-Restli-Protocol-Version': {
                             'type': 'string',
@@ -3269,6 +4416,18 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                                 'properties': {
                                     'count': {'type': 'integer'},
                                     'start': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -3287,6 +4446,7397 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                 ),
             ],
         ),
+        EntityDefinition(
+            name='ad_impression_device_analytics',
+            stream_name='ad_impression_device_analytics',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/adAnalytics:impressionDevice',
+                    path_override=PathOverrideConfig(
+                        path='/adAnalytics',
+                    ),
+                    action=Action.LIST,
+                    description='Returns ad analytics data pivoted by impression device type. Provides performance metrics including clicks, impressions, spend, and engagement data grouped by impression device type.\n',
+                    query_params=[
+                        'q',
+                        'pivot',
+                        'timeGranularity',
+                        'dateRange',
+                        'campaigns',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'analytics',
+                        },
+                        'pivot': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'IMPRESSION_DEVICE_TYPE',
+                        },
+                        'timeGranularity': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'DAILY',
+                            'enum': ['DAILY', 'MONTHLY', 'ALL'],
+                        },
+                        'dateRange': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '(start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))',
+                        },
+                        'campaigns': {'type': 'string', 'required': True},
+                        'fields': {'type': 'string', 'required': False},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Ad analytics API response',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Ad analytics data record with performance metrics',
+                                    'properties': {
+                                        'dateRange': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Date range for this analytics record',
+                                            'properties': {
+                                                'start': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                                'end': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'pivotValues': {
+                                            'type': ['null', 'array'],
+                                            'description': 'Pivot values (URNs) for this analytics record',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'impressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times the ad was shown',
+                                        },
+                                        'clicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of clicks on the ad',
+                                        },
+                                        'costInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': "Total cost in the account's local currency",
+                                        },
+                                        'costInUsd': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Total cost in USD',
+                                        },
+                                        'likes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of likes',
+                                        },
+                                        'shares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of shares',
+                                        },
+                                        'comments': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comments',
+                                        },
+                                        'reactions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of reactions',
+                                        },
+                                        'follows': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of follows',
+                                        },
+                                        'totalEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Total number of engagements',
+                                        },
+                                        'landingPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of landing page clicks',
+                                        },
+                                        'companyPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of company page clicks',
+                                        },
+                                        'externalWebsiteConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of conversions on external websites',
+                                        },
+                                        'externalWebsitePostClickConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click conversions on external websites',
+                                        },
+                                        'externalWebsitePostViewConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view conversions on external websites',
+                                        },
+                                        'conversionValueInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Conversion value in local currency',
+                                        },
+                                        'approximateMemberReach': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Approximate unique member reach',
+                                        },
+                                        'cardClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card clicks',
+                                        },
+                                        'cardImpressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card impressions',
+                                        },
+                                        'videoStarts': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video starts',
+                                        },
+                                        'videoViews': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video views',
+                                        },
+                                        'videoFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 25%',
+                                        },
+                                        'videoMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 50%',
+                                        },
+                                        'videoThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 75%',
+                                        },
+                                        'videoCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 100%',
+                                        },
+                                        'fullScreenPlays': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of full screen video plays',
+                                        },
+                                        'oneClickLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click leads',
+                                        },
+                                        'oneClickLeadFormOpens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click lead form opens',
+                                        },
+                                        'otherEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of other engagements',
+                                        },
+                                        'adUnitClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of ad unit clicks',
+                                        },
+                                        'actionClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of action clicks',
+                                        },
+                                        'textUrlClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of text URL clicks',
+                                        },
+                                        'commentLikes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comment likes',
+                                        },
+                                        'sends': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of sends (InMail)',
+                                        },
+                                        'opens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of opens (InMail)',
+                                        },
+                                        'downloadClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of download clicks',
+                                        },
+                                        'jobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job applications',
+                                        },
+                                        'jobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job apply clicks',
+                                        },
+                                        'registrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of registrations',
+                                        },
+                                        'talentLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of talent leads',
+                                        },
+                                        'validWorkEmailLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of valid work email leads',
+                                        },
+                                        'postClickJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job applications',
+                                        },
+                                        'postClickJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job apply clicks',
+                                        },
+                                        'postClickRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click registrations',
+                                        },
+                                        'postViewJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job applications',
+                                        },
+                                        'postViewJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job apply clicks',
+                                        },
+                                        'postViewRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view registrations',
+                                        },
+                                        'leadGenerationMailContactInfoShares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail contact info shares',
+                                        },
+                                        'leadGenerationMailInterestedClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail interested clicks',
+                                        },
+                                        'documentCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of document completions',
+                                        },
+                                        'documentFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 25%',
+                                        },
+                                        'documentMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 50%',
+                                        },
+                                        'documentThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 75%',
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'count': {'type': 'integer'},
+                                    'start': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.elements',
+                    no_pagination='Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics.',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Ad analytics record pivoted by device type',
+                'properties': {
+                    'actionClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on action buttons in the ad.',
+                    },
+                    'adUnitClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on ad unit components.',
+                    },
+                    'approximateMemberReach': {
+                        'type': ['null', 'number'],
+                        'description': 'An approximation of unique ad impressions.',
+                    },
+                    'cardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on interactive card elements.',
+                    },
+                    'cardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times interactive cards were displayed.',
+                    },
+                    'clicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of clicks on the ad.',
+                    },
+                    'commentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'The count of likes on comments related to the ad.',
+                    },
+                    'comments': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of comments on the ad.',
+                    },
+                    'companyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page associated with the ad.',
+                    },
+                    'conversionValueInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversion value in the local currency.',
+                    },
+                    'costInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in the local currency.',
+                    },
+                    'costInUsd': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in USD.',
+                    },
+                    'documentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of completions for document views.',
+                    },
+                    'documentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of document views.',
+                    },
+                    'documentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of document views.',
+                    },
+                    'documentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of document views.',
+                    },
+                    'downloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on download links in the ad.',
+                    },
+                    'end_date': {
+                        'type': ['null', 'string'],
+                        'description': 'End date of the ad analytics data.',
+                    },
+                    'externalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversions that lead to external websites.',
+                    },
+                    'externalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites.',
+                    },
+                    'externalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites.',
+                    },
+                    'follows': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of follows generated by the ad.',
+                    },
+                    'fullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were played in fullscreen mode.',
+                    },
+                    'impressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of times the ad was displayed.',
+                    },
+                    'jobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of job applications initiated through the ad.',
+                    },
+                    'jobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in the ad.',
+                    },
+                    'landingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the landing page associated with the ad.',
+                    },
+                    'leadGenerationMailContactInfoShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Shares of contact information through lead generation.',
+                    },
+                    'leadGenerationMailInterestedClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on expressing interest through lead generation mail.',
+                    },
+                    'likes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes received on the ad.',
+                    },
+                    'oneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times lead forms were opened in one click.',
+                    },
+                    'oneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click.',
+                    },
+                    'opens': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times the ad was opened or expanded.',
+                    },
+                    'otherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Engagements other than clicks on the ad.',
+                    },
+                    'pivotValues': {
+                        'type': ['null', 'array'],
+                        'description': 'Values used for pivoting the analytics.',
+                    },
+                    'string_of_pivot_values': {
+                        'type': ['null', 'string'],
+                        'description': 'Comma-separated string of pivot values for this analytics record',
+                    },
+                    'postClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking on the ad.',
+                    },
+                    'postClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking on the ad.',
+                    },
+                    'postClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking on the ad.',
+                    },
+                    'postViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing the ad.',
+                    },
+                    'postViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing the ad.',
+                    },
+                    'postViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing the ad.',
+                    },
+                    'reactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions (e.g., like, love, celebrate) on the ad.',
+                    },
+                    'registrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations completed through the ad.',
+                    },
+                    'sends': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of messages sent through the ad.',
+                    },
+                    'shares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares generated by the ad.',
+                    },
+                    'start_date': {
+                        'type': ['null', 'string'],
+                        'description': 'Start date of the ad analytics data.',
+                    },
+                    'talentLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of leads related to talent acquisition.',
+                    },
+                    'textUrlClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on text URLs within the ad.',
+                    },
+                    'totalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of engagements on the ad.',
+                    },
+                    'validWorkEmailLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated through valid work emails.',
+                    },
+                    'videoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were watched till completion.',
+                    },
+                    'videoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of video views.',
+                    },
+                    'videoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of video views.',
+                    },
+                    'videoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts initiated by users.',
+                    },
+                    'videoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of video views.',
+                    },
+                    'videoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in the ad.',
+                    },
+                    'viralCardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on interactive card components in viral distribution.',
+                    },
+                    'viralCardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Impressions of interactive cards in viral distribution.',
+                    },
+                    'viralClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total clicks in viral distribution of the ad.',
+                    },
+                    'viralCommentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Likes received on comments in viral distribution.',
+                    },
+                    'viralComments': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of comments in viral distribution of the ad.',
+                    },
+                    'viralCompanyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page in viral distribution.',
+                    },
+                    'viralDocumentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Complete views of documents in viral distribution.',
+                    },
+                    'viralDocumentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of documents in viral distribution.',
+                    },
+                    'viralDocumentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of documents in viral distribution.',
+                    },
+                    'viralDocumentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of documents in viral distribution.',
+                    },
+                    'viralDownloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on downloads in viral distribution of the ad.',
+                    },
+                    'viralExternalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'External website conversions in viral distribution.',
+                    },
+                    'viralExternalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites in viral distribution.',
+                    },
+                    'viralExternalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites in viral distribution.',
+                    },
+                    'viralFollows': {
+                        'type': ['null', 'number'],
+                        'description': 'Follows generated in viral distribution of the ad.',
+                    },
+                    'viralFullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Fullscreen video plays in viral distribution.',
+                    },
+                    'viralImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total impressions in viral distribution of the ad.',
+                    },
+                    'viralJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated in viral distribution.',
+                    },
+                    'viralJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in viral distribution of the ad.',
+                    },
+                    'viralLandingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on landing page in viral distribution.',
+                    },
+                    'viralLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes in viral distribution of the ad.',
+                    },
+                    'viralOneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'One-click lead form opens in viral distribution.',
+                    },
+                    'viralOneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click in viral distribution.',
+                    },
+                    'viralOtherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Other engagements in viral distribution of the ad.',
+                    },
+                    'viralPostClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking in viral distribution.',
+                    },
+                    'viralPostClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking in viral distribution.',
+                    },
+                    'viralPostClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking in viral distribution.',
+                    },
+                    'viralPostViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing in viral distribution.',
+                    },
+                    'viralPostViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing in viral distribution.',
+                    },
+                    'viralPostViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing in viral distribution.',
+                    },
+                    'viralReactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions in viral distribution of the ad.',
+                    },
+                    'viralRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations in viral distribution of the ad.',
+                    },
+                    'viralShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares in viral distribution of the ad.',
+                    },
+                    'viralTotalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total engagements in viral distribution of the ad.',
+                    },
+                    'viralVideoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions of videos in viral distribution.',
+                    },
+                    'viralVideoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of videos in viral distribution.',
+                    },
+                    'viralVideoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts in viral distribution of the ad.',
+                    },
+                    'viralVideoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in viral distribution of the ad.',
+                    },
+                    'pivot': {
+                        'type': ['null', 'string'],
+                        'description': 'Pivot dimension used for this analytics record',
+                    },
+                    'sponsoredCampaign': {
+                        'type': ['null', 'string'],
+                        'description': 'URN of the sponsored campaign this analytics record belongs to',
+                    },
+                },
+                'x-airbyte-entity-name': 'ad_impression_device_analytics',
+                'x-airbyte-stream-name': 'ad_impression_device_analytics',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Ad performance metrics broken down by device type',
+                    'when_to_use': 'Questions about ad performance segmented by device type',
+                    'trigger_phrases': ['ad performance by device', 'device breakdown', 'impressions by device'],
+                    'freshness': 'live',
+                    'example_questions': ['Show ad performance by device type'],
+                    'search_strategy': 'Search cached device type analytics, filtering by campaign or date range',
+                },
+            },
+            ai_hints={
+                'summary': 'Ad performance metrics broken down by device type',
+                'when_to_use': 'Questions about ad performance segmented by device type',
+                'trigger_phrases': ['ad performance by device', 'device breakdown', 'impressions by device'],
+                'freshness': 'live',
+                'example_questions': ['Show ad performance by device type'],
+                'search_strategy': 'Search cached device type analytics, filtering by campaign or date range',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_impression_device_analytics',
+                    target_entity='campaigns',
+                    foreign_key='campaigns',
+                    target_key='campaign_analytics_param',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='ad_member_company_analytics',
+            stream_name='ad_member_company_analytics',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/adAnalytics:memberCompany',
+                    path_override=PathOverrideConfig(
+                        path='/adAnalytics',
+                    ),
+                    action=Action.LIST,
+                    description='Returns ad analytics data pivoted by member company. Provides performance metrics including clicks, impressions, spend, and engagement data grouped by member company.\n',
+                    query_params=[
+                        'q',
+                        'pivot',
+                        'timeGranularity',
+                        'dateRange',
+                        'campaigns',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'analytics',
+                        },
+                        'pivot': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'MEMBER_COMPANY',
+                        },
+                        'timeGranularity': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'DAILY',
+                            'enum': ['DAILY', 'MONTHLY', 'ALL'],
+                        },
+                        'dateRange': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '(start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))',
+                        },
+                        'campaigns': {'type': 'string', 'required': True},
+                        'fields': {'type': 'string', 'required': False},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Ad analytics API response',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Ad analytics data record with performance metrics',
+                                    'properties': {
+                                        'dateRange': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Date range for this analytics record',
+                                            'properties': {
+                                                'start': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                                'end': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'pivotValues': {
+                                            'type': ['null', 'array'],
+                                            'description': 'Pivot values (URNs) for this analytics record',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'impressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times the ad was shown',
+                                        },
+                                        'clicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of clicks on the ad',
+                                        },
+                                        'costInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': "Total cost in the account's local currency",
+                                        },
+                                        'costInUsd': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Total cost in USD',
+                                        },
+                                        'likes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of likes',
+                                        },
+                                        'shares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of shares',
+                                        },
+                                        'comments': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comments',
+                                        },
+                                        'reactions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of reactions',
+                                        },
+                                        'follows': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of follows',
+                                        },
+                                        'totalEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Total number of engagements',
+                                        },
+                                        'landingPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of landing page clicks',
+                                        },
+                                        'companyPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of company page clicks',
+                                        },
+                                        'externalWebsiteConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of conversions on external websites',
+                                        },
+                                        'externalWebsitePostClickConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click conversions on external websites',
+                                        },
+                                        'externalWebsitePostViewConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view conversions on external websites',
+                                        },
+                                        'conversionValueInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Conversion value in local currency',
+                                        },
+                                        'approximateMemberReach': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Approximate unique member reach',
+                                        },
+                                        'cardClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card clicks',
+                                        },
+                                        'cardImpressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card impressions',
+                                        },
+                                        'videoStarts': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video starts',
+                                        },
+                                        'videoViews': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video views',
+                                        },
+                                        'videoFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 25%',
+                                        },
+                                        'videoMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 50%',
+                                        },
+                                        'videoThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 75%',
+                                        },
+                                        'videoCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 100%',
+                                        },
+                                        'fullScreenPlays': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of full screen video plays',
+                                        },
+                                        'oneClickLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click leads',
+                                        },
+                                        'oneClickLeadFormOpens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click lead form opens',
+                                        },
+                                        'otherEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of other engagements',
+                                        },
+                                        'adUnitClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of ad unit clicks',
+                                        },
+                                        'actionClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of action clicks',
+                                        },
+                                        'textUrlClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of text URL clicks',
+                                        },
+                                        'commentLikes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comment likes',
+                                        },
+                                        'sends': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of sends (InMail)',
+                                        },
+                                        'opens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of opens (InMail)',
+                                        },
+                                        'downloadClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of download clicks',
+                                        },
+                                        'jobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job applications',
+                                        },
+                                        'jobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job apply clicks',
+                                        },
+                                        'registrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of registrations',
+                                        },
+                                        'talentLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of talent leads',
+                                        },
+                                        'validWorkEmailLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of valid work email leads',
+                                        },
+                                        'postClickJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job applications',
+                                        },
+                                        'postClickJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job apply clicks',
+                                        },
+                                        'postClickRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click registrations',
+                                        },
+                                        'postViewJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job applications',
+                                        },
+                                        'postViewJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job apply clicks',
+                                        },
+                                        'postViewRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view registrations',
+                                        },
+                                        'leadGenerationMailContactInfoShares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail contact info shares',
+                                        },
+                                        'leadGenerationMailInterestedClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail interested clicks',
+                                        },
+                                        'documentCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of document completions',
+                                        },
+                                        'documentFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 25%',
+                                        },
+                                        'documentMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 50%',
+                                        },
+                                        'documentThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 75%',
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'count': {'type': 'integer'},
+                                    'start': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.elements',
+                    no_pagination='Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics.',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Ad analytics record pivoted by member company',
+                'properties': {
+                    'actionClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on action buttons in the ad.',
+                    },
+                    'adUnitClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on ad unit components.',
+                    },
+                    'approximateMemberReach': {
+                        'type': ['null', 'number'],
+                        'description': 'An approximation of unique ad impressions.',
+                    },
+                    'cardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on interactive card elements.',
+                    },
+                    'cardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times interactive cards were displayed.',
+                    },
+                    'clicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of clicks on the ad.',
+                    },
+                    'commentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'The count of likes on comments related to the ad.',
+                    },
+                    'comments': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of comments on the ad.',
+                    },
+                    'companyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page associated with the ad.',
+                    },
+                    'conversionValueInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversion value in the local currency.',
+                    },
+                    'costInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in the local currency.',
+                    },
+                    'costInUsd': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in USD.',
+                    },
+                    'documentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of completions for document views.',
+                    },
+                    'documentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of document views.',
+                    },
+                    'documentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of document views.',
+                    },
+                    'documentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of document views.',
+                    },
+                    'downloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on download links in the ad.',
+                    },
+                    'end_date': {
+                        'type': ['null', 'string'],
+                        'description': 'End date of the ad analytics data.',
+                    },
+                    'externalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversions that lead to external websites.',
+                    },
+                    'externalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites.',
+                    },
+                    'externalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites.',
+                    },
+                    'follows': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of follows generated by the ad.',
+                    },
+                    'fullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were played in fullscreen mode.',
+                    },
+                    'impressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of times the ad was displayed.',
+                    },
+                    'jobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of job applications initiated through the ad.',
+                    },
+                    'jobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in the ad.',
+                    },
+                    'landingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the landing page associated with the ad.',
+                    },
+                    'leadGenerationMailContactInfoShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Shares of contact information through lead generation.',
+                    },
+                    'leadGenerationMailInterestedClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on expressing interest through lead generation mail.',
+                    },
+                    'likes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes received on the ad.',
+                    },
+                    'oneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times lead forms were opened in one click.',
+                    },
+                    'oneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click.',
+                    },
+                    'opens': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times the ad was opened or expanded.',
+                    },
+                    'otherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Engagements other than clicks on the ad.',
+                    },
+                    'pivotValues': {
+                        'type': ['null', 'array'],
+                        'description': 'Values used for pivoting the analytics.',
+                    },
+                    'string_of_pivot_values': {
+                        'type': ['null', 'string'],
+                        'description': 'Comma-separated string of pivot values for this analytics record',
+                    },
+                    'postClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking on the ad.',
+                    },
+                    'postClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking on the ad.',
+                    },
+                    'postClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking on the ad.',
+                    },
+                    'postViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing the ad.',
+                    },
+                    'postViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing the ad.',
+                    },
+                    'postViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing the ad.',
+                    },
+                    'reactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions (e.g., like, love, celebrate) on the ad.',
+                    },
+                    'registrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations completed through the ad.',
+                    },
+                    'sends': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of messages sent through the ad.',
+                    },
+                    'shares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares generated by the ad.',
+                    },
+                    'start_date': {
+                        'type': ['null', 'string'],
+                        'description': 'Start date of the ad analytics data.',
+                    },
+                    'talentLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of leads related to talent acquisition.',
+                    },
+                    'textUrlClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on text URLs within the ad.',
+                    },
+                    'totalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of engagements on the ad.',
+                    },
+                    'validWorkEmailLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated through valid work emails.',
+                    },
+                    'videoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were watched till completion.',
+                    },
+                    'videoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of video views.',
+                    },
+                    'videoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of video views.',
+                    },
+                    'videoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts initiated by users.',
+                    },
+                    'videoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of video views.',
+                    },
+                    'videoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in the ad.',
+                    },
+                    'viralCardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on interactive card components in viral distribution.',
+                    },
+                    'viralCardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Impressions of interactive cards in viral distribution.',
+                    },
+                    'viralClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total clicks in viral distribution of the ad.',
+                    },
+                    'viralCommentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Likes received on comments in viral distribution.',
+                    },
+                    'viralComments': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of comments in viral distribution of the ad.',
+                    },
+                    'viralCompanyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page in viral distribution.',
+                    },
+                    'viralDocumentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Complete views of documents in viral distribution.',
+                    },
+                    'viralDocumentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of documents in viral distribution.',
+                    },
+                    'viralDocumentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of documents in viral distribution.',
+                    },
+                    'viralDocumentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of documents in viral distribution.',
+                    },
+                    'viralDownloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on downloads in viral distribution of the ad.',
+                    },
+                    'viralExternalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'External website conversions in viral distribution.',
+                    },
+                    'viralExternalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites in viral distribution.',
+                    },
+                    'viralExternalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites in viral distribution.',
+                    },
+                    'viralFollows': {
+                        'type': ['null', 'number'],
+                        'description': 'Follows generated in viral distribution of the ad.',
+                    },
+                    'viralFullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Fullscreen video plays in viral distribution.',
+                    },
+                    'viralImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total impressions in viral distribution of the ad.',
+                    },
+                    'viralJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated in viral distribution.',
+                    },
+                    'viralJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in viral distribution of the ad.',
+                    },
+                    'viralLandingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on landing page in viral distribution.',
+                    },
+                    'viralLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes in viral distribution of the ad.',
+                    },
+                    'viralOneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'One-click lead form opens in viral distribution.',
+                    },
+                    'viralOneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click in viral distribution.',
+                    },
+                    'viralOtherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Other engagements in viral distribution of the ad.',
+                    },
+                    'viralPostClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking in viral distribution.',
+                    },
+                    'viralPostClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking in viral distribution.',
+                    },
+                    'viralPostClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking in viral distribution.',
+                    },
+                    'viralPostViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing in viral distribution.',
+                    },
+                    'viralPostViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing in viral distribution.',
+                    },
+                    'viralPostViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing in viral distribution.',
+                    },
+                    'viralReactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions in viral distribution of the ad.',
+                    },
+                    'viralRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations in viral distribution of the ad.',
+                    },
+                    'viralShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares in viral distribution of the ad.',
+                    },
+                    'viralTotalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total engagements in viral distribution of the ad.',
+                    },
+                    'viralVideoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions of videos in viral distribution.',
+                    },
+                    'viralVideoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of videos in viral distribution.',
+                    },
+                    'viralVideoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts in viral distribution of the ad.',
+                    },
+                    'viralVideoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in viral distribution of the ad.',
+                    },
+                    'pivot': {
+                        'type': ['null', 'string'],
+                        'description': 'Pivot dimension used for this analytics record',
+                    },
+                    'sponsoredCampaign': {
+                        'type': ['null', 'string'],
+                        'description': 'URN of the sponsored campaign this analytics record belongs to',
+                    },
+                },
+                'x-airbyte-entity-name': 'ad_member_company_analytics',
+                'x-airbyte-stream-name': 'ad_member_company_analytics',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Ad performance metrics broken down by member company',
+                    'when_to_use': 'Questions about ad performance segmented by member company',
+                    'trigger_phrases': ['performance by company', 'which companies see my ads', 'company breakdown'],
+                    'freshness': 'live',
+                    'example_questions': ['Show ad performance by member company'],
+                    'search_strategy': 'Search cached member company analytics, filtering by campaign or date range',
+                },
+            },
+            ai_hints={
+                'summary': 'Ad performance metrics broken down by member company',
+                'when_to_use': 'Questions about ad performance segmented by member company',
+                'trigger_phrases': ['performance by company', 'which companies see my ads', 'company breakdown'],
+                'freshness': 'live',
+                'example_questions': ['Show ad performance by member company'],
+                'search_strategy': 'Search cached member company analytics, filtering by campaign or date range',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_member_company_analytics',
+                    target_entity='campaigns',
+                    foreign_key='campaigns',
+                    target_key='campaign_analytics_param',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='ad_member_company_size_analytics',
+            stream_name='ad_member_company_size_analytics',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/adAnalytics:memberCompanySize',
+                    path_override=PathOverrideConfig(
+                        path='/adAnalytics',
+                    ),
+                    action=Action.LIST,
+                    description='Returns ad analytics data pivoted by member company size. Provides performance metrics including clicks, impressions, spend, and engagement data grouped by member company size.\n',
+                    query_params=[
+                        'q',
+                        'pivot',
+                        'timeGranularity',
+                        'dateRange',
+                        'campaigns',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'analytics',
+                        },
+                        'pivot': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'MEMBER_COMPANY_SIZE',
+                        },
+                        'timeGranularity': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'DAILY',
+                            'enum': ['DAILY', 'MONTHLY', 'ALL'],
+                        },
+                        'dateRange': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '(start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))',
+                        },
+                        'campaigns': {'type': 'string', 'required': True},
+                        'fields': {'type': 'string', 'required': False},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Ad analytics API response',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Ad analytics data record with performance metrics',
+                                    'properties': {
+                                        'dateRange': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Date range for this analytics record',
+                                            'properties': {
+                                                'start': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                                'end': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'pivotValues': {
+                                            'type': ['null', 'array'],
+                                            'description': 'Pivot values (URNs) for this analytics record',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'impressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times the ad was shown',
+                                        },
+                                        'clicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of clicks on the ad',
+                                        },
+                                        'costInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': "Total cost in the account's local currency",
+                                        },
+                                        'costInUsd': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Total cost in USD',
+                                        },
+                                        'likes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of likes',
+                                        },
+                                        'shares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of shares',
+                                        },
+                                        'comments': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comments',
+                                        },
+                                        'reactions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of reactions',
+                                        },
+                                        'follows': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of follows',
+                                        },
+                                        'totalEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Total number of engagements',
+                                        },
+                                        'landingPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of landing page clicks',
+                                        },
+                                        'companyPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of company page clicks',
+                                        },
+                                        'externalWebsiteConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of conversions on external websites',
+                                        },
+                                        'externalWebsitePostClickConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click conversions on external websites',
+                                        },
+                                        'externalWebsitePostViewConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view conversions on external websites',
+                                        },
+                                        'conversionValueInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Conversion value in local currency',
+                                        },
+                                        'approximateMemberReach': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Approximate unique member reach',
+                                        },
+                                        'cardClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card clicks',
+                                        },
+                                        'cardImpressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card impressions',
+                                        },
+                                        'videoStarts': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video starts',
+                                        },
+                                        'videoViews': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video views',
+                                        },
+                                        'videoFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 25%',
+                                        },
+                                        'videoMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 50%',
+                                        },
+                                        'videoThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 75%',
+                                        },
+                                        'videoCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 100%',
+                                        },
+                                        'fullScreenPlays': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of full screen video plays',
+                                        },
+                                        'oneClickLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click leads',
+                                        },
+                                        'oneClickLeadFormOpens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click lead form opens',
+                                        },
+                                        'otherEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of other engagements',
+                                        },
+                                        'adUnitClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of ad unit clicks',
+                                        },
+                                        'actionClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of action clicks',
+                                        },
+                                        'textUrlClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of text URL clicks',
+                                        },
+                                        'commentLikes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comment likes',
+                                        },
+                                        'sends': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of sends (InMail)',
+                                        },
+                                        'opens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of opens (InMail)',
+                                        },
+                                        'downloadClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of download clicks',
+                                        },
+                                        'jobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job applications',
+                                        },
+                                        'jobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job apply clicks',
+                                        },
+                                        'registrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of registrations',
+                                        },
+                                        'talentLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of talent leads',
+                                        },
+                                        'validWorkEmailLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of valid work email leads',
+                                        },
+                                        'postClickJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job applications',
+                                        },
+                                        'postClickJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job apply clicks',
+                                        },
+                                        'postClickRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click registrations',
+                                        },
+                                        'postViewJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job applications',
+                                        },
+                                        'postViewJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job apply clicks',
+                                        },
+                                        'postViewRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view registrations',
+                                        },
+                                        'leadGenerationMailContactInfoShares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail contact info shares',
+                                        },
+                                        'leadGenerationMailInterestedClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail interested clicks',
+                                        },
+                                        'documentCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of document completions',
+                                        },
+                                        'documentFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 25%',
+                                        },
+                                        'documentMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 50%',
+                                        },
+                                        'documentThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 75%',
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'count': {'type': 'integer'},
+                                    'start': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.elements',
+                    no_pagination='Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics.',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Ad analytics record pivoted by member company size',
+                'properties': {
+                    'actionClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on action buttons in the ad.',
+                    },
+                    'adUnitClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on ad unit components.',
+                    },
+                    'approximateMemberReach': {
+                        'type': ['null', 'number'],
+                        'description': 'An approximation of unique ad impressions.',
+                    },
+                    'cardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on interactive card elements.',
+                    },
+                    'cardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times interactive cards were displayed.',
+                    },
+                    'clicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of clicks on the ad.',
+                    },
+                    'commentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'The count of likes on comments related to the ad.',
+                    },
+                    'comments': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of comments on the ad.',
+                    },
+                    'companyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page associated with the ad.',
+                    },
+                    'conversionValueInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversion value in the local currency.',
+                    },
+                    'costInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in the local currency.',
+                    },
+                    'costInUsd': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in USD.',
+                    },
+                    'documentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of completions for document views.',
+                    },
+                    'documentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of document views.',
+                    },
+                    'documentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of document views.',
+                    },
+                    'documentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of document views.',
+                    },
+                    'downloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on download links in the ad.',
+                    },
+                    'end_date': {
+                        'type': ['null', 'string'],
+                        'description': 'End date of the ad analytics data.',
+                    },
+                    'externalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversions that lead to external websites.',
+                    },
+                    'externalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites.',
+                    },
+                    'externalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites.',
+                    },
+                    'follows': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of follows generated by the ad.',
+                    },
+                    'fullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were played in fullscreen mode.',
+                    },
+                    'impressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of times the ad was displayed.',
+                    },
+                    'jobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of job applications initiated through the ad.',
+                    },
+                    'jobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in the ad.',
+                    },
+                    'landingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the landing page associated with the ad.',
+                    },
+                    'leadGenerationMailContactInfoShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Shares of contact information through lead generation.',
+                    },
+                    'leadGenerationMailInterestedClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on expressing interest through lead generation mail.',
+                    },
+                    'likes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes received on the ad.',
+                    },
+                    'oneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times lead forms were opened in one click.',
+                    },
+                    'oneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click.',
+                    },
+                    'opens': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times the ad was opened or expanded.',
+                    },
+                    'otherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Engagements other than clicks on the ad.',
+                    },
+                    'pivotValues': {
+                        'type': ['null', 'array'],
+                        'description': 'Values used for pivoting the analytics.',
+                    },
+                    'string_of_pivot_values': {
+                        'type': ['null', 'string'],
+                        'description': 'Comma-separated string of pivot values for this analytics record',
+                    },
+                    'postClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking on the ad.',
+                    },
+                    'postClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking on the ad.',
+                    },
+                    'postClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking on the ad.',
+                    },
+                    'postViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing the ad.',
+                    },
+                    'postViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing the ad.',
+                    },
+                    'postViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing the ad.',
+                    },
+                    'reactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions (e.g., like, love, celebrate) on the ad.',
+                    },
+                    'registrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations completed through the ad.',
+                    },
+                    'sends': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of messages sent through the ad.',
+                    },
+                    'shares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares generated by the ad.',
+                    },
+                    'start_date': {
+                        'type': ['null', 'string'],
+                        'description': 'Start date of the ad analytics data.',
+                    },
+                    'talentLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of leads related to talent acquisition.',
+                    },
+                    'textUrlClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on text URLs within the ad.',
+                    },
+                    'totalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of engagements on the ad.',
+                    },
+                    'validWorkEmailLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated through valid work emails.',
+                    },
+                    'videoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were watched till completion.',
+                    },
+                    'videoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of video views.',
+                    },
+                    'videoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of video views.',
+                    },
+                    'videoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts initiated by users.',
+                    },
+                    'videoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of video views.',
+                    },
+                    'videoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in the ad.',
+                    },
+                    'viralCardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on interactive card components in viral distribution.',
+                    },
+                    'viralCardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Impressions of interactive cards in viral distribution.',
+                    },
+                    'viralClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total clicks in viral distribution of the ad.',
+                    },
+                    'viralCommentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Likes received on comments in viral distribution.',
+                    },
+                    'viralComments': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of comments in viral distribution of the ad.',
+                    },
+                    'viralCompanyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page in viral distribution.',
+                    },
+                    'viralDocumentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Complete views of documents in viral distribution.',
+                    },
+                    'viralDocumentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of documents in viral distribution.',
+                    },
+                    'viralDocumentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of documents in viral distribution.',
+                    },
+                    'viralDocumentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of documents in viral distribution.',
+                    },
+                    'viralDownloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on downloads in viral distribution of the ad.',
+                    },
+                    'viralExternalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'External website conversions in viral distribution.',
+                    },
+                    'viralExternalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites in viral distribution.',
+                    },
+                    'viralExternalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites in viral distribution.',
+                    },
+                    'viralFollows': {
+                        'type': ['null', 'number'],
+                        'description': 'Follows generated in viral distribution of the ad.',
+                    },
+                    'viralFullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Fullscreen video plays in viral distribution.',
+                    },
+                    'viralImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total impressions in viral distribution of the ad.',
+                    },
+                    'viralJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated in viral distribution.',
+                    },
+                    'viralJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in viral distribution of the ad.',
+                    },
+                    'viralLandingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on landing page in viral distribution.',
+                    },
+                    'viralLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes in viral distribution of the ad.',
+                    },
+                    'viralOneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'One-click lead form opens in viral distribution.',
+                    },
+                    'viralOneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click in viral distribution.',
+                    },
+                    'viralOtherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Other engagements in viral distribution of the ad.',
+                    },
+                    'viralPostClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking in viral distribution.',
+                    },
+                    'viralPostClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking in viral distribution.',
+                    },
+                    'viralPostClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking in viral distribution.',
+                    },
+                    'viralPostViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing in viral distribution.',
+                    },
+                    'viralPostViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing in viral distribution.',
+                    },
+                    'viralPostViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing in viral distribution.',
+                    },
+                    'viralReactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions in viral distribution of the ad.',
+                    },
+                    'viralRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations in viral distribution of the ad.',
+                    },
+                    'viralShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares in viral distribution of the ad.',
+                    },
+                    'viralTotalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total engagements in viral distribution of the ad.',
+                    },
+                    'viralVideoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions of videos in viral distribution.',
+                    },
+                    'viralVideoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of videos in viral distribution.',
+                    },
+                    'viralVideoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts in viral distribution of the ad.',
+                    },
+                    'viralVideoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in viral distribution of the ad.',
+                    },
+                    'pivot': {
+                        'type': ['null', 'string'],
+                        'description': 'Pivot dimension used for this analytics record',
+                    },
+                    'sponsoredCampaign': {
+                        'type': ['null', 'string'],
+                        'description': 'URN of the sponsored campaign this analytics record belongs to',
+                    },
+                },
+                'x-airbyte-entity-name': 'ad_member_company_size_analytics',
+                'x-airbyte-stream-name': 'ad_member_company_size_analytics',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Ad performance metrics broken down by member company size',
+                    'when_to_use': 'Questions about ad performance segmented by member company size',
+                    'trigger_phrases': ['performance by company size', 'company size breakdown'],
+                    'freshness': 'live',
+                    'example_questions': ['Show ad performance by member company size'],
+                    'search_strategy': 'Search cached member company size analytics, filtering by campaign or date range',
+                },
+            },
+            ai_hints={
+                'summary': 'Ad performance metrics broken down by member company size',
+                'when_to_use': 'Questions about ad performance segmented by member company size',
+                'trigger_phrases': ['performance by company size', 'company size breakdown'],
+                'freshness': 'live',
+                'example_questions': ['Show ad performance by member company size'],
+                'search_strategy': 'Search cached member company size analytics, filtering by campaign or date range',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_member_company_size_analytics',
+                    target_entity='campaigns',
+                    foreign_key='campaigns',
+                    target_key='campaign_analytics_param',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='ad_member_country_analytics',
+            stream_name='ad_member_country_analytics',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/adAnalytics:memberCountry',
+                    path_override=PathOverrideConfig(
+                        path='/adAnalytics',
+                    ),
+                    action=Action.LIST,
+                    description='Returns ad analytics data pivoted by member country. Provides performance metrics including clicks, impressions, spend, and engagement data grouped by member country.\n',
+                    query_params=[
+                        'q',
+                        'pivot',
+                        'timeGranularity',
+                        'dateRange',
+                        'campaigns',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'analytics',
+                        },
+                        'pivot': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'MEMBER_COUNTRY_V2',
+                        },
+                        'timeGranularity': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'DAILY',
+                            'enum': ['DAILY', 'MONTHLY', 'ALL'],
+                        },
+                        'dateRange': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '(start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))',
+                        },
+                        'campaigns': {'type': 'string', 'required': True},
+                        'fields': {'type': 'string', 'required': False},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Ad analytics API response',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Ad analytics data record with performance metrics',
+                                    'properties': {
+                                        'dateRange': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Date range for this analytics record',
+                                            'properties': {
+                                                'start': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                                'end': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'pivotValues': {
+                                            'type': ['null', 'array'],
+                                            'description': 'Pivot values (URNs) for this analytics record',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'impressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times the ad was shown',
+                                        },
+                                        'clicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of clicks on the ad',
+                                        },
+                                        'costInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': "Total cost in the account's local currency",
+                                        },
+                                        'costInUsd': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Total cost in USD',
+                                        },
+                                        'likes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of likes',
+                                        },
+                                        'shares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of shares',
+                                        },
+                                        'comments': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comments',
+                                        },
+                                        'reactions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of reactions',
+                                        },
+                                        'follows': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of follows',
+                                        },
+                                        'totalEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Total number of engagements',
+                                        },
+                                        'landingPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of landing page clicks',
+                                        },
+                                        'companyPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of company page clicks',
+                                        },
+                                        'externalWebsiteConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of conversions on external websites',
+                                        },
+                                        'externalWebsitePostClickConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click conversions on external websites',
+                                        },
+                                        'externalWebsitePostViewConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view conversions on external websites',
+                                        },
+                                        'conversionValueInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Conversion value in local currency',
+                                        },
+                                        'approximateMemberReach': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Approximate unique member reach',
+                                        },
+                                        'cardClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card clicks',
+                                        },
+                                        'cardImpressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card impressions',
+                                        },
+                                        'videoStarts': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video starts',
+                                        },
+                                        'videoViews': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video views',
+                                        },
+                                        'videoFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 25%',
+                                        },
+                                        'videoMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 50%',
+                                        },
+                                        'videoThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 75%',
+                                        },
+                                        'videoCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 100%',
+                                        },
+                                        'fullScreenPlays': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of full screen video plays',
+                                        },
+                                        'oneClickLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click leads',
+                                        },
+                                        'oneClickLeadFormOpens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click lead form opens',
+                                        },
+                                        'otherEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of other engagements',
+                                        },
+                                        'adUnitClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of ad unit clicks',
+                                        },
+                                        'actionClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of action clicks',
+                                        },
+                                        'textUrlClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of text URL clicks',
+                                        },
+                                        'commentLikes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comment likes',
+                                        },
+                                        'sends': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of sends (InMail)',
+                                        },
+                                        'opens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of opens (InMail)',
+                                        },
+                                        'downloadClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of download clicks',
+                                        },
+                                        'jobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job applications',
+                                        },
+                                        'jobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job apply clicks',
+                                        },
+                                        'registrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of registrations',
+                                        },
+                                        'talentLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of talent leads',
+                                        },
+                                        'validWorkEmailLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of valid work email leads',
+                                        },
+                                        'postClickJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job applications',
+                                        },
+                                        'postClickJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job apply clicks',
+                                        },
+                                        'postClickRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click registrations',
+                                        },
+                                        'postViewJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job applications',
+                                        },
+                                        'postViewJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job apply clicks',
+                                        },
+                                        'postViewRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view registrations',
+                                        },
+                                        'leadGenerationMailContactInfoShares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail contact info shares',
+                                        },
+                                        'leadGenerationMailInterestedClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail interested clicks',
+                                        },
+                                        'documentCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of document completions',
+                                        },
+                                        'documentFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 25%',
+                                        },
+                                        'documentMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 50%',
+                                        },
+                                        'documentThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 75%',
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'count': {'type': 'integer'},
+                                    'start': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.elements',
+                    no_pagination='Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics.',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Ad analytics record pivoted by member country',
+                'properties': {
+                    'actionClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on action buttons in the ad.',
+                    },
+                    'adUnitClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on ad unit components.',
+                    },
+                    'approximateMemberReach': {
+                        'type': ['null', 'number'],
+                        'description': 'An approximation of unique ad impressions.',
+                    },
+                    'cardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on interactive card elements.',
+                    },
+                    'cardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times interactive cards were displayed.',
+                    },
+                    'clicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of clicks on the ad.',
+                    },
+                    'commentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'The count of likes on comments related to the ad.',
+                    },
+                    'comments': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of comments on the ad.',
+                    },
+                    'companyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page associated with the ad.',
+                    },
+                    'conversionValueInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversion value in the local currency.',
+                    },
+                    'costInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in the local currency.',
+                    },
+                    'costInUsd': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in USD.',
+                    },
+                    'documentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of completions for document views.',
+                    },
+                    'documentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of document views.',
+                    },
+                    'documentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of document views.',
+                    },
+                    'documentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of document views.',
+                    },
+                    'downloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on download links in the ad.',
+                    },
+                    'end_date': {
+                        'type': ['null', 'string'],
+                        'description': 'End date of the ad analytics data.',
+                    },
+                    'externalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversions that lead to external websites.',
+                    },
+                    'externalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites.',
+                    },
+                    'externalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites.',
+                    },
+                    'follows': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of follows generated by the ad.',
+                    },
+                    'fullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were played in fullscreen mode.',
+                    },
+                    'impressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of times the ad was displayed.',
+                    },
+                    'jobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of job applications initiated through the ad.',
+                    },
+                    'jobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in the ad.',
+                    },
+                    'landingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the landing page associated with the ad.',
+                    },
+                    'leadGenerationMailContactInfoShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Shares of contact information through lead generation.',
+                    },
+                    'leadGenerationMailInterestedClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on expressing interest through lead generation mail.',
+                    },
+                    'likes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes received on the ad.',
+                    },
+                    'oneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times lead forms were opened in one click.',
+                    },
+                    'oneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click.',
+                    },
+                    'opens': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times the ad was opened or expanded.',
+                    },
+                    'otherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Engagements other than clicks on the ad.',
+                    },
+                    'pivotValues': {
+                        'type': ['null', 'array'],
+                        'description': 'Values used for pivoting the analytics.',
+                    },
+                    'string_of_pivot_values': {
+                        'type': ['null', 'string'],
+                        'description': 'Comma-separated string of pivot values for this analytics record',
+                    },
+                    'postClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking on the ad.',
+                    },
+                    'postClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking on the ad.',
+                    },
+                    'postClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking on the ad.',
+                    },
+                    'postViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing the ad.',
+                    },
+                    'postViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing the ad.',
+                    },
+                    'postViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing the ad.',
+                    },
+                    'reactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions (e.g., like, love, celebrate) on the ad.',
+                    },
+                    'registrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations completed through the ad.',
+                    },
+                    'sends': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of messages sent through the ad.',
+                    },
+                    'shares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares generated by the ad.',
+                    },
+                    'start_date': {
+                        'type': ['null', 'string'],
+                        'description': 'Start date of the ad analytics data.',
+                    },
+                    'talentLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of leads related to talent acquisition.',
+                    },
+                    'textUrlClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on text URLs within the ad.',
+                    },
+                    'totalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of engagements on the ad.',
+                    },
+                    'validWorkEmailLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated through valid work emails.',
+                    },
+                    'videoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were watched till completion.',
+                    },
+                    'videoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of video views.',
+                    },
+                    'videoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of video views.',
+                    },
+                    'videoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts initiated by users.',
+                    },
+                    'videoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of video views.',
+                    },
+                    'videoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in the ad.',
+                    },
+                    'viralCardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on interactive card components in viral distribution.',
+                    },
+                    'viralCardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Impressions of interactive cards in viral distribution.',
+                    },
+                    'viralClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total clicks in viral distribution of the ad.',
+                    },
+                    'viralCommentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Likes received on comments in viral distribution.',
+                    },
+                    'viralComments': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of comments in viral distribution of the ad.',
+                    },
+                    'viralCompanyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page in viral distribution.',
+                    },
+                    'viralDocumentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Complete views of documents in viral distribution.',
+                    },
+                    'viralDocumentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of documents in viral distribution.',
+                    },
+                    'viralDocumentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of documents in viral distribution.',
+                    },
+                    'viralDocumentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of documents in viral distribution.',
+                    },
+                    'viralDownloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on downloads in viral distribution of the ad.',
+                    },
+                    'viralExternalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'External website conversions in viral distribution.',
+                    },
+                    'viralExternalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites in viral distribution.',
+                    },
+                    'viralExternalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites in viral distribution.',
+                    },
+                    'viralFollows': {
+                        'type': ['null', 'number'],
+                        'description': 'Follows generated in viral distribution of the ad.',
+                    },
+                    'viralFullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Fullscreen video plays in viral distribution.',
+                    },
+                    'viralImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total impressions in viral distribution of the ad.',
+                    },
+                    'viralJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated in viral distribution.',
+                    },
+                    'viralJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in viral distribution of the ad.',
+                    },
+                    'viralLandingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on landing page in viral distribution.',
+                    },
+                    'viralLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes in viral distribution of the ad.',
+                    },
+                    'viralOneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'One-click lead form opens in viral distribution.',
+                    },
+                    'viralOneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click in viral distribution.',
+                    },
+                    'viralOtherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Other engagements in viral distribution of the ad.',
+                    },
+                    'viralPostClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking in viral distribution.',
+                    },
+                    'viralPostClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking in viral distribution.',
+                    },
+                    'viralPostClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking in viral distribution.',
+                    },
+                    'viralPostViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing in viral distribution.',
+                    },
+                    'viralPostViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing in viral distribution.',
+                    },
+                    'viralPostViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing in viral distribution.',
+                    },
+                    'viralReactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions in viral distribution of the ad.',
+                    },
+                    'viralRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations in viral distribution of the ad.',
+                    },
+                    'viralShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares in viral distribution of the ad.',
+                    },
+                    'viralTotalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total engagements in viral distribution of the ad.',
+                    },
+                    'viralVideoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions of videos in viral distribution.',
+                    },
+                    'viralVideoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of videos in viral distribution.',
+                    },
+                    'viralVideoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts in viral distribution of the ad.',
+                    },
+                    'viralVideoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in viral distribution of the ad.',
+                    },
+                    'pivot': {
+                        'type': ['null', 'string'],
+                        'description': 'Pivot dimension used for this analytics record',
+                    },
+                    'sponsoredCampaign': {
+                        'type': ['null', 'string'],
+                        'description': 'URN of the sponsored campaign this analytics record belongs to',
+                    },
+                },
+                'x-airbyte-entity-name': 'ad_member_country_analytics',
+                'x-airbyte-stream-name': 'ad_member_country_analytics',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Ad performance metrics broken down by member country',
+                    'when_to_use': 'Questions about ad performance segmented by member country',
+                    'trigger_phrases': ['performance by country', 'country breakdown', 'geographic ad performance'],
+                    'freshness': 'live',
+                    'example_questions': ['Show ad performance by member country'],
+                    'search_strategy': 'Search cached member country analytics, filtering by campaign or date range',
+                },
+            },
+            ai_hints={
+                'summary': 'Ad performance metrics broken down by member country',
+                'when_to_use': 'Questions about ad performance segmented by member country',
+                'trigger_phrases': ['performance by country', 'country breakdown', 'geographic ad performance'],
+                'freshness': 'live',
+                'example_questions': ['Show ad performance by member country'],
+                'search_strategy': 'Search cached member country analytics, filtering by campaign or date range',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_member_country_analytics',
+                    target_entity='campaigns',
+                    foreign_key='campaigns',
+                    target_key='campaign_analytics_param',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='ad_member_industry_analytics',
+            stream_name='ad_member_industry_analytics',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/adAnalytics:memberIndustry',
+                    path_override=PathOverrideConfig(
+                        path='/adAnalytics',
+                    ),
+                    action=Action.LIST,
+                    description='Returns ad analytics data pivoted by member industry. Provides performance metrics including clicks, impressions, spend, and engagement data grouped by member industry.\n',
+                    query_params=[
+                        'q',
+                        'pivot',
+                        'timeGranularity',
+                        'dateRange',
+                        'campaigns',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'analytics',
+                        },
+                        'pivot': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'MEMBER_INDUSTRY',
+                        },
+                        'timeGranularity': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'DAILY',
+                            'enum': ['DAILY', 'MONTHLY', 'ALL'],
+                        },
+                        'dateRange': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '(start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))',
+                        },
+                        'campaigns': {'type': 'string', 'required': True},
+                        'fields': {'type': 'string', 'required': False},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Ad analytics API response',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Ad analytics data record with performance metrics',
+                                    'properties': {
+                                        'dateRange': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Date range for this analytics record',
+                                            'properties': {
+                                                'start': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                                'end': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'pivotValues': {
+                                            'type': ['null', 'array'],
+                                            'description': 'Pivot values (URNs) for this analytics record',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'impressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times the ad was shown',
+                                        },
+                                        'clicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of clicks on the ad',
+                                        },
+                                        'costInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': "Total cost in the account's local currency",
+                                        },
+                                        'costInUsd': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Total cost in USD',
+                                        },
+                                        'likes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of likes',
+                                        },
+                                        'shares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of shares',
+                                        },
+                                        'comments': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comments',
+                                        },
+                                        'reactions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of reactions',
+                                        },
+                                        'follows': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of follows',
+                                        },
+                                        'totalEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Total number of engagements',
+                                        },
+                                        'landingPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of landing page clicks',
+                                        },
+                                        'companyPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of company page clicks',
+                                        },
+                                        'externalWebsiteConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of conversions on external websites',
+                                        },
+                                        'externalWebsitePostClickConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click conversions on external websites',
+                                        },
+                                        'externalWebsitePostViewConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view conversions on external websites',
+                                        },
+                                        'conversionValueInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Conversion value in local currency',
+                                        },
+                                        'approximateMemberReach': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Approximate unique member reach',
+                                        },
+                                        'cardClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card clicks',
+                                        },
+                                        'cardImpressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card impressions',
+                                        },
+                                        'videoStarts': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video starts',
+                                        },
+                                        'videoViews': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video views',
+                                        },
+                                        'videoFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 25%',
+                                        },
+                                        'videoMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 50%',
+                                        },
+                                        'videoThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 75%',
+                                        },
+                                        'videoCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 100%',
+                                        },
+                                        'fullScreenPlays': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of full screen video plays',
+                                        },
+                                        'oneClickLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click leads',
+                                        },
+                                        'oneClickLeadFormOpens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click lead form opens',
+                                        },
+                                        'otherEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of other engagements',
+                                        },
+                                        'adUnitClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of ad unit clicks',
+                                        },
+                                        'actionClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of action clicks',
+                                        },
+                                        'textUrlClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of text URL clicks',
+                                        },
+                                        'commentLikes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comment likes',
+                                        },
+                                        'sends': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of sends (InMail)',
+                                        },
+                                        'opens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of opens (InMail)',
+                                        },
+                                        'downloadClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of download clicks',
+                                        },
+                                        'jobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job applications',
+                                        },
+                                        'jobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job apply clicks',
+                                        },
+                                        'registrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of registrations',
+                                        },
+                                        'talentLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of talent leads',
+                                        },
+                                        'validWorkEmailLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of valid work email leads',
+                                        },
+                                        'postClickJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job applications',
+                                        },
+                                        'postClickJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job apply clicks',
+                                        },
+                                        'postClickRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click registrations',
+                                        },
+                                        'postViewJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job applications',
+                                        },
+                                        'postViewJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job apply clicks',
+                                        },
+                                        'postViewRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view registrations',
+                                        },
+                                        'leadGenerationMailContactInfoShares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail contact info shares',
+                                        },
+                                        'leadGenerationMailInterestedClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail interested clicks',
+                                        },
+                                        'documentCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of document completions',
+                                        },
+                                        'documentFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 25%',
+                                        },
+                                        'documentMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 50%',
+                                        },
+                                        'documentThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 75%',
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'count': {'type': 'integer'},
+                                    'start': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.elements',
+                    no_pagination='Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics.',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Ad analytics record pivoted by member industry',
+                'properties': {
+                    'actionClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on action buttons in the ad.',
+                    },
+                    'adUnitClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on ad unit components.',
+                    },
+                    'approximateMemberReach': {
+                        'type': ['null', 'number'],
+                        'description': 'An approximation of unique ad impressions.',
+                    },
+                    'cardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on interactive card elements.',
+                    },
+                    'cardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times interactive cards were displayed.',
+                    },
+                    'clicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of clicks on the ad.',
+                    },
+                    'commentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'The count of likes on comments related to the ad.',
+                    },
+                    'comments': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of comments on the ad.',
+                    },
+                    'companyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page associated with the ad.',
+                    },
+                    'conversionValueInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversion value in the local currency.',
+                    },
+                    'costInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in the local currency.',
+                    },
+                    'costInUsd': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in USD.',
+                    },
+                    'documentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of completions for document views.',
+                    },
+                    'documentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of document views.',
+                    },
+                    'documentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of document views.',
+                    },
+                    'documentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of document views.',
+                    },
+                    'downloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on download links in the ad.',
+                    },
+                    'end_date': {
+                        'type': ['null', 'string'],
+                        'description': 'End date of the ad analytics data.',
+                    },
+                    'externalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversions that lead to external websites.',
+                    },
+                    'externalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites.',
+                    },
+                    'externalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites.',
+                    },
+                    'follows': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of follows generated by the ad.',
+                    },
+                    'fullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were played in fullscreen mode.',
+                    },
+                    'impressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of times the ad was displayed.',
+                    },
+                    'jobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of job applications initiated through the ad.',
+                    },
+                    'jobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in the ad.',
+                    },
+                    'landingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the landing page associated with the ad.',
+                    },
+                    'leadGenerationMailContactInfoShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Shares of contact information through lead generation.',
+                    },
+                    'leadGenerationMailInterestedClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on expressing interest through lead generation mail.',
+                    },
+                    'likes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes received on the ad.',
+                    },
+                    'oneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times lead forms were opened in one click.',
+                    },
+                    'oneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click.',
+                    },
+                    'opens': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times the ad was opened or expanded.',
+                    },
+                    'otherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Engagements other than clicks on the ad.',
+                    },
+                    'pivotValues': {
+                        'type': ['null', 'array'],
+                        'description': 'Values used for pivoting the analytics.',
+                    },
+                    'string_of_pivot_values': {
+                        'type': ['null', 'string'],
+                        'description': 'Comma-separated string of pivot values for this analytics record',
+                    },
+                    'postClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking on the ad.',
+                    },
+                    'postClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking on the ad.',
+                    },
+                    'postClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking on the ad.',
+                    },
+                    'postViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing the ad.',
+                    },
+                    'postViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing the ad.',
+                    },
+                    'postViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing the ad.',
+                    },
+                    'reactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions (e.g., like, love, celebrate) on the ad.',
+                    },
+                    'registrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations completed through the ad.',
+                    },
+                    'sends': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of messages sent through the ad.',
+                    },
+                    'shares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares generated by the ad.',
+                    },
+                    'start_date': {
+                        'type': ['null', 'string'],
+                        'description': 'Start date of the ad analytics data.',
+                    },
+                    'talentLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of leads related to talent acquisition.',
+                    },
+                    'textUrlClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on text URLs within the ad.',
+                    },
+                    'totalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of engagements on the ad.',
+                    },
+                    'validWorkEmailLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated through valid work emails.',
+                    },
+                    'videoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were watched till completion.',
+                    },
+                    'videoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of video views.',
+                    },
+                    'videoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of video views.',
+                    },
+                    'videoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts initiated by users.',
+                    },
+                    'videoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of video views.',
+                    },
+                    'videoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in the ad.',
+                    },
+                    'viralCardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on interactive card components in viral distribution.',
+                    },
+                    'viralCardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Impressions of interactive cards in viral distribution.',
+                    },
+                    'viralClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total clicks in viral distribution of the ad.',
+                    },
+                    'viralCommentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Likes received on comments in viral distribution.',
+                    },
+                    'viralComments': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of comments in viral distribution of the ad.',
+                    },
+                    'viralCompanyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page in viral distribution.',
+                    },
+                    'viralDocumentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Complete views of documents in viral distribution.',
+                    },
+                    'viralDocumentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of documents in viral distribution.',
+                    },
+                    'viralDocumentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of documents in viral distribution.',
+                    },
+                    'viralDocumentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of documents in viral distribution.',
+                    },
+                    'viralDownloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on downloads in viral distribution of the ad.',
+                    },
+                    'viralExternalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'External website conversions in viral distribution.',
+                    },
+                    'viralExternalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites in viral distribution.',
+                    },
+                    'viralExternalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites in viral distribution.',
+                    },
+                    'viralFollows': {
+                        'type': ['null', 'number'],
+                        'description': 'Follows generated in viral distribution of the ad.',
+                    },
+                    'viralFullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Fullscreen video plays in viral distribution.',
+                    },
+                    'viralImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total impressions in viral distribution of the ad.',
+                    },
+                    'viralJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated in viral distribution.',
+                    },
+                    'viralJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in viral distribution of the ad.',
+                    },
+                    'viralLandingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on landing page in viral distribution.',
+                    },
+                    'viralLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes in viral distribution of the ad.',
+                    },
+                    'viralOneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'One-click lead form opens in viral distribution.',
+                    },
+                    'viralOneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click in viral distribution.',
+                    },
+                    'viralOtherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Other engagements in viral distribution of the ad.',
+                    },
+                    'viralPostClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking in viral distribution.',
+                    },
+                    'viralPostClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking in viral distribution.',
+                    },
+                    'viralPostClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking in viral distribution.',
+                    },
+                    'viralPostViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing in viral distribution.',
+                    },
+                    'viralPostViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing in viral distribution.',
+                    },
+                    'viralPostViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing in viral distribution.',
+                    },
+                    'viralReactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions in viral distribution of the ad.',
+                    },
+                    'viralRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations in viral distribution of the ad.',
+                    },
+                    'viralShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares in viral distribution of the ad.',
+                    },
+                    'viralTotalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total engagements in viral distribution of the ad.',
+                    },
+                    'viralVideoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions of videos in viral distribution.',
+                    },
+                    'viralVideoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of videos in viral distribution.',
+                    },
+                    'viralVideoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts in viral distribution of the ad.',
+                    },
+                    'viralVideoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in viral distribution of the ad.',
+                    },
+                    'pivot': {
+                        'type': ['null', 'string'],
+                        'description': 'Pivot dimension used for this analytics record',
+                    },
+                    'sponsoredCampaign': {
+                        'type': ['null', 'string'],
+                        'description': 'URN of the sponsored campaign this analytics record belongs to',
+                    },
+                },
+                'x-airbyte-entity-name': 'ad_member_industry_analytics',
+                'x-airbyte-stream-name': 'ad_member_industry_analytics',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Ad performance metrics broken down by member industry',
+                    'when_to_use': 'Questions about ad performance segmented by member industry',
+                    'trigger_phrases': ['performance by industry', 'industry breakdown'],
+                    'freshness': 'live',
+                    'example_questions': ['Show ad performance by member industry'],
+                    'search_strategy': 'Search cached member industry analytics, filtering by campaign or date range',
+                },
+            },
+            ai_hints={
+                'summary': 'Ad performance metrics broken down by member industry',
+                'when_to_use': 'Questions about ad performance segmented by member industry',
+                'trigger_phrases': ['performance by industry', 'industry breakdown'],
+                'freshness': 'live',
+                'example_questions': ['Show ad performance by member industry'],
+                'search_strategy': 'Search cached member industry analytics, filtering by campaign or date range',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_member_industry_analytics',
+                    target_entity='campaigns',
+                    foreign_key='campaigns',
+                    target_key='campaign_analytics_param',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='ad_member_job_function_analytics',
+            stream_name='ad_member_job_function_analytics',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/adAnalytics:memberJobFunction',
+                    path_override=PathOverrideConfig(
+                        path='/adAnalytics',
+                    ),
+                    action=Action.LIST,
+                    description='Returns ad analytics data pivoted by member job function. Provides performance metrics including clicks, impressions, spend, and engagement data grouped by member job function.\n',
+                    query_params=[
+                        'q',
+                        'pivot',
+                        'timeGranularity',
+                        'dateRange',
+                        'campaigns',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'analytics',
+                        },
+                        'pivot': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'MEMBER_JOB_FUNCTION',
+                        },
+                        'timeGranularity': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'DAILY',
+                            'enum': ['DAILY', 'MONTHLY', 'ALL'],
+                        },
+                        'dateRange': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '(start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))',
+                        },
+                        'campaigns': {'type': 'string', 'required': True},
+                        'fields': {'type': 'string', 'required': False},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Ad analytics API response',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Ad analytics data record with performance metrics',
+                                    'properties': {
+                                        'dateRange': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Date range for this analytics record',
+                                            'properties': {
+                                                'start': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                                'end': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'pivotValues': {
+                                            'type': ['null', 'array'],
+                                            'description': 'Pivot values (URNs) for this analytics record',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'impressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times the ad was shown',
+                                        },
+                                        'clicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of clicks on the ad',
+                                        },
+                                        'costInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': "Total cost in the account's local currency",
+                                        },
+                                        'costInUsd': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Total cost in USD',
+                                        },
+                                        'likes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of likes',
+                                        },
+                                        'shares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of shares',
+                                        },
+                                        'comments': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comments',
+                                        },
+                                        'reactions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of reactions',
+                                        },
+                                        'follows': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of follows',
+                                        },
+                                        'totalEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Total number of engagements',
+                                        },
+                                        'landingPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of landing page clicks',
+                                        },
+                                        'companyPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of company page clicks',
+                                        },
+                                        'externalWebsiteConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of conversions on external websites',
+                                        },
+                                        'externalWebsitePostClickConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click conversions on external websites',
+                                        },
+                                        'externalWebsitePostViewConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view conversions on external websites',
+                                        },
+                                        'conversionValueInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Conversion value in local currency',
+                                        },
+                                        'approximateMemberReach': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Approximate unique member reach',
+                                        },
+                                        'cardClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card clicks',
+                                        },
+                                        'cardImpressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card impressions',
+                                        },
+                                        'videoStarts': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video starts',
+                                        },
+                                        'videoViews': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video views',
+                                        },
+                                        'videoFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 25%',
+                                        },
+                                        'videoMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 50%',
+                                        },
+                                        'videoThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 75%',
+                                        },
+                                        'videoCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 100%',
+                                        },
+                                        'fullScreenPlays': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of full screen video plays',
+                                        },
+                                        'oneClickLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click leads',
+                                        },
+                                        'oneClickLeadFormOpens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click lead form opens',
+                                        },
+                                        'otherEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of other engagements',
+                                        },
+                                        'adUnitClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of ad unit clicks',
+                                        },
+                                        'actionClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of action clicks',
+                                        },
+                                        'textUrlClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of text URL clicks',
+                                        },
+                                        'commentLikes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comment likes',
+                                        },
+                                        'sends': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of sends (InMail)',
+                                        },
+                                        'opens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of opens (InMail)',
+                                        },
+                                        'downloadClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of download clicks',
+                                        },
+                                        'jobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job applications',
+                                        },
+                                        'jobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job apply clicks',
+                                        },
+                                        'registrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of registrations',
+                                        },
+                                        'talentLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of talent leads',
+                                        },
+                                        'validWorkEmailLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of valid work email leads',
+                                        },
+                                        'postClickJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job applications',
+                                        },
+                                        'postClickJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job apply clicks',
+                                        },
+                                        'postClickRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click registrations',
+                                        },
+                                        'postViewJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job applications',
+                                        },
+                                        'postViewJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job apply clicks',
+                                        },
+                                        'postViewRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view registrations',
+                                        },
+                                        'leadGenerationMailContactInfoShares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail contact info shares',
+                                        },
+                                        'leadGenerationMailInterestedClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail interested clicks',
+                                        },
+                                        'documentCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of document completions',
+                                        },
+                                        'documentFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 25%',
+                                        },
+                                        'documentMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 50%',
+                                        },
+                                        'documentThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 75%',
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'count': {'type': 'integer'},
+                                    'start': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.elements',
+                    no_pagination='Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics.',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Ad analytics record pivoted by member job function',
+                'properties': {
+                    'actionClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on action buttons in the ad.',
+                    },
+                    'adUnitClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on ad unit components.',
+                    },
+                    'approximateMemberReach': {
+                        'type': ['null', 'number'],
+                        'description': 'An approximation of unique ad impressions.',
+                    },
+                    'cardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on interactive card elements.',
+                    },
+                    'cardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times interactive cards were displayed.',
+                    },
+                    'clicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of clicks on the ad.',
+                    },
+                    'commentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'The count of likes on comments related to the ad.',
+                    },
+                    'comments': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of comments on the ad.',
+                    },
+                    'companyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page associated with the ad.',
+                    },
+                    'conversionValueInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversion value in the local currency.',
+                    },
+                    'costInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in the local currency.',
+                    },
+                    'costInUsd': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in USD.',
+                    },
+                    'documentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of completions for document views.',
+                    },
+                    'documentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of document views.',
+                    },
+                    'documentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of document views.',
+                    },
+                    'documentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of document views.',
+                    },
+                    'downloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on download links in the ad.',
+                    },
+                    'end_date': {
+                        'type': ['null', 'string'],
+                        'description': 'End date of the ad analytics data.',
+                    },
+                    'externalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversions that lead to external websites.',
+                    },
+                    'externalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites.',
+                    },
+                    'externalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites.',
+                    },
+                    'follows': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of follows generated by the ad.',
+                    },
+                    'fullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were played in fullscreen mode.',
+                    },
+                    'impressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of times the ad was displayed.',
+                    },
+                    'jobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of job applications initiated through the ad.',
+                    },
+                    'jobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in the ad.',
+                    },
+                    'landingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the landing page associated with the ad.',
+                    },
+                    'leadGenerationMailContactInfoShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Shares of contact information through lead generation.',
+                    },
+                    'leadGenerationMailInterestedClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on expressing interest through lead generation mail.',
+                    },
+                    'likes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes received on the ad.',
+                    },
+                    'oneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times lead forms were opened in one click.',
+                    },
+                    'oneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click.',
+                    },
+                    'opens': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times the ad was opened or expanded.',
+                    },
+                    'otherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Engagements other than clicks on the ad.',
+                    },
+                    'pivotValues': {
+                        'type': ['null', 'array'],
+                        'description': 'Values used for pivoting the analytics.',
+                    },
+                    'string_of_pivot_values': {
+                        'type': ['null', 'string'],
+                        'description': 'Comma-separated string of pivot values for this analytics record',
+                    },
+                    'postClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking on the ad.',
+                    },
+                    'postClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking on the ad.',
+                    },
+                    'postClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking on the ad.',
+                    },
+                    'postViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing the ad.',
+                    },
+                    'postViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing the ad.',
+                    },
+                    'postViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing the ad.',
+                    },
+                    'reactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions (e.g., like, love, celebrate) on the ad.',
+                    },
+                    'registrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations completed through the ad.',
+                    },
+                    'sends': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of messages sent through the ad.',
+                    },
+                    'shares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares generated by the ad.',
+                    },
+                    'start_date': {
+                        'type': ['null', 'string'],
+                        'description': 'Start date of the ad analytics data.',
+                    },
+                    'talentLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of leads related to talent acquisition.',
+                    },
+                    'textUrlClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on text URLs within the ad.',
+                    },
+                    'totalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of engagements on the ad.',
+                    },
+                    'validWorkEmailLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated through valid work emails.',
+                    },
+                    'videoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were watched till completion.',
+                    },
+                    'videoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of video views.',
+                    },
+                    'videoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of video views.',
+                    },
+                    'videoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts initiated by users.',
+                    },
+                    'videoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of video views.',
+                    },
+                    'videoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in the ad.',
+                    },
+                    'viralCardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on interactive card components in viral distribution.',
+                    },
+                    'viralCardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Impressions of interactive cards in viral distribution.',
+                    },
+                    'viralClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total clicks in viral distribution of the ad.',
+                    },
+                    'viralCommentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Likes received on comments in viral distribution.',
+                    },
+                    'viralComments': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of comments in viral distribution of the ad.',
+                    },
+                    'viralCompanyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page in viral distribution.',
+                    },
+                    'viralDocumentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Complete views of documents in viral distribution.',
+                    },
+                    'viralDocumentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of documents in viral distribution.',
+                    },
+                    'viralDocumentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of documents in viral distribution.',
+                    },
+                    'viralDocumentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of documents in viral distribution.',
+                    },
+                    'viralDownloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on downloads in viral distribution of the ad.',
+                    },
+                    'viralExternalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'External website conversions in viral distribution.',
+                    },
+                    'viralExternalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites in viral distribution.',
+                    },
+                    'viralExternalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites in viral distribution.',
+                    },
+                    'viralFollows': {
+                        'type': ['null', 'number'],
+                        'description': 'Follows generated in viral distribution of the ad.',
+                    },
+                    'viralFullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Fullscreen video plays in viral distribution.',
+                    },
+                    'viralImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total impressions in viral distribution of the ad.',
+                    },
+                    'viralJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated in viral distribution.',
+                    },
+                    'viralJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in viral distribution of the ad.',
+                    },
+                    'viralLandingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on landing page in viral distribution.',
+                    },
+                    'viralLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes in viral distribution of the ad.',
+                    },
+                    'viralOneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'One-click lead form opens in viral distribution.',
+                    },
+                    'viralOneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click in viral distribution.',
+                    },
+                    'viralOtherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Other engagements in viral distribution of the ad.',
+                    },
+                    'viralPostClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking in viral distribution.',
+                    },
+                    'viralPostClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking in viral distribution.',
+                    },
+                    'viralPostClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking in viral distribution.',
+                    },
+                    'viralPostViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing in viral distribution.',
+                    },
+                    'viralPostViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing in viral distribution.',
+                    },
+                    'viralPostViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing in viral distribution.',
+                    },
+                    'viralReactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions in viral distribution of the ad.',
+                    },
+                    'viralRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations in viral distribution of the ad.',
+                    },
+                    'viralShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares in viral distribution of the ad.',
+                    },
+                    'viralTotalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total engagements in viral distribution of the ad.',
+                    },
+                    'viralVideoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions of videos in viral distribution.',
+                    },
+                    'viralVideoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of videos in viral distribution.',
+                    },
+                    'viralVideoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts in viral distribution of the ad.',
+                    },
+                    'viralVideoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in viral distribution of the ad.',
+                    },
+                    'pivot': {
+                        'type': ['null', 'string'],
+                        'description': 'Pivot dimension used for this analytics record',
+                    },
+                    'sponsoredCampaign': {
+                        'type': ['null', 'string'],
+                        'description': 'URN of the sponsored campaign this analytics record belongs to',
+                    },
+                },
+                'x-airbyte-entity-name': 'ad_member_job_function_analytics',
+                'x-airbyte-stream-name': 'ad_member_job_function_analytics',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Ad performance metrics broken down by member job function',
+                    'when_to_use': 'Questions about ad performance segmented by member job function',
+                    'trigger_phrases': ['performance by job function', 'job function breakdown'],
+                    'freshness': 'live',
+                    'example_questions': ['Show ad performance by member job function'],
+                    'search_strategy': 'Search cached member job function analytics, filtering by campaign or date range',
+                },
+            },
+            ai_hints={
+                'summary': 'Ad performance metrics broken down by member job function',
+                'when_to_use': 'Questions about ad performance segmented by member job function',
+                'trigger_phrases': ['performance by job function', 'job function breakdown'],
+                'freshness': 'live',
+                'example_questions': ['Show ad performance by member job function'],
+                'search_strategy': 'Search cached member job function analytics, filtering by campaign or date range',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_member_job_function_analytics',
+                    target_entity='campaigns',
+                    foreign_key='campaigns',
+                    target_key='campaign_analytics_param',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='ad_member_job_title_analytics',
+            stream_name='ad_member_job_title_analytics',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/adAnalytics:memberJobTitle',
+                    path_override=PathOverrideConfig(
+                        path='/adAnalytics',
+                    ),
+                    action=Action.LIST,
+                    description='Returns ad analytics data pivoted by member job title. Provides performance metrics including clicks, impressions, spend, and engagement data grouped by member job title.\n',
+                    query_params=[
+                        'q',
+                        'pivot',
+                        'timeGranularity',
+                        'dateRange',
+                        'campaigns',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'analytics',
+                        },
+                        'pivot': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'MEMBER_JOB_TITLE',
+                        },
+                        'timeGranularity': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'DAILY',
+                            'enum': ['DAILY', 'MONTHLY', 'ALL'],
+                        },
+                        'dateRange': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '(start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))',
+                        },
+                        'campaigns': {'type': 'string', 'required': True},
+                        'fields': {'type': 'string', 'required': False},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Ad analytics API response',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Ad analytics data record with performance metrics',
+                                    'properties': {
+                                        'dateRange': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Date range for this analytics record',
+                                            'properties': {
+                                                'start': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                                'end': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'pivotValues': {
+                                            'type': ['null', 'array'],
+                                            'description': 'Pivot values (URNs) for this analytics record',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'impressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times the ad was shown',
+                                        },
+                                        'clicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of clicks on the ad',
+                                        },
+                                        'costInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': "Total cost in the account's local currency",
+                                        },
+                                        'costInUsd': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Total cost in USD',
+                                        },
+                                        'likes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of likes',
+                                        },
+                                        'shares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of shares',
+                                        },
+                                        'comments': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comments',
+                                        },
+                                        'reactions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of reactions',
+                                        },
+                                        'follows': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of follows',
+                                        },
+                                        'totalEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Total number of engagements',
+                                        },
+                                        'landingPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of landing page clicks',
+                                        },
+                                        'companyPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of company page clicks',
+                                        },
+                                        'externalWebsiteConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of conversions on external websites',
+                                        },
+                                        'externalWebsitePostClickConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click conversions on external websites',
+                                        },
+                                        'externalWebsitePostViewConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view conversions on external websites',
+                                        },
+                                        'conversionValueInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Conversion value in local currency',
+                                        },
+                                        'approximateMemberReach': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Approximate unique member reach',
+                                        },
+                                        'cardClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card clicks',
+                                        },
+                                        'cardImpressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card impressions',
+                                        },
+                                        'videoStarts': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video starts',
+                                        },
+                                        'videoViews': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video views',
+                                        },
+                                        'videoFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 25%',
+                                        },
+                                        'videoMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 50%',
+                                        },
+                                        'videoThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 75%',
+                                        },
+                                        'videoCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 100%',
+                                        },
+                                        'fullScreenPlays': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of full screen video plays',
+                                        },
+                                        'oneClickLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click leads',
+                                        },
+                                        'oneClickLeadFormOpens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click lead form opens',
+                                        },
+                                        'otherEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of other engagements',
+                                        },
+                                        'adUnitClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of ad unit clicks',
+                                        },
+                                        'actionClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of action clicks',
+                                        },
+                                        'textUrlClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of text URL clicks',
+                                        },
+                                        'commentLikes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comment likes',
+                                        },
+                                        'sends': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of sends (InMail)',
+                                        },
+                                        'opens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of opens (InMail)',
+                                        },
+                                        'downloadClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of download clicks',
+                                        },
+                                        'jobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job applications',
+                                        },
+                                        'jobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job apply clicks',
+                                        },
+                                        'registrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of registrations',
+                                        },
+                                        'talentLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of talent leads',
+                                        },
+                                        'validWorkEmailLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of valid work email leads',
+                                        },
+                                        'postClickJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job applications',
+                                        },
+                                        'postClickJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job apply clicks',
+                                        },
+                                        'postClickRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click registrations',
+                                        },
+                                        'postViewJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job applications',
+                                        },
+                                        'postViewJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job apply clicks',
+                                        },
+                                        'postViewRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view registrations',
+                                        },
+                                        'leadGenerationMailContactInfoShares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail contact info shares',
+                                        },
+                                        'leadGenerationMailInterestedClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail interested clicks',
+                                        },
+                                        'documentCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of document completions',
+                                        },
+                                        'documentFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 25%',
+                                        },
+                                        'documentMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 50%',
+                                        },
+                                        'documentThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 75%',
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'count': {'type': 'integer'},
+                                    'start': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.elements',
+                    no_pagination='Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics.',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Ad analytics record pivoted by member job title',
+                'properties': {
+                    'actionClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on action buttons in the ad.',
+                    },
+                    'adUnitClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on ad unit components.',
+                    },
+                    'approximateMemberReach': {
+                        'type': ['null', 'number'],
+                        'description': 'An approximation of unique ad impressions.',
+                    },
+                    'cardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on interactive card elements.',
+                    },
+                    'cardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times interactive cards were displayed.',
+                    },
+                    'clicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of clicks on the ad.',
+                    },
+                    'commentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'The count of likes on comments related to the ad.',
+                    },
+                    'comments': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of comments on the ad.',
+                    },
+                    'companyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page associated with the ad.',
+                    },
+                    'conversionValueInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversion value in the local currency.',
+                    },
+                    'costInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in the local currency.',
+                    },
+                    'costInUsd': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in USD.',
+                    },
+                    'documentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of completions for document views.',
+                    },
+                    'documentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of document views.',
+                    },
+                    'documentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of document views.',
+                    },
+                    'documentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of document views.',
+                    },
+                    'downloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on download links in the ad.',
+                    },
+                    'end_date': {
+                        'type': ['null', 'string'],
+                        'description': 'End date of the ad analytics data.',
+                    },
+                    'externalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversions that lead to external websites.',
+                    },
+                    'externalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites.',
+                    },
+                    'externalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites.',
+                    },
+                    'follows': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of follows generated by the ad.',
+                    },
+                    'fullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were played in fullscreen mode.',
+                    },
+                    'impressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of times the ad was displayed.',
+                    },
+                    'jobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of job applications initiated through the ad.',
+                    },
+                    'jobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in the ad.',
+                    },
+                    'landingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the landing page associated with the ad.',
+                    },
+                    'leadGenerationMailContactInfoShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Shares of contact information through lead generation.',
+                    },
+                    'leadGenerationMailInterestedClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on expressing interest through lead generation mail.',
+                    },
+                    'likes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes received on the ad.',
+                    },
+                    'oneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times lead forms were opened in one click.',
+                    },
+                    'oneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click.',
+                    },
+                    'opens': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times the ad was opened or expanded.',
+                    },
+                    'otherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Engagements other than clicks on the ad.',
+                    },
+                    'pivotValues': {
+                        'type': ['null', 'array'],
+                        'description': 'Values used for pivoting the analytics.',
+                    },
+                    'string_of_pivot_values': {
+                        'type': ['null', 'string'],
+                        'description': 'Comma-separated string of pivot values for this analytics record',
+                    },
+                    'postClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking on the ad.',
+                    },
+                    'postClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking on the ad.',
+                    },
+                    'postClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking on the ad.',
+                    },
+                    'postViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing the ad.',
+                    },
+                    'postViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing the ad.',
+                    },
+                    'postViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing the ad.',
+                    },
+                    'reactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions (e.g., like, love, celebrate) on the ad.',
+                    },
+                    'registrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations completed through the ad.',
+                    },
+                    'sends': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of messages sent through the ad.',
+                    },
+                    'shares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares generated by the ad.',
+                    },
+                    'start_date': {
+                        'type': ['null', 'string'],
+                        'description': 'Start date of the ad analytics data.',
+                    },
+                    'talentLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of leads related to talent acquisition.',
+                    },
+                    'textUrlClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on text URLs within the ad.',
+                    },
+                    'totalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of engagements on the ad.',
+                    },
+                    'validWorkEmailLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated through valid work emails.',
+                    },
+                    'videoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were watched till completion.',
+                    },
+                    'videoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of video views.',
+                    },
+                    'videoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of video views.',
+                    },
+                    'videoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts initiated by users.',
+                    },
+                    'videoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of video views.',
+                    },
+                    'videoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in the ad.',
+                    },
+                    'viralCardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on interactive card components in viral distribution.',
+                    },
+                    'viralCardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Impressions of interactive cards in viral distribution.',
+                    },
+                    'viralClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total clicks in viral distribution of the ad.',
+                    },
+                    'viralCommentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Likes received on comments in viral distribution.',
+                    },
+                    'viralComments': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of comments in viral distribution of the ad.',
+                    },
+                    'viralCompanyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page in viral distribution.',
+                    },
+                    'viralDocumentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Complete views of documents in viral distribution.',
+                    },
+                    'viralDocumentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of documents in viral distribution.',
+                    },
+                    'viralDocumentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of documents in viral distribution.',
+                    },
+                    'viralDocumentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of documents in viral distribution.',
+                    },
+                    'viralDownloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on downloads in viral distribution of the ad.',
+                    },
+                    'viralExternalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'External website conversions in viral distribution.',
+                    },
+                    'viralExternalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites in viral distribution.',
+                    },
+                    'viralExternalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites in viral distribution.',
+                    },
+                    'viralFollows': {
+                        'type': ['null', 'number'],
+                        'description': 'Follows generated in viral distribution of the ad.',
+                    },
+                    'viralFullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Fullscreen video plays in viral distribution.',
+                    },
+                    'viralImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total impressions in viral distribution of the ad.',
+                    },
+                    'viralJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated in viral distribution.',
+                    },
+                    'viralJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in viral distribution of the ad.',
+                    },
+                    'viralLandingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on landing page in viral distribution.',
+                    },
+                    'viralLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes in viral distribution of the ad.',
+                    },
+                    'viralOneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'One-click lead form opens in viral distribution.',
+                    },
+                    'viralOneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click in viral distribution.',
+                    },
+                    'viralOtherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Other engagements in viral distribution of the ad.',
+                    },
+                    'viralPostClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking in viral distribution.',
+                    },
+                    'viralPostClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking in viral distribution.',
+                    },
+                    'viralPostClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking in viral distribution.',
+                    },
+                    'viralPostViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing in viral distribution.',
+                    },
+                    'viralPostViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing in viral distribution.',
+                    },
+                    'viralPostViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing in viral distribution.',
+                    },
+                    'viralReactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions in viral distribution of the ad.',
+                    },
+                    'viralRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations in viral distribution of the ad.',
+                    },
+                    'viralShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares in viral distribution of the ad.',
+                    },
+                    'viralTotalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total engagements in viral distribution of the ad.',
+                    },
+                    'viralVideoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions of videos in viral distribution.',
+                    },
+                    'viralVideoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of videos in viral distribution.',
+                    },
+                    'viralVideoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts in viral distribution of the ad.',
+                    },
+                    'viralVideoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in viral distribution of the ad.',
+                    },
+                    'pivot': {
+                        'type': ['null', 'string'],
+                        'description': 'Pivot dimension used for this analytics record',
+                    },
+                    'sponsoredCampaign': {
+                        'type': ['null', 'string'],
+                        'description': 'URN of the sponsored campaign this analytics record belongs to',
+                    },
+                },
+                'x-airbyte-entity-name': 'ad_member_job_title_analytics',
+                'x-airbyte-stream-name': 'ad_member_job_title_analytics',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Ad performance metrics broken down by member job title',
+                    'when_to_use': 'Questions about ad performance segmented by member job title',
+                    'trigger_phrases': ['performance by job title', 'which job titles engage with my ads'],
+                    'freshness': 'live',
+                    'example_questions': ['Show ad performance by member job title'],
+                    'search_strategy': 'Search cached member job title analytics, filtering by campaign or date range',
+                },
+            },
+            ai_hints={
+                'summary': 'Ad performance metrics broken down by member job title',
+                'when_to_use': 'Questions about ad performance segmented by member job title',
+                'trigger_phrases': ['performance by job title', 'which job titles engage with my ads'],
+                'freshness': 'live',
+                'example_questions': ['Show ad performance by member job title'],
+                'search_strategy': 'Search cached member job title analytics, filtering by campaign or date range',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_member_job_title_analytics',
+                    target_entity='campaigns',
+                    foreign_key='campaigns',
+                    target_key='campaign_analytics_param',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='ad_member_region_analytics',
+            stream_name='ad_member_region_analytics',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/adAnalytics:memberRegion',
+                    path_override=PathOverrideConfig(
+                        path='/adAnalytics',
+                    ),
+                    action=Action.LIST,
+                    description='Returns ad analytics data pivoted by member region. Provides performance metrics including clicks, impressions, spend, and engagement data grouped by member region.\n',
+                    query_params=[
+                        'q',
+                        'pivot',
+                        'timeGranularity',
+                        'dateRange',
+                        'campaigns',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'analytics',
+                        },
+                        'pivot': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'MEMBER_REGION_V2',
+                        },
+                        'timeGranularity': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'DAILY',
+                            'enum': ['DAILY', 'MONTHLY', 'ALL'],
+                        },
+                        'dateRange': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '(start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))',
+                        },
+                        'campaigns': {'type': 'string', 'required': True},
+                        'fields': {'type': 'string', 'required': False},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Ad analytics API response',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Ad analytics data record with performance metrics',
+                                    'properties': {
+                                        'dateRange': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Date range for this analytics record',
+                                            'properties': {
+                                                'start': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                                'end': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'pivotValues': {
+                                            'type': ['null', 'array'],
+                                            'description': 'Pivot values (URNs) for this analytics record',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'impressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times the ad was shown',
+                                        },
+                                        'clicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of clicks on the ad',
+                                        },
+                                        'costInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': "Total cost in the account's local currency",
+                                        },
+                                        'costInUsd': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Total cost in USD',
+                                        },
+                                        'likes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of likes',
+                                        },
+                                        'shares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of shares',
+                                        },
+                                        'comments': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comments',
+                                        },
+                                        'reactions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of reactions',
+                                        },
+                                        'follows': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of follows',
+                                        },
+                                        'totalEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Total number of engagements',
+                                        },
+                                        'landingPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of landing page clicks',
+                                        },
+                                        'companyPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of company page clicks',
+                                        },
+                                        'externalWebsiteConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of conversions on external websites',
+                                        },
+                                        'externalWebsitePostClickConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click conversions on external websites',
+                                        },
+                                        'externalWebsitePostViewConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view conversions on external websites',
+                                        },
+                                        'conversionValueInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Conversion value in local currency',
+                                        },
+                                        'approximateMemberReach': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Approximate unique member reach',
+                                        },
+                                        'cardClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card clicks',
+                                        },
+                                        'cardImpressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card impressions',
+                                        },
+                                        'videoStarts': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video starts',
+                                        },
+                                        'videoViews': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video views',
+                                        },
+                                        'videoFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 25%',
+                                        },
+                                        'videoMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 50%',
+                                        },
+                                        'videoThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 75%',
+                                        },
+                                        'videoCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 100%',
+                                        },
+                                        'fullScreenPlays': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of full screen video plays',
+                                        },
+                                        'oneClickLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click leads',
+                                        },
+                                        'oneClickLeadFormOpens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click lead form opens',
+                                        },
+                                        'otherEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of other engagements',
+                                        },
+                                        'adUnitClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of ad unit clicks',
+                                        },
+                                        'actionClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of action clicks',
+                                        },
+                                        'textUrlClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of text URL clicks',
+                                        },
+                                        'commentLikes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comment likes',
+                                        },
+                                        'sends': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of sends (InMail)',
+                                        },
+                                        'opens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of opens (InMail)',
+                                        },
+                                        'downloadClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of download clicks',
+                                        },
+                                        'jobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job applications',
+                                        },
+                                        'jobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job apply clicks',
+                                        },
+                                        'registrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of registrations',
+                                        },
+                                        'talentLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of talent leads',
+                                        },
+                                        'validWorkEmailLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of valid work email leads',
+                                        },
+                                        'postClickJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job applications',
+                                        },
+                                        'postClickJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job apply clicks',
+                                        },
+                                        'postClickRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click registrations',
+                                        },
+                                        'postViewJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job applications',
+                                        },
+                                        'postViewJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job apply clicks',
+                                        },
+                                        'postViewRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view registrations',
+                                        },
+                                        'leadGenerationMailContactInfoShares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail contact info shares',
+                                        },
+                                        'leadGenerationMailInterestedClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail interested clicks',
+                                        },
+                                        'documentCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of document completions',
+                                        },
+                                        'documentFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 25%',
+                                        },
+                                        'documentMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 50%',
+                                        },
+                                        'documentThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 75%',
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'count': {'type': 'integer'},
+                                    'start': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.elements',
+                    no_pagination='Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics.',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Ad analytics record pivoted by member region',
+                'properties': {
+                    'actionClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on action buttons in the ad.',
+                    },
+                    'adUnitClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on ad unit components.',
+                    },
+                    'approximateMemberReach': {
+                        'type': ['null', 'number'],
+                        'description': 'An approximation of unique ad impressions.',
+                    },
+                    'cardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on interactive card elements.',
+                    },
+                    'cardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times interactive cards were displayed.',
+                    },
+                    'clicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of clicks on the ad.',
+                    },
+                    'commentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'The count of likes on comments related to the ad.',
+                    },
+                    'comments': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of comments on the ad.',
+                    },
+                    'companyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page associated with the ad.',
+                    },
+                    'conversionValueInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversion value in the local currency.',
+                    },
+                    'costInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in the local currency.',
+                    },
+                    'costInUsd': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in USD.',
+                    },
+                    'documentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of completions for document views.',
+                    },
+                    'documentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of document views.',
+                    },
+                    'documentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of document views.',
+                    },
+                    'documentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of document views.',
+                    },
+                    'downloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on download links in the ad.',
+                    },
+                    'end_date': {
+                        'type': ['null', 'string'],
+                        'description': 'End date of the ad analytics data.',
+                    },
+                    'externalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversions that lead to external websites.',
+                    },
+                    'externalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites.',
+                    },
+                    'externalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites.',
+                    },
+                    'follows': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of follows generated by the ad.',
+                    },
+                    'fullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were played in fullscreen mode.',
+                    },
+                    'impressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of times the ad was displayed.',
+                    },
+                    'jobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of job applications initiated through the ad.',
+                    },
+                    'jobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in the ad.',
+                    },
+                    'landingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the landing page associated with the ad.',
+                    },
+                    'leadGenerationMailContactInfoShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Shares of contact information through lead generation.',
+                    },
+                    'leadGenerationMailInterestedClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on expressing interest through lead generation mail.',
+                    },
+                    'likes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes received on the ad.',
+                    },
+                    'oneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times lead forms were opened in one click.',
+                    },
+                    'oneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click.',
+                    },
+                    'opens': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times the ad was opened or expanded.',
+                    },
+                    'otherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Engagements other than clicks on the ad.',
+                    },
+                    'pivotValues': {
+                        'type': ['null', 'array'],
+                        'description': 'Values used for pivoting the analytics.',
+                    },
+                    'string_of_pivot_values': {
+                        'type': ['null', 'string'],
+                        'description': 'Comma-separated string of pivot values for this analytics record',
+                    },
+                    'postClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking on the ad.',
+                    },
+                    'postClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking on the ad.',
+                    },
+                    'postClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking on the ad.',
+                    },
+                    'postViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing the ad.',
+                    },
+                    'postViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing the ad.',
+                    },
+                    'postViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing the ad.',
+                    },
+                    'reactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions (e.g., like, love, celebrate) on the ad.',
+                    },
+                    'registrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations completed through the ad.',
+                    },
+                    'sends': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of messages sent through the ad.',
+                    },
+                    'shares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares generated by the ad.',
+                    },
+                    'start_date': {
+                        'type': ['null', 'string'],
+                        'description': 'Start date of the ad analytics data.',
+                    },
+                    'talentLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of leads related to talent acquisition.',
+                    },
+                    'textUrlClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on text URLs within the ad.',
+                    },
+                    'totalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of engagements on the ad.',
+                    },
+                    'validWorkEmailLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated through valid work emails.',
+                    },
+                    'videoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were watched till completion.',
+                    },
+                    'videoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of video views.',
+                    },
+                    'videoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of video views.',
+                    },
+                    'videoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts initiated by users.',
+                    },
+                    'videoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of video views.',
+                    },
+                    'videoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in the ad.',
+                    },
+                    'viralCardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on interactive card components in viral distribution.',
+                    },
+                    'viralCardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Impressions of interactive cards in viral distribution.',
+                    },
+                    'viralClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total clicks in viral distribution of the ad.',
+                    },
+                    'viralCommentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Likes received on comments in viral distribution.',
+                    },
+                    'viralComments': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of comments in viral distribution of the ad.',
+                    },
+                    'viralCompanyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page in viral distribution.',
+                    },
+                    'viralDocumentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Complete views of documents in viral distribution.',
+                    },
+                    'viralDocumentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of documents in viral distribution.',
+                    },
+                    'viralDocumentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of documents in viral distribution.',
+                    },
+                    'viralDocumentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of documents in viral distribution.',
+                    },
+                    'viralDownloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on downloads in viral distribution of the ad.',
+                    },
+                    'viralExternalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'External website conversions in viral distribution.',
+                    },
+                    'viralExternalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites in viral distribution.',
+                    },
+                    'viralExternalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites in viral distribution.',
+                    },
+                    'viralFollows': {
+                        'type': ['null', 'number'],
+                        'description': 'Follows generated in viral distribution of the ad.',
+                    },
+                    'viralFullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Fullscreen video plays in viral distribution.',
+                    },
+                    'viralImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total impressions in viral distribution of the ad.',
+                    },
+                    'viralJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated in viral distribution.',
+                    },
+                    'viralJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in viral distribution of the ad.',
+                    },
+                    'viralLandingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on landing page in viral distribution.',
+                    },
+                    'viralLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes in viral distribution of the ad.',
+                    },
+                    'viralOneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'One-click lead form opens in viral distribution.',
+                    },
+                    'viralOneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click in viral distribution.',
+                    },
+                    'viralOtherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Other engagements in viral distribution of the ad.',
+                    },
+                    'viralPostClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking in viral distribution.',
+                    },
+                    'viralPostClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking in viral distribution.',
+                    },
+                    'viralPostClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking in viral distribution.',
+                    },
+                    'viralPostViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing in viral distribution.',
+                    },
+                    'viralPostViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing in viral distribution.',
+                    },
+                    'viralPostViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing in viral distribution.',
+                    },
+                    'viralReactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions in viral distribution of the ad.',
+                    },
+                    'viralRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations in viral distribution of the ad.',
+                    },
+                    'viralShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares in viral distribution of the ad.',
+                    },
+                    'viralTotalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total engagements in viral distribution of the ad.',
+                    },
+                    'viralVideoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions of videos in viral distribution.',
+                    },
+                    'viralVideoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of videos in viral distribution.',
+                    },
+                    'viralVideoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts in viral distribution of the ad.',
+                    },
+                    'viralVideoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in viral distribution of the ad.',
+                    },
+                    'pivot': {
+                        'type': ['null', 'string'],
+                        'description': 'Pivot dimension used for this analytics record',
+                    },
+                    'sponsoredCampaign': {
+                        'type': ['null', 'string'],
+                        'description': 'URN of the sponsored campaign this analytics record belongs to',
+                    },
+                },
+                'x-airbyte-entity-name': 'ad_member_region_analytics',
+                'x-airbyte-stream-name': 'ad_member_region_analytics',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Ad performance metrics broken down by member region',
+                    'when_to_use': 'Questions about ad performance segmented by member region',
+                    'trigger_phrases': ['performance by region', 'region breakdown'],
+                    'freshness': 'live',
+                    'example_questions': ['Show ad performance by member region'],
+                    'search_strategy': 'Search cached member region analytics, filtering by campaign or date range',
+                },
+            },
+            ai_hints={
+                'summary': 'Ad performance metrics broken down by member region',
+                'when_to_use': 'Questions about ad performance segmented by member region',
+                'trigger_phrases': ['performance by region', 'region breakdown'],
+                'freshness': 'live',
+                'example_questions': ['Show ad performance by member region'],
+                'search_strategy': 'Search cached member region analytics, filtering by campaign or date range',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_member_region_analytics',
+                    target_entity='campaigns',
+                    foreign_key='campaigns',
+                    target_key='campaign_analytics_param',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='ad_member_seniority_analytics',
+            stream_name='ad_member_seniority_analytics',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/adAnalytics:memberSeniority',
+                    path_override=PathOverrideConfig(
+                        path='/adAnalytics',
+                    ),
+                    action=Action.LIST,
+                    description='Returns ad analytics data pivoted by member seniority. Provides performance metrics including clicks, impressions, spend, and engagement data grouped by member seniority.\n',
+                    query_params=[
+                        'q',
+                        'pivot',
+                        'timeGranularity',
+                        'dateRange',
+                        'campaigns',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'analytics',
+                        },
+                        'pivot': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'MEMBER_SENIORITY',
+                        },
+                        'timeGranularity': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'DAILY',
+                            'enum': ['DAILY', 'MONTHLY', 'ALL'],
+                        },
+                        'dateRange': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '(start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))',
+                        },
+                        'campaigns': {'type': 'string', 'required': True},
+                        'fields': {'type': 'string', 'required': False},
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Ad analytics API response',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Ad analytics data record with performance metrics',
+                                    'properties': {
+                                        'dateRange': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Date range for this analytics record',
+                                            'properties': {
+                                                'start': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                                'end': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'year': {'type': 'integer'},
+                                                        'month': {'type': 'integer'},
+                                                        'day': {'type': 'integer'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'pivotValues': {
+                                            'type': ['null', 'array'],
+                                            'description': 'Pivot values (URNs) for this analytics record',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'impressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times the ad was shown',
+                                        },
+                                        'clicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of clicks on the ad',
+                                        },
+                                        'costInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': "Total cost in the account's local currency",
+                                        },
+                                        'costInUsd': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Total cost in USD',
+                                        },
+                                        'likes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of likes',
+                                        },
+                                        'shares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of shares',
+                                        },
+                                        'comments': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comments',
+                                        },
+                                        'reactions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of reactions',
+                                        },
+                                        'follows': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of follows',
+                                        },
+                                        'totalEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Total number of engagements',
+                                        },
+                                        'landingPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of landing page clicks',
+                                        },
+                                        'companyPageClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of company page clicks',
+                                        },
+                                        'externalWebsiteConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of conversions on external websites',
+                                        },
+                                        'externalWebsitePostClickConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click conversions on external websites',
+                                        },
+                                        'externalWebsitePostViewConversions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view conversions on external websites',
+                                        },
+                                        'conversionValueInLocalCurrency': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Conversion value in local currency',
+                                        },
+                                        'approximateMemberReach': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Approximate unique member reach',
+                                        },
+                                        'cardClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card clicks',
+                                        },
+                                        'cardImpressions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of carousel card impressions',
+                                        },
+                                        'videoStarts': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video starts',
+                                        },
+                                        'videoViews': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of video views',
+                                        },
+                                        'videoFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 25%',
+                                        },
+                                        'videoMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 50%',
+                                        },
+                                        'videoThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 75%',
+                                        },
+                                        'videoCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times video played to 100%',
+                                        },
+                                        'fullScreenPlays': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of full screen video plays',
+                                        },
+                                        'oneClickLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click leads',
+                                        },
+                                        'oneClickLeadFormOpens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of one-click lead form opens',
+                                        },
+                                        'otherEngagements': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of other engagements',
+                                        },
+                                        'adUnitClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of ad unit clicks',
+                                        },
+                                        'actionClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of action clicks',
+                                        },
+                                        'textUrlClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of text URL clicks',
+                                        },
+                                        'commentLikes': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of comment likes',
+                                        },
+                                        'sends': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of sends (InMail)',
+                                        },
+                                        'opens': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of opens (InMail)',
+                                        },
+                                        'downloadClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of download clicks',
+                                        },
+                                        'jobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job applications',
+                                        },
+                                        'jobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of job apply clicks',
+                                        },
+                                        'registrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of registrations',
+                                        },
+                                        'talentLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of talent leads',
+                                        },
+                                        'validWorkEmailLeads': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of valid work email leads',
+                                        },
+                                        'postClickJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job applications',
+                                        },
+                                        'postClickJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click job apply clicks',
+                                        },
+                                        'postClickRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-click registrations',
+                                        },
+                                        'postViewJobApplications': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job applications',
+                                        },
+                                        'postViewJobApplyClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view job apply clicks',
+                                        },
+                                        'postViewRegistrations': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Post-view registrations',
+                                        },
+                                        'leadGenerationMailContactInfoShares': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail contact info shares',
+                                        },
+                                        'leadGenerationMailInterestedClicks': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Lead gen mail interested clicks',
+                                        },
+                                        'documentCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of document completions',
+                                        },
+                                        'documentFirstQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 25%',
+                                        },
+                                        'documentMidpointCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 50%',
+                                        },
+                                        'documentThirdQuartileCompletions': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Number of times document viewed to 75%',
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'count': {'type': 'integer'},
+                                    'start': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.elements',
+                    no_pagination='Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics.',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Ad analytics record pivoted by member seniority',
+                'properties': {
+                    'actionClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on action buttons in the ad.',
+                    },
+                    'adUnitClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on ad unit components.',
+                    },
+                    'approximateMemberReach': {
+                        'type': ['null', 'number'],
+                        'description': 'An approximation of unique ad impressions.',
+                    },
+                    'cardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of clicks on interactive card elements.',
+                    },
+                    'cardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times interactive cards were displayed.',
+                    },
+                    'clicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of clicks on the ad.',
+                    },
+                    'commentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'The count of likes on comments related to the ad.',
+                    },
+                    'comments': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of comments on the ad.',
+                    },
+                    'companyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page associated with the ad.',
+                    },
+                    'conversionValueInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversion value in the local currency.',
+                    },
+                    'costInLocalCurrency': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in the local currency.',
+                    },
+                    'costInUsd': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of ad campaign in USD.',
+                    },
+                    'documentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of completions for document views.',
+                    },
+                    'documentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of document views.',
+                    },
+                    'documentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of document views.',
+                    },
+                    'documentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of document views.',
+                    },
+                    'downloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on download links in the ad.',
+                    },
+                    'end_date': {
+                        'type': ['null', 'string'],
+                        'description': 'End date of the ad analytics data.',
+                    },
+                    'externalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Conversions that lead to external websites.',
+                    },
+                    'externalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites.',
+                    },
+                    'externalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites.',
+                    },
+                    'follows': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of follows generated by the ad.',
+                    },
+                    'fullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were played in fullscreen mode.',
+                    },
+                    'impressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of times the ad was displayed.',
+                    },
+                    'jobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of job applications initiated through the ad.',
+                    },
+                    'jobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in the ad.',
+                    },
+                    'landingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the landing page associated with the ad.',
+                    },
+                    'leadGenerationMailContactInfoShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Shares of contact information through lead generation.',
+                    },
+                    'leadGenerationMailInterestedClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on expressing interest through lead generation mail.',
+                    },
+                    'likes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes received on the ad.',
+                    },
+                    'oneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times lead forms were opened in one click.',
+                    },
+                    'oneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click.',
+                    },
+                    'opens': {
+                        'type': ['null', 'number'],
+                        'description': 'The number of times the ad was opened or expanded.',
+                    },
+                    'otherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Engagements other than clicks on the ad.',
+                    },
+                    'pivotValues': {
+                        'type': ['null', 'array'],
+                        'description': 'Values used for pivoting the analytics.',
+                    },
+                    'string_of_pivot_values': {
+                        'type': ['null', 'string'],
+                        'description': 'Comma-separated string of pivot values for this analytics record',
+                    },
+                    'postClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking on the ad.',
+                    },
+                    'postClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking on the ad.',
+                    },
+                    'postClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking on the ad.',
+                    },
+                    'postViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing the ad.',
+                    },
+                    'postViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing the ad.',
+                    },
+                    'postViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing the ad.',
+                    },
+                    'reactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions (e.g., like, love, celebrate) on the ad.',
+                    },
+                    'registrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations completed through the ad.',
+                    },
+                    'sends': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of messages sent through the ad.',
+                    },
+                    'shares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares generated by the ad.',
+                    },
+                    'start_date': {
+                        'type': ['null', 'string'],
+                        'description': 'Start date of the ad analytics data.',
+                    },
+                    'talentLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of leads related to talent acquisition.',
+                    },
+                    'textUrlClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on text URLs within the ad.',
+                    },
+                    'totalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total number of engagements on the ad.',
+                    },
+                    'validWorkEmailLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated through valid work emails.',
+                    },
+                    'videoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times videos were watched till completion.',
+                    },
+                    'videoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for first quartile of video views.',
+                    },
+                    'videoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for midpoint of video views.',
+                    },
+                    'videoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts initiated by users.',
+                    },
+                    'videoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions for third quartile of video views.',
+                    },
+                    'videoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in the ad.',
+                    },
+                    'viralCardClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on interactive card components in viral distribution.',
+                    },
+                    'viralCardImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Impressions of interactive cards in viral distribution.',
+                    },
+                    'viralClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Total clicks in viral distribution of the ad.',
+                    },
+                    'viralCommentLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Likes received on comments in viral distribution.',
+                    },
+                    'viralComments': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of comments in viral distribution of the ad.',
+                    },
+                    'viralCompanyPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on the company page in viral distribution.',
+                    },
+                    'viralDocumentCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Complete views of documents in viral distribution.',
+                    },
+                    'viralDocumentFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of documents in viral distribution.',
+                    },
+                    'viralDocumentMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of documents in viral distribution.',
+                    },
+                    'viralDocumentThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of documents in viral distribution.',
+                    },
+                    'viralDownloadClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on downloads in viral distribution of the ad.',
+                    },
+                    'viralExternalWebsiteConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'External website conversions in viral distribution.',
+                    },
+                    'viralExternalWebsitePostClickConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-click conversions on external websites in viral distribution.',
+                    },
+                    'viralExternalWebsitePostViewConversions': {
+                        'type': ['null', 'number'],
+                        'description': 'Post-view conversions on external websites in viral distribution.',
+                    },
+                    'viralFollows': {
+                        'type': ['null', 'number'],
+                        'description': 'Follows generated in viral distribution of the ad.',
+                    },
+                    'viralFullScreenPlays': {
+                        'type': ['null', 'number'],
+                        'description': 'Fullscreen video plays in viral distribution.',
+                    },
+                    'viralImpressions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total impressions in viral distribution of the ad.',
+                    },
+                    'viralJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated in viral distribution.',
+                    },
+                    'viralJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button in viral distribution of the ad.',
+                    },
+                    'viralLandingPageClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on landing page in viral distribution.',
+                    },
+                    'viralLikes': {
+                        'type': ['null', 'number'],
+                        'description': 'Total likes in viral distribution of the ad.',
+                    },
+                    'viralOneClickLeadFormOpens': {
+                        'type': ['null', 'number'],
+                        'description': 'One-click lead form opens in viral distribution.',
+                    },
+                    'viralOneClickLeads': {
+                        'type': ['null', 'number'],
+                        'description': 'Leads generated in one click in viral distribution.',
+                    },
+                    'viralOtherEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Other engagements in viral distribution of the ad.',
+                    },
+                    'viralPostClickJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-clicking in viral distribution.',
+                    },
+                    'viralPostClickJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-clicking in viral distribution.',
+                    },
+                    'viralPostClickRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-clicking in viral distribution.',
+                    },
+                    'viralPostViewJobApplications': {
+                        'type': ['null', 'number'],
+                        'description': 'Job applications initiated post-viewing in viral distribution.',
+                    },
+                    'viralPostViewJobApplyClicks': {
+                        'type': ['null', 'number'],
+                        'description': 'Clicks on apply job button post-viewing in viral distribution.',
+                    },
+                    'viralPostViewRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Registrations completed post-viewing in viral distribution.',
+                    },
+                    'viralReactions': {
+                        'type': ['null', 'number'],
+                        'description': 'Total reactions in viral distribution of the ad.',
+                    },
+                    'viralRegistrations': {
+                        'type': ['null', 'number'],
+                        'description': 'Total registrations in viral distribution of the ad.',
+                    },
+                    'viralShares': {
+                        'type': ['null', 'number'],
+                        'description': 'Total shares in viral distribution of the ad.',
+                    },
+                    'viralTotalEngagements': {
+                        'type': ['null', 'number'],
+                        'description': 'Total engagements in viral distribution of the ad.',
+                    },
+                    'viralVideoCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Completions of videos in viral distribution.',
+                    },
+                    'viralVideoFirstQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'First quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoMidpointCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Midpoint completions of videos in viral distribution.',
+                    },
+                    'viralVideoStarts': {
+                        'type': ['null', 'number'],
+                        'description': 'Total video starts in viral distribution of the ad.',
+                    },
+                    'viralVideoThirdQuartileCompletions': {
+                        'type': ['null', 'number'],
+                        'description': 'Third quartile completions of videos in viral distribution.',
+                    },
+                    'viralVideoViews': {
+                        'type': ['null', 'number'],
+                        'description': 'Total views of videos in viral distribution of the ad.',
+                    },
+                    'pivot': {
+                        'type': ['null', 'string'],
+                        'description': 'Pivot dimension used for this analytics record',
+                    },
+                    'sponsoredCampaign': {
+                        'type': ['null', 'string'],
+                        'description': 'URN of the sponsored campaign this analytics record belongs to',
+                    },
+                },
+                'x-airbyte-entity-name': 'ad_member_seniority_analytics',
+                'x-airbyte-stream-name': 'ad_member_seniority_analytics',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Ad performance metrics broken down by member seniority',
+                    'when_to_use': 'Questions about ad performance segmented by member seniority',
+                    'trigger_phrases': ['performance by seniority', 'seniority breakdown'],
+                    'freshness': 'live',
+                    'example_questions': ['Show ad performance by member seniority'],
+                    'search_strategy': 'Search cached member seniority analytics, filtering by campaign or date range',
+                },
+            },
+            ai_hints={
+                'summary': 'Ad performance metrics broken down by member seniority',
+                'when_to_use': 'Questions about ad performance segmented by member seniority',
+                'trigger_phrases': ['performance by seniority', 'seniority breakdown'],
+                'freshness': 'live',
+                'example_questions': ['Show ad performance by member seniority'],
+                'search_strategy': 'Search cached member seniority analytics, filtering by campaign or date range',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_member_seniority_analytics',
+                    target_entity='campaigns',
+                    foreign_key='campaigns',
+                    target_key='campaign_analytics_param',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='lead_forms',
+            stream_name='lead_forms',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/leadForms',
+                    action=Action.LIST,
+                    description='Returns a list of lead generation forms owned by a sponsored ad account',
+                    query_params=[
+                        'q',
+                        'owner',
+                        'count',
+                        'start',
+                    ],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'owner',
+                        },
+                        'owner': {'type': 'string', 'required': True},
+                        'count': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 100,
+                            'minimum': 1,
+                            'maximum': 500,
+                        },
+                        'start': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 0,
+                            'minimum': 0,
+                        },
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of lead forms',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'LinkedIn lead generation form',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Unique lead form identifier'},
+                                        'name': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Lead form name',
+                                        },
+                                        'owner': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Owning entity of the form (sponsored account URN)',
+                                        },
+                                        'state': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Form state (e.g. PUBLISHED, DRAFT)',
+                                        },
+                                        'content': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Form content including questions and consent checkboxes',
+                                        },
+                                        'created': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Creation timestamp (epoch milliseconds)',
+                                        },
+                                        'lastModified': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Last modification timestamp (epoch milliseconds)',
+                                        },
+                                        'creationLocale': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Locale the form was created in',
+                                        },
+                                        'hiddenFields': {
+                                            'type': ['null', 'array'],
+                                            'description': 'Hidden fields configured on the form',
+                                        },
+                                        'reviewInfo': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Review status information',
+                                        },
+                                        'versionId': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Form version identifier',
+                                        },
+                                        'versionTag': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Form version tag',
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'lead_forms',
+                                    'x-airbyte-stream-name': 'lead_forms',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Lead generation forms configured for a sponsored ad account',
+                                        'when_to_use': 'Questions about lead gen forms, their names, states, or configuration',
+                                        'trigger_phrases': ['lead forms', 'lead gen forms', 'lead generation forms'],
+                                        'freshness': 'live',
+                                        'example_questions': ['List lead forms for my ad account'],
+                                        'search_strategy': 'Search cached lead forms, filtering by owning ad account',
+                                    },
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'start': {'type': 'integer'},
+                                    'count': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.elements',
+                    meta_extractor={
+                        'start': '$.paging.start',
+                        'count': '$.paging.count',
+                        'total': '$.paging.total',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'LinkedIn lead generation form',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Unique lead form identifier'},
+                    'name': {
+                        'type': ['null', 'string'],
+                        'description': 'Lead form name',
+                    },
+                    'owner': {
+                        'type': ['null', 'object'],
+                        'description': 'Owning entity of the form (sponsored account URN)',
+                    },
+                    'state': {
+                        'type': ['null', 'string'],
+                        'description': 'Form state (e.g. PUBLISHED, DRAFT)',
+                    },
+                    'content': {
+                        'type': ['null', 'object'],
+                        'description': 'Form content including questions and consent checkboxes',
+                    },
+                    'created': {
+                        'type': ['null', 'integer'],
+                        'description': 'Creation timestamp (epoch milliseconds)',
+                    },
+                    'lastModified': {
+                        'type': ['null', 'integer'],
+                        'description': 'Last modification timestamp (epoch milliseconds)',
+                    },
+                    'creationLocale': {
+                        'type': ['null', 'object'],
+                        'description': 'Locale the form was created in',
+                    },
+                    'hiddenFields': {
+                        'type': ['null', 'array'],
+                        'description': 'Hidden fields configured on the form',
+                    },
+                    'reviewInfo': {
+                        'type': ['null', 'object'],
+                        'description': 'Review status information',
+                    },
+                    'versionId': {
+                        'type': ['null', 'integer'],
+                        'description': 'Form version identifier',
+                    },
+                    'versionTag': {
+                        'type': ['null', 'string'],
+                        'description': 'Form version tag',
+                    },
+                },
+                'x-airbyte-entity-name': 'lead_forms',
+                'x-airbyte-stream-name': 'lead_forms',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Lead generation forms configured for a sponsored ad account',
+                    'when_to_use': 'Questions about lead gen forms, their names, states, or configuration',
+                    'trigger_phrases': ['lead forms', 'lead gen forms', 'lead generation forms'],
+                    'freshness': 'live',
+                    'example_questions': ['List lead forms for my ad account'],
+                    'search_strategy': 'Search cached lead forms, filtering by owning ad account',
+                },
+            },
+            ai_hints={
+                'summary': 'Lead generation forms configured for a sponsored ad account',
+                'when_to_use': 'Questions about lead gen forms, their names, states, or configuration',
+                'trigger_phrases': ['lead forms', 'lead gen forms', 'lead generation forms'],
+                'freshness': 'live',
+                'example_questions': ['List lead forms for my ad account'],
+                'search_strategy': 'Search cached lead forms, filtering by owning ad account',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='lead_forms',
+                    target_entity='accounts',
+                    foreign_key='owner',
+                    target_key='owner_param',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='lead_form_responses',
+            stream_name='lead_form_responses',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/leadFormResponses',
+                    action=Action.LIST,
+                    description='Returns a list of lead form responses submitted to forms owned by a sponsored ad account',
+                    query_params=[
+                        'q',
+                        'owner',
+                        'leadType',
+                        'count',
+                        'start',
+                    ],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'owner',
+                        },
+                        'owner': {'type': 'string', 'required': True},
+                        'leadType': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '(leadType:SPONSORED)',
+                        },
+                        'count': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 100,
+                            'minimum': 1,
+                            'maximum': 500,
+                        },
+                        'start': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 0,
+                            'minimum': 0,
+                        },
+                    },
+                    header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
+                    header_params_schema={
+                        'LinkedIn-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '202606',
+                        },
+                        'X-Restli-Protocol-Version': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2.0.0',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of lead form responses',
+                        'properties': {
+                            'elements': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'LinkedIn lead form response (submitted lead)',
+                                    'properties': {
+                                        'id': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Unique lead response identifier',
+                                        },
+                                        'leadType': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Type of lead (e.g. SPONSORED)',
+                                        },
+                                        'form': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Lead form the response was submitted to',
+                                        },
+                                        'owner': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Owning entity of the lead',
+                                        },
+                                        'ownerInfo': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Additional owner information',
+                                        },
+                                        'leadMetadata': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Metadata about the lead',
+                                        },
+                                        'leadMetadataInfo': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Additional lead metadata information',
+                                        },
+                                        'associatedEntity': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Entity the lead is associated with (e.g. creative URN)',
+                                        },
+                                        'associatedEntityInfo': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Additional associated entity information',
+                                        },
+                                        'submittedAt': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Submission timestamp (epoch milliseconds)',
+                                        },
+                                        'responseId': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Response identifier object',
+                                        },
+                                        'formResponse': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Submitted answers to the form questions',
+                                        },
+                                        'testLead': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether this is a test lead',
+                                        },
+                                        'submitter': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Member URN of the submitter',
+                                        },
+                                        'versionedLeadGenFormUrn': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Versioned lead gen form URN',
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'lead_form_responses',
+                                    'x-airbyte-stream-name': 'lead_form_responses',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Responses submitted to lead generation forms',
+                                        'when_to_use': 'Questions about leads collected via lead gen forms',
+                                        'trigger_phrases': ['lead form responses', 'leads', 'lead submissions'],
+                                        'freshness': 'live',
+                                        'example_questions': ['Show lead form responses for my ad account'],
+                                        'search_strategy': 'Search cached lead form responses, filtering by owning ad account',
+                                    },
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'start': {'type': 'integer'},
+                                    'count': {'type': 'integer'},
+                                    'total': {'type': 'integer'},
+                                    'links': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'rel': {'type': 'string'},
+                                                'href': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.elements',
+                    meta_extractor={
+                        'start': '$.paging.start',
+                        'count': '$.paging.count',
+                        'total': '$.paging.total',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'LinkedIn lead form response (submitted lead)',
+                'properties': {
+                    'id': {
+                        'type': ['null', 'string'],
+                        'description': 'Unique lead response identifier',
+                    },
+                    'leadType': {
+                        'type': ['null', 'string'],
+                        'description': 'Type of lead (e.g. SPONSORED)',
+                    },
+                    'form': {
+                        'type': ['null', 'object'],
+                        'description': 'Lead form the response was submitted to',
+                    },
+                    'owner': {
+                        'type': ['null', 'object'],
+                        'description': 'Owning entity of the lead',
+                    },
+                    'ownerInfo': {
+                        'type': ['null', 'object'],
+                        'description': 'Additional owner information',
+                    },
+                    'leadMetadata': {
+                        'type': ['null', 'object'],
+                        'description': 'Metadata about the lead',
+                    },
+                    'leadMetadataInfo': {
+                        'type': ['null', 'object'],
+                        'description': 'Additional lead metadata information',
+                    },
+                    'associatedEntity': {
+                        'type': ['null', 'object'],
+                        'description': 'Entity the lead is associated with (e.g. creative URN)',
+                    },
+                    'associatedEntityInfo': {
+                        'type': ['null', 'object'],
+                        'description': 'Additional associated entity information',
+                    },
+                    'submittedAt': {
+                        'type': ['null', 'integer'],
+                        'description': 'Submission timestamp (epoch milliseconds)',
+                    },
+                    'responseId': {
+                        'type': ['null', 'object'],
+                        'description': 'Response identifier object',
+                    },
+                    'formResponse': {
+                        'type': ['null', 'object'],
+                        'description': 'Submitted answers to the form questions',
+                    },
+                    'testLead': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether this is a test lead',
+                    },
+                    'submitter': {
+                        'type': ['null', 'string'],
+                        'description': 'Member URN of the submitter',
+                    },
+                    'versionedLeadGenFormUrn': {
+                        'type': ['null', 'string'],
+                        'description': 'Versioned lead gen form URN',
+                    },
+                },
+                'x-airbyte-entity-name': 'lead_form_responses',
+                'x-airbyte-stream-name': 'lead_form_responses',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Responses submitted to lead generation forms',
+                    'when_to_use': 'Questions about leads collected via lead gen forms',
+                    'trigger_phrases': ['lead form responses', 'leads', 'lead submissions'],
+                    'freshness': 'live',
+                    'example_questions': ['Show lead form responses for my ad account'],
+                    'search_strategy': 'Search cached lead form responses, filtering by owning ad account',
+                },
+            },
+            ai_hints={
+                'summary': 'Responses submitted to lead generation forms',
+                'when_to_use': 'Questions about leads collected via lead gen forms',
+                'trigger_phrases': ['lead form responses', 'leads', 'lead submissions'],
+                'freshness': 'live',
+                'example_questions': ['Show lead form responses for my ad account'],
+                'search_strategy': 'Search cached lead form responses, filtering by owning ad account',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='lead_form_responses',
+                    target_entity='accounts',
+                    foreign_key='owner',
+                    target_key='owner_param',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
     ],
     context_store=CacheConfig(
         entities=[
@@ -3296,79 +11846,89 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                 x_airbyte_name='accounts',
                 fields=[
                     CacheFieldConfig(
-                        name='id',
-                        type=['null', 'integer'],
-                        description='Unique account identifier',
-                    ),
-                    CacheFieldConfig(
-                        name='name',
-                        type=['null', 'string'],
-                        description='Account name',
-                    ),
-                    CacheFieldConfig(
-                        name='currency',
-                        type=['null', 'string'],
-                        description='Currency code used by the account',
-                    ),
-                    CacheFieldConfig(
-                        name='status',
-                        type=['null', 'string'],
-                        description='Account status',
-                    ),
-                    CacheFieldConfig(
-                        name='type',
-                        type=['null', 'string'],
-                        description='Account type',
-                    ),
-                    CacheFieldConfig(
-                        name='reference',
-                        type=['null', 'string'],
-                        description='Reference organization URN',
-                    ),
-                    CacheFieldConfig(
                         name='test',
                         type=['null', 'boolean'],
-                        description='Whether this is a test account',
-                    ),
-                    CacheFieldConfig(
-                        name='notifiedOnCampaignOptimization',
-                        type=['null', 'boolean'],
-                        description='Flag for notifications on campaign optimization',
-                    ),
-                    CacheFieldConfig(
-                        name='notifiedOnCreativeApproval',
-                        type=['null', 'boolean'],
-                        description='Flag for notifications on creative approval',
+                        description='Flag indicating if the account is in a test mode.',
                     ),
                     CacheFieldConfig(
                         name='notifiedOnCreativeRejection',
                         type=['null', 'boolean'],
-                        description='Flag for notifications on creative rejection',
-                    ),
-                    CacheFieldConfig(
-                        name='notifiedOnEndOfCampaign',
-                        type=['null', 'boolean'],
-                        description='Flag for notifications on end of campaign',
+                        description='Flag for notifications on creative rejection.',
                     ),
                     CacheFieldConfig(
                         name='notifiedOnNewFeaturesEnabled',
                         type=['null', 'boolean'],
-                        description='Flag for notifications on new features',
+                        description='Flag for notifications on new features being enabled.',
+                    ),
+                    CacheFieldConfig(
+                        name='notifiedOnEndOfCampaign',
+                        type=['null', 'boolean'],
+                        description='Flag for notifications on the end of campaign.',
                     ),
                     CacheFieldConfig(
                         name='servingStatuses',
                         type=['null', 'array'],
-                        description='List of serving statuses',
+                        description='The serving statuses associated with the account.',
+                    ),
+                    CacheFieldConfig(
+                        name='notifiedOnCampaignOptimization',
+                        type=['null', 'boolean'],
+                        description='Flag for notifications on campaign optimization.',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='The type or category of the account.',
                     ),
                     CacheFieldConfig(
                         name='version',
                         type=['null', 'object'],
-                        description='Version information',
+                        description='The version information related to the account.',
                         properties={
                             'versionTag': CacheFieldProperty(
                                 type=['null', 'string'],
                             ),
                         },
+                    ),
+                    CacheFieldConfig(
+                        name='reference',
+                        type=['null', 'string'],
+                        description='A reference identifier for the account.',
+                    ),
+                    CacheFieldConfig(
+                        name='notifiedOnCreativeApproval',
+                        type=['null', 'boolean'],
+                        description='Flag for notifications on creative approval.',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'string'],
+                        description='The timestamp indicating when the account was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='lastModified',
+                        type=['null', 'string'],
+                        description='The timestamp of the last modification made to the account.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the account.',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='The currency used for financial transactions in the account.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='The unique identifier for the account.',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The status of the account.',
                     ),
                 ],
             ),
@@ -3380,17 +11940,27 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='account',
                         type=['null', 'string'],
-                        description='Associated account URN',
+                        description='The account associated with the user',
                     ),
                     CacheFieldConfig(
-                        name='user',
+                        name='created',
                         type=['null', 'string'],
-                        description='User URN',
+                        description='The date and time when the user account was created',
+                    ),
+                    CacheFieldConfig(
+                        name='lastModified',
+                        type=['null', 'string'],
+                        description='The date and time when the user account was last modified',
                     ),
                     CacheFieldConfig(
                         name='role',
                         type=['null', 'string'],
-                        description='User role in the account',
+                        description='The role assigned to the user in the account',
+                    ),
+                    CacheFieldConfig(
+                        name='user',
+                        type=['null', 'string'],
+                        description='The user details including name, email, etc.',
                     ),
                 ],
             ),
@@ -3400,94 +11970,93 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                 x_airbyte_name='campaigns',
                 fields=[
                     CacheFieldConfig(
-                        name='id',
-                        type=['null', 'integer'],
-                        description='Unique campaign identifier',
+                        name='targetingCriteria',
+                        type=['null', 'object'],
+                        description='Criteria for targeting in the campaign.',
+                        properties={
+                            'include': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'exclude': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
                     ),
                     CacheFieldConfig(
-                        name='name',
-                        type=['null', 'string'],
-                        description='Campaign name',
-                    ),
-                    CacheFieldConfig(
-                        name='account',
-                        type=['null', 'string'],
-                        description='Associated account URN',
-                    ),
-                    CacheFieldConfig(
-                        name='campaignGroup',
-                        type=['null', 'string'],
-                        description='Parent campaign group URN',
-                    ),
-                    CacheFieldConfig(
-                        name='status',
-                        type=['null', 'string'],
-                        description='Campaign status',
+                        name='servingStatuses',
+                        type=['null', 'array'],
+                        description='The serving statuses of the campaign.',
                     ),
                     CacheFieldConfig(
                         name='type',
                         type=['null', 'string'],
-                        description='Campaign type',
+                        description='The type of campaign.',
                     ),
                     CacheFieldConfig(
-                        name='costType',
-                        type=['null', 'string'],
-                        description='Cost type (CPC CPM etc)',
+                        name='locale',
+                        type=['null', 'object'],
+                        description='The locale settings for the campaign.',
+                        properties={
+                            'country': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'language': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
                     ),
                     CacheFieldConfig(
-                        name='format',
-                        type=['null', 'string'],
-                        description='Campaign ad format',
-                    ),
-                    CacheFieldConfig(
-                        name='objectiveType',
-                        type=['null', 'string'],
-                        description='Campaign objective type',
-                    ),
-                    CacheFieldConfig(
-                        name='optimizationTargetType',
-                        type=['null', 'string'],
-                        description='Optimization target type',
-                    ),
-                    CacheFieldConfig(
-                        name='creativeSelection',
-                        type=['null', 'string'],
-                        description='Creative selection mode',
-                    ),
-                    CacheFieldConfig(
-                        name='pacingStrategy',
-                        type=['null', 'string'],
-                        description='Budget pacing strategy',
-                    ),
-                    CacheFieldConfig(
-                        name='audienceExpansionEnabled',
-                        type=['null', 'boolean'],
-                        description='Whether audience expansion is enabled',
-                    ),
-                    CacheFieldConfig(
-                        name='offsiteDeliveryEnabled',
-                        type=['null', 'boolean'],
-                        description='Whether offsite delivery is enabled',
-                    ),
-                    CacheFieldConfig(
-                        name='storyDeliveryEnabled',
-                        type=['null', 'boolean'],
-                        description='Whether story delivery is enabled',
-                    ),
-                    CacheFieldConfig(
-                        name='test',
-                        type=['null', 'boolean'],
-                        description='Whether this is a test campaign',
+                        name='version',
+                        type=['null', 'object'],
+                        description='The version information for the campaign.',
+                        properties={
+                            'versionTag': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
                     ),
                     CacheFieldConfig(
                         name='associatedEntity',
                         type=['null', 'string'],
-                        description='Associated entity URN',
+                        description='The entity associated with the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='runSchedule',
+                        type=['null', 'object'],
+                        description='The schedule for running the campaign.',
+                        properties={
+                            'start': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'end': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='optimizationTargetType',
+                        type=['null', 'string'],
+                        description='The type of optimization target for the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'string'],
+                        description='The date and time when the campaign was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='lastModified',
+                        type=['null', 'string'],
+                        description='The date and time when the campaign was last modified.',
+                    ),
+                    CacheFieldConfig(
+                        name='campaignGroup',
+                        type=['null', 'string'],
+                        description='The group to which the campaign belongs.',
                     ),
                     CacheFieldConfig(
                         name='dailyBudget',
                         type=['null', 'object'],
-                        description='Daily budget configuration',
+                        description='The daily budget set for the campaign.',
                         properties={
                             'amount': CacheFieldProperty(
                                 type=['null', 'string'],
@@ -3500,7 +12069,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='totalBudget',
                         type=['null', 'object'],
-                        description='Total budget configuration',
+                        description='The total budget amount for the campaign.',
                         properties={
                             'amount': CacheFieldProperty(
                                 type=['null', 'string'],
@@ -3513,7 +12082,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='unitCost',
                         type=['null', 'object'],
-                        description='Cost per unit (bid amount)',
+                        description='The unit cost for the campaign.',
                         properties={
                             'amount': CacheFieldProperty(
                                 type=['null', 'string'],
@@ -3524,43 +12093,80 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     ),
                     CacheFieldConfig(
-                        name='runSchedule',
-                        type=['null', 'object'],
-                        description='Campaign run schedule',
-                        properties={
-                            'start': CacheFieldProperty(
-                                type=['null', 'integer'],
-                            ),
-                            'end': CacheFieldProperty(
-                                type=['null', 'integer'],
-                            ),
-                        },
+                        name='creativeSelection',
+                        type=['null', 'string'],
+                        description='Information about the creative selection for the campaign.',
                     ),
                     CacheFieldConfig(
-                        name='locale',
-                        type=['null', 'object'],
-                        description='Campaign locale settings',
-                        properties={
-                            'country': CacheFieldProperty(
-                                type=['null', 'string'],
-                            ),
-                            'language': CacheFieldProperty(
-                                type=['null', 'string'],
-                            ),
-                        },
+                        name='costType',
+                        type=['null', 'string'],
+                        description='The type of cost associated with the campaign.',
                     ),
                     CacheFieldConfig(
-                        name='servingStatuses',
-                        type=['null', 'array'],
-                        description='List of serving statuses',
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the campaign.',
                     ),
                     CacheFieldConfig(
-                        name='version',
+                        name='offsiteDeliveryEnabled',
+                        type=['null', 'boolean'],
+                        description='Indicates if offsite delivery is enabled for the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='The unique identifier of the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='audienceExpansionEnabled',
+                        type=['null', 'boolean'],
+                        description='Indicates if audience expansion is enabled for this campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='test',
+                        type=['null', 'boolean'],
+                        description='Indicates if the campaign is a test campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='account',
+                        type=['null', 'string'],
+                        description='The account associated with the campaign data.',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The status of the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='storyDeliveryEnabled',
+                        type=['null', 'boolean'],
+                        description='Indicates if story delivery is enabled for the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='pacingStrategy',
+                        type=['null', 'string'],
+                        description='The pacing strategy for the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='format',
+                        type=['null', 'string'],
+                        description='The format of the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='objectiveType',
+                        type=['null', 'string'],
+                        description='The type of objective for the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='offsitePreferences',
                         type=['null', 'object'],
-                        description='Version information',
+                        description='Preferences related to offsite delivery.',
                         properties={
-                            'versionTag': CacheFieldProperty(
-                                type=['null', 'string'],
+                            'iabCategories': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'publisherRestrictionFiles': CacheFieldProperty(
+                                type=['null', 'object'],
                             ),
                         },
                     ),
@@ -3572,52 +12178,9 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                 x_airbyte_name='campaign_groups',
                 fields=[
                     CacheFieldConfig(
-                        name='id',
-                        type=['null', 'integer'],
-                        description='Unique campaign group identifier',
-                    ),
-                    CacheFieldConfig(
-                        name='name',
-                        type=['null', 'string'],
-                        description='Campaign group name',
-                    ),
-                    CacheFieldConfig(
-                        name='account',
-                        type=['null', 'string'],
-                        description='Associated account URN',
-                    ),
-                    CacheFieldConfig(
-                        name='status',
-                        type=['null', 'string'],
-                        description='Campaign group status',
-                    ),
-                    CacheFieldConfig(
-                        name='test',
-                        type=['null', 'boolean'],
-                        description='Whether this is a test campaign group',
-                    ),
-                    CacheFieldConfig(
-                        name='backfilled',
-                        type=['null', 'boolean'],
-                        description='Whether the campaign group is backfilled',
-                    ),
-                    CacheFieldConfig(
-                        name='totalBudget',
-                        type=['null', 'object'],
-                        description='Total budget for the campaign group',
-                        properties={
-                            'amount': CacheFieldProperty(
-                                type=['null', 'string'],
-                            ),
-                            'currencyCode': CacheFieldProperty(
-                                type=['null', 'string'],
-                            ),
-                        },
-                    ),
-                    CacheFieldConfig(
                         name='runSchedule',
                         type=['null', 'object'],
-                        description='Campaign group run schedule',
+                        description='Schedule for running the campaign group.',
                         properties={
                             'start': CacheFieldProperty(
                                 type=['null', 'integer'],
@@ -3628,162 +12191,29 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     ),
                     CacheFieldConfig(
-                        name='servingStatuses',
-                        type=['null', 'array'],
-                        description='List of serving statuses',
-                    ),
-                    CacheFieldConfig(
-                        name='allowedCampaignTypes',
-                        type=['null', 'array'],
-                        description='Types of campaigns allowed in this group',
-                    ),
-                ],
-            ),
-            CacheEntityConfig(
-                entity='creatives',
-                suggested=True,
-                x_airbyte_name='creatives',
-                fields=[
-                    CacheFieldConfig(
-                        name='id',
-                        type=['null', 'string'],
-                        description='Unique creative identifier',
-                    ),
-                    CacheFieldConfig(
-                        name='name',
-                        type=['null', 'string'],
-                        description='Creative name',
-                    ),
-                    CacheFieldConfig(
-                        name='account',
-                        type=['null', 'string'],
-                        description='Associated account URN',
-                    ),
-                    CacheFieldConfig(
-                        name='campaign',
-                        type=['null', 'string'],
-                        description='Parent campaign URN',
-                    ),
-                    CacheFieldConfig(
-                        name='intendedStatus',
-                        type=['null', 'string'],
-                        description='Intended creative status',
-                    ),
-                    CacheFieldConfig(
-                        name='isServing',
-                        type=['null', 'boolean'],
-                        description='Whether the creative is currently serving',
-                    ),
-                    CacheFieldConfig(
-                        name='isTest',
-                        type=['null', 'boolean'],
-                        description='Whether this is a test creative',
-                    ),
-                    CacheFieldConfig(
-                        name='createdAt',
-                        type=['null', 'integer'],
-                        description='Creation timestamp (epoch milliseconds)',
-                    ),
-                    CacheFieldConfig(
-                        name='createdBy',
-                        type=['null', 'string'],
-                        description='URN of the user who created the creative',
-                    ),
-                    CacheFieldConfig(
-                        name='lastModifiedAt',
-                        type=['null', 'integer'],
-                        description='Last modification timestamp (epoch milliseconds)',
-                    ),
-                    CacheFieldConfig(
-                        name='lastModifiedBy',
-                        type=['null', 'string'],
-                        description='URN of the user who last modified the creative',
-                    ),
-                    CacheFieldConfig(
-                        name='content',
-                        type=['null', 'object'],
-                        description='Creative content configuration',
-                    ),
-                    CacheFieldConfig(
-                        name='servingHoldReasons',
-                        type=['null', 'array'],
-                        description='Reasons for holding creative from serving',
-                    ),
-                ],
-            ),
-            CacheEntityConfig(
-                entity='conversions',
-                x_airbyte_name='conversions',
-                fields=[
-                    CacheFieldConfig(
-                        name='id',
-                        type=['null', 'integer'],
-                        description='Unique conversion identifier',
-                    ),
-                    CacheFieldConfig(
-                        name='name',
-                        type=['null', 'string'],
-                        description='Conversion name',
-                    ),
-                    CacheFieldConfig(
-                        name='account',
-                        type=['null', 'string'],
-                        description='Associated account URN',
-                    ),
-                    CacheFieldConfig(
-                        name='type',
-                        type=['null', 'string'],
-                        description='Conversion type',
-                    ),
-                    CacheFieldConfig(
-                        name='attributionType',
-                        type=['null', 'string'],
-                        description='Attribution type for the conversion',
-                    ),
-                    CacheFieldConfig(
-                        name='enabled',
-                        type=['null', 'boolean'],
-                        description='Whether the conversion tracking is enabled',
-                    ),
-                    CacheFieldConfig(
                         name='created',
-                        type=['null', 'integer'],
-                        description='Creation timestamp (epoch milliseconds)',
+                        type=['null', 'string'],
+                        description='The date and time when the campaign group was created.',
                     ),
                     CacheFieldConfig(
                         name='lastModified',
-                        type=['null', 'integer'],
-                        description='Last modification timestamp (epoch milliseconds)',
-                    ),
-                    CacheFieldConfig(
-                        name='postClickAttributionWindowSize',
-                        type=['null', 'integer'],
-                        description='Post-click attribution window size in days',
-                    ),
-                    CacheFieldConfig(
-                        name='viewThroughAttributionWindowSize',
-                        type=['null', 'integer'],
-                        description='View-through attribution window size in days',
-                    ),
-                    CacheFieldConfig(
-                        name='campaigns',
-                        type=['null', 'array'],
-                        description='Related campaign URNs',
-                    ),
-                    CacheFieldConfig(
-                        name='associatedCampaigns',
-                        type=['null', 'array'],
-                        description='Associated campaigns',
-                    ),
-                    CacheFieldConfig(
-                        name='imagePixelTag',
                         type=['null', 'string'],
-                        description='Image pixel tracking tag',
+                        description='The date and time when the campaign group was last modified.',
                     ),
                     CacheFieldConfig(
-                        name='value',
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the campaign group.',
+                    ),
+                    CacheFieldConfig(
+                        name='test',
+                        type=['null', 'boolean'],
+                        description='Indicates if the campaign group is a test campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalBudget',
                         type=['null', 'object'],
-                        description='Conversion value',
+                        description='Total budget allocated for the campaign group.',
                         properties={
                             'amount': CacheFieldProperty(
                                 type=['null', 'string'],
@@ -3793,6 +12223,238 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                             ),
                         },
                     ),
+                    CacheFieldConfig(
+                        name='servingStatuses',
+                        type=['null', 'array'],
+                        description='List of serving statuses for the campaign group.',
+                    ),
+                    CacheFieldConfig(
+                        name='backfilled',
+                        type=['null', 'boolean'],
+                        description='Indicates if the campaign group was backfilled.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the campaign group.',
+                    ),
+                    CacheFieldConfig(
+                        name='account',
+                        type=['null', 'string'],
+                        description='The account associated with the campaign group.',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Current status of the campaign group.',
+                    ),
+                    CacheFieldConfig(
+                        name='allowedCampaignTypes',
+                        type=['null', 'array'],
+                        description='List of campaign types allowed for this campaign group.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='creatives',
+                suggested=True,
+                x_airbyte_name='creatives',
+                fields=[
+                    CacheFieldConfig(
+                        name='servingHoldReasons',
+                        type=['null', 'array'],
+                        description='Reasons for holding the creative from serving.',
+                    ),
+                    CacheFieldConfig(
+                        name='lastModifiedAt',
+                        type=['null', 'integer'],
+                        description='The timestamp when the creative was last modified.',
+                    ),
+                    CacheFieldConfig(
+                        name='lastModifiedBy',
+                        type=['null', 'string'],
+                        description='The user who last modified the creative.',
+                    ),
+                    CacheFieldConfig(
+                        name='content',
+                        type=['null', 'object'],
+                        description='The actual content of the creative.',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'integer'],
+                        description='The timestamp when the creative was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='isTest',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating if the creative is a test creative.',
+                    ),
+                    CacheFieldConfig(
+                        name='createdBy',
+                        type=['null', 'string'],
+                        description='The user who created the creative.',
+                    ),
+                    CacheFieldConfig(
+                        name='review',
+                        type=['null', 'object'],
+                        description='Review information for the creative.',
+                        properties={
+                            'status': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'rejectionReasons': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the creative.',
+                    ),
+                    CacheFieldConfig(
+                        name='isServing',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating if the creative is currently serving.',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign',
+                        type=['null', 'string'],
+                        description='The campaign to which the creative belongs.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='The unique identifier of the creative.',
+                    ),
+                    CacheFieldConfig(
+                        name='intendedStatus',
+                        type=['null', 'string'],
+                        description='The intended status of the creative.',
+                    ),
+                    CacheFieldConfig(
+                        name='account',
+                        type=['null', 'string'],
+                        description='The account associated with the creative.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadgenCallToAction',
+                        type=['null', 'object'],
+                        description='Call-to-action information for lead generation purposes.',
+                        properties={
+                            'destination': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'label': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='conversions',
+                x_airbyte_name='conversions',
+                fields=[
+                    CacheFieldConfig(
+                        name='attributionType',
+                        type=['null', 'string'],
+                        description='The type of attribution for the conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='account',
+                        type=['null', 'string'],
+                        description='The account associated with the conversion data.',
+                    ),
+                    CacheFieldConfig(
+                        name='campaigns',
+                        type=['null', 'array'],
+                        description='List of campaigns related to the conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='Timestamp of when the conversion was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='enabled',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the conversion tracking is enabled.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='imagePixelTag',
+                        type=['null', 'string'],
+                        description='Pixel tag used for tracking the conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type of conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='latestFirstPartyCallbackAt',
+                        type=['null', 'integer'],
+                        description='Timestamp of the latest first-party callback for the conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickAttributionWindowSize',
+                        type=['null', 'integer'],
+                        description='Window size for post-click attribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viewThroughAttributionWindowSize',
+                        type=['null', 'integer'],
+                        description='Window size for view-through attribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='lastCallbackAt',
+                        type=['null', 'integer'],
+                        description='Timestamp of the last callback for the conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='lastModified',
+                        type=['null', 'integer'],
+                        description='Timestamp of the last modification made to the conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'object'],
+                        description='Value associated with the conversion.',
+                        properties={
+                            'amount': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'currencyCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='associatedCampaigns',
+                        type=['null', 'array'],
+                        description='Campaigns associated with the conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='urlMatchRuleExpression',
+                        type=['null', 'array'],
+                        description='Expression used for matching URLs for attribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='urlRules',
+                        type=['null', 'array'],
+                        description='Rules for URL matching in the conversion.',
+                    ),
                 ],
             ),
             CacheEntityConfig(
@@ -3801,199 +12463,499 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                 x_airbyte_name='ad_campaign_analytics',
                 fields=[
                     CacheFieldConfig(
-                        name='impressions',
+                        name='actionClicks',
                         type=['null', 'number'],
-                        description='Number of times the ad was shown',
-                    ),
-                    CacheFieldConfig(
-                        name='clicks',
-                        type=['null', 'number'],
-                        description='Number of clicks on the ad',
-                    ),
-                    CacheFieldConfig(
-                        name='costInLocalCurrency',
-                        type=['null', 'number'],
-                        description='Total cost in the accounts local currency',
-                    ),
-                    CacheFieldConfig(
-                        name='costInUsd',
-                        type=['null', 'number'],
-                        description='Total cost in USD',
-                    ),
-                    CacheFieldConfig(
-                        name='likes',
-                        type=['null', 'number'],
-                        description='Number of likes',
-                    ),
-                    CacheFieldConfig(
-                        name='shares',
-                        type=['null', 'number'],
-                        description='Number of shares',
-                    ),
-                    CacheFieldConfig(
-                        name='comments',
-                        type=['null', 'number'],
-                        description='Number of comments',
-                    ),
-                    CacheFieldConfig(
-                        name='reactions',
-                        type=['null', 'number'],
-                        description='Number of reactions',
-                    ),
-                    CacheFieldConfig(
-                        name='follows',
-                        type=['null', 'number'],
-                        description='Number of follows',
-                    ),
-                    CacheFieldConfig(
-                        name='totalEngagements',
-                        type=['null', 'number'],
-                        description='Total number of engagements',
-                    ),
-                    CacheFieldConfig(
-                        name='landingPageClicks',
-                        type=['null', 'number'],
-                        description='Number of landing page clicks',
-                    ),
-                    CacheFieldConfig(
-                        name='companyPageClicks',
-                        type=['null', 'number'],
-                        description='Number of company page clicks',
-                    ),
-                    CacheFieldConfig(
-                        name='externalWebsiteConversions',
-                        type=['null', 'number'],
-                        description='Number of conversions on external websites',
-                    ),
-                    CacheFieldConfig(
-                        name='externalWebsitePostClickConversions',
-                        type=['null', 'number'],
-                        description='Post-click conversions on external websites',
-                    ),
-                    CacheFieldConfig(
-                        name='externalWebsitePostViewConversions',
-                        type=['null', 'number'],
-                        description='Post-view conversions on external websites',
-                    ),
-                    CacheFieldConfig(
-                        name='conversionValueInLocalCurrency',
-                        type=['null', 'number'],
-                        description='Conversion value in local currency',
-                    ),
-                    CacheFieldConfig(
-                        name='approximateMemberReach',
-                        type=['null', 'number'],
-                        description='Approximate unique member reach',
-                    ),
-                    CacheFieldConfig(
-                        name='cardClicks',
-                        type=['null', 'number'],
-                        description='Number of carousel card clicks',
-                    ),
-                    CacheFieldConfig(
-                        name='cardImpressions',
-                        type=['null', 'number'],
-                        description='Number of carousel card impressions',
-                    ),
-                    CacheFieldConfig(
-                        name='videoStarts',
-                        type=['null', 'number'],
-                        description='Number of video starts',
-                    ),
-                    CacheFieldConfig(
-                        name='videoViews',
-                        type=['null', 'number'],
-                        description='Number of video views',
-                    ),
-                    CacheFieldConfig(
-                        name='videoFirstQuartileCompletions',
-                        type=['null', 'number'],
-                        description='Number of times video played to 25%',
-                    ),
-                    CacheFieldConfig(
-                        name='videoMidpointCompletions',
-                        type=['null', 'number'],
-                        description='Number of times video played to 50%',
-                    ),
-                    CacheFieldConfig(
-                        name='videoThirdQuartileCompletions',
-                        type=['null', 'number'],
-                        description='Number of times video played to 75%',
-                    ),
-                    CacheFieldConfig(
-                        name='videoCompletions',
-                        type=['null', 'number'],
-                        description='Number of times video played to 100%',
-                    ),
-                    CacheFieldConfig(
-                        name='fullScreenPlays',
-                        type=['null', 'number'],
-                        description='Number of full screen video plays',
-                    ),
-                    CacheFieldConfig(
-                        name='oneClickLeads',
-                        type=['null', 'number'],
-                        description='Number of one-click leads',
-                    ),
-                    CacheFieldConfig(
-                        name='oneClickLeadFormOpens',
-                        type=['null', 'number'],
-                        description='Number of one-click lead form opens',
-                    ),
-                    CacheFieldConfig(
-                        name='otherEngagements',
-                        type=['null', 'number'],
-                        description='Number of other engagements',
+                        description='The number of clicks on action buttons in the ad.',
                     ),
                     CacheFieldConfig(
                         name='adUnitClicks',
                         type=['null', 'number'],
-                        description='Number of ad unit clicks',
+                        description='The number of clicks on ad unit components.',
                     ),
                     CacheFieldConfig(
-                        name='actionClicks',
+                        name='approximateMemberReach',
                         type=['null', 'number'],
-                        description='Number of action clicks',
+                        description='An approximation of unique ad impressions.',
                     ),
                     CacheFieldConfig(
-                        name='textUrlClicks',
+                        name='cardClicks',
                         type=['null', 'number'],
-                        description='Number of text URL clicks',
+                        description='The number of clicks on interactive card elements.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='The number of times interactive cards were displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Total number of clicks on the ad.',
                     ),
                     CacheFieldConfig(
                         name='commentLikes',
                         type=['null', 'number'],
-                        description='Number of comment likes',
+                        description='The count of likes on comments related to the ad.',
                     ),
                     CacheFieldConfig(
-                        name='sends',
+                        name='comments',
                         type=['null', 'number'],
-                        description='Number of sends (InMail)',
+                        description='The number of comments on the ad.',
                     ),
                     CacheFieldConfig(
-                        name='opens',
+                        name='companyPageClicks',
                         type=['null', 'number'],
-                        description='Number of opens (InMail)',
+                        description='Clicks on the company page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in USD.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentCompletions',
+                        type=['null', 'number'],
+                        description='Number of completions for document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of document views.',
                     ),
                     CacheFieldConfig(
                         name='downloadClicks',
                         type=['null', 'number'],
-                        description='Number of download clicks',
-                    ),
-                    CacheFieldConfig(
-                        name='pivotValues',
-                        type=['null', 'array'],
-                        description='Pivot values (URNs) for this analytics record',
-                    ),
-                    CacheFieldConfig(
-                        name='start_date',
-                        type=['null', 'string'],
-                        description='Start date of the ad analytics data',
+                        description='Clicks on download links in the ad.',
                     ),
                     CacheFieldConfig(
                         name='end_date',
                         type=['null', 'string'],
-                        description='End date of the ad analytics data',
+                        description='End date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Conversions that lead to external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of times videos were played in fullscreen mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Total number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplications',
+                        type=['null', 'number'],
+                        description='Number of job applications initiated through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the landing page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailContactInfoShares',
+                        type=['null', 'number'],
+                        description='Shares of contact information through lead generation.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailInterestedClicks',
+                        type=['null', 'number'],
+                        description='Clicks on expressing interest through lead generation mail.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Total likes received on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of times lead forms were opened in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='The number of times the ad was opened or expanded.',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Engagements other than clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Values used for pivoting the analytics.',
+                    ),
+                    CacheFieldConfig(
+                        name='string_of_pivot_values',
+                        type=['null', 'string'],
+                        description='Comma-separated string of pivot values for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Total reactions (e.g., like, love, celebrate) on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='registrations',
+                        type=['null', 'number'],
+                        description='Total registrations completed through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of messages sent through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Total shares generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='talentLeads',
+                        type=['null', 'number'],
+                        description='Number of leads related to talent acquisition.',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Clicks on text URLs within the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='validWorkEmailLeads',
+                        type=['null', 'number'],
+                        description='Leads generated through valid work emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times videos were watched till completion.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts initiated by users.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardClicks',
+                        type=['null', 'number'],
+                        description='Clicks on interactive card components in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardImpressions',
+                        type=['null', 'number'],
+                        description='Impressions of interactive cards in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralClicks',
+                        type=['null', 'number'],
+                        description='Total clicks in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCommentLikes',
+                        type=['null', 'number'],
+                        description='Likes received on comments in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralComments',
+                        type=['null', 'number'],
+                        description='Number of comments in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCompanyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentCompletions',
+                        type=['null', 'number'],
+                        description='Complete views of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDownloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on downloads in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='External website conversions in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFollows',
+                        type=['null', 'number'],
+                        description='Follows generated in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFullScreenPlays',
+                        type=['null', 'number'],
+                        description='Fullscreen video plays in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralImpressions',
+                        type=['null', 'number'],
+                        description='Total impressions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLandingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on landing page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLikes',
+                        type=['null', 'number'],
+                        description='Total likes in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='One-click lead form opens in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOtherEngagements',
+                        type=['null', 'number'],
+                        description='Other engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralReactions',
+                        type=['null', 'number'],
+                        description='Total reactions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralRegistrations',
+                        type=['null', 'number'],
+                        description='Total registrations in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralShares',
+                        type=['null', 'number'],
+                        description='Total shares in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralTotalEngagements',
+                        type=['null', 'number'],
+                        description='Total engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoCompletions',
+                        type=['null', 'number'],
+                        description='Completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivot',
+                        type=['null', 'string'],
+                        description='Pivot dimension used for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='sponsoredCampaign',
+                        type=['null', 'string'],
+                        description='URN of the sponsored campaign this analytics record belongs to',
                     ),
                 ],
             ),
@@ -4003,199 +12965,5200 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                 x_airbyte_name='ad_creative_analytics',
                 fields=[
                     CacheFieldConfig(
-                        name='impressions',
+                        name='actionClicks',
                         type=['null', 'number'],
-                        description='Number of times the ad was shown',
-                    ),
-                    CacheFieldConfig(
-                        name='clicks',
-                        type=['null', 'number'],
-                        description='Number of clicks on the ad',
-                    ),
-                    CacheFieldConfig(
-                        name='costInLocalCurrency',
-                        type=['null', 'number'],
-                        description='Total cost in the accounts local currency',
-                    ),
-                    CacheFieldConfig(
-                        name='costInUsd',
-                        type=['null', 'number'],
-                        description='Total cost in USD',
-                    ),
-                    CacheFieldConfig(
-                        name='likes',
-                        type=['null', 'number'],
-                        description='Number of likes',
-                    ),
-                    CacheFieldConfig(
-                        name='shares',
-                        type=['null', 'number'],
-                        description='Number of shares',
-                    ),
-                    CacheFieldConfig(
-                        name='comments',
-                        type=['null', 'number'],
-                        description='Number of comments',
-                    ),
-                    CacheFieldConfig(
-                        name='reactions',
-                        type=['null', 'number'],
-                        description='Number of reactions',
-                    ),
-                    CacheFieldConfig(
-                        name='follows',
-                        type=['null', 'number'],
-                        description='Number of follows',
-                    ),
-                    CacheFieldConfig(
-                        name='totalEngagements',
-                        type=['null', 'number'],
-                        description='Total number of engagements',
-                    ),
-                    CacheFieldConfig(
-                        name='landingPageClicks',
-                        type=['null', 'number'],
-                        description='Number of landing page clicks',
-                    ),
-                    CacheFieldConfig(
-                        name='companyPageClicks',
-                        type=['null', 'number'],
-                        description='Number of company page clicks',
-                    ),
-                    CacheFieldConfig(
-                        name='externalWebsiteConversions',
-                        type=['null', 'number'],
-                        description='Number of conversions on external websites',
-                    ),
-                    CacheFieldConfig(
-                        name='externalWebsitePostClickConversions',
-                        type=['null', 'number'],
-                        description='Post-click conversions on external websites',
-                    ),
-                    CacheFieldConfig(
-                        name='externalWebsitePostViewConversions',
-                        type=['null', 'number'],
-                        description='Post-view conversions on external websites',
-                    ),
-                    CacheFieldConfig(
-                        name='conversionValueInLocalCurrency',
-                        type=['null', 'number'],
-                        description='Conversion value in local currency',
-                    ),
-                    CacheFieldConfig(
-                        name='approximateMemberReach',
-                        type=['null', 'number'],
-                        description='Approximate unique member reach',
-                    ),
-                    CacheFieldConfig(
-                        name='cardClicks',
-                        type=['null', 'number'],
-                        description='Number of carousel card clicks',
-                    ),
-                    CacheFieldConfig(
-                        name='cardImpressions',
-                        type=['null', 'number'],
-                        description='Number of carousel card impressions',
-                    ),
-                    CacheFieldConfig(
-                        name='videoStarts',
-                        type=['null', 'number'],
-                        description='Number of video starts',
-                    ),
-                    CacheFieldConfig(
-                        name='videoViews',
-                        type=['null', 'number'],
-                        description='Number of video views',
-                    ),
-                    CacheFieldConfig(
-                        name='videoFirstQuartileCompletions',
-                        type=['null', 'number'],
-                        description='Number of times video played to 25%',
-                    ),
-                    CacheFieldConfig(
-                        name='videoMidpointCompletions',
-                        type=['null', 'number'],
-                        description='Number of times video played to 50%',
-                    ),
-                    CacheFieldConfig(
-                        name='videoThirdQuartileCompletions',
-                        type=['null', 'number'],
-                        description='Number of times video played to 75%',
-                    ),
-                    CacheFieldConfig(
-                        name='videoCompletions',
-                        type=['null', 'number'],
-                        description='Number of times video played to 100%',
-                    ),
-                    CacheFieldConfig(
-                        name='fullScreenPlays',
-                        type=['null', 'number'],
-                        description='Number of full screen video plays',
-                    ),
-                    CacheFieldConfig(
-                        name='oneClickLeads',
-                        type=['null', 'number'],
-                        description='Number of one-click leads',
-                    ),
-                    CacheFieldConfig(
-                        name='oneClickLeadFormOpens',
-                        type=['null', 'number'],
-                        description='Number of one-click lead form opens',
-                    ),
-                    CacheFieldConfig(
-                        name='otherEngagements',
-                        type=['null', 'number'],
-                        description='Number of other engagements',
+                        description='The number of clicks on action buttons in the ad.',
                     ),
                     CacheFieldConfig(
                         name='adUnitClicks',
                         type=['null', 'number'],
-                        description='Number of ad unit clicks',
+                        description='The number of clicks on ad unit components.',
                     ),
                     CacheFieldConfig(
-                        name='actionClicks',
+                        name='approximateMemberReach',
                         type=['null', 'number'],
-                        description='Number of action clicks',
+                        description='An approximation of unique ad impressions.',
                     ),
                     CacheFieldConfig(
-                        name='textUrlClicks',
+                        name='cardClicks',
                         type=['null', 'number'],
-                        description='Number of text URL clicks',
+                        description='The number of clicks on interactive card elements.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='The number of times interactive cards were displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Total number of clicks on the ad.',
                     ),
                     CacheFieldConfig(
                         name='commentLikes',
                         type=['null', 'number'],
-                        description='Number of comment likes',
+                        description='The count of likes on comments related to the ad.',
                     ),
                     CacheFieldConfig(
-                        name='sends',
+                        name='comments',
                         type=['null', 'number'],
-                        description='Number of sends (InMail)',
+                        description='The number of comments on the ad.',
                     ),
                     CacheFieldConfig(
-                        name='opens',
+                        name='companyPageClicks',
                         type=['null', 'number'],
-                        description='Number of opens (InMail)',
+                        description='Clicks on the company page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in USD.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentCompletions',
+                        type=['null', 'number'],
+                        description='Number of completions for document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of document views.',
                     ),
                     CacheFieldConfig(
                         name='downloadClicks',
                         type=['null', 'number'],
-                        description='Number of download clicks',
-                    ),
-                    CacheFieldConfig(
-                        name='pivotValues',
-                        type=['null', 'array'],
-                        description='Pivot values (URNs) for this analytics record',
-                    ),
-                    CacheFieldConfig(
-                        name='start_date',
-                        type=['null', 'string'],
-                        description='Start date of the ad analytics data',
+                        description='Clicks on download links in the ad.',
                     ),
                     CacheFieldConfig(
                         name='end_date',
                         type=['null', 'string'],
-                        description='End date of the ad analytics data',
+                        description='End date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Conversions that lead to external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of times videos were played in fullscreen mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Total number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplications',
+                        type=['null', 'number'],
+                        description='Number of job applications initiated through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the landing page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailContactInfoShares',
+                        type=['null', 'number'],
+                        description='Shares of contact information through lead generation.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailInterestedClicks',
+                        type=['null', 'number'],
+                        description='Clicks on expressing interest through lead generation mail.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Total likes received on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of times lead forms were opened in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='The number of times the ad was opened or expanded.',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Engagements other than clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Values used for pivoting the analytics.',
+                    ),
+                    CacheFieldConfig(
+                        name='string_of_pivot_values',
+                        type=['null', 'string'],
+                        description='Comma-separated string of pivot values for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Total reactions (e.g., like, love, celebrate) on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='registrations',
+                        type=['null', 'number'],
+                        description='Total registrations completed through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of messages sent through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Total shares generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='talentLeads',
+                        type=['null', 'number'],
+                        description='Number of leads related to talent acquisition.',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Clicks on text URLs within the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='validWorkEmailLeads',
+                        type=['null', 'number'],
+                        description='Leads generated through valid work emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times videos were watched till completion.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts initiated by users.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardClicks',
+                        type=['null', 'number'],
+                        description='Clicks on interactive card components in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardImpressions',
+                        type=['null', 'number'],
+                        description='Impressions of interactive cards in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralClicks',
+                        type=['null', 'number'],
+                        description='Total clicks in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCommentLikes',
+                        type=['null', 'number'],
+                        description='Likes received on comments in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralComments',
+                        type=['null', 'number'],
+                        description='Number of comments in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCompanyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentCompletions',
+                        type=['null', 'number'],
+                        description='Complete views of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDownloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on downloads in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='External website conversions in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFollows',
+                        type=['null', 'number'],
+                        description='Follows generated in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFullScreenPlays',
+                        type=['null', 'number'],
+                        description='Fullscreen video plays in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralImpressions',
+                        type=['null', 'number'],
+                        description='Total impressions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLandingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on landing page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLikes',
+                        type=['null', 'number'],
+                        description='Total likes in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='One-click lead form opens in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOtherEngagements',
+                        type=['null', 'number'],
+                        description='Other engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralReactions',
+                        type=['null', 'number'],
+                        description='Total reactions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralRegistrations',
+                        type=['null', 'number'],
+                        description='Total registrations in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralShares',
+                        type=['null', 'number'],
+                        description='Total shares in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralTotalEngagements',
+                        type=['null', 'number'],
+                        description='Total engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoCompletions',
+                        type=['null', 'number'],
+                        description='Completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivot',
+                        type=['null', 'string'],
+                        description='Pivot dimension used for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='sponsoredCreative',
+                        type=['null', 'string'],
+                        description='Sponsored creative',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_impression_device_analytics',
+                x_airbyte_name='ad_impression_device_analytics',
+                fields=[
+                    CacheFieldConfig(
+                        name='actionClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on action buttons in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='adUnitClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on ad unit components.',
+                    ),
+                    CacheFieldConfig(
+                        name='approximateMemberReach',
+                        type=['null', 'number'],
+                        description='An approximation of unique ad impressions.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on interactive card elements.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='The number of times interactive cards were displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Total number of clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='commentLikes',
+                        type=['null', 'number'],
+                        description='The count of likes on comments related to the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='The number of comments on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='companyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in USD.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentCompletions',
+                        type=['null', 'number'],
+                        description='Number of completions for document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on download links in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='End date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Conversions that lead to external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of times videos were played in fullscreen mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Total number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplications',
+                        type=['null', 'number'],
+                        description='Number of job applications initiated through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the landing page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailContactInfoShares',
+                        type=['null', 'number'],
+                        description='Shares of contact information through lead generation.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailInterestedClicks',
+                        type=['null', 'number'],
+                        description='Clicks on expressing interest through lead generation mail.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Total likes received on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of times lead forms were opened in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='The number of times the ad was opened or expanded.',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Engagements other than clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Values used for pivoting the analytics.',
+                    ),
+                    CacheFieldConfig(
+                        name='string_of_pivot_values',
+                        type=['null', 'string'],
+                        description='Comma-separated string of pivot values for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Total reactions (e.g., like, love, celebrate) on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='registrations',
+                        type=['null', 'number'],
+                        description='Total registrations completed through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of messages sent through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Total shares generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='talentLeads',
+                        type=['null', 'number'],
+                        description='Number of leads related to talent acquisition.',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Clicks on text URLs within the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='validWorkEmailLeads',
+                        type=['null', 'number'],
+                        description='Leads generated through valid work emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times videos were watched till completion.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts initiated by users.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardClicks',
+                        type=['null', 'number'],
+                        description='Clicks on interactive card components in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardImpressions',
+                        type=['null', 'number'],
+                        description='Impressions of interactive cards in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralClicks',
+                        type=['null', 'number'],
+                        description='Total clicks in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCommentLikes',
+                        type=['null', 'number'],
+                        description='Likes received on comments in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralComments',
+                        type=['null', 'number'],
+                        description='Number of comments in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCompanyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentCompletions',
+                        type=['null', 'number'],
+                        description='Complete views of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDownloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on downloads in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='External website conversions in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFollows',
+                        type=['null', 'number'],
+                        description='Follows generated in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFullScreenPlays',
+                        type=['null', 'number'],
+                        description='Fullscreen video plays in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralImpressions',
+                        type=['null', 'number'],
+                        description='Total impressions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLandingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on landing page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLikes',
+                        type=['null', 'number'],
+                        description='Total likes in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='One-click lead form opens in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOtherEngagements',
+                        type=['null', 'number'],
+                        description='Other engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralReactions',
+                        type=['null', 'number'],
+                        description='Total reactions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralRegistrations',
+                        type=['null', 'number'],
+                        description='Total registrations in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralShares',
+                        type=['null', 'number'],
+                        description='Total shares in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralTotalEngagements',
+                        type=['null', 'number'],
+                        description='Total engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoCompletions',
+                        type=['null', 'number'],
+                        description='Completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivot',
+                        type=['null', 'string'],
+                        description='Pivot dimension used for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='sponsoredCampaign',
+                        type=['null', 'string'],
+                        description='URN of the sponsored campaign this analytics record belongs to',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_member_company_analytics',
+                x_airbyte_name='ad_member_company_analytics',
+                fields=[
+                    CacheFieldConfig(
+                        name='actionClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on action buttons in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='adUnitClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on ad unit components.',
+                    ),
+                    CacheFieldConfig(
+                        name='approximateMemberReach',
+                        type=['null', 'number'],
+                        description='An approximation of unique ad impressions.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on interactive card elements.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='The number of times interactive cards were displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Total number of clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='commentLikes',
+                        type=['null', 'number'],
+                        description='The count of likes on comments related to the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='The number of comments on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='companyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in USD.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentCompletions',
+                        type=['null', 'number'],
+                        description='Number of completions for document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on download links in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='End date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Conversions that lead to external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of times videos were played in fullscreen mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Total number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplications',
+                        type=['null', 'number'],
+                        description='Number of job applications initiated through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the landing page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailContactInfoShares',
+                        type=['null', 'number'],
+                        description='Shares of contact information through lead generation.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailInterestedClicks',
+                        type=['null', 'number'],
+                        description='Clicks on expressing interest through lead generation mail.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Total likes received on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of times lead forms were opened in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='The number of times the ad was opened or expanded.',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Engagements other than clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Values used for pivoting the analytics.',
+                    ),
+                    CacheFieldConfig(
+                        name='string_of_pivot_values',
+                        type=['null', 'string'],
+                        description='Comma-separated string of pivot values for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Total reactions (e.g., like, love, celebrate) on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='registrations',
+                        type=['null', 'number'],
+                        description='Total registrations completed through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of messages sent through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Total shares generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='talentLeads',
+                        type=['null', 'number'],
+                        description='Number of leads related to talent acquisition.',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Clicks on text URLs within the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='validWorkEmailLeads',
+                        type=['null', 'number'],
+                        description='Leads generated through valid work emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times videos were watched till completion.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts initiated by users.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardClicks',
+                        type=['null', 'number'],
+                        description='Clicks on interactive card components in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardImpressions',
+                        type=['null', 'number'],
+                        description='Impressions of interactive cards in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralClicks',
+                        type=['null', 'number'],
+                        description='Total clicks in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCommentLikes',
+                        type=['null', 'number'],
+                        description='Likes received on comments in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralComments',
+                        type=['null', 'number'],
+                        description='Number of comments in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCompanyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentCompletions',
+                        type=['null', 'number'],
+                        description='Complete views of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDownloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on downloads in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='External website conversions in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFollows',
+                        type=['null', 'number'],
+                        description='Follows generated in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFullScreenPlays',
+                        type=['null', 'number'],
+                        description='Fullscreen video plays in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralImpressions',
+                        type=['null', 'number'],
+                        description='Total impressions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLandingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on landing page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLikes',
+                        type=['null', 'number'],
+                        description='Total likes in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='One-click lead form opens in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOtherEngagements',
+                        type=['null', 'number'],
+                        description='Other engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralReactions',
+                        type=['null', 'number'],
+                        description='Total reactions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralRegistrations',
+                        type=['null', 'number'],
+                        description='Total registrations in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralShares',
+                        type=['null', 'number'],
+                        description='Total shares in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralTotalEngagements',
+                        type=['null', 'number'],
+                        description='Total engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoCompletions',
+                        type=['null', 'number'],
+                        description='Completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivot',
+                        type=['null', 'string'],
+                        description='Pivot dimension used for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='sponsoredCampaign',
+                        type=['null', 'string'],
+                        description='URN of the sponsored campaign this analytics record belongs to',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_member_company_size_analytics',
+                x_airbyte_name='ad_member_company_size_analytics',
+                fields=[
+                    CacheFieldConfig(
+                        name='actionClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on action buttons in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='adUnitClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on ad unit components.',
+                    ),
+                    CacheFieldConfig(
+                        name='approximateMemberReach',
+                        type=['null', 'number'],
+                        description='An approximation of unique ad impressions.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on interactive card elements.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='The number of times interactive cards were displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Total number of clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='commentLikes',
+                        type=['null', 'number'],
+                        description='The count of likes on comments related to the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='The number of comments on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='companyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in USD.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentCompletions',
+                        type=['null', 'number'],
+                        description='Number of completions for document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on download links in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='End date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Conversions that lead to external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of times videos were played in fullscreen mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Total number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplications',
+                        type=['null', 'number'],
+                        description='Number of job applications initiated through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the landing page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailContactInfoShares',
+                        type=['null', 'number'],
+                        description='Shares of contact information through lead generation.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailInterestedClicks',
+                        type=['null', 'number'],
+                        description='Clicks on expressing interest through lead generation mail.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Total likes received on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of times lead forms were opened in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='The number of times the ad was opened or expanded.',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Engagements other than clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Values used for pivoting the analytics.',
+                    ),
+                    CacheFieldConfig(
+                        name='string_of_pivot_values',
+                        type=['null', 'string'],
+                        description='Comma-separated string of pivot values for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Total reactions (e.g., like, love, celebrate) on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='registrations',
+                        type=['null', 'number'],
+                        description='Total registrations completed through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of messages sent through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Total shares generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='talentLeads',
+                        type=['null', 'number'],
+                        description='Number of leads related to talent acquisition.',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Clicks on text URLs within the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='validWorkEmailLeads',
+                        type=['null', 'number'],
+                        description='Leads generated through valid work emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times videos were watched till completion.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts initiated by users.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardClicks',
+                        type=['null', 'number'],
+                        description='Clicks on interactive card components in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardImpressions',
+                        type=['null', 'number'],
+                        description='Impressions of interactive cards in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralClicks',
+                        type=['null', 'number'],
+                        description='Total clicks in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCommentLikes',
+                        type=['null', 'number'],
+                        description='Likes received on comments in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralComments',
+                        type=['null', 'number'],
+                        description='Number of comments in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCompanyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentCompletions',
+                        type=['null', 'number'],
+                        description='Complete views of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDownloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on downloads in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='External website conversions in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFollows',
+                        type=['null', 'number'],
+                        description='Follows generated in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFullScreenPlays',
+                        type=['null', 'number'],
+                        description='Fullscreen video plays in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralImpressions',
+                        type=['null', 'number'],
+                        description='Total impressions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLandingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on landing page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLikes',
+                        type=['null', 'number'],
+                        description='Total likes in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='One-click lead form opens in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOtherEngagements',
+                        type=['null', 'number'],
+                        description='Other engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralReactions',
+                        type=['null', 'number'],
+                        description='Total reactions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralRegistrations',
+                        type=['null', 'number'],
+                        description='Total registrations in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralShares',
+                        type=['null', 'number'],
+                        description='Total shares in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralTotalEngagements',
+                        type=['null', 'number'],
+                        description='Total engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoCompletions',
+                        type=['null', 'number'],
+                        description='Completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivot',
+                        type=['null', 'string'],
+                        description='Pivot dimension used for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='sponsoredCampaign',
+                        type=['null', 'string'],
+                        description='URN of the sponsored campaign this analytics record belongs to',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_member_country_analytics',
+                x_airbyte_name='ad_member_country_analytics',
+                fields=[
+                    CacheFieldConfig(
+                        name='actionClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on action buttons in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='adUnitClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on ad unit components.',
+                    ),
+                    CacheFieldConfig(
+                        name='approximateMemberReach',
+                        type=['null', 'number'],
+                        description='An approximation of unique ad impressions.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on interactive card elements.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='The number of times interactive cards were displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Total number of clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='commentLikes',
+                        type=['null', 'number'],
+                        description='The count of likes on comments related to the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='The number of comments on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='companyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in USD.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentCompletions',
+                        type=['null', 'number'],
+                        description='Number of completions for document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on download links in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='End date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Conversions that lead to external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of times videos were played in fullscreen mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Total number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplications',
+                        type=['null', 'number'],
+                        description='Number of job applications initiated through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the landing page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailContactInfoShares',
+                        type=['null', 'number'],
+                        description='Shares of contact information through lead generation.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailInterestedClicks',
+                        type=['null', 'number'],
+                        description='Clicks on expressing interest through lead generation mail.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Total likes received on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of times lead forms were opened in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='The number of times the ad was opened or expanded.',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Engagements other than clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Values used for pivoting the analytics.',
+                    ),
+                    CacheFieldConfig(
+                        name='string_of_pivot_values',
+                        type=['null', 'string'],
+                        description='Comma-separated string of pivot values for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Total reactions (e.g., like, love, celebrate) on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='registrations',
+                        type=['null', 'number'],
+                        description='Total registrations completed through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of messages sent through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Total shares generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='talentLeads',
+                        type=['null', 'number'],
+                        description='Number of leads related to talent acquisition.',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Clicks on text URLs within the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='validWorkEmailLeads',
+                        type=['null', 'number'],
+                        description='Leads generated through valid work emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times videos were watched till completion.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts initiated by users.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardClicks',
+                        type=['null', 'number'],
+                        description='Clicks on interactive card components in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardImpressions',
+                        type=['null', 'number'],
+                        description='Impressions of interactive cards in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralClicks',
+                        type=['null', 'number'],
+                        description='Total clicks in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCommentLikes',
+                        type=['null', 'number'],
+                        description='Likes received on comments in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralComments',
+                        type=['null', 'number'],
+                        description='Number of comments in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCompanyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentCompletions',
+                        type=['null', 'number'],
+                        description='Complete views of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDownloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on downloads in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='External website conversions in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFollows',
+                        type=['null', 'number'],
+                        description='Follows generated in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFullScreenPlays',
+                        type=['null', 'number'],
+                        description='Fullscreen video plays in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralImpressions',
+                        type=['null', 'number'],
+                        description='Total impressions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLandingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on landing page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLikes',
+                        type=['null', 'number'],
+                        description='Total likes in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='One-click lead form opens in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOtherEngagements',
+                        type=['null', 'number'],
+                        description='Other engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralReactions',
+                        type=['null', 'number'],
+                        description='Total reactions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralRegistrations',
+                        type=['null', 'number'],
+                        description='Total registrations in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralShares',
+                        type=['null', 'number'],
+                        description='Total shares in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralTotalEngagements',
+                        type=['null', 'number'],
+                        description='Total engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoCompletions',
+                        type=['null', 'number'],
+                        description='Completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivot',
+                        type=['null', 'string'],
+                        description='Pivot dimension used for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='sponsoredCampaign',
+                        type=['null', 'string'],
+                        description='URN of the sponsored campaign this analytics record belongs to',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_member_industry_analytics',
+                x_airbyte_name='ad_member_industry_analytics',
+                fields=[
+                    CacheFieldConfig(
+                        name='actionClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on action buttons in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='adUnitClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on ad unit components.',
+                    ),
+                    CacheFieldConfig(
+                        name='approximateMemberReach',
+                        type=['null', 'number'],
+                        description='An approximation of unique ad impressions.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on interactive card elements.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='The number of times interactive cards were displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Total number of clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='commentLikes',
+                        type=['null', 'number'],
+                        description='The count of likes on comments related to the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='The number of comments on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='companyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in USD.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentCompletions',
+                        type=['null', 'number'],
+                        description='Number of completions for document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on download links in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='End date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Conversions that lead to external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of times videos were played in fullscreen mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Total number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplications',
+                        type=['null', 'number'],
+                        description='Number of job applications initiated through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the landing page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailContactInfoShares',
+                        type=['null', 'number'],
+                        description='Shares of contact information through lead generation.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailInterestedClicks',
+                        type=['null', 'number'],
+                        description='Clicks on expressing interest through lead generation mail.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Total likes received on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of times lead forms were opened in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='The number of times the ad was opened or expanded.',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Engagements other than clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Values used for pivoting the analytics.',
+                    ),
+                    CacheFieldConfig(
+                        name='string_of_pivot_values',
+                        type=['null', 'string'],
+                        description='Comma-separated string of pivot values for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Total reactions (e.g., like, love, celebrate) on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='registrations',
+                        type=['null', 'number'],
+                        description='Total registrations completed through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of messages sent through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Total shares generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='talentLeads',
+                        type=['null', 'number'],
+                        description='Number of leads related to talent acquisition.',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Clicks on text URLs within the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='validWorkEmailLeads',
+                        type=['null', 'number'],
+                        description='Leads generated through valid work emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times videos were watched till completion.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts initiated by users.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardClicks',
+                        type=['null', 'number'],
+                        description='Clicks on interactive card components in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardImpressions',
+                        type=['null', 'number'],
+                        description='Impressions of interactive cards in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralClicks',
+                        type=['null', 'number'],
+                        description='Total clicks in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCommentLikes',
+                        type=['null', 'number'],
+                        description='Likes received on comments in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralComments',
+                        type=['null', 'number'],
+                        description='Number of comments in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCompanyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentCompletions',
+                        type=['null', 'number'],
+                        description='Complete views of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDownloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on downloads in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='External website conversions in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFollows',
+                        type=['null', 'number'],
+                        description='Follows generated in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFullScreenPlays',
+                        type=['null', 'number'],
+                        description='Fullscreen video plays in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralImpressions',
+                        type=['null', 'number'],
+                        description='Total impressions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLandingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on landing page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLikes',
+                        type=['null', 'number'],
+                        description='Total likes in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='One-click lead form opens in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOtherEngagements',
+                        type=['null', 'number'],
+                        description='Other engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralReactions',
+                        type=['null', 'number'],
+                        description='Total reactions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralRegistrations',
+                        type=['null', 'number'],
+                        description='Total registrations in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralShares',
+                        type=['null', 'number'],
+                        description='Total shares in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralTotalEngagements',
+                        type=['null', 'number'],
+                        description='Total engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoCompletions',
+                        type=['null', 'number'],
+                        description='Completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivot',
+                        type=['null', 'string'],
+                        description='Pivot dimension used for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='sponsoredCampaign',
+                        type=['null', 'string'],
+                        description='URN of the sponsored campaign this analytics record belongs to',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_member_job_function_analytics',
+                x_airbyte_name='ad_member_job_function_analytics',
+                fields=[
+                    CacheFieldConfig(
+                        name='actionClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on action buttons in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='adUnitClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on ad unit components.',
+                    ),
+                    CacheFieldConfig(
+                        name='approximateMemberReach',
+                        type=['null', 'number'],
+                        description='An approximation of unique ad impressions.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on interactive card elements.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='The number of times interactive cards were displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Total number of clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='commentLikes',
+                        type=['null', 'number'],
+                        description='The count of likes on comments related to the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='The number of comments on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='companyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in USD.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentCompletions',
+                        type=['null', 'number'],
+                        description='Number of completions for document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on download links in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='End date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Conversions that lead to external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of times videos were played in fullscreen mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Total number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplications',
+                        type=['null', 'number'],
+                        description='Number of job applications initiated through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the landing page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailContactInfoShares',
+                        type=['null', 'number'],
+                        description='Shares of contact information through lead generation.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailInterestedClicks',
+                        type=['null', 'number'],
+                        description='Clicks on expressing interest through lead generation mail.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Total likes received on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of times lead forms were opened in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='The number of times the ad was opened or expanded.',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Engagements other than clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Values used for pivoting the analytics.',
+                    ),
+                    CacheFieldConfig(
+                        name='string_of_pivot_values',
+                        type=['null', 'string'],
+                        description='Comma-separated string of pivot values for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Total reactions (e.g., like, love, celebrate) on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='registrations',
+                        type=['null', 'number'],
+                        description='Total registrations completed through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of messages sent through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Total shares generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='talentLeads',
+                        type=['null', 'number'],
+                        description='Number of leads related to talent acquisition.',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Clicks on text URLs within the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='validWorkEmailLeads',
+                        type=['null', 'number'],
+                        description='Leads generated through valid work emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times videos were watched till completion.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts initiated by users.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardClicks',
+                        type=['null', 'number'],
+                        description='Clicks on interactive card components in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardImpressions',
+                        type=['null', 'number'],
+                        description='Impressions of interactive cards in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralClicks',
+                        type=['null', 'number'],
+                        description='Total clicks in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCommentLikes',
+                        type=['null', 'number'],
+                        description='Likes received on comments in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralComments',
+                        type=['null', 'number'],
+                        description='Number of comments in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCompanyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentCompletions',
+                        type=['null', 'number'],
+                        description='Complete views of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDownloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on downloads in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='External website conversions in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFollows',
+                        type=['null', 'number'],
+                        description='Follows generated in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFullScreenPlays',
+                        type=['null', 'number'],
+                        description='Fullscreen video plays in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralImpressions',
+                        type=['null', 'number'],
+                        description='Total impressions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLandingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on landing page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLikes',
+                        type=['null', 'number'],
+                        description='Total likes in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='One-click lead form opens in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOtherEngagements',
+                        type=['null', 'number'],
+                        description='Other engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralReactions',
+                        type=['null', 'number'],
+                        description='Total reactions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralRegistrations',
+                        type=['null', 'number'],
+                        description='Total registrations in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralShares',
+                        type=['null', 'number'],
+                        description='Total shares in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralTotalEngagements',
+                        type=['null', 'number'],
+                        description='Total engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoCompletions',
+                        type=['null', 'number'],
+                        description='Completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivot',
+                        type=['null', 'string'],
+                        description='Pivot dimension used for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='sponsoredCampaign',
+                        type=['null', 'string'],
+                        description='URN of the sponsored campaign this analytics record belongs to',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_member_job_title_analytics',
+                x_airbyte_name='ad_member_job_title_analytics',
+                fields=[
+                    CacheFieldConfig(
+                        name='actionClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on action buttons in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='adUnitClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on ad unit components.',
+                    ),
+                    CacheFieldConfig(
+                        name='approximateMemberReach',
+                        type=['null', 'number'],
+                        description='An approximation of unique ad impressions.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on interactive card elements.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='The number of times interactive cards were displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Total number of clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='commentLikes',
+                        type=['null', 'number'],
+                        description='The count of likes on comments related to the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='The number of comments on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='companyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in USD.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentCompletions',
+                        type=['null', 'number'],
+                        description='Number of completions for document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on download links in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='End date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Conversions that lead to external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of times videos were played in fullscreen mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Total number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplications',
+                        type=['null', 'number'],
+                        description='Number of job applications initiated through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the landing page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailContactInfoShares',
+                        type=['null', 'number'],
+                        description='Shares of contact information through lead generation.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailInterestedClicks',
+                        type=['null', 'number'],
+                        description='Clicks on expressing interest through lead generation mail.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Total likes received on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of times lead forms were opened in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='The number of times the ad was opened or expanded.',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Engagements other than clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Values used for pivoting the analytics.',
+                    ),
+                    CacheFieldConfig(
+                        name='string_of_pivot_values',
+                        type=['null', 'string'],
+                        description='Comma-separated string of pivot values for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Total reactions (e.g., like, love, celebrate) on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='registrations',
+                        type=['null', 'number'],
+                        description='Total registrations completed through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of messages sent through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Total shares generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='talentLeads',
+                        type=['null', 'number'],
+                        description='Number of leads related to talent acquisition.',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Clicks on text URLs within the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='validWorkEmailLeads',
+                        type=['null', 'number'],
+                        description='Leads generated through valid work emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times videos were watched till completion.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts initiated by users.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardClicks',
+                        type=['null', 'number'],
+                        description='Clicks on interactive card components in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardImpressions',
+                        type=['null', 'number'],
+                        description='Impressions of interactive cards in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralClicks',
+                        type=['null', 'number'],
+                        description='Total clicks in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCommentLikes',
+                        type=['null', 'number'],
+                        description='Likes received on comments in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralComments',
+                        type=['null', 'number'],
+                        description='Number of comments in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCompanyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentCompletions',
+                        type=['null', 'number'],
+                        description='Complete views of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDownloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on downloads in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='External website conversions in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFollows',
+                        type=['null', 'number'],
+                        description='Follows generated in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFullScreenPlays',
+                        type=['null', 'number'],
+                        description='Fullscreen video plays in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralImpressions',
+                        type=['null', 'number'],
+                        description='Total impressions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLandingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on landing page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLikes',
+                        type=['null', 'number'],
+                        description='Total likes in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='One-click lead form opens in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOtherEngagements',
+                        type=['null', 'number'],
+                        description='Other engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralReactions',
+                        type=['null', 'number'],
+                        description='Total reactions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralRegistrations',
+                        type=['null', 'number'],
+                        description='Total registrations in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralShares',
+                        type=['null', 'number'],
+                        description='Total shares in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralTotalEngagements',
+                        type=['null', 'number'],
+                        description='Total engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoCompletions',
+                        type=['null', 'number'],
+                        description='Completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivot',
+                        type=['null', 'string'],
+                        description='Pivot dimension used for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='sponsoredCampaign',
+                        type=['null', 'string'],
+                        description='URN of the sponsored campaign this analytics record belongs to',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_member_region_analytics',
+                x_airbyte_name='ad_member_region_analytics',
+                fields=[
+                    CacheFieldConfig(
+                        name='actionClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on action buttons in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='adUnitClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on ad unit components.',
+                    ),
+                    CacheFieldConfig(
+                        name='approximateMemberReach',
+                        type=['null', 'number'],
+                        description='An approximation of unique ad impressions.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on interactive card elements.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='The number of times interactive cards were displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Total number of clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='commentLikes',
+                        type=['null', 'number'],
+                        description='The count of likes on comments related to the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='The number of comments on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='companyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in USD.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentCompletions',
+                        type=['null', 'number'],
+                        description='Number of completions for document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on download links in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='End date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Conversions that lead to external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of times videos were played in fullscreen mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Total number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplications',
+                        type=['null', 'number'],
+                        description='Number of job applications initiated through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the landing page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailContactInfoShares',
+                        type=['null', 'number'],
+                        description='Shares of contact information through lead generation.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailInterestedClicks',
+                        type=['null', 'number'],
+                        description='Clicks on expressing interest through lead generation mail.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Total likes received on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of times lead forms were opened in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='The number of times the ad was opened or expanded.',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Engagements other than clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Values used for pivoting the analytics.',
+                    ),
+                    CacheFieldConfig(
+                        name='string_of_pivot_values',
+                        type=['null', 'string'],
+                        description='Comma-separated string of pivot values for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Total reactions (e.g., like, love, celebrate) on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='registrations',
+                        type=['null', 'number'],
+                        description='Total registrations completed through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of messages sent through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Total shares generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='talentLeads',
+                        type=['null', 'number'],
+                        description='Number of leads related to talent acquisition.',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Clicks on text URLs within the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='validWorkEmailLeads',
+                        type=['null', 'number'],
+                        description='Leads generated through valid work emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times videos were watched till completion.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts initiated by users.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardClicks',
+                        type=['null', 'number'],
+                        description='Clicks on interactive card components in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardImpressions',
+                        type=['null', 'number'],
+                        description='Impressions of interactive cards in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralClicks',
+                        type=['null', 'number'],
+                        description='Total clicks in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCommentLikes',
+                        type=['null', 'number'],
+                        description='Likes received on comments in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralComments',
+                        type=['null', 'number'],
+                        description='Number of comments in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCompanyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentCompletions',
+                        type=['null', 'number'],
+                        description='Complete views of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDownloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on downloads in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='External website conversions in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFollows',
+                        type=['null', 'number'],
+                        description='Follows generated in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFullScreenPlays',
+                        type=['null', 'number'],
+                        description='Fullscreen video plays in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralImpressions',
+                        type=['null', 'number'],
+                        description='Total impressions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLandingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on landing page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLikes',
+                        type=['null', 'number'],
+                        description='Total likes in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='One-click lead form opens in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOtherEngagements',
+                        type=['null', 'number'],
+                        description='Other engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralReactions',
+                        type=['null', 'number'],
+                        description='Total reactions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralRegistrations',
+                        type=['null', 'number'],
+                        description='Total registrations in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralShares',
+                        type=['null', 'number'],
+                        description='Total shares in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralTotalEngagements',
+                        type=['null', 'number'],
+                        description='Total engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoCompletions',
+                        type=['null', 'number'],
+                        description='Completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivot',
+                        type=['null', 'string'],
+                        description='Pivot dimension used for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='sponsoredCampaign',
+                        type=['null', 'string'],
+                        description='URN of the sponsored campaign this analytics record belongs to',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_member_seniority_analytics',
+                x_airbyte_name='ad_member_seniority_analytics',
+                fields=[
+                    CacheFieldConfig(
+                        name='actionClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on action buttons in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='adUnitClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on ad unit components.',
+                    ),
+                    CacheFieldConfig(
+                        name='approximateMemberReach',
+                        type=['null', 'number'],
+                        description='An approximation of unique ad impressions.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardClicks',
+                        type=['null', 'number'],
+                        description='The number of clicks on interactive card elements.',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='The number of times interactive cards were displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Total number of clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='commentLikes',
+                        type=['null', 'number'],
+                        description='The count of likes on comments related to the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='The number of comments on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='companyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in the local currency.',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Cost of ad campaign in USD.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentCompletions',
+                        type=['null', 'number'],
+                        description='Number of completions for document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='documentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of document views.',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on download links in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='End date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Conversions that lead to external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of times videos were played in fullscreen mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Total number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplications',
+                        type=['null', 'number'],
+                        description='Number of job applications initiated through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='jobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the landing page associated with the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailContactInfoShares',
+                        type=['null', 'number'],
+                        description='Shares of contact information through lead generation.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadGenerationMailInterestedClicks',
+                        type=['null', 'number'],
+                        description='Clicks on expressing interest through lead generation mail.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Total likes received on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of times lead forms were opened in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click.',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='The number of times the ad was opened or expanded.',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Engagements other than clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Values used for pivoting the analytics.',
+                    ),
+                    CacheFieldConfig(
+                        name='string_of_pivot_values',
+                        type=['null', 'string'],
+                        description='Comma-separated string of pivot values for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='postViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Total reactions (e.g., like, love, celebrate) on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='registrations',
+                        type=['null', 'number'],
+                        description='Total registrations completed through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of messages sent through the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Total shares generated by the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data.',
+                    ),
+                    CacheFieldConfig(
+                        name='talentLeads',
+                        type=['null', 'number'],
+                        description='Number of leads related to talent acquisition.',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Clicks on text URLs within the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='validWorkEmailLeads',
+                        type=['null', 'number'],
+                        description='Leads generated through valid work emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times videos were watched till completion.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for first quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Completions for midpoint of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts initiated by users.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Completions for third quartile of video views.',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardClicks',
+                        type=['null', 'number'],
+                        description='Clicks on interactive card components in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCardImpressions',
+                        type=['null', 'number'],
+                        description='Impressions of interactive cards in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralClicks',
+                        type=['null', 'number'],
+                        description='Total clicks in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCommentLikes',
+                        type=['null', 'number'],
+                        description='Likes received on comments in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralComments',
+                        type=['null', 'number'],
+                        description='Number of comments in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralCompanyPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on the company page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentCompletions',
+                        type=['null', 'number'],
+                        description='Complete views of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDocumentThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of documents in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralDownloadClicks',
+                        type=['null', 'number'],
+                        description='Clicks on downloads in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='External website conversions in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralExternalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFollows',
+                        type=['null', 'number'],
+                        description='Follows generated in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralFullScreenPlays',
+                        type=['null', 'number'],
+                        description='Fullscreen video plays in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralImpressions',
+                        type=['null', 'number'],
+                        description='Total impressions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLandingPageClicks',
+                        type=['null', 'number'],
+                        description='Clicks on landing page in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralLikes',
+                        type=['null', 'number'],
+                        description='Total likes in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='One-click lead form opens in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOneClickLeads',
+                        type=['null', 'number'],
+                        description='Leads generated in one click in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralOtherEngagements',
+                        type=['null', 'number'],
+                        description='Other engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostClickRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-clicking in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplications',
+                        type=['null', 'number'],
+                        description='Job applications initiated post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewJobApplyClicks',
+                        type=['null', 'number'],
+                        description='Clicks on apply job button post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralPostViewRegistrations',
+                        type=['null', 'number'],
+                        description='Registrations completed post-viewing in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralReactions',
+                        type=['null', 'number'],
+                        description='Total reactions in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralRegistrations',
+                        type=['null', 'number'],
+                        description='Total registrations in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralShares',
+                        type=['null', 'number'],
+                        description='Total shares in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralTotalEngagements',
+                        type=['null', 'number'],
+                        description='Total engagements in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoCompletions',
+                        type=['null', 'number'],
+                        description='Completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='First quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Midpoint completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoStarts',
+                        type=['null', 'number'],
+                        description='Total video starts in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Third quartile completions of videos in viral distribution.',
+                    ),
+                    CacheFieldConfig(
+                        name='viralVideoViews',
+                        type=['null', 'number'],
+                        description='Total views of videos in viral distribution of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='pivot',
+                        type=['null', 'string'],
+                        description='Pivot dimension used for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='sponsoredCampaign',
+                        type=['null', 'string'],
+                        description='URN of the sponsored campaign this analytics record belongs to',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='lead_forms',
+                x_airbyte_name='lead_forms',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['integer'],
+                        description='Numerical identifier for the form.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the Lead Form provided by the owner.',
+                    ),
+                    CacheFieldConfig(
+                        name='owner',
+                        type=['null', 'object'],
+                        description="URN that identifies the owner of the Lead Form.\nIt's a Union of sponsoredAccount and organization.\nsponsoredAccount is an URN of SponsoredAccountUrn that indicates the account of the advertiser.\norganization is an URN of OrganizationUrn that indicates the company account of the marketer.\n",
+                        properties={
+                            'sponsoredAccount': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Information about the current state of the Lead Form.',
+                    ),
+                    CacheFieldConfig(
+                        name='content',
+                        type=['null', 'object'],
+                        description='Content of the Lead Form which will be displayed to the viewer.',
+                        properties={
+                            'headline': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'description': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'questions': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'legalInfo': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'postSubmissionInfo': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='An epoch time corresponding to the creation of the form.',
+                    ),
+                    CacheFieldConfig(
+                        name='lastModified',
+                        type=['null', 'integer'],
+                        description='An epoch time corresponding to the last modified of of the form.',
+                    ),
+                    CacheFieldConfig(
+                        name='creationLocale',
+                        type=['null', 'object'],
+                        description='Locale of the entity.\nThis field serves as the preferred locale for all fields within the Lead Form with an object type that is capable of localization, such as MultiLocaleString.\n',
+                    ),
+                    CacheFieldConfig(
+                        name='hiddenFields',
+                        type=['null', 'array'],
+                        description='Hidden fields used by the owner to track key attributes of the form that generated the lead.\nThe field is empty if the owner chooses to not append any tracking attributes to the Lead Form.\n',
+                    ),
+                    CacheFieldConfig(
+                        name='reviewInfo',
+                        type=['null', 'object'],
+                        description='Latest information about the content review of the Lead Form.\nIt will not be present if the form has not been reviewed by the review pipeline.\n',
+                    ),
+                    CacheFieldConfig(
+                        name='versionId',
+                        type=['null', 'integer'],
+                        description='The version ID of the form. This is a derived field and is generated on the server side.',
+                    ),
+                    CacheFieldConfig(
+                        name='versionTag',
+                        type=['null', 'string'],
+                        description='The number of times the form has been modified.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='lead_form_responses',
+                x_airbyte_name='lead_form_responses',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique id to identify the Lead Form Response.',
+                    ),
+                    CacheFieldConfig(
+                        name='leadType',
+                        type=['null', 'string'],
+                        description='Type of the lead representing the origination of the lead.',
+                    ),
+                    CacheFieldConfig(
+                        name='form',
+                        type=['null', 'object'],
+                        description='URN identifying which form this FormResponse belongs to.',
+                    ),
+                    CacheFieldConfig(
+                        name='owner',
+                        type=['null', 'object'],
+                        description='Owner of this Lead Form Response.\nIt is a Union of sponsoredAccount and organization.\nsponsoredAccount is an URN of SponsoredAccountUrn that indicates the ad account of the advertiser.\norganization is an URN of OrganizationUrn that indicates the company page of the advertiser.\n',
+                        properties={
+                            'sponsoredAccount': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='ownerInfo',
+                        type=['null', 'object'],
+                        description="Record containing entity info that owns this Lead Form Response. It's a optional Union of sponsoredAccountInfo and organizationInfo.",
+                    ),
+                    CacheFieldConfig(
+                        name='leadMetadata',
+                        type=['null', 'object'],
+                        description='Metadata of a lead. This field is optional for test leads and other use cases where sponsored lead metadata (e.g. campaign) may not be relevant. If there is no value, the field is not returned.',
+                        properties={
+                            'sponsoredLeadMetadata': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='leadMetadataInfo',
+                        type=['null', 'object'],
+                        description='Record containing a subset of fields resolved on demand from the lead metadata references (e.g. campaign name , campaign type). If there is no value, an empty object is returned.',
+                    ),
+                    CacheFieldConfig(
+                        name='associatedEntity',
+                        type=['null', 'object'],
+                        description="URN identifying which entity the lead is associated with. This field is optional for test leads and other use cases where leads don't have any associatedEntity. If there is no value, the field is not returned.",
+                        properties={
+                            'associatedCreative': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='associatedEntityInfo',
+                        type=['null', 'object'],
+                        description='Record containing useful fields (creative status, ugc reference etc.) resolved on demand from the associated entity object. If there is no value, an empty object is returned.',
+                    ),
+                    CacheFieldConfig(
+                        name='submittedAt',
+                        type=['null', 'integer'],
+                        description='An epoch timestamp that recording when the form response was submitted.',
+                    ),
+                    CacheFieldConfig(
+                        name='responseId',
+                        type=['null', 'object'],
+                        description='The unique identifier for the form response generated in the front-end when a submitter submits the response.',
+                    ),
+                    CacheFieldConfig(
+                        name='formResponse',
+                        type=['null', 'object'],
+                        description='Answers provided by the form submitter.',
+                        properties={
+                            'answers': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'consentResponses': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='testLead',
+                        type=['null', 'boolean'],
+                        description='Whether this is a test lead created for testing purposes.',
+                    ),
+                    CacheFieldConfig(
+                        name='submitter',
+                        type=['null', 'string'],
+                        description='From version 202408 onwards, Guest Leads (when a user submits a form without being logged in) submitted to lead forms, submitter field is treated as a null field and omitted from the JSON response.\nFor non-guest leads, the submitter field will still be included in the response and will provide the person\'s URN. Ex: "submitter": "urn:li:person:MpGcnvaU_p".\tYes\n',
+                    ),
+                    CacheFieldConfig(
+                        name='versionedLeadGenFormUrn',
+                        type=['null', 'string'],
+                        description='URN identifying which form this FormResponse belongs to.',
                     ),
                 ],
             ),
@@ -4203,42 +18166,52 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
     ),
     search_field_paths={
         'accounts': [
-            'id',
-            'name',
-            'currency',
-            'status',
-            'type',
-            'reference',
             'test',
-            'notifiedOnCampaignOptimization',
-            'notifiedOnCreativeApproval',
             'notifiedOnCreativeRejection',
-            'notifiedOnEndOfCampaign',
             'notifiedOnNewFeaturesEnabled',
+            'notifiedOnEndOfCampaign',
             'servingStatuses',
             'servingStatuses[]',
+            'notifiedOnCampaignOptimization',
+            'type',
             'version',
             'version.versionTag',
-        ],
-        'account_users': ['account', 'user', 'role'],
-        'campaigns': [
-            'id',
+            'reference',
+            'notifiedOnCreativeApproval',
+            'created',
+            'lastModified',
             'name',
-            'account',
-            'campaignGroup',
+            'currency',
+            'id',
             'status',
+        ],
+        'account_users': [
+            'account',
+            'created',
+            'lastModified',
+            'role',
+            'user',
+        ],
+        'campaigns': [
+            'targetingCriteria',
+            'targetingCriteria.include',
+            'targetingCriteria.exclude',
+            'servingStatuses',
+            'servingStatuses[]',
             'type',
-            'costType',
-            'format',
-            'objectiveType',
-            'optimizationTargetType',
-            'creativeSelection',
-            'pacingStrategy',
-            'audienceExpansionEnabled',
-            'offsiteDeliveryEnabled',
-            'storyDeliveryEnabled',
-            'test',
+            'locale',
+            'locale.country',
+            'locale.language',
+            'version',
+            'version.versionTag',
             'associatedEntity',
+            'runSchedule',
+            'runSchedule.start',
+            'runSchedule.end',
+            'optimizationTargetType',
+            'created',
+            'lastModified',
+            'campaignGroup',
             'dailyBudget',
             'dailyBudget.amount',
             'dailyBudget.currencyCode',
@@ -4248,154 +18221,1259 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
             'unitCost',
             'unitCost.amount',
             'unitCost.currencyCode',
+            'creativeSelection',
+            'costType',
+            'name',
+            'offsiteDeliveryEnabled',
+            'id',
+            'audienceExpansionEnabled',
+            'test',
+            'account',
+            'status',
+            'storyDeliveryEnabled',
+            'pacingStrategy',
+            'format',
+            'objectiveType',
+            'offsitePreferences',
+            'offsitePreferences.iabCategories',
+            'offsitePreferences.publisherRestrictionFiles',
+        ],
+        'campaign_groups': [
             'runSchedule',
             'runSchedule.start',
             'runSchedule.end',
-            'locale',
-            'locale.country',
-            'locale.language',
-            'servingStatuses',
-            'servingStatuses[]',
-            'version',
-            'version.versionTag',
-        ],
-        'campaign_groups': [
-            'id',
+            'created',
+            'lastModified',
             'name',
-            'account',
-            'status',
             'test',
-            'backfilled',
             'totalBudget',
             'totalBudget.amount',
             'totalBudget.currencyCode',
-            'runSchedule',
-            'runSchedule.start',
-            'runSchedule.end',
             'servingStatuses',
             'servingStatuses[]',
+            'backfilled',
+            'id',
+            'account',
+            'status',
             'allowedCampaignTypes',
             'allowedCampaignTypes[]',
         ],
         'creatives': [
-            'id',
-            'name',
-            'account',
-            'campaign',
-            'intendedStatus',
-            'isServing',
-            'isTest',
-            'createdAt',
-            'createdBy',
+            'servingHoldReasons',
+            'servingHoldReasons[]',
             'lastModifiedAt',
             'lastModifiedBy',
             'content',
-            'servingHoldReasons',
-            'servingHoldReasons[]',
+            'createdAt',
+            'isTest',
+            'createdBy',
+            'review',
+            'review.status',
+            'review.rejectionReasons',
+            'review.rejectionReasons[]',
+            'name',
+            'isServing',
+            'campaign',
+            'id',
+            'intendedStatus',
+            'account',
+            'leadgenCallToAction',
+            'leadgenCallToAction.destination',
+            'leadgenCallToAction.label',
         ],
         'conversions': [
-            'id',
-            'name',
-            'account',
-            'type',
             'attributionType',
-            'enabled',
-            'created',
-            'lastModified',
-            'postClickAttributionWindowSize',
-            'viewThroughAttributionWindowSize',
+            'account',
             'campaigns',
             'campaigns[]',
-            'associatedCampaigns',
-            'associatedCampaigns[]',
+            'created',
+            'enabled',
+            'id',
             'imagePixelTag',
+            'name',
+            'type',
+            'latestFirstPartyCallbackAt',
+            'postClickAttributionWindowSize',
+            'viewThroughAttributionWindowSize',
+            'lastCallbackAt',
+            'lastModified',
             'value',
             'value.amount',
             'value.currencyCode',
+            'associatedCampaigns',
+            'associatedCampaigns[]',
+            'urlMatchRuleExpression',
+            'urlMatchRuleExpression[]',
+            'urlRules',
+            'urlRules[]',
         ],
         'ad_campaign_analytics': [
-            'impressions',
-            'clicks',
-            'costInLocalCurrency',
-            'costInUsd',
-            'likes',
-            'shares',
-            'comments',
-            'reactions',
-            'follows',
-            'totalEngagements',
-            'landingPageClicks',
-            'companyPageClicks',
-            'externalWebsiteConversions',
-            'externalWebsitePostClickConversions',
-            'externalWebsitePostViewConversions',
-            'conversionValueInLocalCurrency',
+            'actionClicks',
+            'adUnitClicks',
             'approximateMemberReach',
             'cardClicks',
             'cardImpressions',
-            'videoStarts',
-            'videoViews',
-            'videoFirstQuartileCompletions',
-            'videoMidpointCompletions',
-            'videoThirdQuartileCompletions',
-            'videoCompletions',
-            'fullScreenPlays',
-            'oneClickLeads',
-            'oneClickLeadFormOpens',
-            'otherEngagements',
-            'adUnitClicks',
-            'actionClicks',
-            'textUrlClicks',
+            'clicks',
             'commentLikes',
-            'sends',
-            'opens',
+            'comments',
+            'companyPageClicks',
+            'conversionValueInLocalCurrency',
+            'costInLocalCurrency',
+            'costInUsd',
+            'documentCompletions',
+            'documentFirstQuartileCompletions',
+            'documentMidpointCompletions',
+            'documentThirdQuartileCompletions',
             'downloadClicks',
+            'end_date',
+            'externalWebsiteConversions',
+            'externalWebsitePostClickConversions',
+            'externalWebsitePostViewConversions',
+            'follows',
+            'fullScreenPlays',
+            'impressions',
+            'jobApplications',
+            'jobApplyClicks',
+            'landingPageClicks',
+            'leadGenerationMailContactInfoShares',
+            'leadGenerationMailInterestedClicks',
+            'likes',
+            'oneClickLeadFormOpens',
+            'oneClickLeads',
+            'opens',
+            'otherEngagements',
             'pivotValues',
             'pivotValues[]',
+            'string_of_pivot_values',
+            'postClickJobApplications',
+            'postClickJobApplyClicks',
+            'postClickRegistrations',
+            'postViewJobApplications',
+            'postViewJobApplyClicks',
+            'postViewRegistrations',
+            'reactions',
+            'registrations',
+            'sends',
+            'shares',
             'start_date',
-            'end_date',
+            'talentLeads',
+            'textUrlClicks',
+            'totalEngagements',
+            'validWorkEmailLeads',
+            'videoCompletions',
+            'videoFirstQuartileCompletions',
+            'videoMidpointCompletions',
+            'videoStarts',
+            'videoThirdQuartileCompletions',
+            'videoViews',
+            'viralCardClicks',
+            'viralCardImpressions',
+            'viralClicks',
+            'viralCommentLikes',
+            'viralComments',
+            'viralCompanyPageClicks',
+            'viralDocumentCompletions',
+            'viralDocumentFirstQuartileCompletions',
+            'viralDocumentMidpointCompletions',
+            'viralDocumentThirdQuartileCompletions',
+            'viralDownloadClicks',
+            'viralExternalWebsiteConversions',
+            'viralExternalWebsitePostClickConversions',
+            'viralExternalWebsitePostViewConversions',
+            'viralFollows',
+            'viralFullScreenPlays',
+            'viralImpressions',
+            'viralJobApplications',
+            'viralJobApplyClicks',
+            'viralLandingPageClicks',
+            'viralLikes',
+            'viralOneClickLeadFormOpens',
+            'viralOneClickLeads',
+            'viralOtherEngagements',
+            'viralPostClickJobApplications',
+            'viralPostClickJobApplyClicks',
+            'viralPostClickRegistrations',
+            'viralPostViewJobApplications',
+            'viralPostViewJobApplyClicks',
+            'viralPostViewRegistrations',
+            'viralReactions',
+            'viralRegistrations',
+            'viralShares',
+            'viralTotalEngagements',
+            'viralVideoCompletions',
+            'viralVideoFirstQuartileCompletions',
+            'viralVideoMidpointCompletions',
+            'viralVideoStarts',
+            'viralVideoThirdQuartileCompletions',
+            'viralVideoViews',
+            'pivot',
+            'sponsoredCampaign',
         ],
         'ad_creative_analytics': [
-            'impressions',
-            'clicks',
-            'costInLocalCurrency',
-            'costInUsd',
-            'likes',
-            'shares',
-            'comments',
-            'reactions',
-            'follows',
-            'totalEngagements',
-            'landingPageClicks',
-            'companyPageClicks',
-            'externalWebsiteConversions',
-            'externalWebsitePostClickConversions',
-            'externalWebsitePostViewConversions',
-            'conversionValueInLocalCurrency',
+            'actionClicks',
+            'adUnitClicks',
             'approximateMemberReach',
             'cardClicks',
             'cardImpressions',
-            'videoStarts',
-            'videoViews',
-            'videoFirstQuartileCompletions',
-            'videoMidpointCompletions',
-            'videoThirdQuartileCompletions',
-            'videoCompletions',
-            'fullScreenPlays',
-            'oneClickLeads',
-            'oneClickLeadFormOpens',
-            'otherEngagements',
-            'adUnitClicks',
-            'actionClicks',
-            'textUrlClicks',
+            'clicks',
             'commentLikes',
-            'sends',
-            'opens',
+            'comments',
+            'companyPageClicks',
+            'conversionValueInLocalCurrency',
+            'costInLocalCurrency',
+            'costInUsd',
+            'documentCompletions',
+            'documentFirstQuartileCompletions',
+            'documentMidpointCompletions',
+            'documentThirdQuartileCompletions',
             'downloadClicks',
+            'end_date',
+            'externalWebsiteConversions',
+            'externalWebsitePostClickConversions',
+            'externalWebsitePostViewConversions',
+            'follows',
+            'fullScreenPlays',
+            'impressions',
+            'jobApplications',
+            'jobApplyClicks',
+            'landingPageClicks',
+            'leadGenerationMailContactInfoShares',
+            'leadGenerationMailInterestedClicks',
+            'likes',
+            'oneClickLeadFormOpens',
+            'oneClickLeads',
+            'opens',
+            'otherEngagements',
             'pivotValues',
             'pivotValues[]',
+            'string_of_pivot_values',
+            'postClickJobApplications',
+            'postClickJobApplyClicks',
+            'postClickRegistrations',
+            'postViewJobApplications',
+            'postViewJobApplyClicks',
+            'postViewRegistrations',
+            'reactions',
+            'registrations',
+            'sends',
+            'shares',
             'start_date',
+            'talentLeads',
+            'textUrlClicks',
+            'totalEngagements',
+            'validWorkEmailLeads',
+            'videoCompletions',
+            'videoFirstQuartileCompletions',
+            'videoMidpointCompletions',
+            'videoStarts',
+            'videoThirdQuartileCompletions',
+            'videoViews',
+            'viralCardClicks',
+            'viralCardImpressions',
+            'viralClicks',
+            'viralCommentLikes',
+            'viralComments',
+            'viralCompanyPageClicks',
+            'viralDocumentCompletions',
+            'viralDocumentFirstQuartileCompletions',
+            'viralDocumentMidpointCompletions',
+            'viralDocumentThirdQuartileCompletions',
+            'viralDownloadClicks',
+            'viralExternalWebsiteConversions',
+            'viralExternalWebsitePostClickConversions',
+            'viralExternalWebsitePostViewConversions',
+            'viralFollows',
+            'viralFullScreenPlays',
+            'viralImpressions',
+            'viralJobApplications',
+            'viralJobApplyClicks',
+            'viralLandingPageClicks',
+            'viralLikes',
+            'viralOneClickLeadFormOpens',
+            'viralOneClickLeads',
+            'viralOtherEngagements',
+            'viralPostClickJobApplications',
+            'viralPostClickJobApplyClicks',
+            'viralPostClickRegistrations',
+            'viralPostViewJobApplications',
+            'viralPostViewJobApplyClicks',
+            'viralPostViewRegistrations',
+            'viralReactions',
+            'viralRegistrations',
+            'viralShares',
+            'viralTotalEngagements',
+            'viralVideoCompletions',
+            'viralVideoFirstQuartileCompletions',
+            'viralVideoMidpointCompletions',
+            'viralVideoStarts',
+            'viralVideoThirdQuartileCompletions',
+            'viralVideoViews',
+            'pivot',
+            'sponsoredCreative',
+        ],
+        'ad_impression_device_analytics': [
+            'actionClicks',
+            'adUnitClicks',
+            'approximateMemberReach',
+            'cardClicks',
+            'cardImpressions',
+            'clicks',
+            'commentLikes',
+            'comments',
+            'companyPageClicks',
+            'conversionValueInLocalCurrency',
+            'costInLocalCurrency',
+            'costInUsd',
+            'documentCompletions',
+            'documentFirstQuartileCompletions',
+            'documentMidpointCompletions',
+            'documentThirdQuartileCompletions',
+            'downloadClicks',
             'end_date',
+            'externalWebsiteConversions',
+            'externalWebsitePostClickConversions',
+            'externalWebsitePostViewConversions',
+            'follows',
+            'fullScreenPlays',
+            'impressions',
+            'jobApplications',
+            'jobApplyClicks',
+            'landingPageClicks',
+            'leadGenerationMailContactInfoShares',
+            'leadGenerationMailInterestedClicks',
+            'likes',
+            'oneClickLeadFormOpens',
+            'oneClickLeads',
+            'opens',
+            'otherEngagements',
+            'pivotValues',
+            'pivotValues[]',
+            'string_of_pivot_values',
+            'postClickJobApplications',
+            'postClickJobApplyClicks',
+            'postClickRegistrations',
+            'postViewJobApplications',
+            'postViewJobApplyClicks',
+            'postViewRegistrations',
+            'reactions',
+            'registrations',
+            'sends',
+            'shares',
+            'start_date',
+            'talentLeads',
+            'textUrlClicks',
+            'totalEngagements',
+            'validWorkEmailLeads',
+            'videoCompletions',
+            'videoFirstQuartileCompletions',
+            'videoMidpointCompletions',
+            'videoStarts',
+            'videoThirdQuartileCompletions',
+            'videoViews',
+            'viralCardClicks',
+            'viralCardImpressions',
+            'viralClicks',
+            'viralCommentLikes',
+            'viralComments',
+            'viralCompanyPageClicks',
+            'viralDocumentCompletions',
+            'viralDocumentFirstQuartileCompletions',
+            'viralDocumentMidpointCompletions',
+            'viralDocumentThirdQuartileCompletions',
+            'viralDownloadClicks',
+            'viralExternalWebsiteConversions',
+            'viralExternalWebsitePostClickConversions',
+            'viralExternalWebsitePostViewConversions',
+            'viralFollows',
+            'viralFullScreenPlays',
+            'viralImpressions',
+            'viralJobApplications',
+            'viralJobApplyClicks',
+            'viralLandingPageClicks',
+            'viralLikes',
+            'viralOneClickLeadFormOpens',
+            'viralOneClickLeads',
+            'viralOtherEngagements',
+            'viralPostClickJobApplications',
+            'viralPostClickJobApplyClicks',
+            'viralPostClickRegistrations',
+            'viralPostViewJobApplications',
+            'viralPostViewJobApplyClicks',
+            'viralPostViewRegistrations',
+            'viralReactions',
+            'viralRegistrations',
+            'viralShares',
+            'viralTotalEngagements',
+            'viralVideoCompletions',
+            'viralVideoFirstQuartileCompletions',
+            'viralVideoMidpointCompletions',
+            'viralVideoStarts',
+            'viralVideoThirdQuartileCompletions',
+            'viralVideoViews',
+            'pivot',
+            'sponsoredCampaign',
+        ],
+        'ad_member_company_analytics': [
+            'actionClicks',
+            'adUnitClicks',
+            'approximateMemberReach',
+            'cardClicks',
+            'cardImpressions',
+            'clicks',
+            'commentLikes',
+            'comments',
+            'companyPageClicks',
+            'conversionValueInLocalCurrency',
+            'costInLocalCurrency',
+            'costInUsd',
+            'documentCompletions',
+            'documentFirstQuartileCompletions',
+            'documentMidpointCompletions',
+            'documentThirdQuartileCompletions',
+            'downloadClicks',
+            'end_date',
+            'externalWebsiteConversions',
+            'externalWebsitePostClickConversions',
+            'externalWebsitePostViewConversions',
+            'follows',
+            'fullScreenPlays',
+            'impressions',
+            'jobApplications',
+            'jobApplyClicks',
+            'landingPageClicks',
+            'leadGenerationMailContactInfoShares',
+            'leadGenerationMailInterestedClicks',
+            'likes',
+            'oneClickLeadFormOpens',
+            'oneClickLeads',
+            'opens',
+            'otherEngagements',
+            'pivotValues',
+            'pivotValues[]',
+            'string_of_pivot_values',
+            'postClickJobApplications',
+            'postClickJobApplyClicks',
+            'postClickRegistrations',
+            'postViewJobApplications',
+            'postViewJobApplyClicks',
+            'postViewRegistrations',
+            'reactions',
+            'registrations',
+            'sends',
+            'shares',
+            'start_date',
+            'talentLeads',
+            'textUrlClicks',
+            'totalEngagements',
+            'validWorkEmailLeads',
+            'videoCompletions',
+            'videoFirstQuartileCompletions',
+            'videoMidpointCompletions',
+            'videoStarts',
+            'videoThirdQuartileCompletions',
+            'videoViews',
+            'viralCardClicks',
+            'viralCardImpressions',
+            'viralClicks',
+            'viralCommentLikes',
+            'viralComments',
+            'viralCompanyPageClicks',
+            'viralDocumentCompletions',
+            'viralDocumentFirstQuartileCompletions',
+            'viralDocumentMidpointCompletions',
+            'viralDocumentThirdQuartileCompletions',
+            'viralDownloadClicks',
+            'viralExternalWebsiteConversions',
+            'viralExternalWebsitePostClickConversions',
+            'viralExternalWebsitePostViewConversions',
+            'viralFollows',
+            'viralFullScreenPlays',
+            'viralImpressions',
+            'viralJobApplications',
+            'viralJobApplyClicks',
+            'viralLandingPageClicks',
+            'viralLikes',
+            'viralOneClickLeadFormOpens',
+            'viralOneClickLeads',
+            'viralOtherEngagements',
+            'viralPostClickJobApplications',
+            'viralPostClickJobApplyClicks',
+            'viralPostClickRegistrations',
+            'viralPostViewJobApplications',
+            'viralPostViewJobApplyClicks',
+            'viralPostViewRegistrations',
+            'viralReactions',
+            'viralRegistrations',
+            'viralShares',
+            'viralTotalEngagements',
+            'viralVideoCompletions',
+            'viralVideoFirstQuartileCompletions',
+            'viralVideoMidpointCompletions',
+            'viralVideoStarts',
+            'viralVideoThirdQuartileCompletions',
+            'viralVideoViews',
+            'pivot',
+            'sponsoredCampaign',
+        ],
+        'ad_member_company_size_analytics': [
+            'actionClicks',
+            'adUnitClicks',
+            'approximateMemberReach',
+            'cardClicks',
+            'cardImpressions',
+            'clicks',
+            'commentLikes',
+            'comments',
+            'companyPageClicks',
+            'conversionValueInLocalCurrency',
+            'costInLocalCurrency',
+            'costInUsd',
+            'documentCompletions',
+            'documentFirstQuartileCompletions',
+            'documentMidpointCompletions',
+            'documentThirdQuartileCompletions',
+            'downloadClicks',
+            'end_date',
+            'externalWebsiteConversions',
+            'externalWebsitePostClickConversions',
+            'externalWebsitePostViewConversions',
+            'follows',
+            'fullScreenPlays',
+            'impressions',
+            'jobApplications',
+            'jobApplyClicks',
+            'landingPageClicks',
+            'leadGenerationMailContactInfoShares',
+            'leadGenerationMailInterestedClicks',
+            'likes',
+            'oneClickLeadFormOpens',
+            'oneClickLeads',
+            'opens',
+            'otherEngagements',
+            'pivotValues',
+            'pivotValues[]',
+            'string_of_pivot_values',
+            'postClickJobApplications',
+            'postClickJobApplyClicks',
+            'postClickRegistrations',
+            'postViewJobApplications',
+            'postViewJobApplyClicks',
+            'postViewRegistrations',
+            'reactions',
+            'registrations',
+            'sends',
+            'shares',
+            'start_date',
+            'talentLeads',
+            'textUrlClicks',
+            'totalEngagements',
+            'validWorkEmailLeads',
+            'videoCompletions',
+            'videoFirstQuartileCompletions',
+            'videoMidpointCompletions',
+            'videoStarts',
+            'videoThirdQuartileCompletions',
+            'videoViews',
+            'viralCardClicks',
+            'viralCardImpressions',
+            'viralClicks',
+            'viralCommentLikes',
+            'viralComments',
+            'viralCompanyPageClicks',
+            'viralDocumentCompletions',
+            'viralDocumentFirstQuartileCompletions',
+            'viralDocumentMidpointCompletions',
+            'viralDocumentThirdQuartileCompletions',
+            'viralDownloadClicks',
+            'viralExternalWebsiteConversions',
+            'viralExternalWebsitePostClickConversions',
+            'viralExternalWebsitePostViewConversions',
+            'viralFollows',
+            'viralFullScreenPlays',
+            'viralImpressions',
+            'viralJobApplications',
+            'viralJobApplyClicks',
+            'viralLandingPageClicks',
+            'viralLikes',
+            'viralOneClickLeadFormOpens',
+            'viralOneClickLeads',
+            'viralOtherEngagements',
+            'viralPostClickJobApplications',
+            'viralPostClickJobApplyClicks',
+            'viralPostClickRegistrations',
+            'viralPostViewJobApplications',
+            'viralPostViewJobApplyClicks',
+            'viralPostViewRegistrations',
+            'viralReactions',
+            'viralRegistrations',
+            'viralShares',
+            'viralTotalEngagements',
+            'viralVideoCompletions',
+            'viralVideoFirstQuartileCompletions',
+            'viralVideoMidpointCompletions',
+            'viralVideoStarts',
+            'viralVideoThirdQuartileCompletions',
+            'viralVideoViews',
+            'pivot',
+            'sponsoredCampaign',
+        ],
+        'ad_member_country_analytics': [
+            'actionClicks',
+            'adUnitClicks',
+            'approximateMemberReach',
+            'cardClicks',
+            'cardImpressions',
+            'clicks',
+            'commentLikes',
+            'comments',
+            'companyPageClicks',
+            'conversionValueInLocalCurrency',
+            'costInLocalCurrency',
+            'costInUsd',
+            'documentCompletions',
+            'documentFirstQuartileCompletions',
+            'documentMidpointCompletions',
+            'documentThirdQuartileCompletions',
+            'downloadClicks',
+            'end_date',
+            'externalWebsiteConversions',
+            'externalWebsitePostClickConversions',
+            'externalWebsitePostViewConversions',
+            'follows',
+            'fullScreenPlays',
+            'impressions',
+            'jobApplications',
+            'jobApplyClicks',
+            'landingPageClicks',
+            'leadGenerationMailContactInfoShares',
+            'leadGenerationMailInterestedClicks',
+            'likes',
+            'oneClickLeadFormOpens',
+            'oneClickLeads',
+            'opens',
+            'otherEngagements',
+            'pivotValues',
+            'pivotValues[]',
+            'string_of_pivot_values',
+            'postClickJobApplications',
+            'postClickJobApplyClicks',
+            'postClickRegistrations',
+            'postViewJobApplications',
+            'postViewJobApplyClicks',
+            'postViewRegistrations',
+            'reactions',
+            'registrations',
+            'sends',
+            'shares',
+            'start_date',
+            'talentLeads',
+            'textUrlClicks',
+            'totalEngagements',
+            'validWorkEmailLeads',
+            'videoCompletions',
+            'videoFirstQuartileCompletions',
+            'videoMidpointCompletions',
+            'videoStarts',
+            'videoThirdQuartileCompletions',
+            'videoViews',
+            'viralCardClicks',
+            'viralCardImpressions',
+            'viralClicks',
+            'viralCommentLikes',
+            'viralComments',
+            'viralCompanyPageClicks',
+            'viralDocumentCompletions',
+            'viralDocumentFirstQuartileCompletions',
+            'viralDocumentMidpointCompletions',
+            'viralDocumentThirdQuartileCompletions',
+            'viralDownloadClicks',
+            'viralExternalWebsiteConversions',
+            'viralExternalWebsitePostClickConversions',
+            'viralExternalWebsitePostViewConversions',
+            'viralFollows',
+            'viralFullScreenPlays',
+            'viralImpressions',
+            'viralJobApplications',
+            'viralJobApplyClicks',
+            'viralLandingPageClicks',
+            'viralLikes',
+            'viralOneClickLeadFormOpens',
+            'viralOneClickLeads',
+            'viralOtherEngagements',
+            'viralPostClickJobApplications',
+            'viralPostClickJobApplyClicks',
+            'viralPostClickRegistrations',
+            'viralPostViewJobApplications',
+            'viralPostViewJobApplyClicks',
+            'viralPostViewRegistrations',
+            'viralReactions',
+            'viralRegistrations',
+            'viralShares',
+            'viralTotalEngagements',
+            'viralVideoCompletions',
+            'viralVideoFirstQuartileCompletions',
+            'viralVideoMidpointCompletions',
+            'viralVideoStarts',
+            'viralVideoThirdQuartileCompletions',
+            'viralVideoViews',
+            'pivot',
+            'sponsoredCampaign',
+        ],
+        'ad_member_industry_analytics': [
+            'actionClicks',
+            'adUnitClicks',
+            'approximateMemberReach',
+            'cardClicks',
+            'cardImpressions',
+            'clicks',
+            'commentLikes',
+            'comments',
+            'companyPageClicks',
+            'conversionValueInLocalCurrency',
+            'costInLocalCurrency',
+            'costInUsd',
+            'documentCompletions',
+            'documentFirstQuartileCompletions',
+            'documentMidpointCompletions',
+            'documentThirdQuartileCompletions',
+            'downloadClicks',
+            'end_date',
+            'externalWebsiteConversions',
+            'externalWebsitePostClickConversions',
+            'externalWebsitePostViewConversions',
+            'follows',
+            'fullScreenPlays',
+            'impressions',
+            'jobApplications',
+            'jobApplyClicks',
+            'landingPageClicks',
+            'leadGenerationMailContactInfoShares',
+            'leadGenerationMailInterestedClicks',
+            'likes',
+            'oneClickLeadFormOpens',
+            'oneClickLeads',
+            'opens',
+            'otherEngagements',
+            'pivotValues',
+            'pivotValues[]',
+            'string_of_pivot_values',
+            'postClickJobApplications',
+            'postClickJobApplyClicks',
+            'postClickRegistrations',
+            'postViewJobApplications',
+            'postViewJobApplyClicks',
+            'postViewRegistrations',
+            'reactions',
+            'registrations',
+            'sends',
+            'shares',
+            'start_date',
+            'talentLeads',
+            'textUrlClicks',
+            'totalEngagements',
+            'validWorkEmailLeads',
+            'videoCompletions',
+            'videoFirstQuartileCompletions',
+            'videoMidpointCompletions',
+            'videoStarts',
+            'videoThirdQuartileCompletions',
+            'videoViews',
+            'viralCardClicks',
+            'viralCardImpressions',
+            'viralClicks',
+            'viralCommentLikes',
+            'viralComments',
+            'viralCompanyPageClicks',
+            'viralDocumentCompletions',
+            'viralDocumentFirstQuartileCompletions',
+            'viralDocumentMidpointCompletions',
+            'viralDocumentThirdQuartileCompletions',
+            'viralDownloadClicks',
+            'viralExternalWebsiteConversions',
+            'viralExternalWebsitePostClickConversions',
+            'viralExternalWebsitePostViewConversions',
+            'viralFollows',
+            'viralFullScreenPlays',
+            'viralImpressions',
+            'viralJobApplications',
+            'viralJobApplyClicks',
+            'viralLandingPageClicks',
+            'viralLikes',
+            'viralOneClickLeadFormOpens',
+            'viralOneClickLeads',
+            'viralOtherEngagements',
+            'viralPostClickJobApplications',
+            'viralPostClickJobApplyClicks',
+            'viralPostClickRegistrations',
+            'viralPostViewJobApplications',
+            'viralPostViewJobApplyClicks',
+            'viralPostViewRegistrations',
+            'viralReactions',
+            'viralRegistrations',
+            'viralShares',
+            'viralTotalEngagements',
+            'viralVideoCompletions',
+            'viralVideoFirstQuartileCompletions',
+            'viralVideoMidpointCompletions',
+            'viralVideoStarts',
+            'viralVideoThirdQuartileCompletions',
+            'viralVideoViews',
+            'pivot',
+            'sponsoredCampaign',
+        ],
+        'ad_member_job_function_analytics': [
+            'actionClicks',
+            'adUnitClicks',
+            'approximateMemberReach',
+            'cardClicks',
+            'cardImpressions',
+            'clicks',
+            'commentLikes',
+            'comments',
+            'companyPageClicks',
+            'conversionValueInLocalCurrency',
+            'costInLocalCurrency',
+            'costInUsd',
+            'documentCompletions',
+            'documentFirstQuartileCompletions',
+            'documentMidpointCompletions',
+            'documentThirdQuartileCompletions',
+            'downloadClicks',
+            'end_date',
+            'externalWebsiteConversions',
+            'externalWebsitePostClickConversions',
+            'externalWebsitePostViewConversions',
+            'follows',
+            'fullScreenPlays',
+            'impressions',
+            'jobApplications',
+            'jobApplyClicks',
+            'landingPageClicks',
+            'leadGenerationMailContactInfoShares',
+            'leadGenerationMailInterestedClicks',
+            'likes',
+            'oneClickLeadFormOpens',
+            'oneClickLeads',
+            'opens',
+            'otherEngagements',
+            'pivotValues',
+            'pivotValues[]',
+            'string_of_pivot_values',
+            'postClickJobApplications',
+            'postClickJobApplyClicks',
+            'postClickRegistrations',
+            'postViewJobApplications',
+            'postViewJobApplyClicks',
+            'postViewRegistrations',
+            'reactions',
+            'registrations',
+            'sends',
+            'shares',
+            'start_date',
+            'talentLeads',
+            'textUrlClicks',
+            'totalEngagements',
+            'validWorkEmailLeads',
+            'videoCompletions',
+            'videoFirstQuartileCompletions',
+            'videoMidpointCompletions',
+            'videoStarts',
+            'videoThirdQuartileCompletions',
+            'videoViews',
+            'viralCardClicks',
+            'viralCardImpressions',
+            'viralClicks',
+            'viralCommentLikes',
+            'viralComments',
+            'viralCompanyPageClicks',
+            'viralDocumentCompletions',
+            'viralDocumentFirstQuartileCompletions',
+            'viralDocumentMidpointCompletions',
+            'viralDocumentThirdQuartileCompletions',
+            'viralDownloadClicks',
+            'viralExternalWebsiteConversions',
+            'viralExternalWebsitePostClickConversions',
+            'viralExternalWebsitePostViewConversions',
+            'viralFollows',
+            'viralFullScreenPlays',
+            'viralImpressions',
+            'viralJobApplications',
+            'viralJobApplyClicks',
+            'viralLandingPageClicks',
+            'viralLikes',
+            'viralOneClickLeadFormOpens',
+            'viralOneClickLeads',
+            'viralOtherEngagements',
+            'viralPostClickJobApplications',
+            'viralPostClickJobApplyClicks',
+            'viralPostClickRegistrations',
+            'viralPostViewJobApplications',
+            'viralPostViewJobApplyClicks',
+            'viralPostViewRegistrations',
+            'viralReactions',
+            'viralRegistrations',
+            'viralShares',
+            'viralTotalEngagements',
+            'viralVideoCompletions',
+            'viralVideoFirstQuartileCompletions',
+            'viralVideoMidpointCompletions',
+            'viralVideoStarts',
+            'viralVideoThirdQuartileCompletions',
+            'viralVideoViews',
+            'pivot',
+            'sponsoredCampaign',
+        ],
+        'ad_member_job_title_analytics': [
+            'actionClicks',
+            'adUnitClicks',
+            'approximateMemberReach',
+            'cardClicks',
+            'cardImpressions',
+            'clicks',
+            'commentLikes',
+            'comments',
+            'companyPageClicks',
+            'conversionValueInLocalCurrency',
+            'costInLocalCurrency',
+            'costInUsd',
+            'documentCompletions',
+            'documentFirstQuartileCompletions',
+            'documentMidpointCompletions',
+            'documentThirdQuartileCompletions',
+            'downloadClicks',
+            'end_date',
+            'externalWebsiteConversions',
+            'externalWebsitePostClickConversions',
+            'externalWebsitePostViewConversions',
+            'follows',
+            'fullScreenPlays',
+            'impressions',
+            'jobApplications',
+            'jobApplyClicks',
+            'landingPageClicks',
+            'leadGenerationMailContactInfoShares',
+            'leadGenerationMailInterestedClicks',
+            'likes',
+            'oneClickLeadFormOpens',
+            'oneClickLeads',
+            'opens',
+            'otherEngagements',
+            'pivotValues',
+            'pivotValues[]',
+            'string_of_pivot_values',
+            'postClickJobApplications',
+            'postClickJobApplyClicks',
+            'postClickRegistrations',
+            'postViewJobApplications',
+            'postViewJobApplyClicks',
+            'postViewRegistrations',
+            'reactions',
+            'registrations',
+            'sends',
+            'shares',
+            'start_date',
+            'talentLeads',
+            'textUrlClicks',
+            'totalEngagements',
+            'validWorkEmailLeads',
+            'videoCompletions',
+            'videoFirstQuartileCompletions',
+            'videoMidpointCompletions',
+            'videoStarts',
+            'videoThirdQuartileCompletions',
+            'videoViews',
+            'viralCardClicks',
+            'viralCardImpressions',
+            'viralClicks',
+            'viralCommentLikes',
+            'viralComments',
+            'viralCompanyPageClicks',
+            'viralDocumentCompletions',
+            'viralDocumentFirstQuartileCompletions',
+            'viralDocumentMidpointCompletions',
+            'viralDocumentThirdQuartileCompletions',
+            'viralDownloadClicks',
+            'viralExternalWebsiteConversions',
+            'viralExternalWebsitePostClickConversions',
+            'viralExternalWebsitePostViewConversions',
+            'viralFollows',
+            'viralFullScreenPlays',
+            'viralImpressions',
+            'viralJobApplications',
+            'viralJobApplyClicks',
+            'viralLandingPageClicks',
+            'viralLikes',
+            'viralOneClickLeadFormOpens',
+            'viralOneClickLeads',
+            'viralOtherEngagements',
+            'viralPostClickJobApplications',
+            'viralPostClickJobApplyClicks',
+            'viralPostClickRegistrations',
+            'viralPostViewJobApplications',
+            'viralPostViewJobApplyClicks',
+            'viralPostViewRegistrations',
+            'viralReactions',
+            'viralRegistrations',
+            'viralShares',
+            'viralTotalEngagements',
+            'viralVideoCompletions',
+            'viralVideoFirstQuartileCompletions',
+            'viralVideoMidpointCompletions',
+            'viralVideoStarts',
+            'viralVideoThirdQuartileCompletions',
+            'viralVideoViews',
+            'pivot',
+            'sponsoredCampaign',
+        ],
+        'ad_member_region_analytics': [
+            'actionClicks',
+            'adUnitClicks',
+            'approximateMemberReach',
+            'cardClicks',
+            'cardImpressions',
+            'clicks',
+            'commentLikes',
+            'comments',
+            'companyPageClicks',
+            'conversionValueInLocalCurrency',
+            'costInLocalCurrency',
+            'costInUsd',
+            'documentCompletions',
+            'documentFirstQuartileCompletions',
+            'documentMidpointCompletions',
+            'documentThirdQuartileCompletions',
+            'downloadClicks',
+            'end_date',
+            'externalWebsiteConversions',
+            'externalWebsitePostClickConversions',
+            'externalWebsitePostViewConversions',
+            'follows',
+            'fullScreenPlays',
+            'impressions',
+            'jobApplications',
+            'jobApplyClicks',
+            'landingPageClicks',
+            'leadGenerationMailContactInfoShares',
+            'leadGenerationMailInterestedClicks',
+            'likes',
+            'oneClickLeadFormOpens',
+            'oneClickLeads',
+            'opens',
+            'otherEngagements',
+            'pivotValues',
+            'pivotValues[]',
+            'string_of_pivot_values',
+            'postClickJobApplications',
+            'postClickJobApplyClicks',
+            'postClickRegistrations',
+            'postViewJobApplications',
+            'postViewJobApplyClicks',
+            'postViewRegistrations',
+            'reactions',
+            'registrations',
+            'sends',
+            'shares',
+            'start_date',
+            'talentLeads',
+            'textUrlClicks',
+            'totalEngagements',
+            'validWorkEmailLeads',
+            'videoCompletions',
+            'videoFirstQuartileCompletions',
+            'videoMidpointCompletions',
+            'videoStarts',
+            'videoThirdQuartileCompletions',
+            'videoViews',
+            'viralCardClicks',
+            'viralCardImpressions',
+            'viralClicks',
+            'viralCommentLikes',
+            'viralComments',
+            'viralCompanyPageClicks',
+            'viralDocumentCompletions',
+            'viralDocumentFirstQuartileCompletions',
+            'viralDocumentMidpointCompletions',
+            'viralDocumentThirdQuartileCompletions',
+            'viralDownloadClicks',
+            'viralExternalWebsiteConversions',
+            'viralExternalWebsitePostClickConversions',
+            'viralExternalWebsitePostViewConversions',
+            'viralFollows',
+            'viralFullScreenPlays',
+            'viralImpressions',
+            'viralJobApplications',
+            'viralJobApplyClicks',
+            'viralLandingPageClicks',
+            'viralLikes',
+            'viralOneClickLeadFormOpens',
+            'viralOneClickLeads',
+            'viralOtherEngagements',
+            'viralPostClickJobApplications',
+            'viralPostClickJobApplyClicks',
+            'viralPostClickRegistrations',
+            'viralPostViewJobApplications',
+            'viralPostViewJobApplyClicks',
+            'viralPostViewRegistrations',
+            'viralReactions',
+            'viralRegistrations',
+            'viralShares',
+            'viralTotalEngagements',
+            'viralVideoCompletions',
+            'viralVideoFirstQuartileCompletions',
+            'viralVideoMidpointCompletions',
+            'viralVideoStarts',
+            'viralVideoThirdQuartileCompletions',
+            'viralVideoViews',
+            'pivot',
+            'sponsoredCampaign',
+        ],
+        'ad_member_seniority_analytics': [
+            'actionClicks',
+            'adUnitClicks',
+            'approximateMemberReach',
+            'cardClicks',
+            'cardImpressions',
+            'clicks',
+            'commentLikes',
+            'comments',
+            'companyPageClicks',
+            'conversionValueInLocalCurrency',
+            'costInLocalCurrency',
+            'costInUsd',
+            'documentCompletions',
+            'documentFirstQuartileCompletions',
+            'documentMidpointCompletions',
+            'documentThirdQuartileCompletions',
+            'downloadClicks',
+            'end_date',
+            'externalWebsiteConversions',
+            'externalWebsitePostClickConversions',
+            'externalWebsitePostViewConversions',
+            'follows',
+            'fullScreenPlays',
+            'impressions',
+            'jobApplications',
+            'jobApplyClicks',
+            'landingPageClicks',
+            'leadGenerationMailContactInfoShares',
+            'leadGenerationMailInterestedClicks',
+            'likes',
+            'oneClickLeadFormOpens',
+            'oneClickLeads',
+            'opens',
+            'otherEngagements',
+            'pivotValues',
+            'pivotValues[]',
+            'string_of_pivot_values',
+            'postClickJobApplications',
+            'postClickJobApplyClicks',
+            'postClickRegistrations',
+            'postViewJobApplications',
+            'postViewJobApplyClicks',
+            'postViewRegistrations',
+            'reactions',
+            'registrations',
+            'sends',
+            'shares',
+            'start_date',
+            'talentLeads',
+            'textUrlClicks',
+            'totalEngagements',
+            'validWorkEmailLeads',
+            'videoCompletions',
+            'videoFirstQuartileCompletions',
+            'videoMidpointCompletions',
+            'videoStarts',
+            'videoThirdQuartileCompletions',
+            'videoViews',
+            'viralCardClicks',
+            'viralCardImpressions',
+            'viralClicks',
+            'viralCommentLikes',
+            'viralComments',
+            'viralCompanyPageClicks',
+            'viralDocumentCompletions',
+            'viralDocumentFirstQuartileCompletions',
+            'viralDocumentMidpointCompletions',
+            'viralDocumentThirdQuartileCompletions',
+            'viralDownloadClicks',
+            'viralExternalWebsiteConversions',
+            'viralExternalWebsitePostClickConversions',
+            'viralExternalWebsitePostViewConversions',
+            'viralFollows',
+            'viralFullScreenPlays',
+            'viralImpressions',
+            'viralJobApplications',
+            'viralJobApplyClicks',
+            'viralLandingPageClicks',
+            'viralLikes',
+            'viralOneClickLeadFormOpens',
+            'viralOneClickLeads',
+            'viralOtherEngagements',
+            'viralPostClickJobApplications',
+            'viralPostClickJobApplyClicks',
+            'viralPostClickRegistrations',
+            'viralPostViewJobApplications',
+            'viralPostViewJobApplyClicks',
+            'viralPostViewRegistrations',
+            'viralReactions',
+            'viralRegistrations',
+            'viralShares',
+            'viralTotalEngagements',
+            'viralVideoCompletions',
+            'viralVideoFirstQuartileCompletions',
+            'viralVideoMidpointCompletions',
+            'viralVideoStarts',
+            'viralVideoThirdQuartileCompletions',
+            'viralVideoViews',
+            'pivot',
+            'sponsoredCampaign',
+        ],
+        'lead_forms': [
+            'id',
+            'name',
+            'owner',
+            'owner.sponsoredAccount',
+            'state',
+            'content',
+            'content.headline',
+            'content.description',
+            'content.questions',
+            'content.questions[]',
+            'content.legalInfo',
+            'content.postSubmissionInfo',
+            'created',
+            'lastModified',
+            'creationLocale',
+            'hiddenFields',
+            'hiddenFields[]',
+            'reviewInfo',
+            'versionId',
+            'versionTag',
+        ],
+        'lead_form_responses': [
+            'id',
+            'leadType',
+            'form',
+            'owner',
+            'owner.sponsoredAccount',
+            'ownerInfo',
+            'leadMetadata',
+            'leadMetadata.sponsoredLeadMetadata',
+            'leadMetadataInfo',
+            'associatedEntity',
+            'associatedEntity.associatedCreative',
+            'associatedEntityInfo',
+            'submittedAt',
+            'responseId',
+            'formResponse',
+            'formResponse.answers',
+            'formResponse.answers[]',
+            'formResponse.consentResponses',
+            'formResponse.consentResponses[]',
+            'testLead',
+            'submitter',
+            'versionedLeadGenFormUrn',
         ],
     },
     example_questions=ExampleQuestions(

@@ -138,8 +138,8 @@ class CassetteGenerator:
         # Filter headers (remove auth headers)
         filtered_headers = self._filter_headers(request_log.headers)
 
-        # Redact secrets in all serialized fields (aggressive mode)
-        redacted_path = DataRedactor.redact_string(request_log.path, aggressive=True)
+        # Redact secrets in all serialized fields (aggressive mode).
+        redacted_path = "/".join(DataRedactor.redact_string(segment, aggressive=True) for segment in request_log.path.split("/"))
         redacted_query_params = DataRedactor.redact_mapping(query_params, aggressive=True) if query_params else None
         redacted_body = _redact_body_aggressive(request_log.body) if request_log.body is not None else None
 
@@ -395,6 +395,9 @@ class CassetteGenerator:
         Returns:
             Dictionary of query parameters as strings
         """
+        if urlparse(request_log.path).query:
+            return {}
+
         # First check if params dict is provided
         if request_log.params:
             # Convert all values to strings (API expects strings)
