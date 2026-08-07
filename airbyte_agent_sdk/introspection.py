@@ -93,10 +93,16 @@ EXECUTE_INSTRUCTIONS = (
     "(b) context_store_search returned no results and you suspect indexing delay."
     "\n\n"
     "HOW TO USE DOWNLOAD:\n"
-    "- By default, download returns a stream for API/SDK clients.\n"
-    '- To request JSON chunks, pass params={"_airbyte_response_type": "json", "_airbyte_response_format": "text"}.\n'
-    '- Use params.range_header like "bytes=0-49151" for the bounded chunk range.\n'
-    '- Use "_airbyte_response_format": "base64" for binary files.\n'
+    "- By default, download returns a stream for API/SDK clients. For agent/MCP JSON responses, omit `range_header` "
+    'and pass params={"_airbyte_response_type": "json", "_airbyte_response_format": "text", "_airbyte_max_chars": 20000}.\n'
+    "- Rich documents (PDF/DOCX/XLSX/PPTX) are converted to a bounded 20,000-character Markdown window; "
+    "plain-text files are decoded.\n"
+    "- If `has_more` is true, request the next converted-text window with "
+    "`params._airbyte_text_offset` set to `next_offset` and `params._airbyte_download_token` set to "
+    "`download_token`; `_airbyte_max_chars` may request a smaller window. Restart at offset 0 if the token expires.\n"
+    '- Use `_airbyte_response_format="base64"` for binary files; base64 content uses the same character-window pagination.\n'
+    "- `range_header` is only for raw byte-range reads and bypasses document-to-Markdown conversion; "
+    "never use it when requesting converted Markdown.\n"
     "\n\n"
     "HOW TO USE CONTEXT_STORE_SEARCH:\n"
     "action='context_store_search' uses params.query with filter, sort, and limit.\n"
