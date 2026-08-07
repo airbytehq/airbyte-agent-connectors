@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "airbyte-agent-sdk"
-version = "0.1.301"
+version = "0.1.302"
 description = "Airbyte Agent SDK: typed connectors that give AI agents access to 50+ third-party APIs"
 authors = [{ name = "Airbyte", email = "contact@airbyte.io" }]
 readme = "README.md"
@@ -61,6 +61,9 @@ dev = [
 docs-generate = { env = { PDOC_ALLOW_EXEC = "1" }, cmd = "python docs/generate.py", help = "Generate API documentation with pdoc." }
 docs-preview = { shell = "poe docs-generate && python -m webbrowser docs/generated/index.html", help = "Generate API documentation and open it in the default web browser." }
 
+[tool.uv]
+python-preference = "managed"
+
 [tool.ruff]
 extend = "../shared/ruff.toml"
 
@@ -69,7 +72,7 @@ ignore = [
     "B008",   # do not perform function calls in argument defaults
     "B904",   # Allow raising exceptions without from e, for HTTPException
     "UP006",  # Use `dict` instead of `Dict` for type annotation - requires refactoring
-    "UP035",  # Deprecated `typing.` declarations - requires refactoring 
+    "UP035",  # Deprecated `typing.` declarations - requires refactoring
     "UP038",  #
     "UP007",  # Allow use of Optional
     "B007",   # Loop control variable not used within loop body

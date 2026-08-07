@@ -271,15 +271,6 @@ class AuditRecordAuthor(BaseModel):
     operations: Any | None = Field(default=None, description="Operations available for the author")
     """Operations available for the author"""
 
-class AuditRecordAssociatedobjectsItem(BaseModel):
-    """Nested schema for AuditRecord.associatedObjects_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None, description="Name of the associated object")
-    """Name of the associated object"""
-    object_type: str | None = Field(default=None, alias="objectType", description="Type of the associated object")
-    """Type of the associated object"""
-
 class AuditRecordAffectedobject(BaseModel):
     """Object affected by the audit event"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -288,6 +279,15 @@ class AuditRecordAffectedobject(BaseModel):
     """Name of the affected object"""
     object_type: str | None = Field(default=None, alias="objectType", description="Type of the affected object")
     """Type of the affected object"""
+
+class AuditRecordAssociatedobjectsItem(BaseModel):
+    """Nested schema for AuditRecord.associatedObjects_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="Name of the associated object")
+    """Name of the associated object"""
+    object_type: str | None = Field(default=None, alias="objectType", description="Type of the associated object")
+    """Type of the associated object"""
 
 class AuditRecord(BaseModel):
     """Confluence audit record"""
