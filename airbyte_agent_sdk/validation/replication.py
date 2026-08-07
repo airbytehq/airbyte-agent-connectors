@@ -865,14 +865,19 @@ def fetch_airbyte_manifest(connector_name: str) -> dict[str, Any] | None:
     return fetch_manifest_resolved(connector_name)
 
 
-def _normalize_auth_type(auth_type: str, option_key: str | None = None) -> str:
+def _normalize_auth_type(auth_type: str, option_key: str | None = None, authenticator: dict[str, Any] | None = None) -> str:
     """Normalize auth type names to canonical form.
 
-    Maps various naming conventions to: oauth2, bearer, basic, api_key.
+    Maps various naming conventions to: oauth2, bearer, basic, api_key, service_account.
 
-    CustomAuthenticator defer to the SelectiveAuthenticator option_key.
+    An authenticator exchanging a signed JWT (profile assertion) is a service
+    account flow, not user OAuth. CustomAuthenticator defer to the
+    SelectiveAuthenticator option_key.
     """
     auth_type_lower = auth_type.lower()
+
+    if authenticator and (authenticator.get("use_profile_assertion") or "profile_assertion" in authenticator):
+        return "service_account"
 
     # OAuth variations
     if "oauth" in auth_type_lower:
@@ -986,7 +991,7 @@ def _extract_auth_from_authenticator(
                 if ref_def:
                     _extract_auth_from_authenticator(ref_def, auth_types, auth_option_keys, defs, key)
     elif auth_type:
-        normalized = _normalize_auth_type(auth_type, option_key)
+        normalized = _normalize_auth_type(auth_type, option_key, authenticator)
         auth_types.add(normalized)
         # Store the option key if provided and not already set
         if option_key and normalized not in auth_option_keys:
@@ -1028,7 +1033,11 @@ def _extract_auth_types_from_connector(connector_def: dict[str, Any]) -> set[str
         scheme_type = scheme.get("type", "")
 
         if scheme_type == "oauth2":
-            auth_types.add("oauth2")
+            token_refresh = scheme.get("x-airbyte-token-refresh") or {}
+            if token_refresh.get("grant_type") == "jwt_bearer":
+                auth_types.add("service_account")
+            else:
+                auth_types.add("oauth2")
         elif scheme_type == "http":
             http_scheme = scheme.get("scheme", "").lower()
             if http_scheme == "bearer":

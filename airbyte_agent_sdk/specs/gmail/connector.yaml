@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: Gmail API Connector
-  version: 0.1.4
+  version: 0.2.0
   description: |
     Gmail is Google's email service that provides email sending, receiving, and organization
     capabilities. This connector provides access to messages, threads, labels, drafts, and
@@ -14,11 +14,12 @@ info:
     message labels, and creating or updating labels.
   x-airbyte-connector-name: gmail
   x-airbyte-connector-definition-id: f7833dac-fc18-4feb-a2a9-94b22001edc6
-  x-airbyte-replication-version: "0.1.8"
-  x-airbyte-replication-compatibility: ">=0.1.8, <1.0.0"
+  x-airbyte-replication-version: "0.1.11"
+  x-airbyte-replication-compatibility: ">=0.1.11, <1.0.0"
   x-airbyte-platform-availability:
-    state: experimental
-    reason: Requires additional QA testing
+    state: enabled
+  x-airbyte-skip-auth-methods:
+    - service_account
   x-airbyte-context-store:
     entities:
       - entity: profile
@@ -1000,7 +1001,6 @@ components:
           scopes:
             https://www.googleapis.com/auth/gmail.modify: View and modify but not delete your email
             https://www.googleapis.com/auth/gmail.compose: Manage drafts and send emails
-            https://www.googleapis.com/auth/gmail.labels: Manage mailbox labels
       # Google may show previously granted Airbyte scopes on the consent screen
       # when include_granted_scopes=true; this mapping is what Sonar requests.
       x-airbyte-oauth-scopes:
@@ -1011,12 +1011,9 @@ components:
             - messages
             - threads
             - drafts
+            - labels
             - messages_trash
             - messages_untrash
-        - scope: "https://www.googleapis.com/auth/gmail.labels"
-          mode: read_write
-          entities:
-            - labels
         - scope: "https://www.googleapis.com/auth/gmail.compose"
           mode: write
           entities:

@@ -96,6 +96,21 @@ class FileImagemediametadata(BaseModel):
     lens: str | None | None = Field(default=None)
     location: FileImagemediametadataLocation | None | None = Field(default=None)
 
+class FileShortcutdetails(BaseModel):
+    """Shortcut file details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    target_id: str | None | None = Field(default=None, alias="targetId")
+    target_mime_type: str | None | None = Field(default=None, alias="targetMimeType")
+    target_resource_key: str | None | None = Field(default=None, alias="targetResourceKey")
+
+class FileLinksharemetadata(BaseModel):
+    """Contains details about the link URLs"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    security_update_eligible: bool | None | None = Field(default=None, alias="securityUpdateEligible")
+    security_update_enabled: bool | None | None = Field(default=None, alias="securityUpdateEnabled")
+
 class FileLabelinfo(BaseModel):
     """An overview of the labels on the file"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -109,21 +124,6 @@ class FileVideomediametadata(BaseModel):
     width: int | None | None = Field(default=None)
     height: int | None | None = Field(default=None)
     duration_millis: str | None | None = Field(default=None, alias="durationMillis")
-
-class FileLinksharemetadata(BaseModel):
-    """Contains details about the link URLs"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    security_update_eligible: bool | None | None = Field(default=None, alias="securityUpdateEligible")
-    security_update_enabled: bool | None | None = Field(default=None, alias="securityUpdateEnabled")
-
-class FileShortcutdetails(BaseModel):
-    """Shortcut file details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    target_id: str | None | None = Field(default=None, alias="targetId")
-    target_mime_type: str | None | None = Field(default=None, alias="targetMimeType")
-    target_resource_key: str | None | None = Field(default=None, alias="targetResourceKey")
 
 class FileCapabilities(BaseModel):
     """Capabilities the current user has on this file"""
@@ -251,16 +251,6 @@ class DriveBackgroundimagefile(BaseModel):
     y_coordinate: float | None | None = Field(default=None, alias="yCoordinate")
     width: float | None | None = Field(default=None)
 
-class DriveRestrictions(BaseModel):
-    """A set of restrictions that apply to this shared drive"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    copy_requires_writer_permission: bool | None | None = Field(default=None, alias="copyRequiresWriterPermission")
-    domain_users_only: bool | None | None = Field(default=None, alias="domainUsersOnly")
-    drive_members_only: bool | None | None = Field(default=None, alias="driveMembersOnly")
-    admin_managed_restrictions: bool | None | None = Field(default=None, alias="adminManagedRestrictions")
-    sharing_folders_requires_organizer_permission: bool | None | None = Field(default=None, alias="sharingFoldersRequiresOrganizerPermission")
-
 class DriveCapabilities(BaseModel):
     """Capabilities the current user has on this shared drive"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -285,6 +275,16 @@ class DriveCapabilities(BaseModel):
     can_reset_drive_restrictions: bool | None | None = Field(default=None, alias="canResetDriveRestrictions")
     can_delete_children: bool | None | None = Field(default=None, alias="canDeleteChildren")
     can_trash_children: bool | None | None = Field(default=None, alias="canTrashChildren")
+
+class DriveRestrictions(BaseModel):
+    """A set of restrictions that apply to this shared drive"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    copy_requires_writer_permission: bool | None | None = Field(default=None, alias="copyRequiresWriterPermission")
+    domain_users_only: bool | None | None = Field(default=None, alias="domainUsersOnly")
+    drive_members_only: bool | None | None = Field(default=None, alias="driveMembersOnly")
+    admin_managed_restrictions: bool | None | None = Field(default=None, alias="adminManagedRestrictions")
+    sharing_folders_requires_organizer_permission: bool | None | None = Field(default=None, alias="sharingFoldersRequiresOrganizerPermission")
 
 class Drive(BaseModel):
     """Representation of a shared drive"""
