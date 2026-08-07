@@ -225,7 +225,7 @@ class GithubConnector:
 
     connector_name = "github"
     connector_version = "0.1.19"
-    sdk_version = "0.1.300"
+    sdk_version = "0.1.301"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -2450,6 +2450,7 @@ Any user with push access can update an issue.
         - database_id: REST API numeric identifier for the issue
         - number: Repository-scoped issue number
         - title: Issue title
+        - body: Markdown body (description) of the issue
         - state: Issue state in the cache: lowercase `open` or `closed`
         - state_reason: Reason the issue is in its current state (e.g. `completed`, `not_planned`, `reopened`). Cached values are lowercase.
         - created_at: ISO 8601 timestamp when the issue was created
@@ -2871,6 +2872,7 @@ To open or update a pull request in a public repository, you must have write acc
         - database_id: REST API numeric identifier for the pull request
         - number: Repository-scoped pull request number
         - title: Pull request title
+        - body: Markdown body (description) of the pull request
         - state: Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)
         - is_draft: Whether the pull request is still a draft
         - created_at: ISO 8601 timestamp when the pull request was created

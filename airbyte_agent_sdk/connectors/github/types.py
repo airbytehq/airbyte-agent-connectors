@@ -1192,6 +1192,8 @@ class IssuesSearchFilter(TypedDict, total=False):
     """Repository-scoped issue number"""
     title: str | None
     """Issue title"""
+    body: str | None
+    """Markdown body (description) of the issue"""
     state: str | None
     """Issue state in the cache: lowercase `open` or `closed`"""
     state_reason: str | None
@@ -1218,6 +1220,8 @@ class IssuesInFilter(TypedDict, total=False):
     """Repository-scoped issue number"""
     title: list[str]
     """Issue title"""
+    body: list[str]
+    """Markdown body (description) of the issue"""
     state: list[str]
     """Issue state in the cache: lowercase `open` or `closed`"""
     state_reason: list[str]
@@ -1244,6 +1248,8 @@ class IssuesAnyValueFilter(TypedDict, total=False):
     """Repository-scoped issue number"""
     title: Any
     """Issue title"""
+    body: Any
+    """Markdown body (description) of the issue"""
     state: Any
     """Issue state in the cache: lowercase `open` or `closed`"""
     state_reason: Any
@@ -1270,6 +1276,8 @@ class IssuesStringFilter(TypedDict, total=False):
     """Repository-scoped issue number"""
     title: str
     """Issue title"""
+    body: str
+    """Markdown body (description) of the issue"""
     state: str
     """Issue state in the cache: lowercase `open` or `closed`"""
     state_reason: str
@@ -1296,6 +1304,8 @@ class IssuesSortFilter(TypedDict, total=False):
     """Repository-scoped issue number"""
     title: AirbyteSortOrder
     """Issue title"""
+    body: AirbyteSortOrder
+    """Markdown body (description) of the issue"""
     state: AirbyteSortOrder
     """Issue state in the cache: lowercase `open` or `closed`"""
     state_reason: AirbyteSortOrder
@@ -2542,6 +2552,8 @@ class PullRequestsSearchFilter(TypedDict, total=False):
     """Repository-scoped pull request number"""
     title: str | None
     """Pull request title"""
+    body: str | None
+    """Markdown body (description) of the pull request"""
     state: str | None
     """Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"""
     is_draft: bool | None
@@ -2568,6 +2580,8 @@ class PullRequestsInFilter(TypedDict, total=False):
     """Repository-scoped pull request number"""
     title: list[str]
     """Pull request title"""
+    body: list[str]
+    """Markdown body (description) of the pull request"""
     state: list[str]
     """Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"""
     is_draft: list[bool]
@@ -2594,6 +2608,8 @@ class PullRequestsAnyValueFilter(TypedDict, total=False):
     """Repository-scoped pull request number"""
     title: Any
     """Pull request title"""
+    body: Any
+    """Markdown body (description) of the pull request"""
     state: Any
     """Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"""
     is_draft: Any
@@ -2620,6 +2636,8 @@ class PullRequestsStringFilter(TypedDict, total=False):
     """Repository-scoped pull request number"""
     title: str
     """Pull request title"""
+    body: str
+    """Markdown body (description) of the pull request"""
     state: str
     """Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"""
     is_draft: str
@@ -2646,6 +2664,8 @@ class PullRequestsSortFilter(TypedDict, total=False):
     """Repository-scoped pull request number"""
     title: AirbyteSortOrder
     """Pull request title"""
+    body: AirbyteSortOrder
+    """Markdown body (description) of the pull request"""
     state: AirbyteSortOrder
     """Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"""
     is_draft: AirbyteSortOrder

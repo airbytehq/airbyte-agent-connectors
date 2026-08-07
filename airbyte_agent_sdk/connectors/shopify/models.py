@@ -342,22 +342,6 @@ class OrderList(BaseModel):
 
     orders: list[Order] | None = Field(default=None)
 
-class ProductImage(BaseModel):
-    """A product image"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    product_id: int | None = Field(default=None)
-    position: int | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    updated_at: str | None = Field(default=None)
-    alt: str | None = Field(default=None)
-    width: int | None = Field(default=None)
-    height: int | None = Field(default=None)
-    src: str | None = Field(default=None)
-    variant_ids: list[int] | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-
 class ProductVariant(BaseModel):
     """A product variant"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -387,6 +371,22 @@ class ProductVariant(BaseModel):
     inventory_quantity: int | None = Field(default=None)
     old_inventory_quantity: int | None = Field(default=None)
     requires_shipping: bool | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+
+class ProductImage(BaseModel):
+    """A product image"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    product_id: int | None = Field(default=None)
+    position: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    alt: str | None = Field(default=None)
+    width: int | None = Field(default=None)
+    height: int | None = Field(default=None)
+    src: str | None = Field(default=None)
+    variant_ids: list[int] | None = Field(default=None)
     admin_graphql_api_id: str | None = Field(default=None)
 
 class Product(BaseModel):
@@ -1895,12 +1895,12 @@ class InventoryAdjustQuantitiesResponse(BaseModel):
 
     data: InventoryAdjustQuantitiesResponseData | None = Field(default=None)
 
-class DiscountCodeCreateParamsBasiccodediscountCustomerselection(BaseModel):
-    """Which customers can use this discount"""
+class DiscountCodeCreateParamsBasiccodediscountCustomergetsItems(BaseModel):
+    """Which items the discount applies to"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    all: bool | None = Field(default=None, description="Set to true for all customers")
-    """Set to true for all customers"""
+    all: bool | None = Field(default=None, description="Set to true for all items")
+    """Set to true for all items"""
 
 class DiscountCodeCreateParamsBasiccodediscountCustomergetsValueDiscountamount(BaseModel):
     """Nested schema for DiscountCodeCreateParamsBasiccodediscountCustomergetsValue.discountAmount"""
@@ -1917,13 +1917,6 @@ class DiscountCodeCreateParamsBasiccodediscountCustomergetsValue(BaseModel):
     """Percentage discount (e.g. 0.1 for 10%)"""
     discount_amount: DiscountCodeCreateParamsBasiccodediscountCustomergetsValueDiscountamount | None = Field(default=None, alias="discountAmount")
 
-class DiscountCodeCreateParamsBasiccodediscountCustomergetsItems(BaseModel):
-    """Which items the discount applies to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    all: bool | None = Field(default=None, description="Set to true for all items")
-    """Set to true for all items"""
-
 class DiscountCodeCreateParamsBasiccodediscountCustomergets(BaseModel):
     """What the customer gets from this discount"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1932,6 +1925,13 @@ class DiscountCodeCreateParamsBasiccodediscountCustomergets(BaseModel):
     """The discount value"""
     items: DiscountCodeCreateParamsBasiccodediscountCustomergetsItems | None = Field(default=None, description="Which items the discount applies to")
     """Which items the discount applies to"""
+
+class DiscountCodeCreateParamsBasiccodediscountCustomerselection(BaseModel):
+    """Which customers can use this discount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    all: bool | None = Field(default=None, description="Set to true for all customers")
+    """Set to true for all customers"""
 
 class DiscountCodeCreateParamsBasiccodediscount(BaseModel):
     """Nested schema for DiscountCodeCreateParams.basicCodeDiscount"""

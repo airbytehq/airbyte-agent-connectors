@@ -144,6 +144,20 @@ info:
           - name: body
             type: ["null", "string"]
             description: "Markdown body of the comment"
+            x-airbyte-semantic-search:
+              content_type: markdown
+              samples:
+                - name: comment_paragraph
+                  windowed: true
+                  sampling: { sample_type: regex, unit_label: comment_paragraph, split_pattern: '\n\s*\n' }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding: { model: text-embedding-3-small }
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: html_url, path: "/html_url", type: string }
+                - { name: node_id, path: "/node_id", type: string }
           - name: createdAt
             x-airbyte-name: created_at
             type: ["null", "string"]
@@ -197,6 +211,28 @@ info:
           - name: title
             type: ["null", "string"]
             description: "Issue title"
+          - name: body
+            type: ["null", "string"]
+            description: "Markdown body (description) of the issue"
+            x-airbyte-semantic-search:
+              content_type: markdown
+              samples:
+                - { name: title, path: "/title" }
+                - name: issue_paragraph
+                  windowed: true
+                  sampling: { sample_type: regex, unit_label: issue_paragraph, split_pattern: '\n\s*\n' }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{title}\n\n{issue_paragraph}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: number, path: "/number", type: string }
+                - { name: state, path: "/state", type: string }
+                - { name: title, path: "/title", type: string }
+                - { name: html_url, path: "/html_url", type: string }
+                - { name: node_id, path: "/node_id", type: string }
           - name: state
             type: ["null", "string"]
             description: "Issue state in the cache: lowercase `open` or `closed`"
@@ -372,6 +408,28 @@ info:
           - name: title
             type: ["null", "string"]
             description: "Pull request title"
+          - name: body
+            type: ["null", "string"]
+            description: "Markdown body (description) of the pull request"
+            x-airbyte-semantic-search:
+              content_type: markdown
+              samples:
+                - { name: title, path: "/title" }
+                - name: pr_paragraph
+                  windowed: true
+                  sampling: { sample_type: regex, unit_label: pr_paragraph, split_pattern: '\n\s*\n' }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{title}\n\n{pr_paragraph}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: number, path: "/number", type: string }
+                - { name: state, path: "/state", type: string }
+                - { name: title, path: "/title", type: string }
+                - { name: html_url, path: "/html_url", type: string }
+                - { name: node_id, path: "/node_id", type: string }
           - name: state
             type: ["null", "string"]
             description: "Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"

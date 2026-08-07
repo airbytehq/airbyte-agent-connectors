@@ -4447,7 +4447,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Markdown body of the comment",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "createdAt",
@@ -4480,8 +4480,36 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "body",
+          "description": "Markdown body of the comment",
+          "context_max_chars": 2048,
+          "content_type": "markdown"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "html_url",
+          "type": "string"
+        },
+        {
+          "name": "node_id",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -4647,6 +4675,16 @@
           "semantic": false
         },
         {
+          "name": "body",
+          "python_name": "body",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Markdown body (description) of the issue",
+          "semantic": true
+        },
+        {
           "name": "state",
           "python_name": "state",
           "type": "str | None",
@@ -4717,8 +4755,44 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "body",
+          "description": "Markdown body (description) of the issue",
+          "context_max_chars": 2048,
+          "content_type": "markdown"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "number",
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "html_url",
+          "type": "string"
+        },
+        {
+          "name": "node_id",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -5234,6 +5308,16 @@
           "semantic": false
         },
         {
+          "name": "body",
+          "python_name": "body",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Markdown body (description) of the pull request",
+          "semantic": true
+        },
+        {
           "name": "state",
           "python_name": "state",
           "type": "str | None",
@@ -5304,8 +5388,44 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "body",
+          "description": "Markdown body (description) of the pull request",
+          "context_max_chars": 2048,
+          "content_type": "markdown"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "number",
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "html_url",
+          "type": "string"
+        },
+        {
+          "name": "node_id",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },

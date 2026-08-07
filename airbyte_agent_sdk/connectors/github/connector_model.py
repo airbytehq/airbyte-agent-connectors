@@ -26,6 +26,12 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheFieldConfig,
     EntityRelationshipConfig,
     ScopingParamConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -4032,6 +4038,48 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         name='body',
                         type=['null', 'string'],
                         description='Markdown body of the comment',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='markdown',
+                            samples=[
+                                SemanticSample(
+                                    name='comment_paragraph',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='regex',
+                                        unit_label='comment_paragraph',
+                                        split_pattern='\\n\\s*\\n',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='created_at',
+                                    path='/created_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='html_url',
+                                    path='/html_url',
+                                ),
+                                SemanticMetadataField(
+                                    name='node_id',
+                                    path='/node_id',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='createdAt',
@@ -4114,6 +4162,66 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         name='title',
                         type=['null', 'string'],
                         description='Issue title',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'string'],
+                        description='Markdown body (description) of the issue',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='markdown',
+                            samples=[
+                                SemanticSample(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticSample(
+                                    name='issue_paragraph',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='regex',
+                                        unit_label='issue_paragraph',
+                                        split_pattern='\\n\\s*\\n',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{title}\n\n{issue_paragraph}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='number',
+                                    path='/number',
+                                ),
+                                SemanticMetadataField(
+                                    name='state',
+                                    path='/state',
+                                ),
+                                SemanticMetadataField(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticMetadataField(
+                                    name='html_url',
+                                    path='/html_url',
+                                ),
+                                SemanticMetadataField(
+                                    name='node_id',
+                                    path='/node_id',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='state',
@@ -4393,6 +4501,66 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         name='title',
                         type=['null', 'string'],
                         description='Pull request title',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'string'],
+                        description='Markdown body (description) of the pull request',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='markdown',
+                            samples=[
+                                SemanticSample(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticSample(
+                                    name='pr_paragraph',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='regex',
+                                        unit_label='pr_paragraph',
+                                        split_pattern='\\n\\s*\\n',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{title}\n\n{pr_paragraph}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='number',
+                                    path='/number',
+                                ),
+                                SemanticMetadataField(
+                                    name='state',
+                                    path='/state',
+                                ),
+                                SemanticMetadataField(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticMetadataField(
+                                    name='html_url',
+                                    path='/html_url',
+                                ),
+                                SemanticMetadataField(
+                                    name='node_id',
+                                    path='/node_id',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='state',
@@ -4761,6 +4929,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             'databaseId',
             'number',
             'title',
+            'body',
             'state',
             'stateReason',
             'createdAt',
@@ -4814,6 +4983,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             'databaseId',
             'number',
             'title',
+            'body',
             'state',
             'isDraft',
             'createdAt',
@@ -4876,6 +5046,166 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             'login',
             'url',
         ],
+    },
+    semantic_search_fields={
+        'comments': {
+            'body': SemanticSearchConfig(
+                content_type='markdown',
+                samples=[
+                    SemanticSample(
+                        name='comment_paragraph',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='regex',
+                            unit_label='comment_paragraph',
+                            split_pattern='\\n\\s*\\n',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='created_at',
+                        path='/created_at',
+                    ),
+                    SemanticMetadataField(
+                        name='html_url',
+                        path='/html_url',
+                    ),
+                    SemanticMetadataField(
+                        name='node_id',
+                        path='/node_id',
+                    ),
+                ],
+            ),
+        },
+        'issues': {
+            'body': SemanticSearchConfig(
+                content_type='markdown',
+                samples=[
+                    SemanticSample(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticSample(
+                        name='issue_paragraph',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='regex',
+                            unit_label='issue_paragraph',
+                            split_pattern='\\n\\s*\\n',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{title}\n\n{issue_paragraph}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='number',
+                        path='/number',
+                    ),
+                    SemanticMetadataField(
+                        name='state',
+                        path='/state',
+                    ),
+                    SemanticMetadataField(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticMetadataField(
+                        name='html_url',
+                        path='/html_url',
+                    ),
+                    SemanticMetadataField(
+                        name='node_id',
+                        path='/node_id',
+                    ),
+                ],
+            ),
+        },
+        'pull_requests': {
+            'body': SemanticSearchConfig(
+                content_type='markdown',
+                samples=[
+                    SemanticSample(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticSample(
+                        name='pr_paragraph',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='regex',
+                            unit_label='pr_paragraph',
+                            split_pattern='\\n\\s*\\n',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{title}\n\n{pr_paragraph}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='number',
+                        path='/number',
+                    ),
+                    SemanticMetadataField(
+                        name='state',
+                        path='/state',
+                    ),
+                    SemanticMetadataField(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticMetadataField(
+                        name='html_url',
+                        path='/html_url',
+                    ),
+                    SemanticMetadataField(
+                        name='node_id',
+                        path='/node_id',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[
