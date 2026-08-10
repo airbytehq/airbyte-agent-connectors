@@ -57,19 +57,19 @@ class SearchRequest(BaseModel):
     contents: SearchRequestContents | None = Field(default=None)
     moderation: bool | None = Field(default=None)
 
-class CostDollarsContents(BaseModel):
-    """Cost breakdown for contents retrieval."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    text: float | None = Field(default=None, description="Cost for text extraction.")
-    """Cost for text extraction."""
-
 class CostDollarsSearch(BaseModel):
     """Nested schema for CostDollars.search"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     neural: float | None = Field(default=None, description="Cost for neural search.")
     """Cost for neural search."""
+
+class CostDollarsContents(BaseModel):
+    """Cost breakdown for contents retrieval."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    text: float | None = Field(default=None, description="Cost for text extraction.")
+    """Cost for text extraction."""
 
 class CostDollars(BaseModel):
     """Estimated cost breakdown for the request."""

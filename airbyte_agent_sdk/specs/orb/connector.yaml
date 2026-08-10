@@ -14,6 +14,9 @@ info:
     - title: Orb API Reference documentation
       type: api_reference
       url: "https://docs.withorb.com/api-reference"
+    - title: Orb changelog
+      type: api_release_history
+      url: "https://changelog.withorb.com"
     - title: Orb API Overview documentation
       type: other
       url: "https://docs.withorb.com/overview"
