@@ -4688,7 +4688,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Plain text content of the comment without formatting",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "public",
@@ -4761,12 +4761,50 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "plain_body",
+          "description": "Plain text content of the comment without formatting",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "ticket_id",
+          "type": "string"
+        },
+        {
+          "name": "author_id",
+          "type": "string"
+        },
+        {
+          "name": "public",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": [
         "authorName",
-        "authorRole"
+        "authorRole",
+        "ticketTitle",
+        "ticketStatus",
+        "ticketPriority",
+        "ticketRequesterId",
+        "ticketAssigneeId",
+        "ticketOrganizationId",
+        "ticketCreatedAt",
+        "ticketUpdatedAt",
+        "ticketUrl",
+        "ticketTags"
       ]
     },
     "ticket_fields": {

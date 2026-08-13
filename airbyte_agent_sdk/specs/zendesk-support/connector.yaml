@@ -468,6 +468,20 @@ info:
         - "null"
         - "string"
         description: Plain text content of the comment without formatting
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+          - name: comment_paragraph
+            windowed: true
+            sampling: { sample_type: regex, unit_label: comment_paragraph, split_pattern: '\n\s*\n' }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding: { model: text-embedding-3-small }
+          metadata:
+          - { name: id, path: "/id", type: string }
+          - { name: created_at, path: "/created_at", type: string }
+          - { name: ticket_id, path: "/ticket_id", type: string }
+          - { name: author_id, path: "/author_id", type: string }
+          - { name: public, path: "/public", type: string }
       - name: public
         type:
         - "null"
@@ -510,6 +524,20 @@ info:
           project:
             - { name: authorName, from: name }
             - { name: authorRole, from: role }
+        - target: tickets
+          match:
+            - { local: ticket_id, foreign: id }
+          project:
+            - { name: ticketTitle, from: subject }
+            - { name: ticketStatus, from: status }
+            - { name: ticketPriority, from: priority }
+            - { name: ticketRequesterId, from: requester_id }
+            - { name: ticketAssigneeId, from: assignee_id }
+            - { name: ticketOrganizationId, from: organization_id }
+            - { name: ticketCreatedAt, from: created_at }
+            - { name: ticketUpdatedAt, from: updated_at }
+            - { name: ticketUrl, from: url }
+            - { name: ticketTags, from: "tags[]" }
     - entity: ticket_fields
       x-airbyte-name: ticket_fields
       suggested: true

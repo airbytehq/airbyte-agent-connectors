@@ -28,6 +28,12 @@ from airbyte_agent_sdk.schema.extensions import (
     EnrichmentMatch,
     EnrichmentProjection,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -6910,6 +6916,48 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         name='plain_body',
                         type=['null', 'string'],
                         description='Plain text content of the comment without formatting',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='comment_paragraph',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='regex',
+                                        unit_label='comment_paragraph',
+                                        split_pattern='\\n\\s*\\n',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='created_at',
+                                    path='/created_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='ticket_id',
+                                    path='/ticket_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='author_id',
+                                    path='/author_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='public',
+                                    path='/public',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='public',
@@ -6964,6 +7012,57 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                             EnrichmentProjection(
                                 name='authorRole',
                                 from_='role',
+                            ),
+                        ],
+                    ),
+                    EnrichmentConfig(
+                        target='tickets',
+                        match=[
+                            EnrichmentMatch(
+                                local='ticket_id',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='ticketTitle',
+                                from_='subject',
+                            ),
+                            EnrichmentProjection(
+                                name='ticketStatus',
+                                from_='status',
+                            ),
+                            EnrichmentProjection(
+                                name='ticketPriority',
+                                from_='priority',
+                            ),
+                            EnrichmentProjection(
+                                name='ticketRequesterId',
+                                from_='requester_id',
+                            ),
+                            EnrichmentProjection(
+                                name='ticketAssigneeId',
+                                from_='assignee_id',
+                            ),
+                            EnrichmentProjection(
+                                name='ticketOrganizationId',
+                                from_='organization_id',
+                            ),
+                            EnrichmentProjection(
+                                name='ticketCreatedAt',
+                                from_='created_at',
+                            ),
+                            EnrichmentProjection(
+                                name='ticketUpdatedAt',
+                                from_='updated_at',
+                            ),
+                            EnrichmentProjection(
+                                name='ticketUrl',
+                                from_='url',
+                            ),
+                            EnrichmentProjection(
+                                name='ticketTags',
+                                from_='tags[]',
                             ),
                         ],
                     ),
@@ -8695,6 +8794,52 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
             'updated_at',
         ],
     },
+    semantic_search_fields={
+        'ticket_comments': {
+            'plain_body': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='comment_paragraph',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='regex',
+                            unit_label='comment_paragraph',
+                            split_pattern='\\n\\s*\\n',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='created_at',
+                        path='/created_at',
+                    ),
+                    SemanticMetadataField(
+                        name='ticket_id',
+                        path='/ticket_id',
+                    ),
+                    SemanticMetadataField(
+                        name='author_id',
+                        path='/author_id',
+                    ),
+                    SemanticMetadataField(
+                        name='public',
+                        path='/public',
+                    ),
+                ],
+            ),
+        },
+    },
     enrichment_configs={
         'ticket_comments': [
             EnrichmentConfig(
@@ -8713,6 +8858,57 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     EnrichmentProjection(
                         name='authorRole',
                         from_='role',
+                    ),
+                ],
+            ),
+            EnrichmentConfig(
+                target='tickets',
+                match=[
+                    EnrichmentMatch(
+                        local='ticket_id',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='ticketTitle',
+                        from_='subject',
+                    ),
+                    EnrichmentProjection(
+                        name='ticketStatus',
+                        from_='status',
+                    ),
+                    EnrichmentProjection(
+                        name='ticketPriority',
+                        from_='priority',
+                    ),
+                    EnrichmentProjection(
+                        name='ticketRequesterId',
+                        from_='requester_id',
+                    ),
+                    EnrichmentProjection(
+                        name='ticketAssigneeId',
+                        from_='assignee_id',
+                    ),
+                    EnrichmentProjection(
+                        name='ticketOrganizationId',
+                        from_='organization_id',
+                    ),
+                    EnrichmentProjection(
+                        name='ticketCreatedAt',
+                        from_='created_at',
+                    ),
+                    EnrichmentProjection(
+                        name='ticketUpdatedAt',
+                        from_='updated_at',
+                    ),
+                    EnrichmentProjection(
+                        name='ticketUrl',
+                        from_='url',
+                    ),
+                    EnrichmentProjection(
+                        name='ticketTags',
+                        from_='tags[]',
                     ),
                 ],
             ),
