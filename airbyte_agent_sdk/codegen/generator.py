@@ -23,7 +23,12 @@ from ..connector_model_loader import (
     convert_openapi_to_connector_model,
 )
 from ..constants import SDK_VERSION
-from ..introspection import get_cached_search_questions
+from ..introspection import (
+    SEMANTIC_DEFAULT_MIN_SIMILARITY,
+    SEMANTIC_MAX_SIMILARITY,
+    SEMANTIC_MIN_SIMILARITY,
+    get_cached_search_questions,
+)
 from ..schema.connector import OpenAPIConnector
 from ..types import Action, AuthType
 from .filters import mdx_escape, py_str_escape, to_pascal_case, to_snake_case
@@ -692,6 +697,9 @@ class ConnectorGenerator:
             entities_grouped=entities_grouped,
             server_variables=server_variables,
             search_schemas=search_schemas,
+            semantic_default_min_similarity=SEMANTIC_DEFAULT_MIN_SIMILARITY,
+            semantic_min_similarity=SEMANTIC_MIN_SIMILARITY,
+            semantic_max_similarity=SEMANTIC_MAX_SIMILARITY,
             spec_info=self.spec.info,
         )
 

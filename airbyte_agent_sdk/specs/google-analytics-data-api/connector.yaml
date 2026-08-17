@@ -65,6 +65,7 @@ info:
     entities:
       - entity: website_overview
         x-airbyte-name: website_overview
+        x-airbyte-skip-manifest-validation: "Derived GA4 Data API runReport entity backed by a direct connector operation; no static replication manifest stream is exposed for this report."
         suggested: true
         fields:
           - name: averageSessionDuration
@@ -105,6 +106,7 @@ info:
             description: Total number of unique users
       - entity: daily_active_users
         x-airbyte-name: daily_active_users
+        x-airbyte-skip-manifest-validation: "Derived GA4 Data API runReport entity backed by a direct connector operation; no static replication manifest stream is exposed for this report."
         suggested: true
         fields:
           - name: active1DayUsers
@@ -124,6 +126,7 @@ info:
             description: Start date of the reporting period
       - entity: weekly_active_users
         x-airbyte-name: weekly_active_users
+        x-airbyte-skip-manifest-validation: "Derived GA4 Data API runReport entity backed by a direct connector operation; no static replication manifest stream is exposed for this report."
         fields:
           - name: active7DayUsers
             type: ["null", "integer"]
@@ -142,6 +145,7 @@ info:
             description: Start date of the reporting period
       - entity: four_weekly_active_users
         x-airbyte-name: four_weekly_active_users
+        x-airbyte-skip-manifest-validation: "Derived GA4 Data API runReport entity backed by a direct connector operation; no static replication manifest stream is exposed for this report."
         fields:
           - name: active28DayUsers
             type: ["null", "integer"]
@@ -160,6 +164,7 @@ info:
             description: Start date of the reporting period
       - entity: traffic_sources
         x-airbyte-name: traffic_sources
+        x-airbyte-skip-manifest-validation: "Derived GA4 Data API runReport entity backed by a direct connector operation; no static replication manifest stream is exposed for this report."
         suggested: true
         fields:
           - name: averageSessionDuration
@@ -206,6 +211,7 @@ info:
             description: Total number of unique users
       - entity: pages
         x-airbyte-name: pages
+        x-airbyte-skip-manifest-validation: "Derived GA4 Data API runReport entity backed by a direct connector operation; no static replication manifest stream is exposed for this report."
         suggested: true
         fields:
           - name: bounceRate
@@ -234,6 +240,7 @@ info:
             description: Start date of the reporting period
       - entity: devices
         x-airbyte-name: devices
+        x-airbyte-skip-manifest-validation: "Derived GA4 Data API runReport entity backed by a direct connector operation; no static replication manifest stream is exposed for this report."
         suggested: true
         fields:
           - name: averageSessionDuration
@@ -283,6 +290,7 @@ info:
             description: Total number of unique users
       - entity: locations
         x-airbyte-name: locations
+        x-airbyte-skip-manifest-validation: "Derived GA4 Data API runReport entity backed by a direct connector operation; no static replication manifest stream is exposed for this report."
         suggested: true
         fields:
           - name: averageSessionDuration

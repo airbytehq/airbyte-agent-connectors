@@ -17,6 +17,9 @@ from typing import Any, Protocol
 
 # Constants
 MAX_EXAMPLE_QUESTIONS = 5  # Maximum number of example questions to include in description
+SEMANTIC_MIN_SIMILARITY = -1.0
+SEMANTIC_MAX_SIMILARITY = 1.0
+SEMANTIC_DEFAULT_MIN_SIMILARITY = 0.25
 
 # --- Shared instruction sections (used by both EXECUTE_INSTRUCTIONS and generate_tool_description) ---
 
@@ -136,6 +139,9 @@ _SEMANTIC_SEARCH_GENERIC_GUIDANCE = (
     "Results are ordered by similarity, so `sort` is not supported.\n"
     "  When using `semantic`, any filter must go inside `semantic.filter` (same shape/operators as `query.filter`). "
     "A top-level `query.filter` is ignored when `semantic` is present.\n"
+    f"  `min_similarity` must be within [{SEMANTIC_MIN_SIMILARITY}, {SEMANTIC_MAX_SIMILARITY}]. "
+    f"When omitted, it defaults to {SEMANTIC_DEFAULT_MIN_SIMILARITY}; scores below the threshold "
+    f"are discarded before deduplication and top-k selection. Set it to {SEMANTIC_MIN_SIMILARITY} to disable the cutoff.\n"
     "  `dedup` controls entity deduplication: `max` (default) returns only the single best-scoring chunk per parent "
     "record (one hit per source entity); `none` disables that collapse so multiple chunks from the same record may "
     "appear, still ranked by similarity and capped by `limit`. Use `none` when you need more than one passage per "
@@ -227,7 +233,7 @@ def build_semantic_search_note(
         )
 
     return (
-        "- context_store_search(semantic={prompt, field?, filter?, context_size?, dedup?}, fields?, limit?)\n"
+        "- context_store_search(semantic={prompt, field?, filter?, context_size?, min_similarity?, dedup?}, fields?, limit?)\n"
         f"  ALPHA — subject to change. Semantic (similarity) search over the '{field_name}' field of {entity_label}.\n"
         f"  Embeds `prompt` and returns relevance-ranked hits shaped as {{entity, metadata}}:{entity_clause} "
         f"`metadata` has the similarity `score`, the matched `context` text{attribution_clause}.\n"
@@ -281,10 +287,13 @@ def build_semantic_sql_table_function_note(
     return (
         "- context_store_sql_query(sql, limit?) can compose semantic search with SQL via "
         f"`semantic_search(entity => '{entity_name}', field => '{field_name}', prompt => '...', "
-        "filter => ..., limit => ..., context_size => ..., dedup => 'max', enrich => true)`.\n"
+        "filter => ..., limit => ..., context_size => ..., min_similarity => ..., dedup => 'max', enrich => true)`.\n"
         "  Use it in FROM/JOIN/CTEs when you need joins, aggregations, projections, or SQL post-filters over relevance-ranked hits. "
         "`prompt` must be a literal string. `filter => ...` inside semantic_search is the pre-ranking filter; "
         "outer WHERE runs after the inner top-k. "
+        f"`min_similarity` must be a numeric literal in [{SEMANTIC_MIN_SIMILARITY}, {SEMANTIC_MAX_SIMILARITY}]. "
+        f"Omission defaults to {SEMANTIC_DEFAULT_MIN_SIMILARITY}; scores below the threshold "
+        f"are discarded before deduplication and top-k selection. Set it to {SEMANTIC_MIN_SIMILARITY} to disable the cutoff. "
         "`dedup => 'max'` is the default and returns the single best-scoring chunk per parent record; "
         "use `dedup => 'none'` to keep multiple matching chunks from the same record. "
         f"The relation returns metadata columns plus computed `score` and `context`{context_clause}; "

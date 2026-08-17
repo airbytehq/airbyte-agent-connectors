@@ -1161,14 +1161,6 @@ class CustomerDeleteResponse(BaseModel):
 
     data: CustomerDeleteResponseData | None = Field(default=None)
 
-class ProductCreateParamsMediaItem(BaseModel):
-    """Nested schema for ProductCreateParams.media_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    original_source: str | None = Field(default=None, alias="originalSource", description="URL of the media")
-    """URL of the media"""
-    media_content_type: str | None = Field(default=None, alias="mediaContentType")
-
 class ProductCreateParamsProduct(BaseModel):
     """ProductCreateInput object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1185,6 +1177,14 @@ class ProductCreateParamsProduct(BaseModel):
     """Tags for the product"""
     status: str | None = Field(default=None, description="Product status (ACTIVE, ARCHIVED, DRAFT)")
     """Product status (ACTIVE, ARCHIVED, DRAFT)"""
+
+class ProductCreateParamsMediaItem(BaseModel):
+    """Nested schema for ProductCreateParams.media_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    original_source: str | None = Field(default=None, alias="originalSource", description="URL of the media")
+    """URL of the media"""
+    media_content_type: str | None = Field(default=None, alias="mediaContentType")
 
 class ProductCreateParams(BaseModel):
     """Parameters for creating a product.
@@ -1381,12 +1381,6 @@ class ProductVariantsDeleteResponse(BaseModel):
 
     data: ProductVariantsDeleteResponseData | None = Field(default=None)
 
-class OrderCreateParamsOptions(BaseModel):
-    """OrderCreateOptionsInput"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    inventory_behaviour: str | None = Field(default=None, alias="inventoryBehaviour")
-
 class OrderCreateParamsOrderLineitemsItemPricesetShopmoney(BaseModel):
     """Nested schema for OrderCreateParamsOrderLineitemsItemPriceset.shopMoney"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1439,6 +1433,12 @@ class OrderCreateParamsOrder(BaseModel):
     tags: list[str] | None = Field(default=None, description="Order tags")
     """Order tags"""
     shipping_address: OrderCreateParamsOrderShippingaddress | None = Field(default=None, alias="shippingAddress")
+
+class OrderCreateParamsOptions(BaseModel):
+    """OrderCreateOptionsInput"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    inventory_behaviour: str | None = Field(default=None, alias="inventoryBehaviour")
 
 class OrderCreateParams(BaseModel):
     """Parameters for creating an order.
