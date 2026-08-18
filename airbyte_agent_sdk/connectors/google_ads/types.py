@@ -83,49 +83,42 @@ class AccountsListParams(TypedDict):
     """Parameters for accounts.list operation"""
     query: NotRequired[str]
     page_token: NotRequired[str]
-    page_size: NotRequired[int]
     customer_id: str
 
 class CampaignsListParams(TypedDict):
     """Parameters for campaigns.list operation"""
     query: NotRequired[str]
     page_token: NotRequired[str]
-    page_size: NotRequired[int]
     customer_id: str
 
 class AdGroupsListParams(TypedDict):
     """Parameters for ad_groups.list operation"""
     query: NotRequired[str]
     page_token: NotRequired[str]
-    page_size: NotRequired[int]
     customer_id: str
 
 class AdGroupAdsListParams(TypedDict):
     """Parameters for ad_group_ads.list operation"""
     query: NotRequired[str]
     page_token: NotRequired[str]
-    page_size: NotRequired[int]
     customer_id: str
 
 class CampaignLabelsListParams(TypedDict):
     """Parameters for campaign_labels.list operation"""
     query: NotRequired[str]
     page_token: NotRequired[str]
-    page_size: NotRequired[int]
     customer_id: str
 
 class AdGroupLabelsListParams(TypedDict):
     """Parameters for ad_group_labels.list operation"""
     query: NotRequired[str]
     page_token: NotRequired[str]
-    page_size: NotRequired[int]
     customer_id: str
 
 class AdGroupAdLabelsListParams(TypedDict):
     """Parameters for ad_group_ad_labels.list operation"""
     query: NotRequired[str]
     page_token: NotRequired[str]
-    page_size: NotRequired[int]
     customer_id: str
 
 class CampaignsUpdateParams(TypedDict):

@@ -95,7 +95,7 @@
     "parameters": [],
     "params_type_name": "AccessibleCustomersListParams",
     "response_type": "AccessibleCustomersListResult",
-    "description": "Returns resource names of customers directly accessible by the user authenticating the call. No customer_id is required for this endpoint.",
+    "description": "Returns resource names of customers directly accessible by the user authenticating the call. This does not traverse customer_client manager hierarchies and therefore does not establish access to manager-only client accounts. No customer_id is required for this endpoint, and Google ignores login-customer-id for this call.",
     "record_extractor": "$.resourceNames",
     "meta_extractor": null,
     "needs_envelope": true,
@@ -114,7 +114,7 @@
         "parameters": [],
         "params_type_name": "AccessibleCustomersListParams",
         "response_type": "AccessibleCustomersListResult",
-        "description": "Returns resource names of customers directly accessible by the user authenticating the call. No customer_id is required for this endpoint.",
+        "description": "Returns resource names of customers directly accessible by the user authenticating the call. This does not traverse customer_client manager hierarchies and therefore does not establish access to manager-only client accounts. No customer_id is required for this endpoint, and Google ignores login-customer-id for this call.",
         "record_extractor": "$.resourceNames",
         "meta_extractor": null,
         "needs_envelope": true,
@@ -149,21 +149,10 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Token for pagination"
+              "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
             },
             "required": false,
-            "description": "Token for pagination"
-          },
-          {
-            "name": "pageSize",
-            "python_name": "page_size",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "description": "Number of results per page (max 10000)"
-            },
-            "required": false,
-            "description": "Number of results per page (max 10000)"
+            "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
           },
           {
             "name": "customer_id",
@@ -179,7 +168,7 @@
         ],
         "params_type_name": "AccountsListParams",
         "response_type": "AccountsListResult",
-        "description": "Retrieves customer account details using GAQL query.",
+        "description": "Generic GAQL search carrier. Use accounts.list for any supported GAQL FROM resource, including views without a dedicated modeled entity; the entity name describes this connector action, not the GAQL resource. The customer must be directly accessible to the OAuth identity. This connector exposes no login-customer-id input or header, so do not use it for client accounts reachable only through a manager. Google Ads API v19+ fixes search pages at 10,000 rows and does not accept pageSize. When meta.next_page_token is non-null, repeat the same customer_id and byte-for-byte identical query with that token in pageToken.",
         "record_extractor": "$.results",
         "meta_extractor": {
           "next_page_token": "$.nextPageToken"
@@ -226,21 +215,10 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Token for pagination"
+              "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
             },
             "required": false,
-            "description": "Token for pagination"
-          },
-          {
-            "name": "pageSize",
-            "python_name": "page_size",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "description": "Number of results per page (max 10000)"
-            },
-            "required": false,
-            "description": "Number of results per page (max 10000)"
+            "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
           },
           {
             "name": "customer_id",
@@ -376,21 +354,10 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Token for pagination"
+              "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
             },
             "required": false,
-            "description": "Token for pagination"
-          },
-          {
-            "name": "pageSize",
-            "python_name": "page_size",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "description": "Number of results per page (max 10000)"
-            },
-            "required": false,
-            "description": "Number of results per page (max 10000)"
+            "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
           },
           {
             "name": "customer_id",
@@ -530,21 +497,10 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Token for pagination"
+              "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
             },
             "required": false,
-            "description": "Token for pagination"
-          },
-          {
-            "name": "pageSize",
-            "python_name": "page_size",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "description": "Number of results per page (max 10000)"
-            },
-            "required": false,
-            "description": "Number of results per page (max 10000)"
+            "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
           },
           {
             "name": "customer_id",
@@ -606,21 +562,10 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Token for pagination"
+              "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
             },
             "required": false,
-            "description": "Token for pagination"
-          },
-          {
-            "name": "pageSize",
-            "python_name": "page_size",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "description": "Number of results per page (max 10000)"
-            },
-            "required": false,
-            "description": "Number of results per page (max 10000)"
+            "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
           },
           {
             "name": "customer_id",
@@ -745,21 +690,10 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Token for pagination"
+              "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
             },
             "required": false,
-            "description": "Token for pagination"
-          },
-          {
-            "name": "pageSize",
-            "python_name": "page_size",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "description": "Number of results per page (max 10000)"
-            },
-            "required": false,
-            "description": "Number of results per page (max 10000)"
+            "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
           },
           {
             "name": "customer_id",
@@ -884,21 +818,10 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Token for pagination"
+              "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
             },
             "required": false,
-            "description": "Token for pagination"
-          },
-          {
-            "name": "pageSize",
-            "python_name": "page_size",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "description": "Number of results per page (max 10000)"
-            },
-            "required": false,
-            "description": "Number of results per page (max 10000)"
+            "description": "Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical."
           },
           {
             "name": "customer_id",

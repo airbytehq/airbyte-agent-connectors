@@ -101,7 +101,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     method='GET',
                     path='/v23/customers:listAccessibleCustomers',
                     action=Action.LIST,
-                    description='Returns resource names of customers directly accessible by the user authenticating the call. No customer_id is required for this endpoint.',
+                    description='Returns resource names of customers directly accessible by the user authenticating the call. This does not traverse customer_client manager hierarchies and therefore does not establish access to manager-only client accounts. No customer_id is required for this endpoint, and Google ignores login-customer-id for this call.',
                     response_schema={
                         'type': 'object',
                         'description': 'List of accessible customer resource names',
@@ -122,7 +122,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.resourceNames',
                     record_transform={'customer_id': "{{ record.value | replace('customers/', '') }}", 'resource_name': '{{ record.value }}'},
-                    no_pagination='Google Ads GET /v23/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; the endpoint exposes no pagination cursor, offset, or next-page token.',
+                    no_pagination='Google Ads GET /v23/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; it does not traverse customer_client manager hierarchies, and the endpoint exposes no pagination cursor, offset, or next-page token.',
                     preferred_for_check=True,
                 ),
             },
@@ -136,8 +136,8 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     method='POST',
                     path='/v23/customers/{customer_id}/googleAds:search',
                     action=Action.LIST,
-                    description='Retrieves customer account details using GAQL query.',
-                    body_fields=['query', 'pageToken', 'pageSize'],
+                    description='Generic GAQL search carrier. Use accounts.list for any supported GAQL FROM resource, including views without a dedicated modeled entity; the entity name describes this connector action, not the GAQL resource. The customer must be directly accessible to the OAuth identity. This connector exposes no login-customer-id input or header, so do not use it for client accounts reachable only through a manager. Google Ads API v19+ fixes search pages at 10,000 rows and does not accept pageSize. When meta.next_page_token is non-null, repeat the same customer_id and byte-for-byte identical query with that token in pageToken.',
+                    body_fields=['query', 'pageToken'],
                     path_params=['customer_id'],
                     path_params_schema={
                         'customer_id': {'type': 'string', 'required': True},
@@ -151,8 +151,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                                 'description': 'Google Ads Query Language (GAQL) query',
                                 'default': 'SELECT\n  customer.auto_tagging_enabled,\n  customer.call_reporting_setting.call_conversion_action,\n  customer.call_reporting_setting.call_conversion_reporting_enabled,\n  customer.call_reporting_setting.call_reporting_enabled,\n  customer.conversion_tracking_setting.conversion_tracking_id,\n  customer.conversion_tracking_setting.cross_account_conversion_tracking_id,\n  customer.currency_code,\n  customer.descriptive_name,\n  customer.final_url_suffix,\n  customer.has_partners_badge,\n  customer.id,\n  customer.manager,\n  customer.optimization_score,\n  customer.optimization_score_weight,\n  customer.pay_per_conversion_eligibility_failure_reasons,\n  customer.remarketing_setting.google_global_site_tag,\n  customer.resource_name,\n  customer.test_account,\n  customer.time_zone,\n  customer.tracking_url_template\nFROM customer',
                             },
-                            'pageToken': {'type': 'string', 'description': 'Token for pagination'},
-                            'pageSize': {'type': 'integer', 'description': 'Number of results per page (max 10000)'},
+                            'pageToken': {'type': 'string', 'description': 'Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.'},
                         },
                     },
                     response_schema={
@@ -319,7 +318,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     action=Action.LIST,
                     description='Retrieves campaign data using GAQL query.',
-                    body_fields=['query', 'pageToken', 'pageSize'],
+                    body_fields=['query', 'pageToken'],
                     path_params=['customer_id'],
                     path_params_schema={
                         'customer_id': {'type': 'string', 'required': True},
@@ -333,8 +332,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                                 'description': 'GAQL query for campaigns',
                                 'default': 'SELECT\n  campaign.id,\n  campaign.name,\n  campaign.status,\n  campaign.advertising_channel_type,\n  campaign.advertising_channel_sub_type,\n  campaign.bidding_strategy,\n  campaign.bidding_strategy_type,\n  campaign.campaign_budget,\n  campaign_budget.amount_micros,\n  campaign.start_date_time,\n  campaign.end_date_time,\n  campaign.serving_status,\n  campaign.resource_name,\n  campaign.labels,\n  campaign.network_settings.target_google_search,\n  campaign.network_settings.target_search_network,\n  campaign.network_settings.target_content_network,\n  campaign.network_settings.target_partner_search_network\nFROM campaign',
                             },
-                            'pageToken': {'type': 'string', 'description': 'Token for pagination'},
-                            'pageSize': {'type': 'integer', 'description': 'Number of results per page (max 10000)'},
+                            'pageToken': {'type': 'string', 'description': 'Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.'},
                         },
                     },
                     response_schema={
@@ -607,7 +605,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     action=Action.LIST,
                     description='Retrieves ad group data using GAQL query.',
-                    body_fields=['query', 'pageToken', 'pageSize'],
+                    body_fields=['query', 'pageToken'],
                     path_params=['customer_id'],
                     path_params_schema={
                         'customer_id': {'type': 'string', 'required': True},
@@ -621,8 +619,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                                 'description': 'GAQL query for ad groups',
                                 'default': 'SELECT\n  campaign.id,\n  ad_group.id,\n  ad_group.name,\n  ad_group.status,\n  ad_group.type,\n  ad_group.ad_rotation_mode,\n  ad_group.base_ad_group,\n  ad_group.campaign,\n  ad_group.cpc_bid_micros,\n  ad_group.cpm_bid_micros,\n  ad_group.cpv_bid_micros,\n  ad_group.effective_target_cpa_micros,\n  ad_group.effective_target_cpa_source,\n  ad_group.effective_target_roas,\n  ad_group.effective_target_roas_source,\n  ad_group.labels,\n  ad_group.resource_name,\n  ad_group.target_cpa_micros,\n  ad_group.target_roas,\n  ad_group.tracking_url_template\nFROM ad_group',
                             },
-                            'pageToken': {'type': 'string', 'description': 'Token for pagination'},
-                            'pageSize': {'type': 'integer', 'description': 'Number of results per page (max 10000)'},
+                            'pageToken': {'type': 'string', 'description': 'Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.'},
                         },
                     },
                     response_schema={
@@ -872,7 +869,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     action=Action.LIST,
                     description='Retrieves ad group ad data using GAQL query.',
-                    body_fields=['query', 'pageToken', 'pageSize'],
+                    body_fields=['query', 'pageToken'],
                     path_params=['customer_id'],
                     path_params_schema={
                         'customer_id': {'type': 'string', 'required': True},
@@ -886,8 +883,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                                 'description': 'GAQL query for ad group ads',
                                 'default': 'SELECT\n  ad_group.id,\n  ad_group_ad.ad.id,\n  ad_group_ad.ad.name,\n  ad_group_ad.ad.type,\n  ad_group_ad.status,\n  ad_group_ad.ad_strength,\n  ad_group_ad.ad.display_url,\n  ad_group_ad.ad.final_urls,\n  ad_group_ad.ad.final_mobile_urls,\n  ad_group_ad.ad.final_url_suffix,\n  ad_group_ad.ad.tracking_url_template,\n  ad_group_ad.ad.resource_name,\n  ad_group_ad.ad_group,\n  ad_group_ad.resource_name,\n  ad_group_ad.labels,\n  ad_group_ad.policy_summary.approval_status,\n  ad_group_ad.policy_summary.review_status\nFROM ad_group_ad',
                             },
-                            'pageToken': {'type': 'string', 'description': 'Token for pagination'},
-                            'pageSize': {'type': 'integer', 'description': 'Number of results per page (max 10000)'},
+                            'pageToken': {'type': 'string', 'description': 'Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.'},
                         },
                     },
                     response_schema={
@@ -1092,7 +1088,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     action=Action.LIST,
                     description='Retrieves campaign label associations using GAQL query.',
-                    body_fields=['query', 'pageToken', 'pageSize'],
+                    body_fields=['query', 'pageToken'],
                     path_params=['customer_id'],
                     path_params_schema={
                         'customer_id': {'type': 'string', 'required': True},
@@ -1106,8 +1102,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                                 'description': 'GAQL query for campaign labels',
                                 'default': 'SELECT\n  campaign.id,\n  campaign_label.campaign,\n  campaign_label.label,\n  campaign_label.resource_name,\n  label.id,\n  label.name,\n  label.resource_name\nFROM campaign_label',
                             },
-                            'pageToken': {'type': 'string', 'description': 'Token for pagination'},
-                            'pageSize': {'type': 'integer', 'description': 'Number of results per page (max 10000)'},
+                            'pageToken': {'type': 'string', 'description': 'Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.'},
                         },
                     },
                     response_schema={
@@ -1284,7 +1279,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     action=Action.LIST,
                     description='Retrieves ad group label associations using GAQL query.',
-                    body_fields=['query', 'pageToken', 'pageSize'],
+                    body_fields=['query', 'pageToken'],
                     path_params=['customer_id'],
                     path_params_schema={
                         'customer_id': {'type': 'string', 'required': True},
@@ -1298,8 +1293,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                                 'description': 'GAQL query for ad group labels',
                                 'default': 'SELECT\n  ad_group.id,\n  ad_group_label.ad_group,\n  ad_group_label.label,\n  ad_group_label.resource_name,\n  label.id,\n  label.name,\n  label.resource_name\nFROM ad_group_label',
                             },
-                            'pageToken': {'type': 'string', 'description': 'Token for pagination'},
-                            'pageSize': {'type': 'integer', 'description': 'Number of results per page (max 10000)'},
+                            'pageToken': {'type': 'string', 'description': 'Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.'},
                         },
                     },
                     response_schema={
@@ -1476,7 +1470,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     action=Action.LIST,
                     description='Retrieves ad group ad label associations using GAQL query.',
-                    body_fields=['query', 'pageToken', 'pageSize'],
+                    body_fields=['query', 'pageToken'],
                     path_params=['customer_id'],
                     path_params_schema={
                         'customer_id': {'type': 'string', 'required': True},
@@ -1490,8 +1484,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                                 'description': 'GAQL query for ad group ad labels',
                                 'default': 'SELECT\n  ad_group_ad.ad.id,\n  ad_group_ad_label.ad_group_ad,\n  ad_group_ad_label.label,\n  ad_group_ad_label.resource_name,\n  label.id,\n  label.name,\n  label.resource_name\nFROM ad_group_ad_label',
                             },
-                            'pageToken': {'type': 'string', 'description': 'Token for pagination'},
-                            'pageSize': {'type': 'integer', 'description': 'Number of results per page (max 10000)'},
+                            'pageToken': {'type': 'string', 'description': 'Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.'},
                         },
                     },
                     response_schema={

@@ -23,6 +23,9 @@ info:
     - title: Google Ads Query Language Reference
       type: api_reference
       url: https://developers.google.com/google-ads/api/docs/query/overview
+    - title: Google Ads Reporting Pagination
+      type: api_reference
+      url: https://developers.google.com/google-ads/api/docs/reporting/paging
   x-airbyte-example-questions:
     direct:
       - "List all accessible Google Ads customer accounts"
@@ -488,7 +491,10 @@ paths:
       summary: List accessible customers
       description: >-
         Returns resource names of customers directly accessible by the user
-        authenticating the call. No customer_id is required for this endpoint.
+        authenticating the call. This does not traverse customer_client manager
+        hierarchies and therefore does not establish access to manager-only client
+        accounts. No customer_id is required for this endpoint, and Google ignores
+        login-customer-id for this call.
       operationId: listAccessibleCustomers
       x-airbyte-entity: accessible_customers
       x-airbyte-action: list
@@ -497,7 +503,7 @@ paths:
       x-airbyte-record-transform:
         customer_id: "{{ record.value | replace('customers/', '') }}"
         resource_name: "{{ record.value }}"
-      x-airbyte-no-pagination: "Google Ads GET /v23/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; the endpoint exposes no pagination cursor, offset, or next-page token."
+      x-airbyte-no-pagination: "Google Ads GET /v23/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; it does not traverse customer_client manager hierarchies, and the endpoint exposes no pagination cursor, offset, or next-page token."
       parameters: []
       responses:
         "200":
@@ -513,7 +519,15 @@ paths:
     post:
       summary: List accounts
       description: >-
-        Retrieves customer account details using GAQL query.
+        Generic GAQL search carrier. Use accounts.list for any supported GAQL FROM
+        resource, including views without a dedicated modeled entity; the entity
+        name describes this connector action, not the GAQL resource. The customer
+        must be directly accessible to the OAuth identity. This connector exposes
+        no login-customer-id input or header, so do not use it for client accounts
+        reachable only through a manager. Google Ads API v19+ fixes search pages at
+        10,000 rows and does not accept pageSize. When meta.next_page_token is
+        non-null, repeat the same customer_id and byte-for-byte identical query with
+        that token in pageToken.
       operationId: listAccounts
       x-airbyte-entity: accounts
       x-airbyte-action: list
@@ -563,10 +577,9 @@ paths:
                     FROM customer
                 pageToken:
                   type: string
-                  description: Token for pagination
-                pageSize:
-                  type: integer
-                  description: Number of results per page (max 10000)
+                  description: >-
+                    Pass response metadata next_page_token ($.nextPageToken) to
+                    retrieve the next fixed-size page; keep the GAQL query identical.
       responses:
         "200":
           description: Account query results
@@ -633,10 +646,9 @@ paths:
                     FROM campaign
                 pageToken:
                   type: string
-                  description: Token for pagination
-                pageSize:
-                  type: integer
-                  description: Number of results per page (max 10000)
+                  description: >-
+                    Pass response metadata next_page_token ($.nextPageToken) to
+                    retrieve the next fixed-size page; keep the GAQL query identical.
       responses:
         "200":
           description: Campaign query results
@@ -705,10 +717,9 @@ paths:
                     FROM ad_group
                 pageToken:
                   type: string
-                  description: Token for pagination
-                pageSize:
-                  type: integer
-                  description: Number of results per page (max 10000)
+                  description: >-
+                    Pass response metadata next_page_token ($.nextPageToken) to
+                    retrieve the next fixed-size page; keep the GAQL query identical.
       responses:
         "200":
           description: Ad group query results
@@ -774,10 +785,9 @@ paths:
                     FROM ad_group_ad
                 pageToken:
                   type: string
-                  description: Token for pagination
-                pageSize:
-                  type: integer
-                  description: Number of results per page (max 10000)
+                  description: >-
+                    Pass response metadata next_page_token ($.nextPageToken) to
+                    retrieve the next fixed-size page; keep the GAQL query identical.
       responses:
         "200":
           description: Ad group ad query results
@@ -833,10 +843,9 @@ paths:
                     FROM campaign_label
                 pageToken:
                   type: string
-                  description: Token for pagination
-                pageSize:
-                  type: integer
-                  description: Number of results per page (max 10000)
+                  description: >-
+                    Pass response metadata next_page_token ($.nextPageToken) to
+                    retrieve the next fixed-size page; keep the GAQL query identical.
       responses:
         "200":
           description: Campaign label query results
@@ -892,10 +901,9 @@ paths:
                     FROM ad_group_label
                 pageToken:
                   type: string
-                  description: Token for pagination
-                pageSize:
-                  type: integer
-                  description: Number of results per page (max 10000)
+                  description: >-
+                    Pass response metadata next_page_token ($.nextPageToken) to
+                    retrieve the next fixed-size page; keep the GAQL query identical.
       responses:
         "200":
           description: Ad group label query results
@@ -951,10 +959,9 @@ paths:
                     FROM ad_group_ad_label
                 pageToken:
                   type: string
-                  description: Token for pagination
-                pageSize:
-                  type: integer
-                  description: Number of results per page (max 10000)
+                  description: >-
+                    Pass response metadata next_page_token ($.nextPageToken) to
+                    retrieve the next fixed-size page; keep the GAQL query identical.
       responses:
         "200":
           description: Ad group ad label query results

@@ -137,13 +137,13 @@ class GoogleAdsConnector:
     # Map of (entity, action) -> {python_param_name: api_param_name}
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
-        ('accounts', 'list'): {'query': 'query', 'page_token': 'pageToken', 'page_size': 'pageSize', 'customer_id': 'customer_id'},
-        ('campaigns', 'list'): {'query': 'query', 'page_token': 'pageToken', 'page_size': 'pageSize', 'customer_id': 'customer_id'},
-        ('ad_groups', 'list'): {'query': 'query', 'page_token': 'pageToken', 'page_size': 'pageSize', 'customer_id': 'customer_id'},
-        ('ad_group_ads', 'list'): {'query': 'query', 'page_token': 'pageToken', 'page_size': 'pageSize', 'customer_id': 'customer_id'},
-        ('campaign_labels', 'list'): {'query': 'query', 'page_token': 'pageToken', 'page_size': 'pageSize', 'customer_id': 'customer_id'},
-        ('ad_group_labels', 'list'): {'query': 'query', 'page_token': 'pageToken', 'page_size': 'pageSize', 'customer_id': 'customer_id'},
-        ('ad_group_ad_labels', 'list'): {'query': 'query', 'page_token': 'pageToken', 'page_size': 'pageSize', 'customer_id': 'customer_id'},
+        ('accounts', 'list'): {'query': 'query', 'page_token': 'pageToken', 'customer_id': 'customer_id'},
+        ('campaigns', 'list'): {'query': 'query', 'page_token': 'pageToken', 'customer_id': 'customer_id'},
+        ('ad_groups', 'list'): {'query': 'query', 'page_token': 'pageToken', 'customer_id': 'customer_id'},
+        ('ad_group_ads', 'list'): {'query': 'query', 'page_token': 'pageToken', 'customer_id': 'customer_id'},
+        ('campaign_labels', 'list'): {'query': 'query', 'page_token': 'pageToken', 'customer_id': 'customer_id'},
+        ('ad_group_labels', 'list'): {'query': 'query', 'page_token': 'pageToken', 'customer_id': 'customer_id'},
+        ('ad_group_ad_labels', 'list'): {'query': 'query', 'page_token': 'pageToken', 'customer_id': 'customer_id'},
         ('campaigns', 'update'): {'operations': 'operations', 'customer_id': 'customer_id'},
         ('ad_groups', 'update'): {'operations': 'operations', 'customer_id': 'customer_id'},
         ('labels', 'create'): {'operations': 'operations', 'customer_id': 'customer_id'},
@@ -858,7 +858,7 @@ class AccessibleCustomersQuery:
         **kwargs
     ) -> AccessibleCustomersListResult:
         """
-        Returns resource names of customers directly accessible by the user authenticating the call. No customer_id is required for this endpoint.
+        Returns resource names of customers directly accessible by the user authenticating the call. This does not traverse customer_client manager hierarchies and therefore does not establish access to manager-only client accounts. No customer_id is required for this endpoint, and Google ignores login-customer-id for this call.
 
         Returns:
             AccessibleCustomersListResult
@@ -889,16 +889,14 @@ class AccountsQuery:
         customer_id: str,
         query: str | None = None,
         page_token: str | None = None,
-        page_size: int | None = None,
         **kwargs
     ) -> AccountsListResult:
         """
-        Retrieves customer account details using GAQL query.
+        Generic GAQL search carrier. Use accounts.list for any supported GAQL FROM resource, including views without a dedicated modeled entity; the entity name describes this connector action, not the GAQL resource. The customer must be directly accessible to the OAuth identity. This connector exposes no login-customer-id input or header, so do not use it for client accounts reachable only through a manager. Google Ads API v19+ fixes search pages at 10,000 rows and does not accept pageSize. When meta.next_page_token is non-null, repeat the same customer_id and byte-for-byte identical query with that token in pageToken.
 
         Args:
             query: Google Ads Query Language (GAQL) query
-            page_token: Token for pagination
-            page_size: Number of results per page (max 10000)
+            page_token: Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.
             customer_id: Google Ads customer ID (10 digits, no dashes)
             **kwargs: Additional parameters
 
@@ -908,7 +906,6 @@ class AccountsQuery:
         params = {k: v for k, v in {
             "query": query,
             "pageToken": page_token,
-            "pageSize": page_size,
             "customer_id": customer_id,
             **kwargs
         }.items() if v is not None}
@@ -1011,7 +1008,6 @@ class CampaignsQuery:
         customer_id: str,
         query: str | None = None,
         page_token: str | None = None,
-        page_size: int | None = None,
         **kwargs
     ) -> CampaignsListResult:
         """
@@ -1019,8 +1015,7 @@ class CampaignsQuery:
 
         Args:
             query: GAQL query for campaigns
-            page_token: Token for pagination
-            page_size: Number of results per page (max 10000)
+            page_token: Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.
             customer_id: Google Ads customer ID (10 digits, no dashes)
             **kwargs: Additional parameters
 
@@ -1030,7 +1025,6 @@ class CampaignsQuery:
         params = {k: v for k, v in {
             "query": query,
             "pageToken": page_token,
-            "pageSize": page_size,
             "customer_id": customer_id,
             **kwargs
         }.items() if v is not None}
@@ -1170,7 +1164,6 @@ class AdGroupsQuery:
         customer_id: str,
         query: str | None = None,
         page_token: str | None = None,
-        page_size: int | None = None,
         **kwargs
     ) -> AdGroupsListResult:
         """
@@ -1178,8 +1171,7 @@ class AdGroupsQuery:
 
         Args:
             query: GAQL query for ad groups
-            page_token: Token for pagination
-            page_size: Number of results per page (max 10000)
+            page_token: Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.
             customer_id: Google Ads customer ID (10 digits, no dashes)
             **kwargs: Additional parameters
 
@@ -1189,7 +1181,6 @@ class AdGroupsQuery:
         params = {k: v for k, v in {
             "query": query,
             "pageToken": page_token,
-            "pageSize": page_size,
             "customer_id": customer_id,
             **kwargs
         }.items() if v is not None}
@@ -1321,7 +1312,6 @@ class AdGroupAdsQuery:
         customer_id: str,
         query: str | None = None,
         page_token: str | None = None,
-        page_size: int | None = None,
         **kwargs
     ) -> AdGroupAdsListResult:
         """
@@ -1329,8 +1319,7 @@ class AdGroupAdsQuery:
 
         Args:
             query: GAQL query for ad group ads
-            page_token: Token for pagination
-            page_size: Number of results per page (max 10000)
+            page_token: Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.
             customer_id: Google Ads customer ID (10 digits, no dashes)
             **kwargs: Additional parameters
 
@@ -1340,7 +1329,6 @@ class AdGroupAdsQuery:
         params = {k: v for k, v in {
             "query": query,
             "pageToken": page_token,
-            "pageSize": page_size,
             "customer_id": customer_id,
             **kwargs
         }.items() if v is not None}
@@ -1440,7 +1428,6 @@ class CampaignLabelsQuery:
         customer_id: str,
         query: str | None = None,
         page_token: str | None = None,
-        page_size: int | None = None,
         **kwargs
     ) -> CampaignLabelsListResult:
         """
@@ -1448,8 +1435,7 @@ class CampaignLabelsQuery:
 
         Args:
             query: GAQL query for campaign labels
-            page_token: Token for pagination
-            page_size: Number of results per page (max 10000)
+            page_token: Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.
             customer_id: Google Ads customer ID (10 digits, no dashes)
             **kwargs: Additional parameters
 
@@ -1459,7 +1445,6 @@ class CampaignLabelsQuery:
         params = {k: v for k, v in {
             "query": query,
             "pageToken": page_token,
-            "pageSize": page_size,
             "customer_id": customer_id,
             **kwargs
         }.items() if v is not None}
@@ -1574,7 +1559,6 @@ class AdGroupLabelsQuery:
         customer_id: str,
         query: str | None = None,
         page_token: str | None = None,
-        page_size: int | None = None,
         **kwargs
     ) -> AdGroupLabelsListResult:
         """
@@ -1582,8 +1566,7 @@ class AdGroupLabelsQuery:
 
         Args:
             query: GAQL query for ad group labels
-            page_token: Token for pagination
-            page_size: Number of results per page (max 10000)
+            page_token: Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.
             customer_id: Google Ads customer ID (10 digits, no dashes)
             **kwargs: Additional parameters
 
@@ -1593,7 +1576,6 @@ class AdGroupLabelsQuery:
         params = {k: v for k, v in {
             "query": query,
             "pageToken": page_token,
-            "pageSize": page_size,
             "customer_id": customer_id,
             **kwargs
         }.items() if v is not None}
@@ -1708,7 +1690,6 @@ class AdGroupAdLabelsQuery:
         customer_id: str,
         query: str | None = None,
         page_token: str | None = None,
-        page_size: int | None = None,
         **kwargs
     ) -> AdGroupAdLabelsListResult:
         """
@@ -1716,8 +1697,7 @@ class AdGroupAdLabelsQuery:
 
         Args:
             query: GAQL query for ad group ad labels
-            page_token: Token for pagination
-            page_size: Number of results per page (max 10000)
+            page_token: Pass response metadata next_page_token ($.nextPageToken) to retrieve the next fixed-size page; keep the GAQL query identical.
             customer_id: Google Ads customer ID (10 digits, no dashes)
             **kwargs: Additional parameters
 
@@ -1727,7 +1707,6 @@ class AdGroupAdLabelsQuery:
         params = {k: v for k, v in {
             "query": query,
             "pageToken": page_token,
-            "pageSize": page_size,
             "customer_id": customer_id,
             **kwargs
         }.items() if v is not None}
