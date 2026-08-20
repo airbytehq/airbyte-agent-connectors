@@ -78,6 +78,10 @@ info:
       - name: fields
         type: ["null", "array"]
         description: List of fields within the form
+        # `fields` is populated on the replicated stream: source-typeform fetches the per-form DETAIL
+        # endpoint (`forms/{form_id}` via FormIdPartitionRouter), not the list endpoint. The list payload
+        # in tests/cassettes/forms_list.yaml has no `fields` -- that fixture backs the `listForms` API
+        # action, which is a separate path from the Context Store stream this annotation indexes.
         x-airbyte-semantic-search:
           content_type: json
           samples:
