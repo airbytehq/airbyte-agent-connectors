@@ -314,6 +314,23 @@ class CreativeAssetVideo(BaseModel):
     fix_task_id: str | None = Field(default=None)
     flaw_types: list[Any] | None = Field(default=None)
 
+class SparkAdVideoInfo(BaseModel):
+    """Information about the video post"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    duration: float | None | None = Field(default=None, description="The duration of the video, in seconds")
+    """The duration of the video, in seconds"""
+    preview_url: str | None | None = Field(default=None, description="The preview URL for the video")
+    """The preview URL for the video"""
+    poster_url: str | None | None = Field(default=None, description="The URL to the video poster")
+    """The URL to the video poster"""
+    height: int | None | None = Field(default=None, description="The height of the video")
+    """The height of the video"""
+    width: int | None | None = Field(default=None, description="The width of the video")
+    """The width of the video"""
+    size: int | None | None = Field(default=None, description="The size of the video, in bytes")
+    """The size of the video, in bytes"""
+
 class SparkAdItemInfo(BaseModel):
     """Information about the Spark Ads post"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -352,23 +369,6 @@ class SparkAdAuthInfo(BaseModel):
     """The time when the authorization code expires (UTC+0)"""
     ad_auth_status: str | None | None = Field(default=None, description="The authorization status (e.g. AUTHORIZED)")
     """The authorization status (e.g. AUTHORIZED)"""
-
-class SparkAdVideoInfo(BaseModel):
-    """Information about the video post"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    duration: float | None | None = Field(default=None, description="The duration of the video, in seconds")
-    """The duration of the video, in seconds"""
-    preview_url: str | None | None = Field(default=None, description="The preview URL for the video")
-    """The preview URL for the video"""
-    poster_url: str | None | None = Field(default=None, description="The URL to the video poster")
-    """The URL to the video poster"""
-    height: int | None | None = Field(default=None, description="The height of the video")
-    """The height of the video"""
-    width: int | None | None = Field(default=None, description="The width of the video")
-    """The width of the video"""
-    size: int | None | None = Field(default=None, description="The size of the video, in bytes")
-    """The size of the video, in bytes"""
 
 class SparkAd(BaseModel):
     """TikTok Spark Ad post authorization"""

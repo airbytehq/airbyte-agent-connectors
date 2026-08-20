@@ -58,6 +58,28 @@ info:
           - name: description_text
             type: ["string", "null"]
             description: Plain text content of the ticket
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: subject, path: "/subject" }
+                - name: ticket_body
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: ticket }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{subject}\n\n{ticket_body}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: subject, path: "/subject", type: string }
+                - { name: status, path: "/status", type: string }
+                - { name: priority, path: "/priority", type: string }
+                - { name: type, path: "/type", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: requester_id, path: "/requester_id", type: string }
+                - { name: responder_id, path: "/responder_id", type: string }
+                - { name: group_id, path: "/group_id", type: string }
           - name: status
             type: ["integer", "null"]
             description: "Status: 2=Open, 3=Pending, 4=Resolved, 5=Closed"
@@ -260,6 +282,26 @@ info:
           - name: description
             type: ["string", "null"]
             description: Description of the contact
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: contact_name, path: "/name" }
+                - name: contact_notes
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: contact }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{contact_name}\n\n{contact_notes}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: name, path: "/name", type: string }
+                - { name: email, path: "/email", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: company_id, path: "/company_id", type: string }
+                - { name: job_title, path: "/job_title", type: string }
+                - { name: active, path: "/active", type: string }
           - name: job_title
             type: ["string", "null"]
             description: Job title of the contact
@@ -303,12 +345,50 @@ info:
           - name: description
             type: ["string", "null"]
             description: Description of the company
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: company_name, path: "/name" }
+                - name: company_description
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: company }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{company_name}\n\n{company_description}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: name, path: "/name", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: industry, path: "/industry", type: string }
+                - { name: account_tier, path: "/account_tier", type: string }
+                - { name: health_score, path: "/health_score", type: string }
           - name: domains
             type: ["array", "null"]
             description: Email domains associated with the company
           - name: note
             type: ["string", "null"]
             description: Notes about the company
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: company_name, path: "/name" }
+                - name: company_note
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: company }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{company_name}\n\n{company_note}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: name, path: "/name", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: industry, path: "/industry", type: string }
+                - { name: account_tier, path: "/account_tier", type: string }
+                - { name: health_score, path: "/health_score", type: string }
           - name: health_score
             type: ["string", "null"]
             description: Health score of the company
@@ -375,6 +455,25 @@ info:
           - name: feedback
             type: ["string", "null"]
             description: Feedback text
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - name: rating_feedback
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: rating }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: ticket_id, path: "/ticket_id", type: string }
+                - { name: survey_id, path: "/survey_id", type: string }
+                - { name: agent_id, path: "/agent_id", type: string }
+                - { name: group_id, path: "/group_id", type: string }
+                - { name: user_id, path: "/user_id", type: string }
+                - { name: ratings, path: "/ratings", type: string }
           - name: ratings
             type: ["object", "null"]
             description: Rating values (question_id to rating mapping)
@@ -426,6 +525,25 @@ info:
           - name: note
             type: ["string", "null"]
             description: Description of the time entry
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - name: time_entry_note
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: time_entry }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: ticket_id, path: "/ticket_id", type: string }
+                - { name: agent_id, path: "/agent_id", type: string }
+                - { name: company_id, path: "/company_id", type: string }
+                - { name: billable, path: "/billable", type: string }
+                - { name: time_spent, path: "/time_spent", type: string }
+                - { name: executed_at, path: "/executed_at", type: string }
           - name: time_spent
             type: ["string", "null"]
             description: "Time spent in hh:mm format"

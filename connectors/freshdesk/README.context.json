@@ -1018,7 +1018,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Plain text content of the ticket",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "status",
@@ -1321,8 +1321,56 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "description_text",
+          "description": "Plain text content of the ticket",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "subject",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "priority",
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "requester_id",
+          "type": "string"
+        },
+        {
+          "name": "responder_id",
+          "type": "string"
+        },
+        {
+          "name": "group_id",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": [
         "requesterName",
@@ -1691,7 +1739,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Description of the contact",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "job_title",
@@ -1794,8 +1842,48 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "description",
+          "description": "Description of the contact",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "email",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "company_id",
+          "type": "string"
+        },
+        {
+          "name": "job_title",
+          "type": "string"
+        },
+        {
+          "name": "active",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -1841,7 +1929,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Description of the company",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "domains",
@@ -1861,7 +1949,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Notes about the company",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "health_score",
@@ -1934,8 +2022,50 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "description",
+          "description": "Description of the company",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        },
+        {
+          "name": "note",
+          "description": "Notes about the company",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "industry",
+          "type": "string"
+        },
+        {
+          "name": "account_tier",
+          "type": "string"
+        },
+        {
+          "name": "health_score",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -2101,7 +2231,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Feedback text",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "ratings",
@@ -2134,8 +2264,52 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "feedback",
+          "description": "Feedback text",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "ticket_id",
+          "type": "string"
+        },
+        {
+          "name": "survey_id",
+          "type": "string"
+        },
+        {
+          "name": "agent_id",
+          "type": "string"
+        },
+        {
+          "name": "group_id",
+          "type": "string"
+        },
+        {
+          "name": "user_id",
+          "type": "string"
+        },
+        {
+          "name": "ratings",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -2291,7 +2465,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Description of the time entry",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "time_spent",
@@ -2354,8 +2528,52 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "note",
+          "description": "Description of the time entry",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "ticket_id",
+          "type": "string"
+        },
+        {
+          "name": "agent_id",
+          "type": "string"
+        },
+        {
+          "name": "company_id",
+          "type": "string"
+        },
+        {
+          "name": "billable",
+          "type": "string"
+        },
+        {
+          "name": "time_spent",
+          "type": "string"
+        },
+        {
+          "name": "executed_at",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
