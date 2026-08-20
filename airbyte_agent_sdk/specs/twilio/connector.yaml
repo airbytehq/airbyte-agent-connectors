@@ -261,6 +261,27 @@ info:
         - "null"
         - "string"
         description: The text body of the message
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+            - { name: error_detail, path: "/error_message" }
+            - name: message_body
+              windowed: true
+              sampling: { sample_type: whole, unit_label: message }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{message_body}\n{error_detail}"
+          metadata:
+            - { name: sid, path: "/sid", type: string }
+            - { name: date_sent, path: "/date_sent", type: string }
+            - { name: date_created, path: "/date_created", type: string }
+            - { name: direction, path: "/direction", type: string }
+            - { name: status, path: "/status", type: string }
+            - { name: from, path: "/from", type: string }
+            - { name: to, path: "/to", type: string }
+            - { name: error_code, path: "/error_code", type: string }
+            - { name: error_message, path: "/error_message", type: string }
       - name: status
         type:
         - "null"

@@ -22,6 +22,12 @@ class KlaviyoAuthConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
+class ProfileLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
+
 class ProfileAttributesLocation(BaseModel):
     """Location information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -65,12 +71,6 @@ class ProfileAttributes(BaseModel):
     properties: dict[str, Any] | None | None = Field(default=None, description="Custom properties")
     """Custom properties"""
 
-class ProfileLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: str | None | None = Field(default=None)
-
 class Profile(BaseModel):
     """A Klaviyo profile representing a contact"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -95,6 +95,12 @@ class ProfilesList(BaseModel):
     data: list[Profile] | None = Field(default=None)
     links: ProfilesListLinks | None = Field(default=None)
 
+class ListLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
+
 class ListAttributes(BaseModel):
     """List attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -107,12 +113,6 @@ class ListAttributes(BaseModel):
     """Last update timestamp"""
     opt_in_process: str | None | None = Field(default=None, description="Opt-in process type")
     """Opt-in process type"""
-
-class ListLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: str | None | None = Field(default=None)
 
 class List(BaseModel):
     """A Klaviyo list for organizing profiles"""
@@ -137,12 +137,6 @@ class ListsList(BaseModel):
 
     data: list[List] | None = Field(default=None)
     links: ListsListLinks | None = Field(default=None)
-
-class CampaignLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: str | None | None = Field(default=None)
 
 class CampaignAttributes(BaseModel):
     """Campaign attributes"""
@@ -171,6 +165,12 @@ class CampaignAttributes(BaseModel):
     send_time: str | None | None = Field(default=None, description="Actual send time")
     """Actual send time"""
 
+class CampaignLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
+
 class Campaign(BaseModel):
     """A Klaviyo campaign"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -195,24 +195,18 @@ class CampaignsList(BaseModel):
     data: list[Campaign] | None = Field(default=None)
     links: CampaignsListLinks | None = Field(default=None)
 
-class EventAttributes(BaseModel):
-    """Event attributes"""
+class EventRelationshipsProfileData(BaseModel):
+    """Nested schema for EventRelationshipsProfile.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    timestamp: Any | None = Field(default=None, description="Event timestamp (can be ISO string or Unix timestamp)")
-    """Event timestamp (can be ISO string or Unix timestamp)"""
-    datetime: str | None | None = Field(default=None, description="Event datetime")
-    """Event datetime"""
-    uuid: str | None | None = Field(default=None, description="Event UUID")
-    """Event UUID"""
-    event_properties: dict[str, Any] | None | None = Field(default=None, description="Custom event properties")
-    """Custom event properties"""
+    type_: str | None | None = Field(default=None, alias="type")
+    id: str | None | None = Field(default=None)
 
-class EventLinks(BaseModel):
-    """Related links"""
+class EventRelationshipsProfile(BaseModel):
+    """Nested schema for EventRelationships.profile"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: str | None | None = Field(default=None)
+    data: EventRelationshipsProfileData | None | None = Field(default=None)
 
 class EventRelationshipsMetricData(BaseModel):
     """Nested schema for EventRelationshipsMetric.data"""
@@ -227,25 +221,31 @@ class EventRelationshipsMetric(BaseModel):
 
     data: EventRelationshipsMetricData | None | None = Field(default=None)
 
-class EventRelationshipsProfileData(BaseModel):
-    """Nested schema for EventRelationshipsProfile.data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None | None = Field(default=None, alias="type")
-    id: str | None | None = Field(default=None)
-
-class EventRelationshipsProfile(BaseModel):
-    """Nested schema for EventRelationships.profile"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    data: EventRelationshipsProfileData | None | None = Field(default=None)
-
 class EventRelationships(BaseModel):
     """Related resources"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     profile: EventRelationshipsProfile | None | None = Field(default=None)
     metric: EventRelationshipsMetric | None | None = Field(default=None)
+
+class EventLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
+
+class EventAttributes(BaseModel):
+    """Event attributes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    timestamp: Any | None = Field(default=None, description="Event timestamp (can be ISO string or Unix timestamp)")
+    """Event timestamp (can be ISO string or Unix timestamp)"""
+    datetime: str | None | None = Field(default=None, description="Event datetime")
+    """Event datetime"""
+    uuid: str | None | None = Field(default=None, description="Event UUID")
+    """Event UUID"""
+    event_properties: dict[str, Any] | None | None = Field(default=None, description="Custom event properties")
+    """Custom event properties"""
 
 class Event(BaseModel):
     """A Klaviyo event representing an action taken by a profile"""

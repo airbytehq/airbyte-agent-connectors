@@ -1929,7 +1929,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "The text body of the message",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "status",
@@ -2032,8 +2032,52 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "body",
+          "description": "The text body of the message",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "sid",
+          "type": "string"
+        },
+        {
+          "name": "date_sent",
+          "type": "string"
+        },
+        {
+          "name": "date_created",
+          "type": "string"
+        },
+        {
+          "name": "direction",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "from",
+          "type": "string"
+        },
+        {
+          "name": "to",
+          "type": "string"
+        },
+        {
+          "name": "error_code",
+          "type": "string"
+        },
+        {
+          "name": "error_message",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },

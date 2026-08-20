@@ -25,6 +25,12 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -4588,6 +4594,68 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                         name='body',
                         type=['null', 'string'],
                         description='The text body of the message',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='error_detail',
+                                    path='/error_message',
+                                ),
+                                SemanticSample(
+                                    name='message_body',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='message',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{message_body}\n{error_detail}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='sid',
+                                    path='/sid',
+                                ),
+                                SemanticMetadataField(
+                                    name='date_sent',
+                                    path='/date_sent',
+                                ),
+                                SemanticMetadataField(
+                                    name='date_created',
+                                    path='/date_created',
+                                ),
+                                SemanticMetadataField(
+                                    name='direction',
+                                    path='/direction',
+                                ),
+                                SemanticMetadataField(
+                                    name='status',
+                                    path='/status',
+                                ),
+                                SemanticMetadataField(
+                                    name='from',
+                                    path='/from',
+                                ),
+                                SemanticMetadataField(
+                                    name='to',
+                                    path='/to',
+                                ),
+                                SemanticMetadataField(
+                                    name='error_code',
+                                    path='/error_code',
+                                ),
+                                SemanticMetadataField(
+                                    name='error_message',
+                                    path='/error_message',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='status',
@@ -5171,6 +5239,72 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
             'date_created',
             'date_updated',
         ],
+    },
+    semantic_search_fields={
+        'messages': {
+            'body': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='error_detail',
+                        path='/error_message',
+                    ),
+                    SemanticSample(
+                        name='message_body',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='message',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{message_body}\n{error_detail}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='sid',
+                        path='/sid',
+                    ),
+                    SemanticMetadataField(
+                        name='date_sent',
+                        path='/date_sent',
+                    ),
+                    SemanticMetadataField(
+                        name='date_created',
+                        path='/date_created',
+                    ),
+                    SemanticMetadataField(
+                        name='direction',
+                        path='/direction',
+                    ),
+                    SemanticMetadataField(
+                        name='status',
+                        path='/status',
+                    ),
+                    SemanticMetadataField(
+                        name='from',
+                        path='/from',
+                    ),
+                    SemanticMetadataField(
+                        name='to',
+                        path='/to',
+                    ),
+                    SemanticMetadataField(
+                        name='error_code',
+                        path='/error_code',
+                    ),
+                    SemanticMetadataField(
+                        name='error_message',
+                        path='/error_message',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[
