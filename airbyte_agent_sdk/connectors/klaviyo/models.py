@@ -95,12 +95,6 @@ class ProfilesList(BaseModel):
     data: list[Profile] | None = Field(default=None)
     links: ProfilesListLinks | None = Field(default=None)
 
-class ListLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: str | None | None = Field(default=None)
-
 class ListAttributes(BaseModel):
     """List attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -113,6 +107,12 @@ class ListAttributes(BaseModel):
     """Last update timestamp"""
     opt_in_process: str | None | None = Field(default=None, description="Opt-in process type")
     """Opt-in process type"""
+
+class ListLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
 
 class List(BaseModel):
     """A Klaviyo list for organizing profiles"""
@@ -323,12 +323,6 @@ class MetricsList(BaseModel):
     data: list[Metric] | None = Field(default=None)
     links: MetricsListLinks | None = Field(default=None)
 
-class FlowLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: str | None | None = Field(default=None)
-
 class FlowAttributes(BaseModel):
     """Flow attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -345,6 +339,12 @@ class FlowAttributes(BaseModel):
     """Last update timestamp"""
     trigger_type: str | None | None = Field(default=None, description="Type of trigger for the flow")
     """Type of trigger for the flow"""
+
+class FlowLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
 
 class Flow(BaseModel):
     """A Klaviyo flow (automated sequence)"""
