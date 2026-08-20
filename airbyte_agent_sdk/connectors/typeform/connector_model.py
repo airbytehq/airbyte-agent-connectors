@@ -24,7 +24,16 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     CacheFieldProperty,
+    EnrichmentConfig,
+    EnrichmentMatch,
+    EnrichmentProjection,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -3267,6 +3276,65 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
                         name='fields',
                         type=['null', 'array'],
                         description='List of fields within the form',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='json',
+                            samples=[
+                                SemanticSample(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticSample(
+                                    name='description',
+                                    path='/settings.meta.description',
+                                ),
+                                SemanticSample(
+                                    name='questions',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='questions',
+                                        text_path='[].title',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{title}\n{description}\n\n{questions}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='last_updated_at',
+                                    path='/last_updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticMetadataField(
+                                    name='created_at',
+                                    path='/created_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='published_at',
+                                    path='/published_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='workspace_href',
+                                    path='/workspace.href',
+                                ),
+                                SemanticMetadataField(
+                                    name='display_url',
+                                    path='/_links.display',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='id',
@@ -3482,6 +3550,44 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
                         name='answers',
                         type=['null', 'array'],
                         description='Response data for each question in the form',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='json',
+                            samples=[
+                                SemanticSample(
+                                    name='response',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='response',
+                                        text_path='[].text',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='response_id',
+                                    path='/response_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='submitted_at',
+                                    path='/submitted_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='form_id',
+                                    path='/form_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='response_type',
+                                    path='/response_type',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='calculated',
@@ -3556,6 +3662,23 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
                         name='variables',
                         type=['null', 'array'],
                         description='Variables associated with the response',
+                    ),
+                ],
+                x_airbyte_enrichment=[
+                    EnrichmentConfig(
+                        target='forms',
+                        match=[
+                            EnrichmentMatch(
+                                local='/form_id',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='formTitle',
+                                from_='title',
+                            ),
+                        ],
                     ),
                 ],
             ),
@@ -3958,6 +4081,128 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
             'screens.font_size',
             'updated_at',
             'visibility',
+        ],
+    },
+    semantic_search_fields={
+        'forms': {
+            'fields': SemanticSearchConfig(
+                content_type='json',
+                samples=[
+                    SemanticSample(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticSample(
+                        name='description',
+                        path='/settings.meta.description',
+                    ),
+                    SemanticSample(
+                        name='questions',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='questions',
+                            text_path='[].title',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{title}\n{description}\n\n{questions}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='last_updated_at',
+                        path='/last_updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticMetadataField(
+                        name='created_at',
+                        path='/created_at',
+                    ),
+                    SemanticMetadataField(
+                        name='published_at',
+                        path='/published_at',
+                    ),
+                    SemanticMetadataField(
+                        name='workspace_href',
+                        path='/workspace.href',
+                    ),
+                    SemanticMetadataField(
+                        name='display_url',
+                        path='/_links.display',
+                    ),
+                ],
+            ),
+        },
+        'responses': {
+            'answers': SemanticSearchConfig(
+                content_type='json',
+                samples=[
+                    SemanticSample(
+                        name='response',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='response',
+                            text_path='[].text',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='response_id',
+                        path='/response_id',
+                    ),
+                    SemanticMetadataField(
+                        name='submitted_at',
+                        path='/submitted_at',
+                    ),
+                    SemanticMetadataField(
+                        name='form_id',
+                        path='/form_id',
+                    ),
+                    SemanticMetadataField(
+                        name='response_type',
+                        path='/response_type',
+                    ),
+                ],
+            ),
+        },
+    },
+    enrichment_configs={
+        'responses': [
+            EnrichmentConfig(
+                target='forms',
+                match=[
+                    EnrichmentMatch(
+                        local='/form_id',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='formTitle',
+                        from_='title',
+                    ),
+                ],
+            ),
         ],
     },
     example_questions=ExampleQuestions(

@@ -78,6 +78,27 @@ info:
       - name: fields
         type: ["null", "array"]
         description: List of fields within the form
+        x-airbyte-semantic-search:
+          content_type: json
+          samples:
+          - { name: title, path: "/title" }
+          - { name: description, path: "/settings.meta.description" }
+          - name: questions
+            windowed: true
+            # text_path takes ONE path: top-level question titles only. Matrix/group sub-questions (properties.fields[].title) are not indexed; repointing there would drop these.
+            sampling: { sample_type: whole, unit_label: questions, text_path: "[].title", stitch: "\n" }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{title}\n{description}\n\n{questions}"
+          metadata:
+          - { name: id, path: "/id", type: string }
+          - { name: last_updated_at, path: "/last_updated_at", type: string }
+          - { name: title, path: "/title", type: string }
+          - { name: created_at, path: "/created_at", type: string }
+          - { name: published_at, path: "/published_at", type: string }
+          - { name: workspace_href, path: "/workspace.href", type: string }
+          - { name: display_url, path: "/_links.display", type: string }
       - name: id
         type: ["null", "string"]
         description: Unique identifier of the form
@@ -213,6 +234,20 @@ info:
       - name: answers
         type: ["null", "array"]
         description: Response data for each question in the form
+        x-airbyte-semantic-search:
+          content_type: json
+          samples:
+          - name: response
+            windowed: true
+            # text_path takes ONE path: this indexes free-text answers only. choice/choices/number/email/date answers carry no prose, so a fully categorical response indexes to zero chunks -- deliberate, it is what bounds volume and keeps bare option labels out of the vector.
+            sampling: { sample_type: whole, unit_label: response, text_path: "[].text", stitch: "\n" }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding: { model: text-embedding-3-small }
+          metadata:
+          - { name: response_id, path: "/response_id", type: string }
+          - { name: submitted_at, path: "/submitted_at", type: string }
+          - { name: form_id, path: "/form_id", type: string }
+          - { name: response_type, path: "/response_type", type: string }
       - name: calculated
         type: ["null", "object"]
         description: Calculated data related to the response
@@ -258,6 +293,15 @@ info:
       - name: variables
         type: ["null", "array"]
         description: Variables associated with the response
+      # Read-time only: an answer carries no question text and cross-entity joins do not exist at
+      # index time, so this makes a hit readable ("which form is this from?") without changing what
+      # it matches on.
+      x-airbyte-enrichment:
+      - target: forms
+        match:
+        - { local: "/form_id", foreign: id }
+        project:
+        - { name: formTitle, from: title }
     - entity: webhooks
       x-airbyte-name: webhooks
       fields:

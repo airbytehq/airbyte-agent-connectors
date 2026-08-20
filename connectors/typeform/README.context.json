@@ -616,7 +616,7 @@
           "example_value_json": "[]",
           "json_example_value": [],
           "description": "List of fields within the form",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "id",
@@ -729,8 +729,44 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "fields",
+          "description": "List of fields within the form",
+          "context_max_chars": 2048,
+          "content_type": "json"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "last_updated_at",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "published_at",
+          "type": "string"
+        },
+        {
+          "name": "workspace_href",
+          "type": "string"
+        },
+        {
+          "name": "display_url",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -756,7 +792,7 @@
           "example_value_json": "[]",
           "json_example_value": [],
           "description": "Response data for each question in the form",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "calculated",
@@ -869,10 +905,36 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "answers",
+          "description": "Response data for each question in the form",
+          "context_max_chars": 2048,
+          "content_type": "json"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "response_id",
+          "type": "string"
+        },
+        {
+          "name": "submitted_at",
+          "type": "string"
+        },
+        {
+          "name": "form_id",
+          "type": "string"
+        },
+        {
+          "name": "response_type",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
-      "enrichment_outputs": []
+      "enrichment_outputs": [
+        "formTitle"
+      ]
     },
     "webhooks": {
       "entity": "webhooks",
