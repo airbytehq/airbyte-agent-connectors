@@ -15,6 +15,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Any, Protocol
 
+from airbyte_agent_sdk.schema.extensions import executable_projections, is_enrichment_config_executable
+
 # Constants
 MAX_EXAMPLE_QUESTIONS = 5  # Maximum number of example questions to include in description
 SEMANTIC_MIN_SIMILARITY = -1.0
@@ -205,6 +207,27 @@ def build_semantic_search_note(
     entity_label = _humanize_entity_name(entity_name)
     entity_fields = _semantic_metadata_names(config, record_root=True)
     attribution_fields = _semantic_metadata_names(config, record_root=False)
+    windowed_sample = next((sample for sample in (getattr(config, "samples", None) or []) if getattr(sample, "windowed", False)), None)
+    sampling = getattr(windowed_sample, "sampling", None)
+    unit_label = getattr(sampling, "unit_label", "chunk") or "chunk"
+    filterable_names = [
+        *entity_fields,
+        *attribution_fields,
+        unit_label,
+        f"{unit_label}_context",
+        f"{unit_label}_chunk_id",
+        f"{unit_label}_chunk_index",
+    ]
+    if field_name == unit_label:
+        alias_clause = f"`{field_name}` is the indexed unit text column and matches each chunk, not the full source field. "
+    elif field_name in filterable_names:
+        alias_clause = (
+            f"`{field_name}` names one of the declared columns above and filters that column, not the chunk text; "
+            f"filter on `{unit_label}` to match the indexed unit text. "
+        )
+    else:
+        filterable_names.append(field_name)
+        alias_clause = f"`{field_name}` is an alias for the indexed unit text and therefore matches each chunk, not the full source field. "
 
     windowing = getattr(config, "windowing", None)
     context_max_chars = getattr(windowing, "context_max_chars", 0) or 0
@@ -216,6 +239,14 @@ def build_semantic_search_note(
         f"({', '.join(enrichment_outputs)}); these are returned for reading only and are NOT filterable.\n"
         if enrichment_outputs
         else ""
+    )
+    computed_output_filter_clause = (
+        f"  For `context_store_search`, computed output `score` and returned `context` are not valid "
+        f"`semantic.filter` inputs. Use `min_similarity` for score thresholds -- only a lower bound is "
+        f"expressible, not an upper bound or an exact match. To filter context content, filter the "
+        f"physical `{unit_label}_context` column instead; it holds the full stored context, which can be "
+        f"wider than the returned `context` window, so a match there may not appear in the text you get "
+        f"back.\n"
     )
 
     if context_max_chars > 0:
@@ -237,6 +268,10 @@ def build_semantic_search_note(
         f"  ALPHA — subject to change. Semantic (similarity) search over the '{field_name}' field of {entity_label}.\n"
         f"  Embeds `prompt` and returns relevance-ranked hits shaped as {{entity, metadata}}:{entity_clause} "
         f"`metadata` has the similarity `score`, the matched `context` text{attribution_clause}.\n"
+        f"  `semantic.filter` has a distinct, chunk-level field namespace: {', '.join(f'`{name}`' for name in filterable_names)}. "
+        f"{alias_clause}"
+        "Other entity fields, enrichment outputs, and the embedding vector are NOT filterable.\n"
+        f"{computed_output_filter_clause}"
         f"{enrichment_clause}"
         f"{_SEMANTIC_SEARCH_GENERIC_GUIDANCE}\n"
         f"{context_clause}"
@@ -329,7 +364,10 @@ def build_enrichment_note(config: Any, *, entity_name: str) -> str:
     are resolved from at read time.
     """
     target = getattr(config, "target", "") or ""
-    outputs = [getattr(p, "name", None) for p in (getattr(config, "project", None) or [])]
+    # Only the projections the runtime can resolve. Since the gate became projection-scoped a
+    # config can be partially executable, and enumerating config.project here would advertise the
+    # very projections the runtime drops.
+    outputs = [getattr(p, "name", None) for p in executable_projections(config)]
     output_names = [name for name in outputs if name]
     entity_label = _humanize_entity_name(entity_name)
     return f"Each {entity_label} record is enriched with {', '.join(output_names)} (resolved from {target} at read time)."
@@ -349,7 +387,11 @@ def enrichment_note_lines(
     """
     if not entity_enrichments:
         return []
-    return [f"{indent}- {build_enrichment_note(config, entity_name=entity_name)}" for config in entity_enrichments]
+    return [
+        f"{indent}- {build_enrichment_note(config, entity_name=entity_name)}"
+        for config in entity_enrichments
+        if is_enrichment_config_executable(config)
+    ]
 
 
 def _simplify_type(type_value: str | list[str]) -> str:
@@ -865,6 +907,7 @@ def generate_tool_description(
     if enable_semantic_sql_table_function is None:
         enable_semantic_sql_table_function = bool(getattr(model, "enable_semantic_sql_table_function", False))
     semantic_search_fields = getattr(model, "semantic_search_fields", None) or {}
+    enrichment_configs = getattr(model, "enrichment_configs", None) or {}
     search_field_paths = _collect_search_field_paths(model)
     entity_field_schemas = _collect_entity_field_schemas(model)
     _, rels_by_entity = _build_relationship_index(model.entities)
@@ -947,9 +990,23 @@ def generate_tool_description(
         if entity.name in search_field_paths:
             search_sig = _format_search_param_signature()
             lines.append(f"      - context_store_search{search_sig}")
-            lines.extend(semantic_search_note_lines(semantic_search_fields.get(entity.name), entity_name=entity.name))
+            entity_enrichments = enrichment_configs.get(entity.name) or []
+            enrichment_outputs = [projection.name for config in entity_enrichments for projection in executable_projections(config)]
+            lines.extend(
+                semantic_search_note_lines(
+                    semantic_search_fields.get(entity.name),
+                    entity_name=entity.name,
+                    enrichment_outputs=enrichment_outputs,
+                )
+            )
             if enable_semantic_sql_table_function:
-                lines.extend(semantic_sql_table_function_note_lines(semantic_search_fields.get(entity.name), entity_name=entity.name))
+                lines.extend(
+                    semantic_sql_table_function_note_lines(
+                        semantic_search_fields.get(entity.name),
+                        entity_name=entity.name,
+                        enrichment_outputs=enrichment_outputs,
+                    )
+                )
 
         # Searchable fields sub-section (nested paths for search queries)
         entity_search_fields = search_field_paths.get(entity.name)

@@ -258,6 +258,15 @@ class SemanticMetadataField(BaseModel):
 # literal text by both the validator and the renderer.
 _TEMPLATE_PLACEHOLDER_RE = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*)\}")
 _SAMPLE_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+_ENRICHMENT_ARRAY_TOKEN_RE = re.compile(r"^(?P<key>[^\[]*)\[\](?P<rest>.*)$")
+_SEMANTIC_COMPUTED_OUTPUT_NAMES = {"context", "score"}
+
+
+def _validate_semantic_filter_column_name(name: str, *, label: str) -> None:
+    if name.casefold() in _SEMANTIC_COMPUTED_OUTPUT_NAMES:
+        raise ValueError(f"x-airbyte-semantic-search: {label} '{name}' conflicts with a computed search output.")
+    if "." in name:
+        raise ValueError(f"x-airbyte-semantic-search: {label} '{name}' must not contain '.'.")
 
 
 def _reserved_window_chars(context_max_chars: int) -> int:
@@ -314,6 +323,9 @@ class SemanticSearchConfig(BaseModel):
     @model_validator(mode="after")
     def validate_samples_consistency(self) -> "SemanticSearchConfig":
         """Validate the samples list, the windowed sample's sampling, and the embedding template."""
+        for metadata_field in self.metadata:
+            _validate_semantic_filter_column_name(metadata_field.name, label="metadata name")
+
         samples = self.samples
         if not samples:
             raise ValueError("x-airbyte-semantic-search: 'samples' must declare at least one sample.")
@@ -335,6 +347,9 @@ class SemanticSearchConfig(BaseModel):
 
         if windowed.sampling is None:
             raise ValueError("x-airbyte-semantic-search: the windowed sample must declare a 'sampling' block.")
+        if not windowed.sampling.unit_label:
+            raise ValueError("x-airbyte-semantic-search: unit label must not be empty.")
+        _validate_semantic_filter_column_name(windowed.sampling.unit_label, label="unit label")
         if windowed.path is not None:
             raise ValueError("x-airbyte-semantic-search: the windowed sample must not set 'path'.")
 
@@ -438,6 +453,12 @@ class CacheFieldConfig(ExtensionAwareModel):
         "and what metadata travels with each unit).",
     )
 
+    @model_validator(mode="after")
+    def validate_semantic_search_field_name(self) -> "CacheFieldConfig":
+        if self.x_airbyte_semantic_search is not None:
+            _validate_semantic_filter_column_name(self.name, label="source field name")
+        return self
+
     @property
     def cache_name(self) -> str:
         """Return cache name, falling back to name if alias not specified."""
@@ -519,6 +540,79 @@ class EnrichmentConfig(BaseModel):
         if not self.project:
             raise ValueError("x-airbyte-enrichment: at least one 'project' field is required.")
         return self
+
+
+def split_enrichment_path(path: str) -> tuple[str, ...]:
+    """Split a dotted enrichment path, preserving array markers as segments."""
+    segments: list[str] = []
+    for raw in path.split("."):
+        token = raw
+        while token:
+            match = _ENRICHMENT_ARRAY_TOKEN_RE.match(token)
+            if match is None:
+                segments.append(token)
+                break
+            key = match.group("key")
+            if key:
+                segments.append(key)
+            segments.append("[]")
+            token = match.group("rest")
+    return tuple(segment for segment in segments if segment)
+
+
+def analyze_enrichment_path(path: str) -> tuple[bool, tuple[str, ...], tuple[str, ...]]:
+    """Return scalar status, array prefix, and value segments for an enrichment path."""
+    segments = split_enrichment_path(path)
+    if "[]" not in segments:
+        return True, (), segments
+    array_index = segments.index("[]")
+    return False, segments[:array_index], segments[array_index + 1 :]
+
+
+def executable_projections(config: EnrichmentConfig) -> list[EnrichmentProjection]:
+    """The projections the current enrichment runtime can actually resolve.
+
+    Config-level problems make the whole join unrunnable and yield nothing. A single unsupported
+    projection is dropped on its own, so its siblings survive: one bad projection taking down nine
+    working ones is how this PR came to delete zendesk's ticketTags.
+    """
+    foreign_array_prefixes: set[tuple[str, ...]] = set()
+    has_scalar_foreign_match = False
+
+    for match in config.match:
+        if not split_enrichment_path(match.foreign):
+            return []
+        if not split_enrichment_path(match.local.lstrip("/")):
+            # An empty local path reaches the renderer as bound_match.local_segments == (), which
+            # raises MotherDuckEnrichmentRenderError rather than degrading.
+            return []
+        is_scalar, array_prefix, _ = analyze_enrichment_path(match.foreign)
+        if is_scalar:
+            has_scalar_foreign_match = True
+        else:
+            foreign_array_prefixes.add(array_prefix)
+
+    if not has_scalar_foreign_match or len(foreign_array_prefixes) > 1:
+        return []
+
+    usable: list[EnrichmentProjection] = []
+    for projection in config.project:
+        if not split_enrichment_path(projection.from_):
+            continue
+        is_scalar, array_prefix, value_segments = analyze_enrichment_path(projection.from_)
+        # A terminal array (`tags[]`) projects the list itself, so it needs no per-element
+        # correlation with a match array -- the runtime resolves it through the in_array=False
+        # branch. Only a projection that indexes THROUGH an array into fields has to share the
+        # matched array's prefix.
+        if not is_scalar and value_segments and array_prefix not in foreign_array_prefixes:
+            continue
+        usable.append(projection)
+    return usable
+
+
+def is_enrichment_config_executable(config: EnrichmentConfig) -> bool:
+    """Whether the current enrichment runtime can execute any part of this schema-valid config."""
+    return bool(executable_projections(config))
 
 
 class CacheEntityConfig(ExtensionAwareModel):

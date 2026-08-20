@@ -30,6 +30,7 @@ from ..introspection import (
     get_cached_search_questions,
 )
 from ..schema.connector import OpenAPIConnector
+from ..schema.extensions import executable_projections
 from ..types import Action, AuthType
 from .filters import mdx_escape, py_str_escape, to_pascal_case, to_snake_case
 from .serializer import PythonCodeSerializer
@@ -1154,7 +1155,9 @@ class ConnectorGenerator:
                         if not any(existing["name"] == meta.name for existing in target):
                             target.append({"name": meta.name, "type": meta.type})
 
-            enrichment_outputs = [projection.name for enrichment in (entity_config.x_airbyte_enrichment or []) for projection in enrichment.project]
+            enrichment_outputs = [
+                projection.name for enrichment in (entity_config.x_airbyte_enrichment or []) for projection in executable_projections(enrichment)
+            ]
 
             entity_pascal = to_pascal_case(entity_name)
             search_schemas[entity_name] = {
