@@ -136,6 +136,28 @@ info:
           - name: name
             type: ["null", "string"]
             description: Name/title of the incident
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: summary, path: "/summary" }
+                - name: incident_name
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: incident }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{incident_name}\n\n{summary}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: reference, path: "/reference", type: string }
+                - { name: name, path: "/name", type: string }
+                - { name: status, path: "/incident_status.category", type: string }
+                - { name: status_label, path: "/incident_status.name", type: string }
+                - { name: severity, path: "/severity.name", type: string }
+                - { name: mode, path: "/mode", type: string }
+                - { name: permalink, path: "/permalink", type: string }
+                - { name: created_at, path: "/created_at", type: string }
           - name: permalink
             type: ["null", "string"]
             description: Link to the incident in the dashboard
@@ -207,6 +229,25 @@ info:
           - name: description
             type: ["null", "string"]
             description: Description of the alert
+            x-airbyte-semantic-search:
+              content_type: markdown
+              samples:
+                - { name: title, path: "/title" }
+                - name: alert_description
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: alert }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{title}\n\n{alert_description}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: title, path: "/title", type: string }
+                - { name: status, path: "/status", type: string }
+                - { name: source_url, path: "/source_url", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: resolved_at, path: "/resolved_at", type: string }
           - name: id
             type: ["null", "string"]
             description: Unique identifier for the alert
@@ -275,6 +316,25 @@ info:
           - name: message
             type: ["null", "string"]
             description: Update message content
+            x-airbyte-semantic-search:
+              content_type: markdown
+              samples:
+                - { name: alert_title, path: "/updater.alert.title" }
+                - name: update_message
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: update }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{update_message}\n\n{alert_title}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: incident_id, path: "/incident_id", type: string }
+                - { name: status, path: "/new_incident_status.category", type: string }
+                - { name: status_label, path: "/new_incident_status.name", type: string }
+                - { name: severity, path: "/new_severity.name", type: string }
+                - { name: author, path: "/updater.user.name", type: string }
           - name: new_incident_status
             type: ["null", "object"]
             description: New incident status set by this update
