@@ -10,8 +10,8 @@ info:
     catalog product groups, audiences, conversion tags, customer lists, and keywords.
   x-airbyte-connector-name: pinterest
   x-airbyte-connector-definition-id: 5cb7e5fe-38c2-11ec-8d3d-0242ac130003
-  x-airbyte-replication-version: "2.2.7"
-  x-airbyte-replication-compatibility: ">=2.2.7, <3.0.0"
+  x-airbyte-replication-version: "2.2.11"
+  x-airbyte-replication-compatibility: ">=2.2.11, <3.0.0"
   x-airbyte-external-documentation-urls:
   - type: api_reference
     title: Pinterest API v5 Reference

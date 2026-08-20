@@ -14,8 +14,8 @@ info:
     message labels, and creating or updating labels.
   x-airbyte-connector-name: gmail
   x-airbyte-connector-definition-id: f7833dac-fc18-4feb-a2a9-94b22001edc6
-  x-airbyte-replication-version: "0.1.11"
-  x-airbyte-replication-compatibility: ">=0.1.11, <1.0.0"
+  x-airbyte-replication-version: "0.1.13"
+  x-airbyte-replication-compatibility: ">=0.1.13, <1.0.0"
   x-airbyte-platform-availability:
     state: enabled
   x-airbyte-skip-auth-methods:

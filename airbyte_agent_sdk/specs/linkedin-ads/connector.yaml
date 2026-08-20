@@ -11,8 +11,8 @@ info:
     monitor creative assets across your LinkedIn advertising accounts.
   x-airbyte-connector-name: linkedin-ads
   x-airbyte-connector-definition-id: 137ece28-5434-455c-8f34-69dc3782f451
-  x-airbyte-replication-version: "5.6.13"
-  x-airbyte-replication-compatibility: ">=5.6.13, <6.0.0"
+  x-airbyte-replication-version: "6.0.2"
+  x-airbyte-replication-compatibility: ">=6.0.2, <7.0.0"
   x-airbyte-platform-availability:
     state: enabled
   x-airbyte-external-documentation-urls:

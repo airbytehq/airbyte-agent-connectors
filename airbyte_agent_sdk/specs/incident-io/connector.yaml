@@ -12,8 +12,8 @@ info:
   x-airbyte-connector-name: incident-io
   x-airbyte-connector-display-name: Incident.io
   x-airbyte-connector-definition-id: 7926da90-399e-4f9f-9833-52d8dc3fcb29
-  x-airbyte-replication-version: "0.1.33"
-  x-airbyte-replication-compatibility: ">=0.1.33, <1.0.0"
+  x-airbyte-replication-version: "0.1.37"
+  x-airbyte-replication-compatibility: ">=0.1.37, <1.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: incident.io API reference

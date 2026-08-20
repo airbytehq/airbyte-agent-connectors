@@ -195,18 +195,18 @@ class CampaignsList(BaseModel):
     data: list[Campaign] | None = Field(default=None)
     links: CampaignsListLinks | None = Field(default=None)
 
-class EventAttributes(BaseModel):
-    """Event attributes"""
+class EventRelationshipsProfileData(BaseModel):
+    """Nested schema for EventRelationshipsProfile.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    timestamp: Any | None = Field(default=None, description="Event timestamp (can be ISO string or Unix timestamp)")
-    """Event timestamp (can be ISO string or Unix timestamp)"""
-    datetime: str | None | None = Field(default=None, description="Event datetime")
-    """Event datetime"""
-    uuid: str | None | None = Field(default=None, description="Event UUID")
-    """Event UUID"""
-    event_properties: dict[str, Any] | None | None = Field(default=None, description="Custom event properties")
-    """Custom event properties"""
+    type_: str | None | None = Field(default=None, alias="type")
+    id: str | None | None = Field(default=None)
+
+class EventRelationshipsProfile(BaseModel):
+    """Nested schema for EventRelationships.profile"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: EventRelationshipsProfileData | None | None = Field(default=None)
 
 class EventRelationshipsMetricData(BaseModel):
     """Nested schema for EventRelationshipsMetric.data"""
@@ -221,25 +221,25 @@ class EventRelationshipsMetric(BaseModel):
 
     data: EventRelationshipsMetricData | None | None = Field(default=None)
 
-class EventRelationshipsProfileData(BaseModel):
-    """Nested schema for EventRelationshipsProfile.data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None | None = Field(default=None, alias="type")
-    id: str | None | None = Field(default=None)
-
-class EventRelationshipsProfile(BaseModel):
-    """Nested schema for EventRelationships.profile"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    data: EventRelationshipsProfileData | None | None = Field(default=None)
-
 class EventRelationships(BaseModel):
     """Related resources"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     profile: EventRelationshipsProfile | None | None = Field(default=None)
     metric: EventRelationshipsMetric | None | None = Field(default=None)
+
+class EventAttributes(BaseModel):
+    """Event attributes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    timestamp: Any | None = Field(default=None, description="Event timestamp (can be ISO string or Unix timestamp)")
+    """Event timestamp (can be ISO string or Unix timestamp)"""
+    datetime: str | None | None = Field(default=None, description="Event datetime")
+    """Event datetime"""
+    uuid: str | None | None = Field(default=None, description="Event UUID")
+    """Event UUID"""
+    event_properties: dict[str, Any] | None | None = Field(default=None, description="Custom event properties")
+    """Custom event properties"""
 
 class EventLinks(BaseModel):
     """Related links"""

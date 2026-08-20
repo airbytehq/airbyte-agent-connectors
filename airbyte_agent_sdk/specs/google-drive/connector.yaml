@@ -13,8 +13,8 @@ info:
     and change tracking, including the ability to create, update, delete, and upload files.
   x-airbyte-connector-name: google-drive
   x-airbyte-connector-definition-id: 9f8dda77-1048-4368-815b-269bf54ee9b8
-  x-airbyte-replication-version: "0.5.25"
-  x-airbyte-replication-compatibility: ">=0.5.25, <1.0.0"
+  x-airbyte-replication-version: "0.5.30"
+  x-airbyte-replication-compatibility: ">=0.5.30, <1.0.0"
   x-airbyte-example-questions:
     direct:
       - "List all files in my Google Drive"

@@ -13,8 +13,8 @@ info:
     notes, and attachments for sales analytics and customer relationship management.
   x-airbyte-connector-name: salesforce
   x-airbyte-connector-definition-id: b117307c-14b6-41aa-9422-947e34922962
-  x-airbyte-replication-version: "2.8.0"
-  x-airbyte-replication-compatibility: ">=2.8.0, <3.0.0"
+  x-airbyte-replication-version: "2.8.1"
+  x-airbyte-replication-compatibility: ">=2.8.1, <3.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Salesforce REST API Documentation

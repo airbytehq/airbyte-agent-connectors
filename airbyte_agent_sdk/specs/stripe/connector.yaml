@@ -8,8 +8,8 @@ info:
     access to customers for payment analytics and customer management.
   x-airbyte-connector-name: stripe
   x-airbyte-connector-definition-id: e094cb9a-26de-4645-8761-65c0c425d1de
-  x-airbyte-replication-version: "6.0.10"
-  x-airbyte-replication-compatibility: ">=6.0.10, <7.0.0"
+  x-airbyte-replication-version: "6.0.13"
+  x-airbyte-replication-compatibility: ">=6.0.13, <7.0.0"
   x-airbyte-external-documentation-urls:
     - title: Stripe API Changelog documentation
       type: changelog

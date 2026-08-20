@@ -16,11 +16,11 @@ info:
     are not supported in this beta; inline literal values into the statement.
   x-airbyte-connector-name: snowflake
   x-airbyte-connector-definition-id: e2d65910-8c8b-40a1-ae7d-ee2416b2bfa2
+  x-airbyte-replication-version: "1.1.1"
+  x-airbyte-replication-compatibility: ">=1.1.1, <2.0.0"
   x-airbyte-platform-availability:
     state: experimental
     reason: Requires additional QA testing
-  x-airbyte-replication-version: "1.1.0"
-  x-airbyte-replication-compatibility: ">=1.1.0, <2.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Snowflake SQL API Reference
