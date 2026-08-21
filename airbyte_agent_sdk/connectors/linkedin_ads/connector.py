@@ -218,7 +218,7 @@ class LinkedinAdsConnector:
 
     connector_name = "linkedin-ads"
     connector_version = "1.2.0"
-    sdk_version = "0.1.314"
+    sdk_version = "0.1.315"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -1601,8 +1601,9 @@ class AccountsQuery:
         - status: The status of the account.
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -1800,8 +1801,9 @@ class AccountUsersQuery:
         - user: The user details including name, email, etc.
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2096,8 +2098,9 @@ class CampaignsQuery:
         - offsite_preferences: Preferences related to offsite delivery.
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2346,8 +2349,9 @@ class CampaignGroupsQuery:
         - allowed_campaign_types: List of campaign types allowed for this campaign group.
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2594,8 +2598,9 @@ class CreativesQuery:
         - leadgen_call_to_action: Call-to-action information for lead generation purposes.
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2827,8 +2832,9 @@ class ConversionsQuery:
         - url_rules: Rules for URL matching in the conversion.
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -3141,8 +3147,9 @@ class AdCampaignAnalyticsQuery:
         - sponsored_campaign: URN of the sponsored campaign this analytics record belongs to
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -3347,8 +3354,9 @@ class AdCreativeAnalyticsQuery:
         - sponsored_creative: Sponsored creative
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -3553,8 +3561,9 @@ class AdImpressionDeviceAnalyticsQuery:
         - sponsored_campaign: URN of the sponsored campaign this analytics record belongs to
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -3759,8 +3768,9 @@ class AdMemberCompanyAnalyticsQuery:
         - sponsored_campaign: URN of the sponsored campaign this analytics record belongs to
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -3965,8 +3975,9 @@ class AdMemberCompanySizeAnalyticsQuery:
         - sponsored_campaign: URN of the sponsored campaign this analytics record belongs to
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -4171,8 +4182,9 @@ class AdMemberCountryAnalyticsQuery:
         - sponsored_campaign: URN of the sponsored campaign this analytics record belongs to
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -4377,8 +4389,9 @@ class AdMemberIndustryAnalyticsQuery:
         - sponsored_campaign: URN of the sponsored campaign this analytics record belongs to
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -4583,8 +4596,9 @@ class AdMemberJobFunctionAnalyticsQuery:
         - sponsored_campaign: URN of the sponsored campaign this analytics record belongs to
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -4789,8 +4803,9 @@ class AdMemberJobTitleAnalyticsQuery:
         - sponsored_campaign: URN of the sponsored campaign this analytics record belongs to
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -4995,8 +5010,9 @@ class AdMemberRegionAnalyticsQuery:
         - sponsored_campaign: URN of the sponsored campaign this analytics record belongs to
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -5201,8 +5217,9 @@ class AdMemberSeniorityAnalyticsQuery:
         - sponsored_campaign: URN of the sponsored campaign this analytics record belongs to
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -5324,8 +5341,9 @@ It will not be present if the form has not been reviewed by the review pipeline.
         - version_tag: The number of times the form has been modified.
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -5449,8 +5467,9 @@ For non-guest leads, the submitter field will still be included in the response 
         - versioned_lead_gen_form_urn: URN identifying which form this FormResponse belongs to.
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.

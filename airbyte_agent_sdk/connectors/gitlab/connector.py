@@ -160,7 +160,7 @@ class GitlabConnector:
 
     connector_name = "gitlab"
     connector_version = "1.0.4"
-    sdk_version = "0.1.314"
+    sdk_version = "0.1.315"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -1300,8 +1300,9 @@ class ProjectsQuery:
         - keep_latest_artifact: Whether the latest artifact is kept
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -1487,8 +1488,9 @@ class IssuesQuery:
         - severity: Severity level of the issue
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -1687,8 +1689,9 @@ class MergeRequestsQuery:
         - merge_user: User who performed the merge
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -1820,8 +1823,9 @@ class UsersQuery:
         - locked: Whether the user account is locked
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -1977,8 +1981,9 @@ class CommitsQuery:
         - stats: Commit statistics
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2134,8 +2139,9 @@ class GroupsQuery:
         - projects: Projects in the group
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2274,8 +2280,9 @@ class BranchesQuery:
         - commit: Head commit details
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2423,8 +2430,9 @@ class PipelinesQuery:
         - name: Name of the pipeline
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2565,8 +2573,9 @@ class GroupMembersQuery:
         - locked: Whether the member account is locked
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2707,8 +2716,9 @@ class ProjectMembersQuery:
         - locked: Whether the member account is locked
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2856,8 +2866,9 @@ class ReleasesQuery:
         - project_id: ID of the project
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2999,8 +3010,9 @@ class TagsQuery:
         - project_id: ID of the project
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -3143,8 +3155,9 @@ class GroupMilestonesQuery:
         - web_url: Web URL of the milestone
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -3287,8 +3300,9 @@ class ProjectMilestonesQuery:
         - web_url: Web URL of the milestone
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.

@@ -196,7 +196,7 @@ class HubspotConnector:
 
     connector_name = "hubspot"
     connector_version = "0.1.20"
-    sdk_version = "0.1.314"
+    sdk_version = "0.1.315"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -1704,8 +1704,9 @@ class ContactsQuery:
         - updated_at: Timestamp indicating when the contact record was last modified
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -1960,8 +1961,9 @@ class CompaniesQuery:
         - updated_at: Timestamp when the company record was last modified
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2221,8 +2223,9 @@ class DealsQuery:
         - updated_at: Timestamp when the deal record was last modified
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2481,8 +2484,9 @@ class TicketsQuery:
         - updated_at: Timestamp when the ticket record was last modified
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2726,8 +2730,9 @@ hard-delete endpoint exists.
         - updated_at: Timestamp when the note record was last modified
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -2975,8 +2980,9 @@ hard-delete endpoint exists.
         - updated_at: Timestamp when the call record was last modified
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -3223,8 +3229,9 @@ hard-delete endpoint exists.
         - updated_at: Timestamp when the email record was last modified
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -3473,8 +3480,9 @@ hard-delete endpoint exists.
         - updated_at: Timestamp when the meeting record was last modified
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
@@ -3722,8 +3730,9 @@ hard-delete endpoint exists.
         - updated_at: Timestamp when the task record was last modified
 
         Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
             cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.

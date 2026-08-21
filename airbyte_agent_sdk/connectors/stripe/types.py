@@ -703,7 +703,7 @@ class ChargesAnyValueFilter(TypedDict, total=False):
 
 
 class ChargesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     amount: str
     """Amount intended to be collected by this payment in the smallest currency unit (e.g., 100 cents for $1.00), supporting up to eight digits."""
     amount_captured: str
@@ -945,9 +945,14 @@ class ChargesLteCondition(TypedDict, total=False):
     lte: ChargesSearchFilter
 
 
-class ChargesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ChargesStringFilter
+class ChargesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ChargesStringFilter
+
+
+class ChargesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ChargesStringFilter
 
 
 class ChargesFuzzyCondition(TypedDict, total=False):
@@ -961,7 +966,7 @@ class ChargesKeywordCondition(TypedDict, total=False):
 
 
 class ChargesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ChargesAnyValueFilter
 
 
@@ -990,7 +995,8 @@ ChargesCondition = (
     | ChargesLtCondition
     | ChargesLteCondition
     | ChargesInCondition
-    | ChargesLikeCondition
+    | ChargesStartswithCondition
+    | ChargesEndswithCondition
     | ChargesFuzzyCondition
     | ChargesKeywordCondition
     | ChargesContainsCondition
@@ -1208,7 +1214,7 @@ class CustomersAnyValueFilter(TypedDict, total=False):
 
 
 class CustomersStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     account_balance: str
     """Current balance value representing funds owed by or to the customer."""
     address: str
@@ -1370,9 +1376,14 @@ class CustomersLteCondition(TypedDict, total=False):
     lte: CustomersSearchFilter
 
 
-class CustomersLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: CustomersStringFilter
+class CustomersStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: CustomersStringFilter
+
+
+class CustomersEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: CustomersStringFilter
 
 
 class CustomersFuzzyCondition(TypedDict, total=False):
@@ -1386,7 +1397,7 @@ class CustomersKeywordCondition(TypedDict, total=False):
 
 
 class CustomersContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: CustomersAnyValueFilter
 
 
@@ -1415,7 +1426,8 @@ CustomersCondition = (
     | CustomersLtCondition
     | CustomersLteCondition
     | CustomersInCondition
-    | CustomersLikeCondition
+    | CustomersStartswithCondition
+    | CustomersEndswithCondition
     | CustomersFuzzyCondition
     | CustomersKeywordCondition
     | CustomersContainsCondition
@@ -1987,7 +1999,7 @@ class InvoicesAnyValueFilter(TypedDict, total=False):
 
 
 class InvoicesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     account_country: str
     """The country of the business associated with this invoice, commonly used to display localized content."""
     account_name: str
@@ -2385,9 +2397,14 @@ class InvoicesLteCondition(TypedDict, total=False):
     lte: InvoicesSearchFilter
 
 
-class InvoicesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: InvoicesStringFilter
+class InvoicesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: InvoicesStringFilter
+
+
+class InvoicesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: InvoicesStringFilter
 
 
 class InvoicesFuzzyCondition(TypedDict, total=False):
@@ -2401,7 +2418,7 @@ class InvoicesKeywordCondition(TypedDict, total=False):
 
 
 class InvoicesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: InvoicesAnyValueFilter
 
 
@@ -2430,7 +2447,8 @@ InvoicesCondition = (
     | InvoicesLtCondition
     | InvoicesLteCondition
     | InvoicesInCondition
-    | InvoicesLikeCondition
+    | InvoicesStartswithCondition
+    | InvoicesEndswithCondition
     | InvoicesFuzzyCondition
     | InvoicesKeywordCondition
     | InvoicesContainsCondition
@@ -2558,7 +2576,7 @@ class RefundsAnyValueFilter(TypedDict, total=False):
 
 
 class RefundsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     amount: str
     """Amount refunded, in cents (the smallest currency unit)."""
     balance_transaction: str
@@ -2660,9 +2678,14 @@ class RefundsLteCondition(TypedDict, total=False):
     lte: RefundsSearchFilter
 
 
-class RefundsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: RefundsStringFilter
+class RefundsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: RefundsStringFilter
+
+
+class RefundsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: RefundsStringFilter
 
 
 class RefundsFuzzyCondition(TypedDict, total=False):
@@ -2676,7 +2699,7 @@ class RefundsKeywordCondition(TypedDict, total=False):
 
 
 class RefundsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: RefundsAnyValueFilter
 
 
@@ -2705,7 +2728,8 @@ RefundsCondition = (
     | RefundsLtCondition
     | RefundsLteCondition
     | RefundsInCondition
-    | RefundsLikeCondition
+    | RefundsStartswithCondition
+    | RefundsEndswithCondition
     | RefundsFuzzyCondition
     | RefundsKeywordCondition
     | RefundsContainsCondition
@@ -3043,7 +3067,7 @@ class SubscriptionsAnyValueFilter(TypedDict, total=False):
 
 
 class SubscriptionsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     application: str
     """For Connect platforms, the application associated with the subscription."""
     application_fee_percent: str
@@ -3285,9 +3309,14 @@ class SubscriptionsLteCondition(TypedDict, total=False):
     lte: SubscriptionsSearchFilter
 
 
-class SubscriptionsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SubscriptionsStringFilter
+class SubscriptionsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SubscriptionsStringFilter
+
+
+class SubscriptionsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SubscriptionsStringFilter
 
 
 class SubscriptionsFuzzyCondition(TypedDict, total=False):
@@ -3301,7 +3330,7 @@ class SubscriptionsKeywordCondition(TypedDict, total=False):
 
 
 class SubscriptionsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SubscriptionsAnyValueFilter
 
 
@@ -3330,7 +3359,8 @@ SubscriptionsCondition = (
     | SubscriptionsLtCondition
     | SubscriptionsLteCondition
     | SubscriptionsInCondition
-    | SubscriptionsLikeCondition
+    | SubscriptionsStartswithCondition
+    | SubscriptionsEndswithCondition
     | SubscriptionsFuzzyCondition
     | SubscriptionsKeywordCondition
     | SubscriptionsContainsCondition

@@ -295,7 +295,7 @@ class WebsiteOverviewAnyValueFilter(TypedDict, total=False):
 
 
 class WebsiteOverviewStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     average_session_duration: str
     """Average duration of sessions in seconds"""
     bounce_rate: str
@@ -381,9 +381,14 @@ class WebsiteOverviewLteCondition(TypedDict, total=False):
     lte: WebsiteOverviewSearchFilter
 
 
-class WebsiteOverviewLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: WebsiteOverviewStringFilter
+class WebsiteOverviewStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: WebsiteOverviewStringFilter
+
+
+class WebsiteOverviewEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: WebsiteOverviewStringFilter
 
 
 class WebsiteOverviewFuzzyCondition(TypedDict, total=False):
@@ -397,7 +402,7 @@ class WebsiteOverviewKeywordCondition(TypedDict, total=False):
 
 
 class WebsiteOverviewContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: WebsiteOverviewAnyValueFilter
 
 
@@ -426,7 +431,8 @@ WebsiteOverviewCondition = (
     | WebsiteOverviewLtCondition
     | WebsiteOverviewLteCondition
     | WebsiteOverviewInCondition
-    | WebsiteOverviewLikeCondition
+    | WebsiteOverviewStartswithCondition
+    | WebsiteOverviewEndswithCondition
     | WebsiteOverviewFuzzyCondition
     | WebsiteOverviewKeywordCondition
     | WebsiteOverviewContainsCondition
@@ -488,7 +494,7 @@ class DailyActiveUsersAnyValueFilter(TypedDict, total=False):
 
 
 class DailyActiveUsersStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     active1_day_users: str
     """Number of distinct users active in the last 1 day"""
     date: str
@@ -546,9 +552,14 @@ class DailyActiveUsersLteCondition(TypedDict, total=False):
     lte: DailyActiveUsersSearchFilter
 
 
-class DailyActiveUsersLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: DailyActiveUsersStringFilter
+class DailyActiveUsersStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: DailyActiveUsersStringFilter
+
+
+class DailyActiveUsersEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: DailyActiveUsersStringFilter
 
 
 class DailyActiveUsersFuzzyCondition(TypedDict, total=False):
@@ -562,7 +573,7 @@ class DailyActiveUsersKeywordCondition(TypedDict, total=False):
 
 
 class DailyActiveUsersContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: DailyActiveUsersAnyValueFilter
 
 
@@ -591,7 +602,8 @@ DailyActiveUsersCondition = (
     | DailyActiveUsersLtCondition
     | DailyActiveUsersLteCondition
     | DailyActiveUsersInCondition
-    | DailyActiveUsersLikeCondition
+    | DailyActiveUsersStartswithCondition
+    | DailyActiveUsersEndswithCondition
     | DailyActiveUsersFuzzyCondition
     | DailyActiveUsersKeywordCondition
     | DailyActiveUsersContainsCondition
@@ -653,7 +665,7 @@ class WeeklyActiveUsersAnyValueFilter(TypedDict, total=False):
 
 
 class WeeklyActiveUsersStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     active7_day_users: str
     """Number of distinct users active in the last 7 days"""
     date: str
@@ -711,9 +723,14 @@ class WeeklyActiveUsersLteCondition(TypedDict, total=False):
     lte: WeeklyActiveUsersSearchFilter
 
 
-class WeeklyActiveUsersLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: WeeklyActiveUsersStringFilter
+class WeeklyActiveUsersStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: WeeklyActiveUsersStringFilter
+
+
+class WeeklyActiveUsersEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: WeeklyActiveUsersStringFilter
 
 
 class WeeklyActiveUsersFuzzyCondition(TypedDict, total=False):
@@ -727,7 +744,7 @@ class WeeklyActiveUsersKeywordCondition(TypedDict, total=False):
 
 
 class WeeklyActiveUsersContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: WeeklyActiveUsersAnyValueFilter
 
 
@@ -756,7 +773,8 @@ WeeklyActiveUsersCondition = (
     | WeeklyActiveUsersLtCondition
     | WeeklyActiveUsersLteCondition
     | WeeklyActiveUsersInCondition
-    | WeeklyActiveUsersLikeCondition
+    | WeeklyActiveUsersStartswithCondition
+    | WeeklyActiveUsersEndswithCondition
     | WeeklyActiveUsersFuzzyCondition
     | WeeklyActiveUsersKeywordCondition
     | WeeklyActiveUsersContainsCondition
@@ -818,7 +836,7 @@ class FourWeeklyActiveUsersAnyValueFilter(TypedDict, total=False):
 
 
 class FourWeeklyActiveUsersStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     active28_day_users: str
     """Number of distinct users active in the last 28 days"""
     date: str
@@ -876,9 +894,14 @@ class FourWeeklyActiveUsersLteCondition(TypedDict, total=False):
     lte: FourWeeklyActiveUsersSearchFilter
 
 
-class FourWeeklyActiveUsersLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: FourWeeklyActiveUsersStringFilter
+class FourWeeklyActiveUsersStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: FourWeeklyActiveUsersStringFilter
+
+
+class FourWeeklyActiveUsersEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: FourWeeklyActiveUsersStringFilter
 
 
 class FourWeeklyActiveUsersFuzzyCondition(TypedDict, total=False):
@@ -892,7 +915,7 @@ class FourWeeklyActiveUsersKeywordCondition(TypedDict, total=False):
 
 
 class FourWeeklyActiveUsersContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: FourWeeklyActiveUsersAnyValueFilter
 
 
@@ -921,7 +944,8 @@ FourWeeklyActiveUsersCondition = (
     | FourWeeklyActiveUsersLtCondition
     | FourWeeklyActiveUsersLteCondition
     | FourWeeklyActiveUsersInCondition
-    | FourWeeklyActiveUsersLikeCondition
+    | FourWeeklyActiveUsersStartswithCondition
+    | FourWeeklyActiveUsersEndswithCondition
     | FourWeeklyActiveUsersFuzzyCondition
     | FourWeeklyActiveUsersKeywordCondition
     | FourWeeklyActiveUsersContainsCondition
@@ -1037,7 +1061,7 @@ class TrafficSourcesAnyValueFilter(TypedDict, total=False):
 
 
 class TrafficSourcesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     average_session_duration: str
     """Average duration of sessions in seconds"""
     bounce_rate: str
@@ -1131,9 +1155,14 @@ class TrafficSourcesLteCondition(TypedDict, total=False):
     lte: TrafficSourcesSearchFilter
 
 
-class TrafficSourcesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: TrafficSourcesStringFilter
+class TrafficSourcesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: TrafficSourcesStringFilter
+
+
+class TrafficSourcesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: TrafficSourcesStringFilter
 
 
 class TrafficSourcesFuzzyCondition(TypedDict, total=False):
@@ -1147,7 +1176,7 @@ class TrafficSourcesKeywordCondition(TypedDict, total=False):
 
 
 class TrafficSourcesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: TrafficSourcesAnyValueFilter
 
 
@@ -1176,7 +1205,8 @@ TrafficSourcesCondition = (
     | TrafficSourcesLtCondition
     | TrafficSourcesLteCondition
     | TrafficSourcesInCondition
-    | TrafficSourcesLikeCondition
+    | TrafficSourcesStartswithCondition
+    | TrafficSourcesEndswithCondition
     | TrafficSourcesFuzzyCondition
     | TrafficSourcesKeywordCondition
     | TrafficSourcesContainsCondition
@@ -1256,7 +1286,7 @@ class PagesAnyValueFilter(TypedDict, total=False):
 
 
 class PagesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     bounce_rate: str
     """Percentage of sessions that were single-page with no interaction"""
     date: str
@@ -1326,9 +1356,14 @@ class PagesLteCondition(TypedDict, total=False):
     lte: PagesSearchFilter
 
 
-class PagesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: PagesStringFilter
+class PagesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: PagesStringFilter
+
+
+class PagesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: PagesStringFilter
 
 
 class PagesFuzzyCondition(TypedDict, total=False):
@@ -1342,7 +1377,7 @@ class PagesKeywordCondition(TypedDict, total=False):
 
 
 class PagesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: PagesAnyValueFilter
 
 
@@ -1371,7 +1406,8 @@ PagesCondition = (
     | PagesLtCondition
     | PagesLteCondition
     | PagesInCondition
-    | PagesLikeCondition
+    | PagesStartswithCondition
+    | PagesEndswithCondition
     | PagesFuzzyCondition
     | PagesKeywordCondition
     | PagesContainsCondition
@@ -1493,7 +1529,7 @@ class DevicesAnyValueFilter(TypedDict, total=False):
 
 
 class DevicesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     average_session_duration: str
     """Average duration of sessions in seconds"""
     bounce_rate: str
@@ -1591,9 +1627,14 @@ class DevicesLteCondition(TypedDict, total=False):
     lte: DevicesSearchFilter
 
 
-class DevicesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: DevicesStringFilter
+class DevicesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: DevicesStringFilter
+
+
+class DevicesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: DevicesStringFilter
 
 
 class DevicesFuzzyCondition(TypedDict, total=False):
@@ -1607,7 +1648,7 @@ class DevicesKeywordCondition(TypedDict, total=False):
 
 
 class DevicesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: DevicesAnyValueFilter
 
 
@@ -1636,7 +1677,8 @@ DevicesCondition = (
     | DevicesLtCondition
     | DevicesLteCondition
     | DevicesInCondition
-    | DevicesLikeCondition
+    | DevicesStartswithCondition
+    | DevicesEndswithCondition
     | DevicesFuzzyCondition
     | DevicesKeywordCondition
     | DevicesContainsCondition
@@ -1758,7 +1800,7 @@ class LocationsAnyValueFilter(TypedDict, total=False):
 
 
 class LocationsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     average_session_duration: str
     """Average duration of sessions in seconds"""
     bounce_rate: str
@@ -1856,9 +1898,14 @@ class LocationsLteCondition(TypedDict, total=False):
     lte: LocationsSearchFilter
 
 
-class LocationsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: LocationsStringFilter
+class LocationsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: LocationsStringFilter
+
+
+class LocationsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: LocationsStringFilter
 
 
 class LocationsFuzzyCondition(TypedDict, total=False):
@@ -1872,7 +1919,7 @@ class LocationsKeywordCondition(TypedDict, total=False):
 
 
 class LocationsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: LocationsAnyValueFilter
 
 
@@ -1901,7 +1948,8 @@ LocationsCondition = (
     | LocationsLtCondition
     | LocationsLteCondition
     | LocationsInCondition
-    | LocationsLikeCondition
+    | LocationsStartswithCondition
+    | LocationsEndswithCondition
     | LocationsFuzzyCondition
     | LocationsKeywordCondition
     | LocationsContainsCondition

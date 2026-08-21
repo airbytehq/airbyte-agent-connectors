@@ -532,7 +532,7 @@ class IssuesAnyValueFilter(TypedDict, total=False):
 
 
 class IssuesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     changelog: str
     """Details of changelogs associated with the issue"""
     created: str
@@ -646,9 +646,14 @@ class IssuesLteCondition(TypedDict, total=False):
     lte: IssuesSearchFilter
 
 
-class IssuesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: IssuesStringFilter
+class IssuesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: IssuesStringFilter
+
+
+class IssuesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: IssuesStringFilter
 
 
 class IssuesFuzzyCondition(TypedDict, total=False):
@@ -662,7 +667,7 @@ class IssuesKeywordCondition(TypedDict, total=False):
 
 
 class IssuesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: IssuesAnyValueFilter
 
 
@@ -691,7 +696,8 @@ IssuesCondition = (
     | IssuesLtCondition
     | IssuesLteCondition
     | IssuesInCondition
-    | IssuesLikeCondition
+    | IssuesStartswithCondition
+    | IssuesEndswithCondition
     | IssuesFuzzyCondition
     | IssuesKeywordCondition
     | IssuesContainsCondition
@@ -927,7 +933,7 @@ class ProjectsAnyValueFilter(TypedDict, total=False):
 
 
 class ProjectsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     archived: str
     """Whether the project is archived"""
     archived_by: str
@@ -1101,9 +1107,14 @@ class ProjectsLteCondition(TypedDict, total=False):
     lte: ProjectsSearchFilter
 
 
-class ProjectsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ProjectsStringFilter
+class ProjectsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ProjectsStringFilter
+
+
+class ProjectsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ProjectsStringFilter
 
 
 class ProjectsFuzzyCondition(TypedDict, total=False):
@@ -1117,7 +1128,7 @@ class ProjectsKeywordCondition(TypedDict, total=False):
 
 
 class ProjectsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ProjectsAnyValueFilter
 
 
@@ -1146,7 +1157,8 @@ ProjectsCondition = (
     | ProjectsLtCondition
     | ProjectsLteCondition
     | ProjectsInCondition
-    | ProjectsLikeCondition
+    | ProjectsStartswithCondition
+    | ProjectsEndswithCondition
     | ProjectsFuzzyCondition
     | ProjectsKeywordCondition
     | ProjectsContainsCondition
@@ -1262,7 +1274,7 @@ class UsersAnyValueFilter(TypedDict, total=False):
 
 
 class UsersStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     account_id: str
     """The account ID of the user, uniquely identifying the user across all Atlassian products"""
     account_type: str
@@ -1356,9 +1368,14 @@ class UsersLteCondition(TypedDict, total=False):
     lte: UsersSearchFilter
 
 
-class UsersLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: UsersStringFilter
+class UsersStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: UsersStringFilter
+
+
+class UsersEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: UsersStringFilter
 
 
 class UsersFuzzyCondition(TypedDict, total=False):
@@ -1372,7 +1389,7 @@ class UsersKeywordCondition(TypedDict, total=False):
 
 
 class UsersContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: UsersAnyValueFilter
 
 
@@ -1401,7 +1418,8 @@ UsersCondition = (
     | UsersLtCondition
     | UsersLteCondition
     | UsersInCondition
-    | UsersLikeCondition
+    | UsersStartswithCondition
+    | UsersEndswithCondition
     | UsersFuzzyCondition
     | UsersKeywordCondition
     | UsersContainsCondition
@@ -1505,7 +1523,7 @@ class IssueCommentsAnyValueFilter(TypedDict, total=False):
 
 
 class IssueCommentsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     author: str
     """The ID of the user who created the comment"""
     body: str
@@ -1591,9 +1609,14 @@ class IssueCommentsLteCondition(TypedDict, total=False):
     lte: IssueCommentsSearchFilter
 
 
-class IssueCommentsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: IssueCommentsStringFilter
+class IssueCommentsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: IssueCommentsStringFilter
+
+
+class IssueCommentsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: IssueCommentsStringFilter
 
 
 class IssueCommentsFuzzyCondition(TypedDict, total=False):
@@ -1607,7 +1630,7 @@ class IssueCommentsKeywordCondition(TypedDict, total=False):
 
 
 class IssueCommentsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: IssueCommentsAnyValueFilter
 
 
@@ -1636,7 +1659,8 @@ IssueCommentsCondition = (
     | IssueCommentsLtCondition
     | IssueCommentsLteCondition
     | IssueCommentsInCondition
-    | IssueCommentsLikeCondition
+    | IssueCommentsStartswithCondition
+    | IssueCommentsEndswithCondition
     | IssueCommentsFuzzyCondition
     | IssueCommentsKeywordCondition
     | IssueCommentsContainsCondition
@@ -1734,7 +1758,7 @@ class IssueFieldsAnyValueFilter(TypedDict, total=False):
 
 
 class IssueFieldsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     clause_names: str
     """The names that can be used to reference the field in an advanced search"""
     custom: str
@@ -1816,9 +1840,14 @@ class IssueFieldsLteCondition(TypedDict, total=False):
     lte: IssueFieldsSearchFilter
 
 
-class IssueFieldsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: IssueFieldsStringFilter
+class IssueFieldsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: IssueFieldsStringFilter
+
+
+class IssueFieldsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: IssueFieldsStringFilter
 
 
 class IssueFieldsFuzzyCondition(TypedDict, total=False):
@@ -1832,7 +1861,7 @@ class IssueFieldsKeywordCondition(TypedDict, total=False):
 
 
 class IssueFieldsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: IssueFieldsAnyValueFilter
 
 
@@ -1861,7 +1890,8 @@ IssueFieldsCondition = (
     | IssueFieldsLtCondition
     | IssueFieldsLteCondition
     | IssueFieldsInCondition
-    | IssueFieldsLikeCondition
+    | IssueFieldsStartswithCondition
+    | IssueFieldsEndswithCondition
     | IssueFieldsFuzzyCondition
     | IssueFieldsKeywordCondition
     | IssueFieldsContainsCondition
@@ -1971,7 +2001,7 @@ class IssueWorklogsAnyValueFilter(TypedDict, total=False):
 
 
 class IssueWorklogsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     author: str
     """Details of the user who created the worklog"""
     comment: str
@@ -2061,9 +2091,14 @@ class IssueWorklogsLteCondition(TypedDict, total=False):
     lte: IssueWorklogsSearchFilter
 
 
-class IssueWorklogsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: IssueWorklogsStringFilter
+class IssueWorklogsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: IssueWorklogsStringFilter
+
+
+class IssueWorklogsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: IssueWorklogsStringFilter
 
 
 class IssueWorklogsFuzzyCondition(TypedDict, total=False):
@@ -2077,7 +2112,7 @@ class IssueWorklogsKeywordCondition(TypedDict, total=False):
 
 
 class IssueWorklogsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: IssueWorklogsAnyValueFilter
 
 
@@ -2106,7 +2141,8 @@ IssueWorklogsCondition = (
     | IssueWorklogsLtCondition
     | IssueWorklogsLteCondition
     | IssueWorklogsInCondition
-    | IssueWorklogsLikeCondition
+    | IssueWorklogsStartswithCondition
+    | IssueWorklogsEndswithCondition
     | IssueWorklogsFuzzyCondition
     | IssueWorklogsKeywordCondition
     | IssueWorklogsContainsCondition

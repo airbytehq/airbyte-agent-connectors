@@ -232,7 +232,7 @@ class FilesAnyValueFilter(TypedDict, total=False):
 
 
 class FilesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Unique identifier of the file in Google Drive."""
     updated_at: str
@@ -294,9 +294,14 @@ class FilesLteCondition(TypedDict, total=False):
     lte: FilesSearchFilter
 
 
-class FilesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: FilesStringFilter
+class FilesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: FilesStringFilter
+
+
+class FilesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: FilesStringFilter
 
 
 class FilesFuzzyCondition(TypedDict, total=False):
@@ -310,7 +315,7 @@ class FilesKeywordCondition(TypedDict, total=False):
 
 
 class FilesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: FilesAnyValueFilter
 
 
@@ -339,7 +344,8 @@ FilesCondition = (
     | FilesLtCondition
     | FilesLteCondition
     | FilesInCondition
-    | FilesLikeCondition
+    | FilesStartswithCondition
+    | FilesEndswithCondition
     | FilesFuzzyCondition
     | FilesKeywordCondition
     | FilesContainsCondition

@@ -157,7 +157,7 @@ class ApplicationsAnyValueFilter(TypedDict, total=False):
 
 
 class ApplicationsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Unique identifier for the application"""
     status: str
@@ -215,9 +215,14 @@ class ApplicationsLteCondition(TypedDict, total=False):
     lte: ApplicationsSearchFilter
 
 
-class ApplicationsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ApplicationsStringFilter
+class ApplicationsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ApplicationsStringFilter
+
+
+class ApplicationsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ApplicationsStringFilter
 
 
 class ApplicationsFuzzyCondition(TypedDict, total=False):
@@ -231,7 +236,7 @@ class ApplicationsKeywordCondition(TypedDict, total=False):
 
 
 class ApplicationsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ApplicationsAnyValueFilter
 
 
@@ -260,7 +265,8 @@ ApplicationsCondition = (
     | ApplicationsLtCondition
     | ApplicationsLteCondition
     | ApplicationsInCondition
-    | ApplicationsLikeCondition
+    | ApplicationsStartswithCondition
+    | ApplicationsEndswithCondition
     | ApplicationsFuzzyCondition
     | ApplicationsKeywordCondition
     | ApplicationsContainsCondition
@@ -322,7 +328,7 @@ class CandidatesAnyValueFilter(TypedDict, total=False):
 
 
 class CandidatesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Unique identifier for the candidate"""
     name: str
@@ -380,9 +386,14 @@ class CandidatesLteCondition(TypedDict, total=False):
     lte: CandidatesSearchFilter
 
 
-class CandidatesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: CandidatesStringFilter
+class CandidatesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: CandidatesStringFilter
+
+
+class CandidatesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: CandidatesStringFilter
 
 
 class CandidatesFuzzyCondition(TypedDict, total=False):
@@ -396,7 +407,7 @@ class CandidatesKeywordCondition(TypedDict, total=False):
 
 
 class CandidatesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: CandidatesAnyValueFilter
 
 
@@ -425,7 +436,8 @@ CandidatesCondition = (
     | CandidatesLtCondition
     | CandidatesLteCondition
     | CandidatesInCondition
-    | CandidatesLikeCondition
+    | CandidatesStartswithCondition
+    | CandidatesEndswithCondition
     | CandidatesFuzzyCondition
     | CandidatesKeywordCondition
     | CandidatesContainsCondition
@@ -487,7 +499,7 @@ class JobPostingsAnyValueFilter(TypedDict, total=False):
 
 
 class JobPostingsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Unique identifier for the job posting"""
     title: str
@@ -545,9 +557,14 @@ class JobPostingsLteCondition(TypedDict, total=False):
     lte: JobPostingsSearchFilter
 
 
-class JobPostingsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: JobPostingsStringFilter
+class JobPostingsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: JobPostingsStringFilter
+
+
+class JobPostingsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: JobPostingsStringFilter
 
 
 class JobPostingsFuzzyCondition(TypedDict, total=False):
@@ -561,7 +578,7 @@ class JobPostingsKeywordCondition(TypedDict, total=False):
 
 
 class JobPostingsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: JobPostingsAnyValueFilter
 
 
@@ -590,7 +607,8 @@ JobPostingsCondition = (
     | JobPostingsLtCondition
     | JobPostingsLteCondition
     | JobPostingsInCondition
-    | JobPostingsLikeCondition
+    | JobPostingsStartswithCondition
+    | JobPostingsEndswithCondition
     | JobPostingsFuzzyCondition
     | JobPostingsKeywordCondition
     | JobPostingsContainsCondition
@@ -652,7 +670,7 @@ class JobsAnyValueFilter(TypedDict, total=False):
 
 
 class JobsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Unique identifier for the job"""
     title: str
@@ -710,9 +728,14 @@ class JobsLteCondition(TypedDict, total=False):
     lte: JobsSearchFilter
 
 
-class JobsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: JobsStringFilter
+class JobsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: JobsStringFilter
+
+
+class JobsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: JobsStringFilter
 
 
 class JobsFuzzyCondition(TypedDict, total=False):
@@ -726,7 +749,7 @@ class JobsKeywordCondition(TypedDict, total=False):
 
 
 class JobsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: JobsAnyValueFilter
 
 
@@ -755,7 +778,8 @@ JobsCondition = (
     | JobsLtCondition
     | JobsLteCondition
     | JobsInCondition
-    | JobsLikeCondition
+    | JobsStartswithCondition
+    | JobsEndswithCondition
     | JobsFuzzyCondition
     | JobsKeywordCondition
     | JobsContainsCondition
@@ -811,7 +835,7 @@ class UsersAnyValueFilter(TypedDict, total=False):
 
 
 class UsersStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Unique identifier for the user"""
     first_name: str
@@ -865,9 +889,14 @@ class UsersLteCondition(TypedDict, total=False):
     lte: UsersSearchFilter
 
 
-class UsersLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: UsersStringFilter
+class UsersStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: UsersStringFilter
+
+
+class UsersEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: UsersStringFilter
 
 
 class UsersFuzzyCondition(TypedDict, total=False):
@@ -881,7 +910,7 @@ class UsersKeywordCondition(TypedDict, total=False):
 
 
 class UsersContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: UsersAnyValueFilter
 
 
@@ -910,7 +939,8 @@ UsersCondition = (
     | UsersLtCondition
     | UsersLteCondition
     | UsersInCondition
-    | UsersLikeCondition
+    | UsersStartswithCondition
+    | UsersEndswithCondition
     | UsersFuzzyCondition
     | UsersKeywordCondition
     | UsersContainsCondition

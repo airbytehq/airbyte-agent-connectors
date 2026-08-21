@@ -307,7 +307,7 @@ class OrdersAnyValueFilter(TypedDict, total=False):
 
 
 class OrdersStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     amazon_order_id: str
     """Unique identifier for the Amazon order"""
     automated_shipping_settings: str
@@ -481,9 +481,14 @@ class OrdersLteCondition(TypedDict, total=False):
     lte: OrdersSearchFilter
 
 
-class OrdersLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: OrdersStringFilter
+class OrdersStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: OrdersStringFilter
+
+
+class OrdersEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: OrdersStringFilter
 
 
 class OrdersFuzzyCondition(TypedDict, total=False):
@@ -497,7 +502,7 @@ class OrdersKeywordCondition(TypedDict, total=False):
 
 
 class OrdersContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: OrdersAnyValueFilter
 
 
@@ -526,7 +531,8 @@ OrdersCondition = (
     | OrdersLtCondition
     | OrdersLteCondition
     | OrdersInCondition
-    | OrdersLikeCondition
+    | OrdersStartswithCondition
+    | OrdersEndswithCondition
     | OrdersFuzzyCondition
     | OrdersKeywordCondition
     | OrdersContainsCondition
@@ -780,7 +786,7 @@ class OrderItemsAnyValueFilter(TypedDict, total=False):
 
 
 class OrderItemsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     asin: str
     """Amazon Standard Identification Number of the product"""
     amazon_order_id: str
@@ -966,9 +972,14 @@ class OrderItemsLteCondition(TypedDict, total=False):
     lte: OrderItemsSearchFilter
 
 
-class OrderItemsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: OrderItemsStringFilter
+class OrderItemsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: OrderItemsStringFilter
+
+
+class OrderItemsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: OrderItemsStringFilter
 
 
 class OrderItemsFuzzyCondition(TypedDict, total=False):
@@ -982,7 +993,7 @@ class OrderItemsKeywordCondition(TypedDict, total=False):
 
 
 class OrderItemsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: OrderItemsAnyValueFilter
 
 
@@ -1011,7 +1022,8 @@ OrderItemsCondition = (
     | OrderItemsLtCondition
     | OrderItemsLteCondition
     | OrderItemsInCondition
-    | OrderItemsLikeCondition
+    | OrderItemsStartswithCondition
+    | OrderItemsEndswithCondition
     | OrderItemsFuzzyCondition
     | OrderItemsKeywordCondition
     | OrderItemsContainsCondition
@@ -1109,7 +1121,7 @@ class ListFinancialEventGroupsAnyValueFilter(TypedDict, total=False):
 
 
 class ListFinancialEventGroupsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     account_tail: str
     """The last digits of the account number"""
     beginning_balance: str
@@ -1191,9 +1203,14 @@ class ListFinancialEventGroupsLteCondition(TypedDict, total=False):
     lte: ListFinancialEventGroupsSearchFilter
 
 
-class ListFinancialEventGroupsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ListFinancialEventGroupsStringFilter
+class ListFinancialEventGroupsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ListFinancialEventGroupsStringFilter
+
+
+class ListFinancialEventGroupsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ListFinancialEventGroupsStringFilter
 
 
 class ListFinancialEventGroupsFuzzyCondition(TypedDict, total=False):
@@ -1207,7 +1224,7 @@ class ListFinancialEventGroupsKeywordCondition(TypedDict, total=False):
 
 
 class ListFinancialEventGroupsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ListFinancialEventGroupsAnyValueFilter
 
 
@@ -1236,7 +1253,8 @@ ListFinancialEventGroupsCondition = (
     | ListFinancialEventGroupsLtCondition
     | ListFinancialEventGroupsLteCondition
     | ListFinancialEventGroupsInCondition
-    | ListFinancialEventGroupsLikeCondition
+    | ListFinancialEventGroupsStartswithCondition
+    | ListFinancialEventGroupsEndswithCondition
     | ListFinancialEventGroupsFuzzyCondition
     | ListFinancialEventGroupsKeywordCondition
     | ListFinancialEventGroupsContainsCondition
@@ -1478,7 +1496,7 @@ class ListFinancialEventsAnyValueFilter(TypedDict, total=False):
 
 
 class ListFinancialEventsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     adhoc_disbursement_event_list: str
     """List of adhoc disbursement events"""
     adjustment_event_list: str
@@ -1656,9 +1674,14 @@ class ListFinancialEventsLteCondition(TypedDict, total=False):
     lte: ListFinancialEventsSearchFilter
 
 
-class ListFinancialEventsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ListFinancialEventsStringFilter
+class ListFinancialEventsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ListFinancialEventsStringFilter
+
+
+class ListFinancialEventsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ListFinancialEventsStringFilter
 
 
 class ListFinancialEventsFuzzyCondition(TypedDict, total=False):
@@ -1672,7 +1695,7 @@ class ListFinancialEventsKeywordCondition(TypedDict, total=False):
 
 
 class ListFinancialEventsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ListFinancialEventsAnyValueFilter
 
 
@@ -1701,7 +1724,8 @@ ListFinancialEventsCondition = (
     | ListFinancialEventsLtCondition
     | ListFinancialEventsLteCondition
     | ListFinancialEventsInCondition
-    | ListFinancialEventsLikeCondition
+    | ListFinancialEventsStartswithCondition
+    | ListFinancialEventsEndswithCondition
     | ListFinancialEventsFuzzyCondition
     | ListFinancialEventsKeywordCondition
     | ListFinancialEventsContainsCondition

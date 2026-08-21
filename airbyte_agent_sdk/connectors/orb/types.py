@@ -146,7 +146,7 @@ class CustomersAnyValueFilter(TypedDict, total=False):
 
 
 class CustomersStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """The unique identifier of the customer"""
     external_customer_id: str
@@ -224,9 +224,14 @@ class CustomersLteCondition(TypedDict, total=False):
     lte: CustomersSearchFilter
 
 
-class CustomersLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: CustomersStringFilter
+class CustomersStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: CustomersStringFilter
+
+
+class CustomersEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: CustomersStringFilter
 
 
 class CustomersFuzzyCondition(TypedDict, total=False):
@@ -240,7 +245,7 @@ class CustomersKeywordCondition(TypedDict, total=False):
 
 
 class CustomersContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: CustomersAnyValueFilter
 
 
@@ -269,7 +274,8 @@ CustomersCondition = (
     | CustomersLtCondition
     | CustomersLteCondition
     | CustomersInCondition
-    | CustomersLikeCondition
+    | CustomersStartswithCondition
+    | CustomersEndswithCondition
     | CustomersFuzzyCondition
     | CustomersKeywordCondition
     | CustomersContainsCondition
@@ -331,7 +337,7 @@ class SubscriptionsAnyValueFilter(TypedDict, total=False):
 
 
 class SubscriptionsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """The unique identifier of the subscription"""
     created_at: str
@@ -389,9 +395,14 @@ class SubscriptionsLteCondition(TypedDict, total=False):
     lte: SubscriptionsSearchFilter
 
 
-class SubscriptionsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SubscriptionsStringFilter
+class SubscriptionsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SubscriptionsStringFilter
+
+
+class SubscriptionsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SubscriptionsStringFilter
 
 
 class SubscriptionsFuzzyCondition(TypedDict, total=False):
@@ -405,7 +416,7 @@ class SubscriptionsKeywordCondition(TypedDict, total=False):
 
 
 class SubscriptionsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SubscriptionsAnyValueFilter
 
 
@@ -434,7 +445,8 @@ SubscriptionsCondition = (
     | SubscriptionsLtCondition
     | SubscriptionsLteCondition
     | SubscriptionsInCondition
-    | SubscriptionsLikeCondition
+    | SubscriptionsStartswithCondition
+    | SubscriptionsEndswithCondition
     | SubscriptionsFuzzyCondition
     | SubscriptionsKeywordCondition
     | SubscriptionsContainsCondition
@@ -502,7 +514,7 @@ class PlansAnyValueFilter(TypedDict, total=False):
 
 
 class PlansStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """The unique identifier of the plan"""
     created_at: str
@@ -564,9 +576,14 @@ class PlansLteCondition(TypedDict, total=False):
     lte: PlansSearchFilter
 
 
-class PlansLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: PlansStringFilter
+class PlansStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: PlansStringFilter
+
+
+class PlansEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: PlansStringFilter
 
 
 class PlansFuzzyCondition(TypedDict, total=False):
@@ -580,7 +597,7 @@ class PlansKeywordCondition(TypedDict, total=False):
 
 
 class PlansContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: PlansAnyValueFilter
 
 
@@ -609,7 +626,8 @@ PlansCondition = (
     | PlansLtCondition
     | PlansLteCondition
     | PlansInCondition
-    | PlansLikeCondition
+    | PlansStartswithCondition
+    | PlansEndswithCondition
     | PlansFuzzyCondition
     | PlansKeywordCondition
     | PlansContainsCondition
@@ -731,7 +749,7 @@ class InvoicesAnyValueFilter(TypedDict, total=False):
 
 
 class InvoicesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """The unique identifier of the invoice"""
     created_at: str
@@ -829,9 +847,14 @@ class InvoicesLteCondition(TypedDict, total=False):
     lte: InvoicesSearchFilter
 
 
-class InvoicesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: InvoicesStringFilter
+class InvoicesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: InvoicesStringFilter
+
+
+class InvoicesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: InvoicesStringFilter
 
 
 class InvoicesFuzzyCondition(TypedDict, total=False):
@@ -845,7 +868,7 @@ class InvoicesKeywordCondition(TypedDict, total=False):
 
 
 class InvoicesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: InvoicesAnyValueFilter
 
 
@@ -874,7 +897,8 @@ InvoicesCondition = (
     | InvoicesLtCondition
     | InvoicesLteCondition
     | InvoicesInCondition
-    | InvoicesLikeCondition
+    | InvoicesStartswithCondition
+    | InvoicesEndswithCondition
     | InvoicesFuzzyCondition
     | InvoicesKeywordCondition
     | InvoicesContainsCondition

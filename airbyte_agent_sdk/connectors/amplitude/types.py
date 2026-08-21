@@ -96,7 +96,7 @@ class AnnotationsAnyValueFilter(TypedDict, total=False):
 
 
 class AnnotationsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     date: str
     """The date when the annotation was made"""
     details: str
@@ -150,9 +150,14 @@ class AnnotationsLteCondition(TypedDict, total=False):
     lte: AnnotationsSearchFilter
 
 
-class AnnotationsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: AnnotationsStringFilter
+class AnnotationsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: AnnotationsStringFilter
+
+
+class AnnotationsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: AnnotationsStringFilter
 
 
 class AnnotationsFuzzyCondition(TypedDict, total=False):
@@ -166,7 +171,7 @@ class AnnotationsKeywordCondition(TypedDict, total=False):
 
 
 class AnnotationsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: AnnotationsAnyValueFilter
 
 
@@ -195,7 +200,8 @@ AnnotationsCondition = (
     | AnnotationsLtCondition
     | AnnotationsLteCondition
     | AnnotationsInCondition
-    | AnnotationsLikeCondition
+    | AnnotationsStartswithCondition
+    | AnnotationsEndswithCondition
     | AnnotationsFuzzyCondition
     | AnnotationsKeywordCondition
     | AnnotationsContainsCondition
@@ -383,7 +389,7 @@ class CohortsAnyValueFilter(TypedDict, total=False):
 
 
 class CohortsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     app_id: str
     """The unique identifier of the application"""
     archived: str
@@ -525,9 +531,14 @@ class CohortsLteCondition(TypedDict, total=False):
     lte: CohortsSearchFilter
 
 
-class CohortsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: CohortsStringFilter
+class CohortsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: CohortsStringFilter
+
+
+class CohortsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: CohortsStringFilter
 
 
 class CohortsFuzzyCondition(TypedDict, total=False):
@@ -541,7 +552,7 @@ class CohortsKeywordCondition(TypedDict, total=False):
 
 
 class CohortsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: CohortsAnyValueFilter
 
 
@@ -570,7 +581,8 @@ CohortsCondition = (
     | CohortsLtCondition
     | CohortsLteCondition
     | CohortsInCondition
-    | CohortsLikeCondition
+    | CohortsStartswithCondition
+    | CohortsEndswithCondition
     | CohortsFuzzyCondition
     | CohortsKeywordCondition
     | CohortsContainsCondition
@@ -686,7 +698,7 @@ class EventsListAnyValueFilter(TypedDict, total=False):
 
 
 class EventsListStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     autohidden: str
     """Whether the event is auto-hidden"""
     clusters_hidden: str
@@ -780,9 +792,14 @@ class EventsListLteCondition(TypedDict, total=False):
     lte: EventsListSearchFilter
 
 
-class EventsListLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: EventsListStringFilter
+class EventsListStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: EventsListStringFilter
+
+
+class EventsListEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: EventsListStringFilter
 
 
 class EventsListFuzzyCondition(TypedDict, total=False):
@@ -796,7 +813,7 @@ class EventsListKeywordCondition(TypedDict, total=False):
 
 
 class EventsListContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: EventsListAnyValueFilter
 
 
@@ -825,7 +842,8 @@ EventsListCondition = (
     | EventsListLtCondition
     | EventsListLteCondition
     | EventsListInCondition
-    | EventsListLikeCondition
+    | EventsListStartswithCondition
+    | EventsListEndswithCondition
     | EventsListFuzzyCondition
     | EventsListKeywordCondition
     | EventsListContainsCondition
@@ -869,7 +887,7 @@ class ActiveUsersAnyValueFilter(TypedDict, total=False):
 
 
 class ActiveUsersStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     date: str
     """The date for which the active user data is reported"""
     statistics: str
@@ -915,9 +933,14 @@ class ActiveUsersLteCondition(TypedDict, total=False):
     lte: ActiveUsersSearchFilter
 
 
-class ActiveUsersLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ActiveUsersStringFilter
+class ActiveUsersStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ActiveUsersStringFilter
+
+
+class ActiveUsersEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ActiveUsersStringFilter
 
 
 class ActiveUsersFuzzyCondition(TypedDict, total=False):
@@ -931,7 +954,7 @@ class ActiveUsersKeywordCondition(TypedDict, total=False):
 
 
 class ActiveUsersContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ActiveUsersAnyValueFilter
 
 
@@ -960,7 +983,8 @@ ActiveUsersCondition = (
     | ActiveUsersLtCondition
     | ActiveUsersLteCondition
     | ActiveUsersInCondition
-    | ActiveUsersLikeCondition
+    | ActiveUsersStartswithCondition
+    | ActiveUsersEndswithCondition
     | ActiveUsersFuzzyCondition
     | ActiveUsersKeywordCondition
     | ActiveUsersContainsCondition
@@ -1004,7 +1028,7 @@ class AverageSessionLengthAnyValueFilter(TypedDict, total=False):
 
 
 class AverageSessionLengthStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     date: str
     """The date on which the session occurred"""
     length: str
@@ -1050,9 +1074,14 @@ class AverageSessionLengthLteCondition(TypedDict, total=False):
     lte: AverageSessionLengthSearchFilter
 
 
-class AverageSessionLengthLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: AverageSessionLengthStringFilter
+class AverageSessionLengthStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: AverageSessionLengthStringFilter
+
+
+class AverageSessionLengthEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: AverageSessionLengthStringFilter
 
 
 class AverageSessionLengthFuzzyCondition(TypedDict, total=False):
@@ -1066,7 +1095,7 @@ class AverageSessionLengthKeywordCondition(TypedDict, total=False):
 
 
 class AverageSessionLengthContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: AverageSessionLengthAnyValueFilter
 
 
@@ -1095,7 +1124,8 @@ AverageSessionLengthCondition = (
     | AverageSessionLengthLtCondition
     | AverageSessionLengthLteCondition
     | AverageSessionLengthInCondition
-    | AverageSessionLengthLikeCondition
+    | AverageSessionLengthStartswithCondition
+    | AverageSessionLengthEndswithCondition
     | AverageSessionLengthFuzzyCondition
     | AverageSessionLengthKeywordCondition
     | AverageSessionLengthContainsCondition

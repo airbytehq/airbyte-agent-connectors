@@ -81,7 +81,7 @@ class BasesAnyValueFilter(TypedDict, total=False):
 
 
 class BasesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Unique identifier for the base"""
     name: str
@@ -131,9 +131,14 @@ class BasesLteCondition(TypedDict, total=False):
     lte: BasesSearchFilter
 
 
-class BasesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: BasesStringFilter
+class BasesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: BasesStringFilter
+
+
+class BasesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: BasesStringFilter
 
 
 class BasesFuzzyCondition(TypedDict, total=False):
@@ -147,7 +152,7 @@ class BasesKeywordCondition(TypedDict, total=False):
 
 
 class BasesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: BasesAnyValueFilter
 
 
@@ -176,7 +181,8 @@ BasesCondition = (
     | BasesLtCondition
     | BasesLteCondition
     | BasesInCondition
-    | BasesLikeCondition
+    | BasesStartswithCondition
+    | BasesEndswithCondition
     | BasesFuzzyCondition
     | BasesKeywordCondition
     | BasesContainsCondition
@@ -238,7 +244,7 @@ class TablesAnyValueFilter(TypedDict, total=False):
 
 
 class TablesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Unique identifier for the table"""
     name: str
@@ -296,9 +302,14 @@ class TablesLteCondition(TypedDict, total=False):
     lte: TablesSearchFilter
 
 
-class TablesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: TablesStringFilter
+class TablesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: TablesStringFilter
+
+
+class TablesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: TablesStringFilter
 
 
 class TablesFuzzyCondition(TypedDict, total=False):
@@ -312,7 +323,7 @@ class TablesKeywordCondition(TypedDict, total=False):
 
 
 class TablesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: TablesAnyValueFilter
 
 
@@ -341,7 +352,8 @@ TablesCondition = (
     | TablesLtCondition
     | TablesLteCondition
     | TablesInCondition
-    | TablesLikeCondition
+    | TablesStartswithCondition
+    | TablesEndswithCondition
     | TablesFuzzyCondition
     | TablesKeywordCondition
     | TablesContainsCondition

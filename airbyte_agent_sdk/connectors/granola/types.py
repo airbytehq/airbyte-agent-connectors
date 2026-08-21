@@ -123,7 +123,7 @@ class NotesAnyValueFilter(TypedDict, total=False):
 
 
 class NotesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """The unique identifier of the note."""
     object_: str
@@ -209,9 +209,14 @@ class NotesLteCondition(TypedDict, total=False):
     lte: NotesSearchFilter
 
 
-class NotesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: NotesStringFilter
+class NotesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: NotesStringFilter
+
+
+class NotesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: NotesStringFilter
 
 
 class NotesFuzzyCondition(TypedDict, total=False):
@@ -225,7 +230,7 @@ class NotesKeywordCondition(TypedDict, total=False):
 
 
 class NotesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: NotesAnyValueFilter
 
 
@@ -254,7 +259,8 @@ NotesCondition = (
     | NotesLtCondition
     | NotesLteCondition
     | NotesInCondition
-    | NotesLikeCondition
+    | NotesStartswithCondition
+    | NotesEndswithCondition
     | NotesFuzzyCondition
     | NotesKeywordCondition
     | NotesContainsCondition

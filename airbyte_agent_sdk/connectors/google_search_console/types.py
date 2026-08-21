@@ -140,7 +140,7 @@ class SitesAnyValueFilter(TypedDict, total=False):
 
 
 class SitesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     permission_level: str
     """The user's permission level for the site (owner, full, restricted, etc.)"""
     site_url: str
@@ -186,9 +186,14 @@ class SitesLteCondition(TypedDict, total=False):
     lte: SitesSearchFilter
 
 
-class SitesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SitesStringFilter
+class SitesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SitesStringFilter
+
+
+class SitesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SitesStringFilter
 
 
 class SitesFuzzyCondition(TypedDict, total=False):
@@ -202,7 +207,7 @@ class SitesKeywordCondition(TypedDict, total=False):
 
 
 class SitesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SitesAnyValueFilter
 
 
@@ -231,7 +236,8 @@ SitesCondition = (
     | SitesLtCondition
     | SitesLteCondition
     | SitesInCondition
-    | SitesLikeCondition
+    | SitesStartswithCondition
+    | SitesEndswithCondition
     | SitesFuzzyCondition
     | SitesKeywordCondition
     | SitesContainsCondition
@@ -317,7 +323,7 @@ class SitemapsAnyValueFilter(TypedDict, total=False):
 
 
 class SitemapsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     contents: str
     """Data related to the sitemap contents"""
     errors: str
@@ -391,9 +397,14 @@ class SitemapsLteCondition(TypedDict, total=False):
     lte: SitemapsSearchFilter
 
 
-class SitemapsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SitemapsStringFilter
+class SitemapsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SitemapsStringFilter
+
+
+class SitemapsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SitemapsStringFilter
 
 
 class SitemapsFuzzyCondition(TypedDict, total=False):
@@ -407,7 +418,7 @@ class SitemapsKeywordCondition(TypedDict, total=False):
 
 
 class SitemapsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SitemapsAnyValueFilter
 
 
@@ -436,7 +447,8 @@ SitemapsCondition = (
     | SitemapsLtCondition
     | SitemapsLteCondition
     | SitemapsInCondition
-    | SitemapsLikeCondition
+    | SitemapsStartswithCondition
+    | SitemapsEndswithCondition
     | SitemapsFuzzyCondition
     | SitemapsKeywordCondition
     | SitemapsContainsCondition
@@ -534,7 +546,7 @@ class SearchAnalyticsAllFieldsAnyValueFilter(TypedDict, total=False):
 
 
 class SearchAnalyticsAllFieldsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     clicks: str
     """The number of times users clicked on the search result for a specific query"""
     country: str
@@ -616,9 +628,14 @@ class SearchAnalyticsAllFieldsLteCondition(TypedDict, total=False):
     lte: SearchAnalyticsAllFieldsSearchFilter
 
 
-class SearchAnalyticsAllFieldsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SearchAnalyticsAllFieldsStringFilter
+class SearchAnalyticsAllFieldsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SearchAnalyticsAllFieldsStringFilter
+
+
+class SearchAnalyticsAllFieldsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SearchAnalyticsAllFieldsStringFilter
 
 
 class SearchAnalyticsAllFieldsFuzzyCondition(TypedDict, total=False):
@@ -632,7 +649,7 @@ class SearchAnalyticsAllFieldsKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsAllFieldsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SearchAnalyticsAllFieldsAnyValueFilter
 
 
@@ -661,7 +678,8 @@ SearchAnalyticsAllFieldsCondition = (
     | SearchAnalyticsAllFieldsLtCondition
     | SearchAnalyticsAllFieldsLteCondition
     | SearchAnalyticsAllFieldsInCondition
-    | SearchAnalyticsAllFieldsLikeCondition
+    | SearchAnalyticsAllFieldsStartswithCondition
+    | SearchAnalyticsAllFieldsEndswithCondition
     | SearchAnalyticsAllFieldsFuzzyCondition
     | SearchAnalyticsAllFieldsKeywordCondition
     | SearchAnalyticsAllFieldsContainsCondition
@@ -741,7 +759,7 @@ class SearchAnalyticsByCountryAnyValueFilter(TypedDict, total=False):
 
 
 class SearchAnalyticsByCountryStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     clicks: str
     """The number of times users clicked on the search result for a specific country"""
     country: str
@@ -811,9 +829,14 @@ class SearchAnalyticsByCountryLteCondition(TypedDict, total=False):
     lte: SearchAnalyticsByCountrySearchFilter
 
 
-class SearchAnalyticsByCountryLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SearchAnalyticsByCountryStringFilter
+class SearchAnalyticsByCountryStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SearchAnalyticsByCountryStringFilter
+
+
+class SearchAnalyticsByCountryEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SearchAnalyticsByCountryStringFilter
 
 
 class SearchAnalyticsByCountryFuzzyCondition(TypedDict, total=False):
@@ -827,7 +850,7 @@ class SearchAnalyticsByCountryKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsByCountryContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SearchAnalyticsByCountryAnyValueFilter
 
 
@@ -856,7 +879,8 @@ SearchAnalyticsByCountryCondition = (
     | SearchAnalyticsByCountryLtCondition
     | SearchAnalyticsByCountryLteCondition
     | SearchAnalyticsByCountryInCondition
-    | SearchAnalyticsByCountryLikeCondition
+    | SearchAnalyticsByCountryStartswithCondition
+    | SearchAnalyticsByCountryEndswithCondition
     | SearchAnalyticsByCountryFuzzyCondition
     | SearchAnalyticsByCountryKeywordCondition
     | SearchAnalyticsByCountryContainsCondition
@@ -930,7 +954,7 @@ class SearchAnalyticsByDateAnyValueFilter(TypedDict, total=False):
 
 
 class SearchAnalyticsByDateStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     clicks: str
     """The total number of clicks on the specific date"""
     ctr: str
@@ -996,9 +1020,14 @@ class SearchAnalyticsByDateLteCondition(TypedDict, total=False):
     lte: SearchAnalyticsByDateSearchFilter
 
 
-class SearchAnalyticsByDateLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SearchAnalyticsByDateStringFilter
+class SearchAnalyticsByDateStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SearchAnalyticsByDateStringFilter
+
+
+class SearchAnalyticsByDateEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SearchAnalyticsByDateStringFilter
 
 
 class SearchAnalyticsByDateFuzzyCondition(TypedDict, total=False):
@@ -1012,7 +1041,7 @@ class SearchAnalyticsByDateKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsByDateContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SearchAnalyticsByDateAnyValueFilter
 
 
@@ -1041,7 +1070,8 @@ SearchAnalyticsByDateCondition = (
     | SearchAnalyticsByDateLtCondition
     | SearchAnalyticsByDateLteCondition
     | SearchAnalyticsByDateInCondition
-    | SearchAnalyticsByDateLikeCondition
+    | SearchAnalyticsByDateStartswithCondition
+    | SearchAnalyticsByDateEndswithCondition
     | SearchAnalyticsByDateFuzzyCondition
     | SearchAnalyticsByDateKeywordCondition
     | SearchAnalyticsByDateContainsCondition
@@ -1121,7 +1151,7 @@ class SearchAnalyticsByDeviceAnyValueFilter(TypedDict, total=False):
 
 
 class SearchAnalyticsByDeviceStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     clicks: str
     """The total number of clicks by device type"""
     ctr: str
@@ -1191,9 +1221,14 @@ class SearchAnalyticsByDeviceLteCondition(TypedDict, total=False):
     lte: SearchAnalyticsByDeviceSearchFilter
 
 
-class SearchAnalyticsByDeviceLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SearchAnalyticsByDeviceStringFilter
+class SearchAnalyticsByDeviceStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SearchAnalyticsByDeviceStringFilter
+
+
+class SearchAnalyticsByDeviceEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SearchAnalyticsByDeviceStringFilter
 
 
 class SearchAnalyticsByDeviceFuzzyCondition(TypedDict, total=False):
@@ -1207,7 +1242,7 @@ class SearchAnalyticsByDeviceKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsByDeviceContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SearchAnalyticsByDeviceAnyValueFilter
 
 
@@ -1236,7 +1271,8 @@ SearchAnalyticsByDeviceCondition = (
     | SearchAnalyticsByDeviceLtCondition
     | SearchAnalyticsByDeviceLteCondition
     | SearchAnalyticsByDeviceInCondition
-    | SearchAnalyticsByDeviceLikeCondition
+    | SearchAnalyticsByDeviceStartswithCondition
+    | SearchAnalyticsByDeviceEndswithCondition
     | SearchAnalyticsByDeviceFuzzyCondition
     | SearchAnalyticsByDeviceKeywordCondition
     | SearchAnalyticsByDeviceContainsCondition
@@ -1316,7 +1352,7 @@ class SearchAnalyticsByPageAnyValueFilter(TypedDict, total=False):
 
 
 class SearchAnalyticsByPageStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     clicks: str
     """The number of clicks for a specific page"""
     ctr: str
@@ -1386,9 +1422,14 @@ class SearchAnalyticsByPageLteCondition(TypedDict, total=False):
     lte: SearchAnalyticsByPageSearchFilter
 
 
-class SearchAnalyticsByPageLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SearchAnalyticsByPageStringFilter
+class SearchAnalyticsByPageStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SearchAnalyticsByPageStringFilter
+
+
+class SearchAnalyticsByPageEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SearchAnalyticsByPageStringFilter
 
 
 class SearchAnalyticsByPageFuzzyCondition(TypedDict, total=False):
@@ -1402,7 +1443,7 @@ class SearchAnalyticsByPageKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsByPageContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SearchAnalyticsByPageAnyValueFilter
 
 
@@ -1431,7 +1472,8 @@ SearchAnalyticsByPageCondition = (
     | SearchAnalyticsByPageLtCondition
     | SearchAnalyticsByPageLteCondition
     | SearchAnalyticsByPageInCondition
-    | SearchAnalyticsByPageLikeCondition
+    | SearchAnalyticsByPageStartswithCondition
+    | SearchAnalyticsByPageEndswithCondition
     | SearchAnalyticsByPageFuzzyCondition
     | SearchAnalyticsByPageKeywordCondition
     | SearchAnalyticsByPageContainsCondition
@@ -1511,7 +1553,7 @@ class SearchAnalyticsByQueryAnyValueFilter(TypedDict, total=False):
 
 
 class SearchAnalyticsByQueryStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     clicks: str
     """The number of clicks for the specific query"""
     ctr: str
@@ -1581,9 +1623,14 @@ class SearchAnalyticsByQueryLteCondition(TypedDict, total=False):
     lte: SearchAnalyticsByQuerySearchFilter
 
 
-class SearchAnalyticsByQueryLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SearchAnalyticsByQueryStringFilter
+class SearchAnalyticsByQueryStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SearchAnalyticsByQueryStringFilter
+
+
+class SearchAnalyticsByQueryEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SearchAnalyticsByQueryStringFilter
 
 
 class SearchAnalyticsByQueryFuzzyCondition(TypedDict, total=False):
@@ -1597,7 +1644,7 @@ class SearchAnalyticsByQueryKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsByQueryContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SearchAnalyticsByQueryAnyValueFilter
 
 
@@ -1626,7 +1673,8 @@ SearchAnalyticsByQueryCondition = (
     | SearchAnalyticsByQueryLtCondition
     | SearchAnalyticsByQueryLteCondition
     | SearchAnalyticsByQueryInCondition
-    | SearchAnalyticsByQueryLikeCondition
+    | SearchAnalyticsByQueryStartswithCondition
+    | SearchAnalyticsByQueryEndswithCondition
     | SearchAnalyticsByQueryFuzzyCondition
     | SearchAnalyticsByQueryKeywordCondition
     | SearchAnalyticsByQueryContainsCondition

@@ -29,12 +29,15 @@ FILTER_OPERATORS = (
     "FILTER OPERATORS — operator is the outer key, field:value is nested inside:\n"
     '  Exact match:    {"query": {"filter": {"eq":    {"status": "completed"}}}}\n'
     '  Fuzzy text:     {"query": {"filter": {"fuzzy": {"name": "john smith"}}}}\n'
-    '  Substring:      {"query": {"filter": {"like":  {"externalId": "CUS-"}}}}\n'
+    '  Starts with:    {"query": {"filter": {"startswith": {"externalId": "CUS-"}}}}\n'
+    '  Ends with:      {"query": {"filter": {"endswith": {"email": "@acme.com"}}}}\n'
+    '  Contains:       {"query": {"filter": {"contains": {"name": "pro"}}}}  '
+    "(case-insensitive substring for scalar fields; exact membership for arrays)\n"
     '  Greater-or-eq:  {"query": {"filter": {"gte":   {"started": "2026-01-01T00:00:00Z"}}}}\n'
     '  Less than:      {"query": {"filter": {"lt":    {"amount": 1000}}}}\n'
     '  Set membership: {"query": {"filter": {"in":    {"stage": ["discovery", "negotiation"]}}}}\n'
     '  Combined (AND): {"query": {"filter": {"gte": {"started": "..."}, "eq": {"status": "completed"}}}}\n'
-    "Available operators: eq, neq, gt, gte, lt, lte, in, like, fuzzy, keyword, contains, any\n"
+    "Available operators: eq, neq, gt, gte, lt, lte, in, startswith, endswith, fuzzy, keyword, contains, any\n"
     'Compose with and/or/not: {"and": [cond1, cond2]}, {"or": [...]}, {"not": cond}'
 )
 
@@ -116,12 +119,12 @@ EXECUTE_INSTRUCTIONS = (
     '- Sort:      params={"limit": 20, "query": {"filter": {...}, "sort": [{"created": "desc"}]}}\n'
     '- Sort only: params={"limit": 20, "query": {"sort": [{"created": "desc"}]}}\n'
     "- Never send an empty filter object; omit filter instead.\n"
-    "- When searching for text, ALWAYS prefer `fuzzy` over `like`. "
+    "- When searching for approximate text, prefer `fuzzy` over literal `contains`. "
     "`fuzzy` matches words in any order, ignores punctuation/casing, and handles partial names. "
-    "`like` requires exact substring match and fails on typos or word reordering.\n"
+    "`contains` requires an exact substring and fails on typos or word reordering.\n"
     "- Example — find a user by name:\n"
     '  action="context_store_search", params={"query": {"filter": {"fuzzy": {"firstName": "Teo"}}}}\n'
-    "- Only fall back to `like` when you need exact substring matching (e.g. prefix search on IDs)."
+    "- Use `contains` for exact substrings, or `startswith`/`endswith` for literal anchoring."
     "\n\n"
     "FIELD SELECTION (MANDATORY): Every item MUST include select_fields (allowlist) or "
     "exclude_fields (blocklist). Both support dot-notation for nested fields "
@@ -1032,10 +1035,10 @@ def generate_tool_description(
     lines.append("  - Direct API actions (list/get/download) are slower and should be used only if search cannot answer the query.")
     lines.append("  - Keep results small: use params.fields, params.query.filter, small params.limit, and cursor pagination.")
     lines.append("  - If output is too large, refine the query with tighter filters/fields/limit.")
-    lines.append("  - When searching for text, ALWAYS prefer `fuzzy` over `like`.")
+    lines.append("  - When searching for approximate text, prefer `fuzzy` over literal `contains`.")
     lines.append("    `fuzzy` matches words in any order, ignores punctuation/casing, and handles partial names.")
-    lines.append("    `like` requires exact substring match and fails on typos or word reordering.")
-    lines.append("    Only fall back to `like` when you need exact substring matching (e.g. prefix search on IDs).")
+    lines.append("    `contains` requires an exact substring and fails on typos or word reordering.")
+    lines.append("    Use `contains` for exact substrings, or `startswith`/`endswith` for literal anchoring.")
 
     # Search section — only if entities have searchable fields.
     # Prose header; see note at ENTITIES above.
@@ -1049,7 +1052,7 @@ def generate_tool_description(
         lines.append('  Example: {"query": {"filter": {"eq": {"title": "Intro to Airbyte | Miinto"}}}, "limit": 1,')
         lines.append('            "fields": ["id", "title", "started", "primaryUserId"]}')
         lines.append("  Conditions are composable:")
-        lines.append("    - eq, neq, gt, gte, lt, lte, in, like, fuzzy, keyword, contains, any")
+        lines.append("    - eq, neq, gt, gte, lt, lte, in, startswith, endswith, fuzzy, keyword, contains, any")
         lines.append('    - and/or/not to combine conditions (e.g., {"and": [cond1, cond2]})')
 
     # Shared constants — these are the single source of truth, also composed into

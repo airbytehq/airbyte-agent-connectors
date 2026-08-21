@@ -151,7 +151,7 @@ class TransactionsAnyValueFilter(TypedDict, total=False):
 
 
 class TransactionsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     auction_info: str
     """Information related to an auction"""
     cart_info: str
@@ -229,9 +229,14 @@ class TransactionsLteCondition(TypedDict, total=False):
     lte: TransactionsSearchFilter
 
 
-class TransactionsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: TransactionsStringFilter
+class TransactionsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: TransactionsStringFilter
+
+
+class TransactionsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: TransactionsStringFilter
 
 
 class TransactionsFuzzyCondition(TypedDict, total=False):
@@ -245,7 +250,7 @@ class TransactionsKeywordCondition(TypedDict, total=False):
 
 
 class TransactionsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: TransactionsAnyValueFilter
 
 
@@ -274,7 +279,8 @@ TransactionsCondition = (
     | TransactionsLtCondition
     | TransactionsLteCondition
     | TransactionsInCondition
-    | TransactionsLikeCondition
+    | TransactionsStartswithCondition
+    | TransactionsEndswithCondition
     | TransactionsFuzzyCondition
     | TransactionsKeywordCondition
     | TransactionsContainsCondition
@@ -330,7 +336,7 @@ class BalancesAnyValueFilter(TypedDict, total=False):
 
 
 class BalancesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     account_id: str
     """The unique identifier of the account."""
     as_of_time: str
@@ -384,9 +390,14 @@ class BalancesLteCondition(TypedDict, total=False):
     lte: BalancesSearchFilter
 
 
-class BalancesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: BalancesStringFilter
+class BalancesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: BalancesStringFilter
+
+
+class BalancesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: BalancesStringFilter
 
 
 class BalancesFuzzyCondition(TypedDict, total=False):
@@ -400,7 +411,7 @@ class BalancesKeywordCondition(TypedDict, total=False):
 
 
 class BalancesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: BalancesAnyValueFilter
 
 
@@ -429,7 +440,8 @@ BalancesCondition = (
     | BalancesLtCondition
     | BalancesLteCondition
     | BalancesInCondition
-    | BalancesLikeCondition
+    | BalancesStartswithCondition
+    | BalancesEndswithCondition
     | BalancesFuzzyCondition
     | BalancesKeywordCondition
     | BalancesContainsCondition
@@ -491,7 +503,7 @@ class ListProductsAnyValueFilter(TypedDict, total=False):
 
 
 class ListProductsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     create_time: str
     """The time when the product was created"""
     description: str
@@ -549,9 +561,14 @@ class ListProductsLteCondition(TypedDict, total=False):
     lte: ListProductsSearchFilter
 
 
-class ListProductsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ListProductsStringFilter
+class ListProductsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ListProductsStringFilter
+
+
+class ListProductsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ListProductsStringFilter
 
 
 class ListProductsFuzzyCondition(TypedDict, total=False):
@@ -565,7 +582,7 @@ class ListProductsKeywordCondition(TypedDict, total=False):
 
 
 class ListProductsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ListProductsAnyValueFilter
 
 
@@ -594,7 +611,8 @@ ListProductsCondition = (
     | ListProductsLtCondition
     | ListProductsLteCondition
     | ListProductsInCondition
-    | ListProductsLikeCondition
+    | ListProductsStartswithCondition
+    | ListProductsEndswithCondition
     | ListProductsFuzzyCondition
     | ListProductsKeywordCondition
     | ListProductsContainsCondition
@@ -686,7 +704,7 @@ class ShowProductDetailsAnyValueFilter(TypedDict, total=False):
 
 
 class ShowProductDetailsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     category: str
     """The category to which the product belongs"""
     create_time: str
@@ -764,9 +782,14 @@ class ShowProductDetailsLteCondition(TypedDict, total=False):
     lte: ShowProductDetailsSearchFilter
 
 
-class ShowProductDetailsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ShowProductDetailsStringFilter
+class ShowProductDetailsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ShowProductDetailsStringFilter
+
+
+class ShowProductDetailsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ShowProductDetailsStringFilter
 
 
 class ShowProductDetailsFuzzyCondition(TypedDict, total=False):
@@ -780,7 +803,7 @@ class ShowProductDetailsKeywordCondition(TypedDict, total=False):
 
 
 class ShowProductDetailsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ShowProductDetailsAnyValueFilter
 
 
@@ -809,7 +832,8 @@ ShowProductDetailsCondition = (
     | ShowProductDetailsLtCondition
     | ShowProductDetailsLteCondition
     | ShowProductDetailsInCondition
-    | ShowProductDetailsLikeCondition
+    | ShowProductDetailsStartswithCondition
+    | ShowProductDetailsEndswithCondition
     | ShowProductDetailsFuzzyCondition
     | ShowProductDetailsKeywordCondition
     | ShowProductDetailsContainsCondition
@@ -919,7 +943,7 @@ class ListDisputesAnyValueFilter(TypedDict, total=False):
 
 
 class ListDisputesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     create_time: str
     """The timestamp when the dispute was created."""
     dispute_amount: str
@@ -1009,9 +1033,14 @@ class ListDisputesLteCondition(TypedDict, total=False):
     lte: ListDisputesSearchFilter
 
 
-class ListDisputesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ListDisputesStringFilter
+class ListDisputesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ListDisputesStringFilter
+
+
+class ListDisputesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ListDisputesStringFilter
 
 
 class ListDisputesFuzzyCondition(TypedDict, total=False):
@@ -1025,7 +1054,7 @@ class ListDisputesKeywordCondition(TypedDict, total=False):
 
 
 class ListDisputesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ListDisputesAnyValueFilter
 
 
@@ -1054,7 +1083,8 @@ ListDisputesCondition = (
     | ListDisputesLtCondition
     | ListDisputesLteCondition
     | ListDisputesInCondition
-    | ListDisputesLikeCondition
+    | ListDisputesStartswithCondition
+    | ListDisputesEndswithCondition
     | ListDisputesFuzzyCondition
     | ListDisputesKeywordCondition
     | ListDisputesContainsCondition
@@ -1170,7 +1200,7 @@ class SearchInvoicesAnyValueFilter(TypedDict, total=False):
 
 
 class SearchInvoicesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     additional_recipients: str
     """List of additional recipients associated with the invoice"""
     amount: str
@@ -1264,9 +1294,14 @@ class SearchInvoicesLteCondition(TypedDict, total=False):
     lte: SearchInvoicesSearchFilter
 
 
-class SearchInvoicesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SearchInvoicesStringFilter
+class SearchInvoicesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SearchInvoicesStringFilter
+
+
+class SearchInvoicesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SearchInvoicesStringFilter
 
 
 class SearchInvoicesFuzzyCondition(TypedDict, total=False):
@@ -1280,7 +1315,7 @@ class SearchInvoicesKeywordCondition(TypedDict, total=False):
 
 
 class SearchInvoicesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SearchInvoicesAnyValueFilter
 
 
@@ -1309,7 +1344,8 @@ SearchInvoicesCondition = (
     | SearchInvoicesLtCondition
     | SearchInvoicesLteCondition
     | SearchInvoicesInCondition
-    | SearchInvoicesLikeCondition
+    | SearchInvoicesStartswithCondition
+    | SearchInvoicesEndswithCondition
     | SearchInvoicesFuzzyCondition
     | SearchInvoicesKeywordCondition
     | SearchInvoicesContainsCondition
@@ -1395,7 +1431,7 @@ class ListPaymentsAnyValueFilter(TypedDict, total=False):
 
 
 class ListPaymentsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     cart: str
     """Details of the cart associated with the payment."""
     create_time: str
@@ -1469,9 +1505,14 @@ class ListPaymentsLteCondition(TypedDict, total=False):
     lte: ListPaymentsSearchFilter
 
 
-class ListPaymentsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ListPaymentsStringFilter
+class ListPaymentsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ListPaymentsStringFilter
+
+
+class ListPaymentsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ListPaymentsStringFilter
 
 
 class ListPaymentsFuzzyCondition(TypedDict, total=False):
@@ -1485,7 +1526,7 @@ class ListPaymentsKeywordCondition(TypedDict, total=False):
 
 
 class ListPaymentsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ListPaymentsAnyValueFilter
 
 
@@ -1514,7 +1555,8 @@ ListPaymentsCondition = (
     | ListPaymentsLtCondition
     | ListPaymentsLteCondition
     | ListPaymentsInCondition
-    | ListPaymentsLikeCondition
+    | ListPaymentsStartswithCondition
+    | ListPaymentsEndswithCondition
     | ListPaymentsFuzzyCondition
     | ListPaymentsKeywordCondition
     | ListPaymentsContainsCondition

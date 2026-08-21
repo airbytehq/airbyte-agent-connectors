@@ -292,7 +292,7 @@ class AccountsAnyValueFilter(TypedDict, total=False):
 
 
 class AccountsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     customer_auto_tagging_enabled: str
     """Whether auto-tagging is enabled for the account"""
     customer_call_reporting_setting_call_conversion_action: str
@@ -414,9 +414,14 @@ class AccountsLteCondition(TypedDict, total=False):
     lte: AccountsSearchFilter
 
 
-class AccountsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: AccountsStringFilter
+class AccountsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: AccountsStringFilter
+
+
+class AccountsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: AccountsStringFilter
 
 
 class AccountsFuzzyCondition(TypedDict, total=False):
@@ -430,7 +435,7 @@ class AccountsKeywordCondition(TypedDict, total=False):
 
 
 class AccountsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: AccountsAnyValueFilter
 
 
@@ -459,7 +464,8 @@ AccountsCondition = (
     | AccountsLtCondition
     | AccountsLteCondition
     | AccountsInCondition
-    | AccountsLikeCondition
+    | AccountsStartswithCondition
+    | AccountsEndswithCondition
     | AccountsFuzzyCondition
     | AccountsKeywordCondition
     | AccountsContainsCondition
@@ -671,7 +677,7 @@ class CampaignsAnyValueFilter(TypedDict, total=False):
 
 
 class CampaignsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     campaign_id: str
     """Campaign ID"""
     campaign_name: str
@@ -829,9 +835,14 @@ class CampaignsLteCondition(TypedDict, total=False):
     lte: CampaignsSearchFilter
 
 
-class CampaignsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: CampaignsStringFilter
+class CampaignsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: CampaignsStringFilter
+
+
+class CampaignsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: CampaignsStringFilter
 
 
 class CampaignsFuzzyCondition(TypedDict, total=False):
@@ -845,7 +856,7 @@ class CampaignsKeywordCondition(TypedDict, total=False):
 
 
 class CampaignsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: CampaignsAnyValueFilter
 
 
@@ -874,7 +885,8 @@ CampaignsCondition = (
     | CampaignsLtCondition
     | CampaignsLteCondition
     | CampaignsInCondition
-    | CampaignsLikeCondition
+    | CampaignsStartswithCondition
+    | CampaignsEndswithCondition
     | CampaignsFuzzyCondition
     | CampaignsKeywordCondition
     | CampaignsContainsCondition
@@ -1038,7 +1050,7 @@ class AdGroupsAnyValueFilter(TypedDict, total=False):
 
 
 class AdGroupsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     campaign_id: str
     """Parent campaign ID"""
     ad_group_id: str
@@ -1164,9 +1176,14 @@ class AdGroupsLteCondition(TypedDict, total=False):
     lte: AdGroupsSearchFilter
 
 
-class AdGroupsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: AdGroupsStringFilter
+class AdGroupsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: AdGroupsStringFilter
+
+
+class AdGroupsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: AdGroupsStringFilter
 
 
 class AdGroupsFuzzyCondition(TypedDict, total=False):
@@ -1180,7 +1197,7 @@ class AdGroupsKeywordCondition(TypedDict, total=False):
 
 
 class AdGroupsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: AdGroupsAnyValueFilter
 
 
@@ -1209,7 +1226,8 @@ AdGroupsCondition = (
     | AdGroupsLtCondition
     | AdGroupsLteCondition
     | AdGroupsInCondition
-    | AdGroupsLikeCondition
+    | AdGroupsStartswithCondition
+    | AdGroupsEndswithCondition
     | AdGroupsFuzzyCondition
     | AdGroupsKeywordCondition
     | AdGroupsContainsCondition
@@ -1349,7 +1367,7 @@ class AdGroupAdsAnyValueFilter(TypedDict, total=False):
 
 
 class AdGroupAdsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     ad_group_id: str
     """Parent ad group ID"""
     ad_group_ad_ad_id: str
@@ -1459,9 +1477,14 @@ class AdGroupAdsLteCondition(TypedDict, total=False):
     lte: AdGroupAdsSearchFilter
 
 
-class AdGroupAdsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: AdGroupAdsStringFilter
+class AdGroupAdsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: AdGroupAdsStringFilter
+
+
+class AdGroupAdsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: AdGroupAdsStringFilter
 
 
 class AdGroupAdsFuzzyCondition(TypedDict, total=False):
@@ -1475,7 +1498,7 @@ class AdGroupAdsKeywordCondition(TypedDict, total=False):
 
 
 class AdGroupAdsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: AdGroupAdsAnyValueFilter
 
 
@@ -1504,7 +1527,8 @@ AdGroupAdsCondition = (
     | AdGroupAdsLtCondition
     | AdGroupAdsLteCondition
     | AdGroupAdsInCondition
-    | AdGroupAdsLikeCondition
+    | AdGroupAdsStartswithCondition
+    | AdGroupAdsEndswithCondition
     | AdGroupAdsFuzzyCondition
     | AdGroupAdsKeywordCondition
     | AdGroupAdsContainsCondition
@@ -1566,7 +1590,7 @@ class CampaignLabelsAnyValueFilter(TypedDict, total=False):
 
 
 class CampaignLabelsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     campaign_id: str
     """Campaign ID"""
     campaign_label_resource_name: str
@@ -1624,9 +1648,14 @@ class CampaignLabelsLteCondition(TypedDict, total=False):
     lte: CampaignLabelsSearchFilter
 
 
-class CampaignLabelsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: CampaignLabelsStringFilter
+class CampaignLabelsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: CampaignLabelsStringFilter
+
+
+class CampaignLabelsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: CampaignLabelsStringFilter
 
 
 class CampaignLabelsFuzzyCondition(TypedDict, total=False):
@@ -1640,7 +1669,7 @@ class CampaignLabelsKeywordCondition(TypedDict, total=False):
 
 
 class CampaignLabelsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: CampaignLabelsAnyValueFilter
 
 
@@ -1669,7 +1698,8 @@ CampaignLabelsCondition = (
     | CampaignLabelsLtCondition
     | CampaignLabelsLteCondition
     | CampaignLabelsInCondition
-    | CampaignLabelsLikeCondition
+    | CampaignLabelsStartswithCondition
+    | CampaignLabelsEndswithCondition
     | CampaignLabelsFuzzyCondition
     | CampaignLabelsKeywordCondition
     | CampaignLabelsContainsCondition
@@ -1731,7 +1761,7 @@ class AdGroupLabelsAnyValueFilter(TypedDict, total=False):
 
 
 class AdGroupLabelsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     ad_group_id: str
     """Ad group ID"""
     ad_group_label_resource_name: str
@@ -1789,9 +1819,14 @@ class AdGroupLabelsLteCondition(TypedDict, total=False):
     lte: AdGroupLabelsSearchFilter
 
 
-class AdGroupLabelsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: AdGroupLabelsStringFilter
+class AdGroupLabelsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: AdGroupLabelsStringFilter
+
+
+class AdGroupLabelsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: AdGroupLabelsStringFilter
 
 
 class AdGroupLabelsFuzzyCondition(TypedDict, total=False):
@@ -1805,7 +1840,7 @@ class AdGroupLabelsKeywordCondition(TypedDict, total=False):
 
 
 class AdGroupLabelsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: AdGroupLabelsAnyValueFilter
 
 
@@ -1834,7 +1869,8 @@ AdGroupLabelsCondition = (
     | AdGroupLabelsLtCondition
     | AdGroupLabelsLteCondition
     | AdGroupLabelsInCondition
-    | AdGroupLabelsLikeCondition
+    | AdGroupLabelsStartswithCondition
+    | AdGroupLabelsEndswithCondition
     | AdGroupLabelsFuzzyCondition
     | AdGroupLabelsKeywordCondition
     | AdGroupLabelsContainsCondition
@@ -1896,7 +1932,7 @@ class AdGroupAdLabelsAnyValueFilter(TypedDict, total=False):
 
 
 class AdGroupAdLabelsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     ad_group_ad_ad_id: str
     """Ad ID"""
     ad_group_ad_label_resource_name: str
@@ -1954,9 +1990,14 @@ class AdGroupAdLabelsLteCondition(TypedDict, total=False):
     lte: AdGroupAdLabelsSearchFilter
 
 
-class AdGroupAdLabelsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: AdGroupAdLabelsStringFilter
+class AdGroupAdLabelsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: AdGroupAdLabelsStringFilter
+
+
+class AdGroupAdLabelsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: AdGroupAdLabelsStringFilter
 
 
 class AdGroupAdLabelsFuzzyCondition(TypedDict, total=False):
@@ -1970,7 +2011,7 @@ class AdGroupAdLabelsKeywordCondition(TypedDict, total=False):
 
 
 class AdGroupAdLabelsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: AdGroupAdLabelsAnyValueFilter
 
 
@@ -1999,7 +2040,8 @@ AdGroupAdLabelsCondition = (
     | AdGroupAdLabelsLtCondition
     | AdGroupAdLabelsLteCondition
     | AdGroupAdLabelsInCondition
-    | AdGroupAdLabelsLikeCondition
+    | AdGroupAdLabelsStartswithCondition
+    | AdGroupAdLabelsEndswithCondition
     | AdGroupAdLabelsFuzzyCondition
     | AdGroupAdLabelsKeywordCondition
     | AdGroupAdLabelsContainsCondition

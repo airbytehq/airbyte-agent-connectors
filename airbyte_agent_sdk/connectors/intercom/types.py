@@ -321,7 +321,7 @@ class CompaniesAnyValueFilter(TypedDict, total=False):
 
 
 class CompaniesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     app_id: str
     """The ID of the application associated with the company"""
     company_id: str
@@ -431,9 +431,14 @@ class CompaniesLteCondition(TypedDict, total=False):
     lte: CompaniesSearchFilter
 
 
-class CompaniesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: CompaniesStringFilter
+class CompaniesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: CompaniesStringFilter
+
+
+class CompaniesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: CompaniesStringFilter
 
 
 class CompaniesFuzzyCondition(TypedDict, total=False):
@@ -447,7 +452,7 @@ class CompaniesKeywordCondition(TypedDict, total=False):
 
 
 class CompaniesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: CompaniesAnyValueFilter
 
 
@@ -476,7 +481,8 @@ CompaniesCondition = (
     | CompaniesLtCondition
     | CompaniesLteCondition
     | CompaniesInCondition
-    | CompaniesLikeCondition
+    | CompaniesStartswithCondition
+    | CompaniesEndswithCondition
     | CompaniesFuzzyCondition
     | CompaniesKeywordCondition
     | CompaniesContainsCondition
@@ -832,7 +838,7 @@ class ContactsAnyValueFilter(TypedDict, total=False):
 
 
 class ContactsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     android_app_name: str
     """The name of the Android app associated with the contact."""
     android_app_version: str
@@ -1086,9 +1092,14 @@ class ContactsLteCondition(TypedDict, total=False):
     lte: ContactsSearchFilter
 
 
-class ContactsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ContactsStringFilter
+class ContactsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ContactsStringFilter
+
+
+class ContactsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ContactsStringFilter
 
 
 class ContactsFuzzyCondition(TypedDict, total=False):
@@ -1102,7 +1113,7 @@ class ContactsKeywordCondition(TypedDict, total=False):
 
 
 class ContactsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ContactsAnyValueFilter
 
 
@@ -1131,7 +1142,8 @@ ContactsCondition = (
     | ContactsLtCondition
     | ContactsLteCondition
     | ContactsInCondition
-    | ContactsLikeCondition
+    | ContactsStartswithCondition
+    | ContactsEndswithCondition
     | ContactsFuzzyCondition
     | ContactsKeywordCondition
     | ContactsContainsCondition
@@ -1361,7 +1373,7 @@ class ConversationsAnyValueFilter(TypedDict, total=False):
 
 
 class ConversationsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     admin_assignee_id: str
     """The ID of the administrator assigned to the conversation"""
     ai_agent: str
@@ -1531,9 +1543,14 @@ class ConversationsLteCondition(TypedDict, total=False):
     lte: ConversationsSearchFilter
 
 
-class ConversationsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ConversationsStringFilter
+class ConversationsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ConversationsStringFilter
+
+
+class ConversationsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ConversationsStringFilter
 
 
 class ConversationsFuzzyCondition(TypedDict, total=False):
@@ -1547,7 +1564,7 @@ class ConversationsKeywordCondition(TypedDict, total=False):
 
 
 class ConversationsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ConversationsAnyValueFilter
 
 
@@ -1576,7 +1593,8 @@ ConversationsCondition = (
     | ConversationsLtCondition
     | ConversationsLteCondition
     | ConversationsInCondition
-    | ConversationsLikeCondition
+    | ConversationsStartswithCondition
+    | ConversationsEndswithCondition
     | ConversationsFuzzyCondition
     | ConversationsKeywordCondition
     | ConversationsContainsCondition
@@ -1632,7 +1650,7 @@ class TeamsAnyValueFilter(TypedDict, total=False):
 
 
 class TeamsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     admin_ids: str
     """Array of user IDs representing the admins of the team."""
     id: str
@@ -1686,9 +1704,14 @@ class TeamsLteCondition(TypedDict, total=False):
     lte: TeamsSearchFilter
 
 
-class TeamsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: TeamsStringFilter
+class TeamsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: TeamsStringFilter
+
+
+class TeamsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: TeamsStringFilter
 
 
 class TeamsFuzzyCondition(TypedDict, total=False):
@@ -1702,7 +1725,7 @@ class TeamsKeywordCondition(TypedDict, total=False):
 
 
 class TeamsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: TeamsAnyValueFilter
 
 
@@ -1731,7 +1754,8 @@ TeamsCondition = (
     | TeamsLtCondition
     | TeamsLteCondition
     | TeamsInCondition
-    | TeamsLikeCondition
+    | TeamsStartswithCondition
+    | TeamsEndswithCondition
     | TeamsFuzzyCondition
     | TeamsKeywordCondition
     | TeamsContainsCondition

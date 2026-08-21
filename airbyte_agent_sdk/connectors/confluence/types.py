@@ -164,7 +164,7 @@ class AuditAnyValueFilter(TypedDict, total=False):
 
 
 class AuditStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     affected_object: str
     """The object that was affected by the audit event."""
     associated_objects: str
@@ -246,9 +246,14 @@ class AuditLteCondition(TypedDict, total=False):
     lte: AuditSearchFilter
 
 
-class AuditLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: AuditStringFilter
+class AuditStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: AuditStringFilter
+
+
+class AuditEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: AuditStringFilter
 
 
 class AuditFuzzyCondition(TypedDict, total=False):
@@ -262,7 +267,7 @@ class AuditKeywordCondition(TypedDict, total=False):
 
 
 class AuditContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: AuditAnyValueFilter
 
 
@@ -291,7 +296,8 @@ AuditCondition = (
     | AuditLtCondition
     | AuditLteCondition
     | AuditInCondition
-    | AuditLikeCondition
+    | AuditStartswithCondition
+    | AuditEndswithCondition
     | AuditFuzzyCondition
     | AuditKeywordCondition
     | AuditContainsCondition
@@ -377,7 +383,7 @@ class BlogPostsAnyValueFilter(TypedDict, total=False):
 
 
 class BlogPostsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     links: str
     """Links related to the blog post"""
     author_id: str
@@ -451,9 +457,14 @@ class BlogPostsLteCondition(TypedDict, total=False):
     lte: BlogPostsSearchFilter
 
 
-class BlogPostsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: BlogPostsStringFilter
+class BlogPostsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: BlogPostsStringFilter
+
+
+class BlogPostsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: BlogPostsStringFilter
 
 
 class BlogPostsFuzzyCondition(TypedDict, total=False):
@@ -467,7 +478,7 @@ class BlogPostsKeywordCondition(TypedDict, total=False):
 
 
 class BlogPostsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: BlogPostsAnyValueFilter
 
 
@@ -496,7 +507,8 @@ BlogPostsCondition = (
     | BlogPostsLtCondition
     | BlogPostsLteCondition
     | BlogPostsInCondition
-    | BlogPostsLikeCondition
+    | BlogPostsStartswithCondition
+    | BlogPostsEndswithCondition
     | BlogPostsFuzzyCondition
     | BlogPostsKeywordCondition
     | BlogPostsContainsCondition
@@ -552,7 +564,7 @@ class GroupsAnyValueFilter(TypedDict, total=False):
 
 
 class GroupsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     links: str
     """Links related to the group"""
     id: str
@@ -606,9 +618,14 @@ class GroupsLteCondition(TypedDict, total=False):
     lte: GroupsSearchFilter
 
 
-class GroupsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: GroupsStringFilter
+class GroupsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: GroupsStringFilter
+
+
+class GroupsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: GroupsStringFilter
 
 
 class GroupsFuzzyCondition(TypedDict, total=False):
@@ -622,7 +639,7 @@ class GroupsKeywordCondition(TypedDict, total=False):
 
 
 class GroupsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: GroupsAnyValueFilter
 
 
@@ -651,7 +668,8 @@ GroupsCondition = (
     | GroupsLtCondition
     | GroupsLteCondition
     | GroupsInCondition
-    | GroupsLikeCondition
+    | GroupsStartswithCondition
+    | GroupsEndswithCondition
     | GroupsFuzzyCondition
     | GroupsKeywordCondition
     | GroupsContainsCondition
@@ -767,7 +785,7 @@ class PagesAnyValueFilter(TypedDict, total=False):
 
 
 class PagesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     links: str
     """Links related to the page"""
     author_id: str
@@ -861,9 +879,14 @@ class PagesLteCondition(TypedDict, total=False):
     lte: PagesSearchFilter
 
 
-class PagesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: PagesStringFilter
+class PagesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: PagesStringFilter
+
+
+class PagesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: PagesStringFilter
 
 
 class PagesFuzzyCondition(TypedDict, total=False):
@@ -877,7 +900,7 @@ class PagesKeywordCondition(TypedDict, total=False):
 
 
 class PagesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: PagesAnyValueFilter
 
 
@@ -906,7 +929,8 @@ PagesCondition = (
     | PagesLtCondition
     | PagesLteCondition
     | PagesInCondition
-    | PagesLikeCondition
+    | PagesStartswithCondition
+    | PagesEndswithCondition
     | PagesFuzzyCondition
     | PagesKeywordCondition
     | PagesContainsCondition
@@ -1004,7 +1028,7 @@ class SpacesAnyValueFilter(TypedDict, total=False):
 
 
 class SpacesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     links: str
     """Links related to the space"""
     author_id: str
@@ -1086,9 +1110,14 @@ class SpacesLteCondition(TypedDict, total=False):
     lte: SpacesSearchFilter
 
 
-class SpacesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: SpacesStringFilter
+class SpacesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: SpacesStringFilter
+
+
+class SpacesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: SpacesStringFilter
 
 
 class SpacesFuzzyCondition(TypedDict, total=False):
@@ -1102,7 +1131,7 @@ class SpacesKeywordCondition(TypedDict, total=False):
 
 
 class SpacesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: SpacesAnyValueFilter
 
 
@@ -1131,7 +1160,8 @@ SpacesCondition = (
     | SpacesLtCondition
     | SpacesLteCondition
     | SpacesInCondition
-    | SpacesLikeCondition
+    | SpacesStartswithCondition
+    | SpacesEndswithCondition
     | SpacesFuzzyCondition
     | SpacesKeywordCondition
     | SpacesContainsCondition

@@ -179,7 +179,7 @@ class AgentsAnyValueFilter(TypedDict, total=False):
 
 
 class AgentsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Unique agent identifier"""
     email: str
@@ -253,9 +253,14 @@ class AgentsLteCondition(TypedDict, total=False):
     lte: AgentsSearchFilter
 
 
-class AgentsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: AgentsStringFilter
+class AgentsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: AgentsStringFilter
+
+
+class AgentsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: AgentsStringFilter
 
 
 class AgentsFuzzyCondition(TypedDict, total=False):
@@ -269,7 +274,7 @@ class AgentsKeywordCondition(TypedDict, total=False):
 
 
 class AgentsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: AgentsAnyValueFilter
 
 
@@ -298,7 +303,8 @@ AgentsCondition = (
     | AgentsLtCondition
     | AgentsLteCondition
     | AgentsInCondition
-    | AgentsLikeCondition
+    | AgentsStartswithCondition
+    | AgentsEndswithCondition
     | AgentsFuzzyCondition
     | AgentsKeywordCondition
     | AgentsContainsCondition
@@ -384,7 +390,7 @@ class ChatsAnyValueFilter(TypedDict, total=False):
 
 
 class ChatsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Unique chat identifier"""
     timestamp: str
@@ -458,9 +464,14 @@ class ChatsLteCondition(TypedDict, total=False):
     lte: ChatsSearchFilter
 
 
-class ChatsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ChatsStringFilter
+class ChatsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ChatsStringFilter
+
+
+class ChatsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ChatsStringFilter
 
 
 class ChatsFuzzyCondition(TypedDict, total=False):
@@ -474,7 +485,7 @@ class ChatsKeywordCondition(TypedDict, total=False):
 
 
 class ChatsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ChatsAnyValueFilter
 
 
@@ -503,7 +514,8 @@ ChatsCondition = (
     | ChatsLtCondition
     | ChatsLteCondition
     | ChatsInCondition
-    | ChatsLikeCondition
+    | ChatsStartswithCondition
+    | ChatsEndswithCondition
     | ChatsFuzzyCondition
     | ChatsKeywordCondition
     | ChatsContainsCondition
@@ -559,7 +571,7 @@ class DepartmentsAnyValueFilter(TypedDict, total=False):
 
 
 class DepartmentsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Department ID"""
     name: str
@@ -613,9 +625,14 @@ class DepartmentsLteCondition(TypedDict, total=False):
     lte: DepartmentsSearchFilter
 
 
-class DepartmentsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: DepartmentsStringFilter
+class DepartmentsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: DepartmentsStringFilter
+
+
+class DepartmentsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: DepartmentsStringFilter
 
 
 class DepartmentsFuzzyCondition(TypedDict, total=False):
@@ -629,7 +646,7 @@ class DepartmentsKeywordCondition(TypedDict, total=False):
 
 
 class DepartmentsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: DepartmentsAnyValueFilter
 
 
@@ -658,7 +675,8 @@ DepartmentsCondition = (
     | DepartmentsLtCondition
     | DepartmentsLteCondition
     | DepartmentsInCondition
-    | DepartmentsLikeCondition
+    | DepartmentsStartswithCondition
+    | DepartmentsEndswithCondition
     | DepartmentsFuzzyCondition
     | DepartmentsKeywordCondition
     | DepartmentsContainsCondition
@@ -714,7 +732,7 @@ class ShortcutsAnyValueFilter(TypedDict, total=False):
 
 
 class ShortcutsStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Shortcut ID"""
     name: str
@@ -768,9 +786,14 @@ class ShortcutsLteCondition(TypedDict, total=False):
     lte: ShortcutsSearchFilter
 
 
-class ShortcutsLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ShortcutsStringFilter
+class ShortcutsStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ShortcutsStringFilter
+
+
+class ShortcutsEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ShortcutsStringFilter
 
 
 class ShortcutsFuzzyCondition(TypedDict, total=False):
@@ -784,7 +807,7 @@ class ShortcutsKeywordCondition(TypedDict, total=False):
 
 
 class ShortcutsContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ShortcutsAnyValueFilter
 
 
@@ -813,7 +836,8 @@ ShortcutsCondition = (
     | ShortcutsLtCondition
     | ShortcutsLteCondition
     | ShortcutsInCondition
-    | ShortcutsLikeCondition
+    | ShortcutsStartswithCondition
+    | ShortcutsEndswithCondition
     | ShortcutsFuzzyCondition
     | ShortcutsKeywordCondition
     | ShortcutsContainsCondition
@@ -863,7 +887,7 @@ class TriggersAnyValueFilter(TypedDict, total=False):
 
 
 class TriggersStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     id: str
     """Trigger ID"""
     name: str
@@ -913,9 +937,14 @@ class TriggersLteCondition(TypedDict, total=False):
     lte: TriggersSearchFilter
 
 
-class TriggersLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: TriggersStringFilter
+class TriggersStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: TriggersStringFilter
+
+
+class TriggersEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: TriggersStringFilter
 
 
 class TriggersFuzzyCondition(TypedDict, total=False):
@@ -929,7 +958,7 @@ class TriggersKeywordCondition(TypedDict, total=False):
 
 
 class TriggersContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: TriggersAnyValueFilter
 
 
@@ -958,7 +987,8 @@ TriggersCondition = (
     | TriggersLtCondition
     | TriggersLteCondition
     | TriggersInCondition
-    | TriggersLikeCondition
+    | TriggersStartswithCondition
+    | TriggersEndswithCondition
     | TriggersFuzzyCondition
     | TriggersKeywordCondition
     | TriggersContainsCondition

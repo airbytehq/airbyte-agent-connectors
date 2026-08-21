@@ -128,7 +128,7 @@ class {{ schema.any_value_filter_type_name }}(TypedDict, total=False):
 
 
 class {{ schema.string_filter_type_name }}(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
 {% for field in schema.fields %}
     {{ field.python_name }}: str
     """{{ field.description }}"""
@@ -174,9 +174,14 @@ class {{ schema.condition_prefix }}LteCondition(TypedDict, total=False):
     lte: {{ schema.filter_type_name }}
 
 
-class {{ schema.condition_prefix }}LikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: {{ schema.string_filter_type_name }}
+class {{ schema.condition_prefix }}StartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: {{ schema.string_filter_type_name }}
+
+
+class {{ schema.condition_prefix }}EndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: {{ schema.string_filter_type_name }}
 
 
 class {{ schema.condition_prefix }}FuzzyCondition(TypedDict, total=False):
@@ -190,7 +195,7 @@ class {{ schema.condition_prefix }}KeywordCondition(TypedDict, total=False):
 
 
 class {{ schema.condition_prefix }}ContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: {{ schema.any_value_filter_type_name }}
 
 
@@ -219,7 +224,8 @@ class {{ schema.condition_prefix }}ContainsCondition(TypedDict, total=False):
     | {{ schema.condition_prefix }}LtCondition
     | {{ schema.condition_prefix }}LteCondition
     | {{ schema.condition_prefix }}InCondition
-    | {{ schema.condition_prefix }}LikeCondition
+    | {{ schema.condition_prefix }}StartswithCondition
+    | {{ schema.condition_prefix }}EndswithCondition
     | {{ schema.condition_prefix }}FuzzyCondition
     | {{ schema.condition_prefix }}KeywordCondition
     | {{ schema.condition_prefix }}ContainsCondition

@@ -185,7 +185,7 @@ class ProfilesAnyValueFilter(TypedDict, total=False):
 
 
 class ProfilesStringFilter(TypedDict, total=False):
-    """String fields for text search conditions (like, fuzzy, keyword)."""
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     account_info: str
     """"""
     country_code: str
@@ -247,9 +247,14 @@ class ProfilesLteCondition(TypedDict, total=False):
     lte: ProfilesSearchFilter
 
 
-class ProfilesLikeCondition(TypedDict, total=False):
-    """Partial string match with % wildcards."""
-    like: ProfilesStringFilter
+class ProfilesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: ProfilesStringFilter
+
+
+class ProfilesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: ProfilesStringFilter
 
 
 class ProfilesFuzzyCondition(TypedDict, total=False):
@@ -263,7 +268,7 @@ class ProfilesKeywordCondition(TypedDict, total=False):
 
 
 class ProfilesContainsCondition(TypedDict, total=False):
-    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
     contains: ProfilesAnyValueFilter
 
 
@@ -292,7 +297,8 @@ ProfilesCondition = (
     | ProfilesLtCondition
     | ProfilesLteCondition
     | ProfilesInCondition
-    | ProfilesLikeCondition
+    | ProfilesStartswithCondition
+    | ProfilesEndswithCondition
     | ProfilesFuzzyCondition
     | ProfilesKeywordCondition
     | ProfilesContainsCondition
