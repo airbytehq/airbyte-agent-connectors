@@ -220,7 +220,7 @@ Use `context_store_search` for connectors that have already synced (returning us
 ```typescript
 const { data } = useAirbyteQuery(connectorId, "customers", "context_store_search", {
   query: {
-    filter: { like: { email: "%@acme.com" } },
+    filter: { endswith: { email: "@acme.com" } },
     sort: [{ created_at: "desc" }],
   },
   limit: 50,
@@ -228,7 +228,7 @@ const { data } = useAirbyteQuery(connectorId, "customers", "context_store_search
 });
 ```
 
-**Filter operators**: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`, `like` (SQL `%` wildcards), `fuzzy` (ordered word match), `keyword` (any word present), `in` (value in list). Combine with `and`, `or`, `not`. Advanced operators (`any`, `has`, `contains` for nested/array fields) — see the connector's REFERENCE.md.
+**Filter operators**: `eq`, `neq`, `gt`, `gte`, `lt`, `lte`, `startswith`, `endswith`, `contains`, `fuzzy` (ordered word match), `keyword` (any word present), `in` (value in list). `startswith` and `endswith` are literal case-insensitive text matches. `contains` is a literal case-insensitive substring match on scalar fields and exact membership on arrays. Combine with `and`, `or`, `not`; advanced operators also include `any` and `has`. See the connector's REFERENCE.md.
 
 ## Write Operations
 
