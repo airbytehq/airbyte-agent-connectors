@@ -5502,7 +5502,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Ticket subject line",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "updatedAt",
@@ -5515,8 +5515,44 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "properties_subject",
+          "description": "Ticket subject line",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updatedAt",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "type": "string"
+        },
+        {
+          "name": "priority",
+          "type": "string"
+        },
+        {
+          "name": "contacts",
+          "type": "array"
+        },
+        {
+          "name": "companies",
+          "type": "array"
+        },
+        {
+          "name": "deals",
+          "type": "array"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -5602,7 +5638,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "The body content of the note (supports HTML)",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "properties.hs_object_id",
@@ -5645,8 +5681,44 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "properties_hs_note_body",
+          "description": "The body content of the note (supports HTML)",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updatedAt",
+          "type": "string"
+        },
+        {
+          "name": "activity_at",
+          "type": "string"
+        },
+        {
+          "name": "contacts",
+          "type": "array"
+        },
+        {
+          "name": "companies",
+          "type": "array"
+        },
+        {
+          "name": "deals",
+          "type": "array"
+        },
+        {
+          "name": "tickets",
+          "type": "array"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -5712,7 +5784,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Description or notes about the call",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "properties.hs_call_direction",
@@ -5815,8 +5887,52 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "properties_hs_call_body",
+          "description": "Description or notes about the call",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updatedAt",
+          "type": "string"
+        },
+        {
+          "name": "activity_at",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "direction",
+          "type": "string"
+        },
+        {
+          "name": "contacts",
+          "type": "array"
+        },
+        {
+          "name": "companies",
+          "type": "array"
+        },
+        {
+          "name": "deals",
+          "type": "array"
+        },
+        {
+          "name": "tickets",
+          "type": "array"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -5912,7 +6028,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Subject line of the email",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "properties.hs_email_text",
@@ -5975,8 +6091,48 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "properties_hs_email_subject",
+          "description": "Subject line of the email",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updatedAt",
+          "type": "string"
+        },
+        {
+          "name": "activity_at",
+          "type": "string"
+        },
+        {
+          "name": "direction",
+          "type": "string"
+        },
+        {
+          "name": "contacts",
+          "type": "array"
+        },
+        {
+          "name": "companies",
+          "type": "array"
+        },
+        {
+          "name": "deals",
+          "type": "array"
+        },
+        {
+          "name": "tickets",
+          "type": "array"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -6112,7 +6268,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Title of the meeting",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "properties.hs_object_id",
@@ -6155,8 +6311,48 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "properties_hs_meeting_title",
+          "description": "Title of the meeting",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updatedAt",
+          "type": "string"
+        },
+        {
+          "name": "activity_at",
+          "type": "string"
+        },
+        {
+          "name": "outcome",
+          "type": "string"
+        },
+        {
+          "name": "contacts",
+          "type": "array"
+        },
+        {
+          "name": "companies",
+          "type": "array"
+        },
+        {
+          "name": "deals",
+          "type": "array"
+        },
+        {
+          "name": "tickets",
+          "type": "array"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -6282,7 +6478,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Subject or title of the task",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "properties.hs_task_type",
@@ -6325,8 +6521,52 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "properties_hs_task_subject",
+          "description": "Subject or title of the task",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updatedAt",
+          "type": "string"
+        },
+        {
+          "name": "due_at",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "priority",
+          "type": "string"
+        },
+        {
+          "name": "contacts",
+          "type": "array"
+        },
+        {
+          "name": "companies",
+          "type": "array"
+        },
+        {
+          "name": "deals",
+          "type": "array"
+        },
+        {
+          "name": "tickets",
+          "type": "array"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     }

@@ -416,7 +416,8 @@ class ConnectorModel(BaseModel):
     semantic_search_fields: dict[str, dict[str, SemanticSearchConfig]] = Field(
         default_factory=dict,
         description="Parsed x-airbyte-semantic-search annotations, keyed by user-facing "
-        "entity name then field name. Dormant in Phase 1; no engine consumes it yet.",
+        "entity name then the field's PHYSICAL Context Store column name (x-airbyte-name when "
+        "present, else name). Dormant in Phase 1; no engine consumes it yet.",
     )
     enrichment_configs: dict[str, list[EnrichmentConfig]] = Field(
         default_factory=dict,

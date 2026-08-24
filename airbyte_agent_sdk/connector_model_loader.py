@@ -294,7 +294,8 @@ def _extract_semantic_search_fields(spec: OpenAPIConnector) -> dict[str, dict[st
             semantic = getattr(field, "x_airbyte_semantic_search", None)
             if semantic is None:
                 continue
-            field_name = getattr(field, "name", None)
+            # Physical Context Store column name; see semantic_config.resolve_semantic_search_fields.
+            field_name = getattr(field, "x_airbyte_name", None) or getattr(field, "name", None)
             if not isinstance(field_name, str) or not field_name:
                 continue
             field_configs[field_name] = semantic

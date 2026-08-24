@@ -456,7 +456,9 @@ class CacheFieldConfig(ExtensionAwareModel):
     @model_validator(mode="after")
     def validate_semantic_search_field_name(self) -> "CacheFieldConfig":
         if self.x_airbyte_semantic_search is not None:
-            _validate_semantic_filter_column_name(self.name, label="source field name")
+            # The physical Context Store column (`x-airbyte-name` when aliased) is what
+            # semantic search filters on, so that is the name that must be filter-safe.
+            _validate_semantic_filter_column_name(self.cache_name, label="source field name")
         return self
 
     @property

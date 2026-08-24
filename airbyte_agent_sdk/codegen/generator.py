@@ -1139,9 +1139,11 @@ class ConnectorGenerator:
                     }
                 )
                 if semantic is not None:
+                    # The backend resolves semantic fields by physical Context Store
+                    # column name (see connector_model_loader), so examples must too.
                     semantic_fields.append(
                         {
-                            "name": field.name,
+                            "name": field.cache_name,
                             "description": field.description,
                             "context_max_chars": semantic.windowing.context_max_chars,
                             "content_type": semantic.content_type,

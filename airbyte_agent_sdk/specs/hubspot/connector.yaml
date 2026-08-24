@@ -517,6 +517,25 @@ info:
         - 'null'
         - 'string'
         description: Ticket subject line
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+          - { name: ticket_content, path: "/properties_content" }
+          - name: ticket_subject
+            windowed: true
+            sampling: { sample_type: whole, unit_label: ticket }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{ticket_subject}\n\n{ticket_content}"
+          metadata:
+          - { name: id, path: "/id", type: string }
+          - { name: updatedAt, path: "/updatedAt", type: string }
+          - { name: createdAt, path: "/createdAt", type: string }
+          - { name: priority, path: "/properties_hs_ticket_priority", type: string }
+          - { name: contacts, path: "/contacts[]", type: array }
+          - { name: companies, path: "/companies[]", type: array }
+          - { name: deals, path: "/deals[]", type: array }
       - name: updatedAt
         type:
         - 'null'
@@ -563,6 +582,23 @@ info:
         - 'null'
         - 'string'
         description: The body content of the note (supports HTML)
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+          - name: note_body
+            windowed: true
+            sampling: { sample_type: whole, unit_label: note }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+          metadata:
+          - { name: id, path: "/id", type: string }
+          - { name: updatedAt, path: "/updatedAt", type: string }
+          - { name: activity_at, path: "/properties_hs_timestamp", type: string }
+          - { name: contacts, path: "/contacts[]", type: array }
+          - { name: companies, path: "/companies[]", type: array }
+          - { name: deals, path: "/deals[]", type: array }
+          - { name: tickets, path: "/tickets[]", type: array }
       - name: properties.hs_object_id
         x-airbyte-name: properties_hs_object_id
         type:
@@ -615,6 +651,27 @@ info:
         - 'null'
         - 'string'
         description: Description or notes about the call
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+          - { name: call_title, path: "/properties_hs_call_title" }
+          - name: call_body
+            windowed: true
+            sampling: { sample_type: whole, unit_label: call }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{call_title}\n\n{call_body}"
+          metadata:
+          - { name: id, path: "/id", type: string }
+          - { name: updatedAt, path: "/updatedAt", type: string }
+          - { name: activity_at, path: "/properties_hs_timestamp", type: string }
+          - { name: title, path: "/properties_hs_call_title", type: string }
+          - { name: direction, path: "/properties_hs_call_direction", type: string }
+          - { name: contacts, path: "/contacts[]", type: array }
+          - { name: companies, path: "/companies[]", type: array }
+          - { name: deals, path: "/deals[]", type: array }
+          - { name: tickets, path: "/tickets[]", type: array }
       - name: properties.hs_call_direction
         x-airbyte-name: properties_hs_call_direction
         type:
@@ -721,6 +778,26 @@ info:
         - 'null'
         - 'string'
         description: Subject line of the email
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+          - { name: email_body, path: "/properties_hs_email_text" }
+          - name: email_subject
+            windowed: true
+            sampling: { sample_type: whole, unit_label: email }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{email_subject}\n\n{email_body}"
+          metadata:
+          - { name: id, path: "/id", type: string }
+          - { name: updatedAt, path: "/updatedAt", type: string }
+          - { name: activity_at, path: "/properties_hs_timestamp", type: string }
+          - { name: direction, path: "/properties_hs_email_direction", type: string }
+          - { name: contacts, path: "/contacts[]", type: array }
+          - { name: companies, path: "/companies[]", type: array }
+          - { name: deals, path: "/deals[]", type: array }
+          - { name: tickets, path: "/tickets[]", type: array }
       - name: properties.hs_email_text
         x-airbyte-name: properties_hs_email_text
         type:
@@ -827,6 +904,26 @@ info:
         - 'null'
         - 'string'
         description: Title of the meeting
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+          - { name: meeting_body, path: "/properties_hs_meeting_body" }
+          - name: meeting_title
+            windowed: true
+            sampling: { sample_type: whole, unit_label: meeting }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{meeting_title}\n\n{meeting_body}"
+          metadata:
+          - { name: id, path: "/id", type: string }
+          - { name: updatedAt, path: "/updatedAt", type: string }
+          - { name: activity_at, path: "/properties_hs_timestamp", type: string }
+          - { name: outcome, path: "/properties_hs_meeting_outcome", type: string }
+          - { name: contacts, path: "/contacts[]", type: array }
+          - { name: companies, path: "/companies[]", type: array }
+          - { name: deals, path: "/deals[]", type: array }
+          - { name: tickets, path: "/tickets[]", type: array }
       - name: properties.hs_object_id
         x-airbyte-name: properties_hs_object_id
         type:
@@ -915,6 +1012,27 @@ info:
         - 'null'
         - 'string'
         description: Subject or title of the task
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+          - { name: task_body, path: "/properties_hs_task_body" }
+          - name: task_subject
+            windowed: true
+            sampling: { sample_type: whole, unit_label: task }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{task_subject}\n\n{task_body}"
+          metadata:
+          - { name: id, path: "/id", type: string }
+          - { name: updatedAt, path: "/updatedAt", type: string }
+          - { name: due_at, path: "/properties_hs_timestamp", type: string }
+          - { name: status, path: "/properties_hs_task_status", type: string }
+          - { name: priority, path: "/properties_hs_task_priority", type: string }
+          - { name: contacts, path: "/contacts[]", type: array }
+          - { name: companies, path: "/companies[]", type: array }
+          - { name: deals, path: "/deals[]", type: array }
+          - { name: tickets, path: "/tickets[]", type: array }
       - name: properties.hs_task_type
         x-airbyte-name: properties_hs_task_type
         type:

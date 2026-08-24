@@ -87,7 +87,7 @@ class AmplitudeConnector:
 
     connector_name = "amplitude"
     connector_version = "1.0.3"
-    sdk_version = "0.1.315"
+    sdk_version = "0.1.316"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
