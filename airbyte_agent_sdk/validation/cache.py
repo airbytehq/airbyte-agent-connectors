@@ -31,6 +31,31 @@ def _extract_stream_schema(stream: dict[str, Any]) -> dict[str, Any]:
     return {}
 
 
+def _config_resolver_default_stream_names(resolver: dict[str, Any]) -> list[str]:
+    """Stream names a `ConfigComponentsResolver` materializes from its own defaults.
+
+    A `DynamicDeclarativeStream` builds one stream per entry of the config array at
+    `configs_pointer` plus one per `default_values` entry, each named after that entry's
+    `name`. Config-driven entries are only known at runtime, but the `default_values` are
+    the connector's built-in reports and are statically known.
+    """
+    if resolver.get("type") != "ConfigComponentsResolver":
+        return []
+
+    # `stream_config` accepts either a single StreamConfig or a list of them.
+    declared = resolver.get("stream_config")
+    stream_configs = declared if isinstance(declared, list) else [declared]
+
+    names: list[str] = []
+    for stream_config in stream_configs:
+        if not isinstance(stream_config, dict):
+            continue
+        for default in stream_config.get("default_values") or []:
+            if isinstance(default, dict) and isinstance(default.get("name"), str) and default["name"]:
+                names.append(default["name"])
+    return names
+
+
 def _extract_manifest_streams(manifest: dict[str, Any]) -> dict[str, set[str]]:
     """Extract stream names and their schema property keys from a resolved manifest.
 
@@ -61,6 +86,20 @@ def _extract_manifest_streams(manifest: dict[str, Any]) -> dict[str, set[str]]:
             continue
 
         _process_stream(stream)
+
+    for dynamic_stream in manifest.get("dynamic_streams", []):
+        if not isinstance(dynamic_stream, dict):
+            continue
+
+        template = dynamic_stream.get("stream_template", {})
+        template_fields = set(_extract_stream_schema(template).get("properties", {}).keys()) if isinstance(template, dict) else set()
+
+        resolver = dynamic_stream.get("components_resolver", {})
+        if not isinstance(resolver, dict):
+            continue
+
+        for name in _config_resolver_default_stream_names(resolver):
+            result.setdefault(name, template_fields)
 
     return result
 

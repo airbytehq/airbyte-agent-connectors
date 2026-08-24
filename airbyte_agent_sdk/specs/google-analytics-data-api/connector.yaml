@@ -57,6 +57,132 @@ info:
       - property_ids
     replication_config_key_mapping:
       property_ids: property_ids
+  x-airbyte-direct-form:
+    # Optional GA4 fields surfaced in the direct connector registration form.
+    # These are overlaid onto the inferred user_config_spec at serve time so the
+    # simple direct interface can opt into guided custom reports without exposing
+    # the full replication connector. Every key and value here is a subset of the
+    # DR source's own config, so a filled form is already a valid source config:
+    # the overlay curates titles, descriptions, suggestions and the name pattern,
+    # and nothing is reshaped on the way to the source.
+    title: Custom Reports (optional)
+    description: >-
+      Opt into one or more guided custom GA4 reports. Each report pulls the
+      selected metrics broken down by the selected dimensions, one of which is
+      the report's time bucket.
+    properties:
+      custom_reports_array:
+        type: array
+        title: Custom Reports
+        description: >-
+          Define one or more custom reports. Leave empty to sync only the
+          built-in reports.
+        order: 20
+        # Each entry becomes a stream named after this field, so the entity
+        # picker lists the configured reports alongside the built-in entities.
+        x-airbyte-dynamic-stream-name-field: name
+        items:
+          type: object
+          required:
+            - name
+            - dimensions
+            - metrics
+          properties:
+            name:
+              type: string
+              title: Report Name
+              description: >-
+                A unique name for this report. It has to start with
+                custom_report_ and continue in lower snake case (letters,
+                digits and single underscores) -- for example
+                custom_report_weekly_traffic. The stream is named exactly this,
+                which keeps custom reports together in the streams list and
+                distinct from the built-in ones.
+              pattern: "^custom_report_[a-z0-9]+(_[a-z0-9]+)*$"
+              order: 0
+            dimensions:
+              type: array
+              title: Dimensions
+              description: >-
+                GA4 dimensions to break the report down by. Include one time
+                dimension -- date, yearMonth or year -- to set the report's
+                time bucket and its incremental sync cursor. date is
+                recommended: it is additive across days, it upserts on
+                re-sync, and a coarser bucket is aggregated only over the
+                window each sync requests.
+              order: 1
+              minItems: 1
+              items:
+                type: string
+              suggestions:
+                - date
+                - yearMonth
+                - year
+                - country
+                - region
+                - city
+                - deviceCategory
+                - operatingSystem
+                - browser
+                - platform
+                - language
+                - sessionSource
+                - sessionMedium
+                - sessionCampaignName
+                - sessionDefaultChannelGroup
+                - firstUserDefaultChannelGroup
+                - pagePath
+                - pageTitle
+                - landingPage
+                - eventName
+            metrics:
+              type: array
+              title: Metrics
+              description: GA4 metrics to include in this report.
+              order: 2
+              minItems: 1
+              items:
+                type: string
+              suggestions:
+                - totalUsers
+                - newUsers
+                - activeUsers
+                - sessions
+                - engagedSessions
+                - engagementRate
+                - averageSessionDuration
+                - bounceRate
+                - screenPageViews
+                - screenPageViewsPerSession
+                - eventCount
+                - eventCountPerUser
+                - conversions
+                - totalRevenue
+                - purchaseRevenue
+      date_ranges_start_date:
+        type: string
+        title: Backfill Start Date
+        format: date
+        description: >-
+          The earliest date to backfill data from, in YYYY-MM-DD format. This is
+          the maximum historical window for the initial sync and defaults to about
+          two years ago. It is not a lookback window.
+        order: 21
+      lookback_window:
+        type: integer
+        title: Minimum Lookback (days)
+        description: >-
+          Minimum number of days to re-fetch on each incremental sync to capture
+          late-arriving data. This only compensates for data-processing latency;
+          it does not control how far back the initial backfill goes. The connector
+          balances this against the time since the last sync.
+        default: 2
+        minimum: 0
+        order: 22
+    required: []
+    dynamic_streams:
+      - array_field: custom_reports_array
+        name_field: name
   x-airbyte-scoping:
     - param: property_id
       config_key: property_ids
