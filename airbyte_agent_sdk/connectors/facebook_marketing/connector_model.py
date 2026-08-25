@@ -26,6 +26,12 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -5927,6 +5933,88 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                         name='body',
                         type=['null', 'string'],
                         description='Ad body text',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticSample(
+                                    name='creative_body',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='creative',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{title}\n\n{creative_body}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='status',
+                                    path='/status',
+                                ),
+                                SemanticMetadataField(
+                                    name='name',
+                                    path='/name',
+                                ),
+                                SemanticMetadataField(
+                                    name='account_id',
+                                    path='/account_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticMetadataField(
+                                    name='call_to_action_type',
+                                    path='/call_to_action_type',
+                                ),
+                                SemanticMetadataField(
+                                    name='object_type',
+                                    path='/object_type',
+                                ),
+                                SemanticMetadataField(
+                                    name='actor_id',
+                                    path='/actor_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='effective_object_story_id',
+                                    path='/effective_object_story_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='video_id',
+                                    path='/video_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='image_hash',
+                                    path='/image_hash',
+                                ),
+                                SemanticMetadataField(
+                                    name='link_url',
+                                    path='/link_url',
+                                ),
+                                SemanticMetadataField(
+                                    name='url_tags',
+                                    path='/url_tags',
+                                ),
+                                SemanticMetadataField(
+                                    name='instagram_permalink_url',
+                                    path='/instagram_permalink_url',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='title',
@@ -6423,6 +6511,92 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'created_time',
             'updated_time',
         ],
+    },
+    semantic_search_fields={
+        'ad_creatives': {
+            'body': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticSample(
+                        name='creative_body',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='creative',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{title}\n\n{creative_body}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='status',
+                        path='/status',
+                    ),
+                    SemanticMetadataField(
+                        name='name',
+                        path='/name',
+                    ),
+                    SemanticMetadataField(
+                        name='account_id',
+                        path='/account_id',
+                    ),
+                    SemanticMetadataField(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticMetadataField(
+                        name='call_to_action_type',
+                        path='/call_to_action_type',
+                    ),
+                    SemanticMetadataField(
+                        name='object_type',
+                        path='/object_type',
+                    ),
+                    SemanticMetadataField(
+                        name='actor_id',
+                        path='/actor_id',
+                    ),
+                    SemanticMetadataField(
+                        name='effective_object_story_id',
+                        path='/effective_object_story_id',
+                    ),
+                    SemanticMetadataField(
+                        name='video_id',
+                        path='/video_id',
+                    ),
+                    SemanticMetadataField(
+                        name='image_hash',
+                        path='/image_hash',
+                    ),
+                    SemanticMetadataField(
+                        name='link_url',
+                        path='/link_url',
+                    ),
+                    SemanticMetadataField(
+                        name='url_tags',
+                        path='/url_tags',
+                    ),
+                    SemanticMetadataField(
+                        name='instagram_permalink_url',
+                        path='/instagram_permalink_url',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[

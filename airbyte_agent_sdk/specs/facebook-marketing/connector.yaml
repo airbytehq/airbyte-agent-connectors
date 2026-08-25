@@ -271,6 +271,51 @@ info:
       - name: body
         type: ["null", "string"]
         description: Ad body text
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+          - { name: title, path: "/title" }
+          - name: creative_body
+            windowed: true
+            sampling: { sample_type: whole, unit_label: creative }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{title}\n\n{creative_body}"
+          # AdCreative has no created_time/updated_time on the Graph API object and Airbyte's
+          # AdCreatives stream is full-refresh only, so there is no incremental cursor for
+          # record-root position [1]. `status` sits there deliberately: it is a varchar, so
+          # `dedup_order_by` logs a WARNING and falls back to sync_id/_airbyte_extracted_at
+          # ordering, which is the correct dedupe order for a full-refresh append stream.
+          # Do not "fix" this by inventing a timestamp column -- none exists.
+          #
+          # Metadata is now-or-never: the embeddings table is CREATE TABLE AS on first write and
+          # INSERT INTO ... (<explicit column list>) thereafter, with no ALTER or drift
+          # reconciliation, so adding an entry later fails the append with a BinderException and
+          # forces a full re-embed. The set below is therefore deliberately wider than today's
+          # known queries -- every scalar an advertiser might plausibly filter or join on is here.
+          # A name absent from the raw table resolves to NULL rather than failing, so a
+          # speculative entry is cheap; a missing one is not.
+          # Deliberately excluded: image_url and thumbnail_url (expiring signed CDN URLs,
+          # measured at 260 and 330 chars -- the largest available context tax, and they go
+          # stale), object_story_id (redundant with effective_object_story_id), and the nested
+          # object/array columns (object_story_spec, asset_feed_spec, adlabels, image_crops,
+          # template_url_spec), which are not scalar filters.
+          metadata:
+          - { name: id, path: "/id", type: string }
+          - { name: status, path: "/status", type: string }
+          - { name: name, path: "/name", type: string }
+          - { name: account_id, path: "/account_id", type: string }
+          - { name: title, path: "/title", type: string }
+          - { name: call_to_action_type, path: "/call_to_action_type", type: string }
+          - { name: object_type, path: "/object_type", type: string }
+          - { name: actor_id, path: "/actor_id", type: string }
+          - { name: effective_object_story_id, path: "/effective_object_story_id", type: string }
+          - { name: video_id, path: "/video_id", type: string }
+          - { name: image_hash, path: "/image_hash", type: string }
+          - { name: link_url, path: "/link_url", type: string }
+          - { name: url_tags, path: "/url_tags", type: string }
+          - { name: instagram_permalink_url, path: "/instagram_permalink_url", type: string }
       - name: title
         type: ["null", "string"]
         description: Ad title

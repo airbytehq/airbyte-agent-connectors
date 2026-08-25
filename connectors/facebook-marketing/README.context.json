@@ -2176,7 +2176,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Ad body text",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "title",
@@ -2239,8 +2239,72 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "body",
+          "description": "Ad body text",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "account_id",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "call_to_action_type",
+          "type": "string"
+        },
+        {
+          "name": "object_type",
+          "type": "string"
+        },
+        {
+          "name": "actor_id",
+          "type": "string"
+        },
+        {
+          "name": "effective_object_story_id",
+          "type": "string"
+        },
+        {
+          "name": "video_id",
+          "type": "string"
+        },
+        {
+          "name": "image_hash",
+          "type": "string"
+        },
+        {
+          "name": "link_url",
+          "type": "string"
+        },
+        {
+          "name": "url_tags",
+          "type": "string"
+        },
+        {
+          "name": "instagram_permalink_url",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
