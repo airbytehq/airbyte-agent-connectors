@@ -334,6 +334,11 @@ info:
               - "null"
               - "string"
             description: "Message timestamp (unique identifier)."
+          - name: float_ts
+            type:
+              - "null"
+              - "number"
+            description: "Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."
           - name: user
             type:
               - "null"
@@ -344,6 +349,38 @@ info:
               - "null"
               - "string"
             description: "Message text content."
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - name: bot_name
+                  path: /bot_profile.name
+                  suffix: ": "
+                - name: webhook_name
+                  path: /username
+                  suffix: ": "
+                - name: message
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: message }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{bot_name|webhook_name}{message}"
+              # Order matters: the first record-root entry is the record key, the second is the
+              # cursor. The names define the embeddings-table columns; changing them after
+              # vectors exist requires rebuilding the table.
+              metadata:
+                - { name: ts, path: "/ts", type: string }
+                # float_ts is numeric on the record but stored as its string form here: an
+                # opaque per-record token used only as the derived cursor. It is never compared
+                # against ts and never ordered lexically -- the Athena delta dedupe orders on
+                # the raw numeric column, not this stored string.
+                - { name: float_ts, path: "/float_ts", type: string }
+                - { name: channel_id, path: "/channel_id", type: string }
+                - { name: thread_ts, path: "/thread_ts", type: string }
+                - { name: user, path: "/user", type: string }
+                - { name: subtype, path: "/subtype", type: string }
+                - { name: botName, path: "/bot_profile.name", type: string }
+                - { name: webhookName, path: "/username", type: string }
           - name: thread_ts
             type:
               - "null"
@@ -404,18 +441,55 @@ info:
               - "null"
               - "object"
             description: "Bot profile information."
+          - name: username
+            type:
+              - "null"
+              - "string"
+            description: "Display name stamped on the message by incoming webhooks and legacy bot posts; absent on ordinary user messages and on most modern app messages, which carry bot_profile instead."
           - name: team
             type:
               - "null"
               - "string"
             description: "Team ID."
+          - name: channel_id
+            type:
+              - "null"
+              - "string"
+            description: "Channel ID the message was posted in. Added by the Airbyte Slack source; not returned by the Slack API."
         x-airbyte-enrichment:
           - target: users
             match:
               - { local: user, foreign: id }
             project:
-              - { name: authorName, from: real_name }
+              - { name: authorName, from: "profile.real_name" }
               - { name: authorDisplayName, from: "profile.display_name" }
+          - target: channels
+            match:
+              - { local: channel_id, foreign: id }
+            project:
+              - { name: channelName, from: name }
+        # Slack stores mentions as raw ids (<@U089R2B6A04>, <#C01ABCDEF>). Rewrite them into
+        # readable names when a hit is returned. Display-only: the stored text and the
+        # embeddings keep the ids, so a query for "what did Johnny say" still won't match on
+        # the name. <!subteam^S...> is intentionally absent -- source-slack replicates no
+        # usergroups stream, so those stay verbatim rather than render a made-up label.
+        x-airbyte-text-references:
+          fields: [text]
+          pattern: '<(?P<sigil>[@#])(?P<id>[A-Z0-9]+)(\|[^>]*)?>'
+          specials:
+            pattern: '<!(?P<command>here|channel|everyone)(\|[^>]*)?>'
+            render: '@{command}'
+          resolve:
+            - sigil: '@'
+              target: users
+              key: id
+              render: '@{label}'
+              label: ["profile.display_name", "profile.real_name", "name"]
+            - sigil: '#'
+              target: channels
+              key: id
+              render: '#{label}'
+              label: ["name"]
       - entity: threads
         x-airbyte-name: threads
         suggested: true
@@ -435,6 +509,11 @@ info:
               - "null"
               - "string"
             description: "Message timestamp (unique identifier)."
+          - name: float_ts
+            type:
+              - "null"
+              - "number"
+            description: "Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."
           - name: user
             type:
               - "null"
@@ -445,6 +524,41 @@ info:
               - "null"
               - "string"
             description: "Message text content."
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                # A reply embeds its thread parent's text as TRAILING context: the parent is the
+                # sibling row whose ts equals this row's thread_ts. The parent follows the reply
+                # rather than leading it because a search hit's context field is truncated from
+                # the front, so a leading parent consumes the whole budget and hides the reply
+                # itself -- the thing that matched. Parent rows (ts == thread_ts) resolve no
+                # sibling, so the "In reply to:" label only renders when a parent exists.
+                # max_chars bounds a very long parent (an ellipsis marks the cut).
+                - name: parent_text
+                  lookup: { local: thread_ts, foreign: ts, from: text }
+                  max_chars: 512
+                  prefix: "\n\nIn reply to: "
+                - name: message
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: message }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{message}{parent_text}"
+              # Order matters: the first record-root entry is the record key, the second is the
+              # cursor. The names define the embeddings-table columns; changing them after
+              # vectors exist requires rebuilding the table.
+              metadata:
+                - { name: ts, path: "/ts", type: string }
+                # float_ts is numeric on the record but stored as its string form here: an
+                # opaque per-record token used only as the derived cursor. It is never compared
+                # against ts and never ordered lexically -- the Athena delta dedupe orders on
+                # the raw numeric column, not this stored string.
+                - { name: float_ts, path: "/float_ts", type: string }
+                - { name: channel_id, path: "/channel_id", type: string }
+                - { name: thread_ts, path: "/thread_ts", type: string }
+                - { name: user, path: "/user", type: string }
+                - { name: subtype, path: "/subtype", type: string }
           - name: thread_ts
             type:
               - "null"
@@ -500,13 +614,45 @@ info:
               - "null"
               - "string"
             description: "Team ID."
+          - name: channel_id
+            type:
+              - "null"
+              - "string"
+            description: "Channel ID the thread lives in. Added by the Airbyte Slack source; not returned by the Slack API."
         x-airbyte-enrichment:
           - target: users
             match:
               - { local: user, foreign: id }
             project:
-              - { name: authorName, from: real_name }
+              - { name: authorName, from: "profile.real_name" }
               - { name: authorDisplayName, from: "profile.display_name" }
+          - target: channels
+            match:
+              - { local: channel_id, foreign: id }
+            project:
+              - { name: channelName, from: name }
+        # Slack stores mentions as raw ids (<@U089R2B6A04>, <#C01ABCDEF>). Rewrite them into
+        # readable names when a hit is returned. Display-only: the stored text and the
+        # embeddings keep the ids, so a query for "what did Johnny say" still won't match on
+        # the name. <!subteam^S...> is intentionally absent -- source-slack replicates no
+        # usergroups stream, so those stay verbatim rather than render a made-up label.
+        x-airbyte-text-references:
+          fields: [text]
+          pattern: '<(?P<sigil>[@#])(?P<id>[A-Z0-9]+)(\|[^>]*)?>'
+          specials:
+            pattern: '<!(?P<command>here|channel|everyone)(\|[^>]*)?>'
+            render: '@{command}'
+          resolve:
+            - sigil: '@'
+              target: users
+              key: id
+              render: '@{label}'
+              label: ["profile.display_name", "profile.real_name", "name"]
+            - sigil: '#'
+              target: channels
+              key: id
+              render: '#{label}'
+              label: ["name"]
       - entity: users
         x-airbyte-name: users
         suggested: true

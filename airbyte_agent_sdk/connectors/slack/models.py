@@ -823,6 +823,8 @@ class ChannelMessagesSearchData(BaseModel):
     """Message subtype."""
     ts: str | None = None
     """Message timestamp (unique identifier)."""
+    float_ts: float | None = None
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: str | None = None
     """User ID who sent the message."""
     text: str | None = None
@@ -851,8 +853,12 @@ class ChannelMessagesSearchData(BaseModel):
     """Bot ID if message was sent by a bot."""
     bot_profile: dict[str, Any] | None = None
     """Bot profile information."""
+    username: str | None = None
+    """Display name stamped on the message by incoming webhooks and legacy bot posts; absent on ordinary user messages and on most modern app messages, which carry bot_profile instead."""
     team: str | None = None
     """Team ID."""
+    channel_id: str | None = None
+    """Channel ID the message was posted in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 class ThreadsSearchData(BaseModel):
@@ -865,6 +871,8 @@ class ThreadsSearchData(BaseModel):
     """Message subtype."""
     ts: str | None = None
     """Message timestamp (unique identifier)."""
+    float_ts: float | None = None
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: str | None = None
     """User ID who sent the message."""
     text: str | None = None
@@ -891,6 +899,8 @@ class ThreadsSearchData(BaseModel):
     """Bot ID if message was sent by a bot."""
     team: str | None = None
     """Team ID."""
+    channel_id: str | None = None
+    """Channel ID the thread lives in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 class UsersSearchData(BaseModel):

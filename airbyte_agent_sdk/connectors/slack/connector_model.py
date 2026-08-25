@@ -29,6 +29,16 @@ from airbyte_agent_sdk.schema.extensions import (
     EnrichmentMatch,
     EnrichmentProjection,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampleLookup,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
+    TextReferenceConfig,
+    TextReferenceResolver,
+    TextReferenceSpecials,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -4692,6 +4702,11 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         description='Message timestamp (unique identifier).',
                     ),
                     CacheFieldConfig(
+                        name='float_ts',
+                        type=['null', 'number'],
+                        description='Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API.',
+                    ),
+                    CacheFieldConfig(
                         name='user',
                         type=['null', 'string'],
                         description='User ID who sent the message.',
@@ -4700,6 +4715,70 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         name='text',
                         type=['null', 'string'],
                         description='Message text content.',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='bot_name',
+                                    path='/bot_profile.name',
+                                    suffix=': ',
+                                ),
+                                SemanticSample(
+                                    name='webhook_name',
+                                    path='/username',
+                                    suffix=': ',
+                                ),
+                                SemanticSample(
+                                    name='message',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='message',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{bot_name|webhook_name}{message}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='ts',
+                                    path='/ts',
+                                ),
+                                SemanticMetadataField(
+                                    name='float_ts',
+                                    path='/float_ts',
+                                ),
+                                SemanticMetadataField(
+                                    name='channel_id',
+                                    path='/channel_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='thread_ts',
+                                    path='/thread_ts',
+                                ),
+                                SemanticMetadataField(
+                                    name='user',
+                                    path='/user',
+                                ),
+                                SemanticMetadataField(
+                                    name='subtype',
+                                    path='/subtype',
+                                ),
+                                SemanticMetadataField(
+                                    name='botName',
+                                    path='/bot_profile.name',
+                                ),
+                                SemanticMetadataField(
+                                    name='webhookName',
+                                    path='/username',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='thread_ts',
@@ -4762,9 +4841,19 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         description='Bot profile information.',
                     ),
                     CacheFieldConfig(
+                        name='username',
+                        type=['null', 'string'],
+                        description='Display name stamped on the message by incoming webhooks and legacy bot posts; absent on ordinary user messages and on most modern app messages, which carry bot_profile instead.',
+                    ),
+                    CacheFieldConfig(
                         name='team',
                         type=['null', 'string'],
                         description='Team ID.',
+                    ),
+                    CacheFieldConfig(
+                        name='channel_id',
+                        type=['null', 'string'],
+                        description='Channel ID the message was posted in. Added by the Airbyte Slack source; not returned by the Slack API.',
                     ),
                 ],
                 x_airbyte_enrichment=[
@@ -4779,7 +4868,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         project=[
                             EnrichmentProjection(
                                 name='authorName',
-                                from_='real_name',
+                                from_='profile.real_name',
                             ),
                             EnrichmentProjection(
                                 name='authorDisplayName',
@@ -4787,7 +4876,46 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                             ),
                         ],
                     ),
+                    EnrichmentConfig(
+                        target='channels',
+                        match=[
+                            EnrichmentMatch(
+                                local='channel_id',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='channelName',
+                                from_='name',
+                            ),
+                        ],
+                    ),
                 ],
+                x_airbyte_text_references=TextReferenceConfig(
+                    fields=['text'],
+                    pattern='<(?P<sigil>[@#])(?P<id>[A-Z0-9]+)(\\|[^>]*)?>',
+                    specials=TextReferenceSpecials(
+                        pattern='<!(?P<command>here|channel|everyone)(\\|[^>]*)?>',
+                        render='@{command}',
+                    ),
+                    resolve=[
+                        TextReferenceResolver(
+                            sigil='@',
+                            target='users',
+                            key='id',
+                            render='@{label}',
+                            label=['profile.display_name', 'profile.real_name', 'name'],
+                        ),
+                        TextReferenceResolver(
+                            sigil='#',
+                            target='channels',
+                            key='id',
+                            render='#{label}',
+                            label=['name'],
+                        ),
+                    ],
+                ),
             ),
             CacheEntityConfig(
                 entity='threads',
@@ -4810,6 +4938,11 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         description='Message timestamp (unique identifier).',
                     ),
                     CacheFieldConfig(
+                        name='float_ts',
+                        type=['null', 'number'],
+                        description='Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API.',
+                    ),
+                    CacheFieldConfig(
                         name='user',
                         type=['null', 'string'],
                         description='User ID who sent the message.',
@@ -4818,6 +4951,62 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         name='text',
                         type=['null', 'string'],
                         description='Message text content.',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='parent_text',
+                                    lookup=SemanticSampleLookup(
+                                        local='thread_ts',
+                                        foreign='ts',
+                                        source='text',
+                                    ),
+                                    max_chars=512,
+                                    prefix='\n\nIn reply to: ',
+                                ),
+                                SemanticSample(
+                                    name='message',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='message',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{message}{parent_text}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='ts',
+                                    path='/ts',
+                                ),
+                                SemanticMetadataField(
+                                    name='float_ts',
+                                    path='/float_ts',
+                                ),
+                                SemanticMetadataField(
+                                    name='channel_id',
+                                    path='/channel_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='thread_ts',
+                                    path='/thread_ts',
+                                ),
+                                SemanticMetadataField(
+                                    name='user',
+                                    path='/user',
+                                ),
+                                SemanticMetadataField(
+                                    name='subtype',
+                                    path='/subtype',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='thread_ts',
@@ -4874,6 +5063,11 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         type=['null', 'string'],
                         description='Team ID.',
                     ),
+                    CacheFieldConfig(
+                        name='channel_id',
+                        type=['null', 'string'],
+                        description='Channel ID the thread lives in. Added by the Airbyte Slack source; not returned by the Slack API.',
+                    ),
                 ],
                 x_airbyte_enrichment=[
                     EnrichmentConfig(
@@ -4887,7 +5081,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         project=[
                             EnrichmentProjection(
                                 name='authorName',
-                                from_='real_name',
+                                from_='profile.real_name',
                             ),
                             EnrichmentProjection(
                                 name='authorDisplayName',
@@ -4895,7 +5089,46 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                             ),
                         ],
                     ),
+                    EnrichmentConfig(
+                        target='channels',
+                        match=[
+                            EnrichmentMatch(
+                                local='channel_id',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='channelName',
+                                from_='name',
+                            ),
+                        ],
+                    ),
                 ],
+                x_airbyte_text_references=TextReferenceConfig(
+                    fields=['text'],
+                    pattern='<(?P<sigil>[@#])(?P<id>[A-Z0-9]+)(\\|[^>]*)?>',
+                    specials=TextReferenceSpecials(
+                        pattern='<!(?P<command>here|channel|everyone)(\\|[^>]*)?>',
+                        render='@{command}',
+                    ),
+                    resolve=[
+                        TextReferenceResolver(
+                            sigil='@',
+                            target='users',
+                            key='id',
+                            render='@{label}',
+                            label=['profile.display_name', 'profile.real_name', 'name'],
+                        ),
+                        TextReferenceResolver(
+                            sigil='#',
+                            target='channels',
+                            key='id',
+                            render='#{label}',
+                            label=['name'],
+                        ),
+                    ],
+                ),
             ),
             CacheEntityConfig(
                 entity='users',
@@ -5156,6 +5389,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
             'type',
             'subtype',
             'ts',
+            'float_ts',
             'user',
             'text',
             'thread_ts',
@@ -5174,12 +5408,15 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
             'blocks[]',
             'bot_id',
             'bot_profile',
+            'username',
             'team',
+            'channel_id',
         ],
         'threads': [
             'type',
             'subtype',
             'ts',
+            'float_ts',
             'user',
             'text',
             'thread_ts',
@@ -5195,6 +5432,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
             'blocks[]',
             'bot_id',
             'team',
+            'channel_id',
         ],
         'users': [
             'color',
@@ -5251,6 +5489,132 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
             'who_can_share_contact_card',
         ],
     },
+    semantic_search_fields={
+        'channel_messages': {
+            'text': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='bot_name',
+                        path='/bot_profile.name',
+                        suffix=': ',
+                    ),
+                    SemanticSample(
+                        name='webhook_name',
+                        path='/username',
+                        suffix=': ',
+                    ),
+                    SemanticSample(
+                        name='message',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='message',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{bot_name|webhook_name}{message}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='ts',
+                        path='/ts',
+                    ),
+                    SemanticMetadataField(
+                        name='float_ts',
+                        path='/float_ts',
+                    ),
+                    SemanticMetadataField(
+                        name='channel_id',
+                        path='/channel_id',
+                    ),
+                    SemanticMetadataField(
+                        name='thread_ts',
+                        path='/thread_ts',
+                    ),
+                    SemanticMetadataField(
+                        name='user',
+                        path='/user',
+                    ),
+                    SemanticMetadataField(
+                        name='subtype',
+                        path='/subtype',
+                    ),
+                    SemanticMetadataField(
+                        name='botName',
+                        path='/bot_profile.name',
+                    ),
+                    SemanticMetadataField(
+                        name='webhookName',
+                        path='/username',
+                    ),
+                ],
+            ),
+        },
+        'threads': {
+            'text': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='parent_text',
+                        lookup=SemanticSampleLookup(
+                            local='thread_ts',
+                            foreign='ts',
+                            source='text',
+                        ),
+                        max_chars=512,
+                        prefix='\n\nIn reply to: ',
+                    ),
+                    SemanticSample(
+                        name='message',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='message',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{message}{parent_text}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='ts',
+                        path='/ts',
+                    ),
+                    SemanticMetadataField(
+                        name='float_ts',
+                        path='/float_ts',
+                    ),
+                    SemanticMetadataField(
+                        name='channel_id',
+                        path='/channel_id',
+                    ),
+                    SemanticMetadataField(
+                        name='thread_ts',
+                        path='/thread_ts',
+                    ),
+                    SemanticMetadataField(
+                        name='user',
+                        path='/user',
+                    ),
+                    SemanticMetadataField(
+                        name='subtype',
+                        path='/subtype',
+                    ),
+                ],
+            ),
+        },
+    },
     enrichment_configs={
         'channel_messages': [
             EnrichmentConfig(
@@ -5264,11 +5628,26 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                 project=[
                     EnrichmentProjection(
                         name='authorName',
-                        from_='real_name',
+                        from_='profile.real_name',
                     ),
                     EnrichmentProjection(
                         name='authorDisplayName',
                         from_='profile.display_name',
+                    ),
+                ],
+            ),
+            EnrichmentConfig(
+                target='channels',
+                match=[
+                    EnrichmentMatch(
+                        local='channel_id',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='channelName',
+                        from_='name',
                     ),
                 ],
             ),
@@ -5285,11 +5664,26 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                 project=[
                     EnrichmentProjection(
                         name='authorName',
-                        from_='real_name',
+                        from_='profile.real_name',
                     ),
                     EnrichmentProjection(
                         name='authorDisplayName',
                         from_='profile.display_name',
+                    ),
+                ],
+            ),
+            EnrichmentConfig(
+                target='channels',
+                match=[
+                    EnrichmentMatch(
+                        local='channel_id',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='channelName',
+                        from_='name',
                     ),
                 ],
             ),

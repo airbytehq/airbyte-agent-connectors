@@ -12,7 +12,7 @@ Provides Pydantic models for OpenAPI x-airbyte-* extensions:
 import re
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, field_validator, model_validator
 
 from airbyte_agent_sdk.schema.interpolation import resolve_interpolated_constants
 
@@ -149,6 +149,52 @@ class SemanticSampling(BaseModel):
     )
 
 
+class SemanticSampleLookup(BaseModel):
+    """
+    Lookup supplying a scalar sample's value from a related record.
+
+    The embedding engine resolves the value with a join over raw rows: for each
+    record, the related record whose `foreign` column equals this record's `local`
+    column is located (one related record per foreign value, latest version), and
+    its `from` column becomes the sample's value. A record whose `local` column is
+    null or unmatched resolves to no value.
+
+    The lookup side is this record's own stream (a self-join), and a record that
+    is its own sibling resolves to no value; a lookup may only reference the same stream.
+
+    `from` may be a dotted path (e.g. `profile.real_name`): the first segment is
+    the lookup-side column, and the remaining segments resolve within its value.
+
+    Used inside a scalar SemanticSample in place of `path`.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    local: str = Field(
+        min_length=1,
+        description="Column on this record whose value identifies the related record.",
+    )
+    foreign: str = Field(
+        min_length=1,
+        description="Column on the related record matched against 'local'.",
+    )
+    source: str = Field(
+        alias="from",
+        min_length=1,
+        description="Column on the related record supplying the sample's value; a dotted path resolves nested values within that column.",
+    )
+
+    @field_validator("local", "foreign", "source")
+    @classmethod
+    def _require_path_segment(cls, value: str) -> str:
+        # Every segment must be non-empty, not merely one of them: `local`/`foreign` reach the
+        # embedding job as literal column names, so a stray separator ("thread_ts.", ".ts")
+        # yields a column that cannot exist and fails every embedding run for the connector.
+        if not value or any(not segment.strip() for segment in value.split(".")):
+            raise ValueError(f"lookup paths must not contain empty segments, got {value!r}")
+        return value
+
+
 class SemanticSample(BaseModel):
     """
     A single sample contributing to a semantic-search field's embedded text.
@@ -156,8 +202,9 @@ class SemanticSample(BaseModel):
     A field declares a list of samples. Exactly one sample is ``windowed`` -- it
     carries the ``sampling`` block that splits the decoded field value into the
     units that get embedded and that drives table/column naming. Every other
-    sample is scalar: it resolves a single record-level value via ``path`` and is
-    rendered into the embedding template alongside the windowed text.
+    sample is scalar: it resolves a single value -- from this record via `path`,
+    or from a related record via `lookup` -- and is rendered into the embedding
+    template alongside the windowed text.
 
     Used inside x-airbyte-semantic-search on a context-store field.
     """
@@ -170,6 +217,24 @@ class SemanticSample(BaseModel):
     path: str | None = Field(
         default=None,
         description="Scalar samples only: path to the record-level value (a leading '/' resolves from the record root).",
+    )
+    lookup: SemanticSampleLookup | None = Field(
+        default=None,
+        description="Scalar samples only: resolve the value from a related record (mutually exclusive with 'path').",
+    )
+    max_chars: int | None = Field(
+        default=None,
+        ge=1,
+        description="Scalar samples only: hard cap on the resolved value's length; longer values are "
+        "truncated before templating, with an ellipsis appended to mark the cut.",
+    )
+    prefix: str | None = Field(
+        default=None,
+        description="Scalar samples only: literal prepended to the resolved value, only when it is non-empty.",
+    )
+    suffix: str | None = Field(
+        default=None,
+        description="Scalar samples only: literal appended to the resolved value, only when it is non-empty.",
     )
     windowed: bool = Field(
         default=False,
@@ -224,7 +289,9 @@ class SemanticEmbedding(BaseModel):
         default=None,
         description="Template for the embedded context text. Each '{name}' placeholder is replaced "
         "with the named sample's value (the windowed sample's window text, or a scalar sample's "
-        "resolved value). Required when there are >=2 samples; forbidden for a single sample "
+        "resolved value). A '{a|b|c}' placeholder renders the first named scalar sample that "
+        "resolves non-empty, so mutually-exclusive-by-convention samples never double-render. "
+        "Required when there are >=2 samples; forbidden for a single sample "
         "(which defaults to '{<windowed name>}').",
     )
 
@@ -252,11 +319,12 @@ class SemanticMetadataField(BaseModel):
     )
 
 
-# A template placeholder is a brace group wrapping a bare identifier. Sample names are constrained
-# to the same identifier grammar, so this matches the renderer's "brace group whose inner text is a
-# declared sample name" rule exactly -- any other brace group (e.g. a JSON-like literal) is left as
-# literal text by both the validator and the renderer.
-_TEMPLATE_PLACEHOLDER_RE = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*)\}")
+# A template placeholder is a brace group wrapping a bare identifier, or a '|'-separated group of
+# identifiers (first-non-empty precedence). Sample names are constrained to the same identifier
+# grammar, so this matches the renderer's "brace group whose inner names are all declared sample
+# names" rule exactly -- any other brace group (e.g. a JSON-like literal) is left as literal text
+# by both the validator and the renderer.
+_TEMPLATE_PLACEHOLDER_RE = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*(?:\|[A-Za-z_][A-Za-z0-9_]*)*)\}")
 _SAMPLE_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 _ENRICHMENT_ARRAY_TOKEN_RE = re.compile(r"^(?P<key>[^\[]*)\[\](?P<rest>.*)$")
 _SEMANTIC_COMPUTED_OUTPUT_NAMES = {"context", "score"}
@@ -352,12 +420,18 @@ class SemanticSearchConfig(BaseModel):
         _validate_semantic_filter_column_name(windowed.sampling.unit_label, label="unit label")
         if windowed.path is not None:
             raise ValueError("x-airbyte-semantic-search: the windowed sample must not set 'path'.")
+        if windowed.lookup is not None:
+            raise ValueError("x-airbyte-semantic-search: the windowed sample must not set 'lookup'.")
+        if windowed.max_chars is not None:
+            raise ValueError("x-airbyte-semantic-search: the windowed sample must not set 'max_chars' (use windowing.context_max_chars).")
+        if windowed.prefix is not None or windowed.suffix is not None:
+            raise ValueError("x-airbyte-semantic-search: the windowed sample must not set 'prefix' or 'suffix' (put literals in the template).")
 
         for sample in samples:
             if sample is windowed:
                 continue
-            if sample.path is None:
-                raise ValueError(f"x-airbyte-semantic-search: scalar sample '{sample.name}' must set 'path'.")
+            if (sample.path is None) == (sample.lookup is None):
+                raise ValueError(f"x-airbyte-semantic-search: scalar sample '{sample.name}' must set exactly one of 'path' or 'lookup'.")
             if sample.sampling is not None:
                 raise ValueError(f"x-airbyte-semantic-search: scalar sample '{sample.name}' must not set 'sampling'.")
 
@@ -379,6 +453,23 @@ class SemanticSearchConfig(BaseModel):
         if self.windowing.context_boundary == "regex" and not self.windowing.context_boundary_pattern:
             raise ValueError("x-airbyte-semantic-search: windowing.context_boundary 'regex' requires 'context_boundary_pattern'.")
 
+        # A same-stream lookup is executed as a self-join that excludes the sibling whose foreign
+        # value equals the base row's record key -- only meaningful when the foreign column IS that
+        # record key. The embedding engine rejects any other foreign column at run time, so without
+        # the same check here a connector validates and ships yet fails every embedding run.
+        lookup_samples = [sample for sample in samples if sample.lookup is not None]
+        record_key = next((meta.name for meta in self.metadata if meta.path.startswith("/")), None)
+        if lookup_samples and record_key is None:
+            raise ValueError("x-airbyte-semantic-search: same-stream lookup samples require record-root ('/') metadata declaring the record key.")
+        mismatched_self_lookups = sorted(
+            sample.name for sample in lookup_samples if sample.lookup is not None and sample.lookup.foreign != record_key
+        )
+        if mismatched_self_lookups:
+            raise ValueError(
+                f"x-airbyte-semantic-search: same-stream lookup sample(s) {mismatched_self_lookups} must set 'foreign' "
+                f"to the record key column ('{record_key}')."
+            )
+
         template = self.embedding.template
         if len(samples) >= 2:
             if template is None:
@@ -390,12 +481,17 @@ class SemanticSearchConfig(BaseModel):
             # Only brace groups wrapping a declared identifier are placeholders; every other brace
             # group (JSON-like literals, etc.) is left untouched by the renderer, so it must not be
             # flagged here -- matching the renderer keeps validation and rendering consistent.
-            references = _TEMPLATE_PLACEHOLDER_RE.findall(template)
+            groups = [reference.split("|") for reference in _TEMPLATE_PLACEHOLDER_RE.findall(template)]
             declared = set(names)
-            unknown = sorted(set(references) - declared)
+            unknown = sorted({name for group in groups for name in group} - declared)
             if unknown:
                 raise ValueError(f"x-airbyte-semantic-search: embedding.template references undeclared sample name(s): {unknown}.")
-            windowed_references = references.count(windowed.name)
+            if any(windowed.name in group for group in groups if len(group) > 1):
+                raise ValueError(
+                    f"x-airbyte-semantic-search: the windowed sample '{windowed.name}' must not appear in a "
+                    "'{a|b}' precedence group (its window text is always rendered)."
+                )
+            windowed_references = sum(group.count(windowed.name) for group in groups)
             if windowed_references == 0:
                 raise ValueError(f"x-airbyte-semantic-search: embedding.template must reference the windowed sample '{windowed.name}'.")
             # The windowed sample is the only variable-length input; the window budget is derived by
@@ -413,9 +509,10 @@ class SemanticSearchConfig(BaseModel):
             # text from being truncated away. Reject at parse time instead.
             context_max_chars = self.windowing.context_max_chars
             if context_max_chars > 0:
-                literal_text = template
-                for name in declared:
-                    literal_text = literal_text.replace("{" + name + "}", "")
+                literal_text = _TEMPLATE_PLACEHOLDER_RE.sub(
+                    lambda match: "" if all(name in declared for name in match.group(1).split("|")) else match.group(0),
+                    template,
+                )
                 max_overhead = context_max_chars - _reserved_window_chars(context_max_chars)
                 if len(literal_text) > max_overhead:
                     raise ValueError(
@@ -544,6 +641,141 @@ class EnrichmentConfig(BaseModel):
         return self
 
 
+def combined_reference_pattern(pattern: str, specials_pattern: str | None) -> str:
+    """Alternation the rewriter matches with: id-bearing tokens first, then id-less specials.
+
+    Each half is wrapped so a top-level ``|`` inside either one cannot bind across the join.
+    """
+    if specials_pattern is None:
+        return pattern
+    return f"(?:{pattern})|(?:{specials_pattern})"
+
+
+def _compile_reference_pattern(pattern: str, label: str, required_groups: tuple[str, ...]) -> re.Pattern[str]:
+    """Compile a text-reference regex, requiring the named groups the rewriter indexes by name.
+
+    Deliberately stricter than ``split_pattern``/``context_boundary_pattern``, which are
+    validated presence-only: those feed ``re.split`` in a background embedding job and have
+    no contract beyond "a string ``re`` accepts", while these patterns are read on the search
+    request path and their *named capture groups* are an API the rewriter dereferences. A
+    missing or misnamed group there is a silently unrewritten token in a live response, so it
+    is worth catching at schema-validation time.
+    """
+    try:
+        compiled = re.compile(pattern)
+    except re.error as exc:
+        raise ValueError(f"x-airbyte-text-references: {label} is not a valid regex: {exc}") from exc
+    missing = [name for name in required_groups if name not in compiled.groupindex]
+    if missing:
+        raise ValueError(f"x-airbyte-text-references: {label} must declare the named group(s) {', '.join(missing)}.")
+    return compiled
+
+
+class TextReferenceSpecials(BaseModel):
+    """
+    Id-less reference tokens rendered without any lookup (a `specials` block).
+
+    Slack's `<!here>` / `<!channel>` name an audience rather than a record, so there is
+    nothing to resolve -- the captured command is substituted straight into `render`.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    pattern: str = Field(description="Regex matching an id-less token; must declare a 'command' named group.")
+    render: str = Field(description="Rendered replacement; must contain the '{command}' placeholder.")
+
+    @model_validator(mode="after")
+    def validate_grammar(self) -> "TextReferenceSpecials":
+        """Require a compilable pattern carrying 'command', and a render that uses it."""
+        _compile_reference_pattern(self.pattern, "'specials.pattern'", ("command",))
+        if "{command}" not in self.render:
+            raise ValueError("x-airbyte-text-references: 'specials.render' must contain the '{command}' placeholder.")
+        return self
+
+
+class TextReferenceResolver(BaseModel):
+    """
+    One sigil resolved against a context-store entity (a `resolve` entry).
+
+    Used inside x-airbyte-text-references on a context-store entity.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    sigil: str = Field(description="Single character captured by the pattern's 'sigil' group.")
+    target: str = Field(description="Target context-store entity holding the labels.")
+    key: str = Field(description="Column on the target row carrying the token id.")
+    render: str = Field(description="Rendered replacement; must contain the '{label}' placeholder.")
+    label: list[str] = Field(description="Ordered label paths on the target row; first non-blank wins.")
+
+    @model_validator(mode="after")
+    def validate_grammar(self) -> "TextReferenceResolver":
+        """Require a one-character sigil and a render that actually interpolates the label."""
+        if len(self.sigil) != 1:
+            raise ValueError(f"x-airbyte-text-references: 'sigil' must be exactly one character, got {self.sigil!r}.")
+        if not self.target.strip():
+            raise ValueError("x-airbyte-text-references: 'target' must be non-blank.")
+        if not self.key.strip():
+            raise ValueError("x-airbyte-text-references: 'key' must be non-blank.")
+        if "{label}" not in self.render:
+            raise ValueError("x-airbyte-text-references: 'render' must contain the '{label}' placeholder.")
+        if not self.label:
+            raise ValueError("x-airbyte-text-references: 'label' must list at least one path.")
+        # An empty path resolves to the whole target row, which would render a stringified dict
+        # as the label instead of a name -- bad output rather than a clean miss.
+        if any(not path or any(segment == "" for segment in path.split(".")) for path in self.label):
+            raise ValueError(f"x-airbyte-text-references: 'label' paths must not contain empty segments, got {self.label!r}")
+        return self
+
+
+class TextReferenceConfig(BaseModel):
+    """
+    Read-time rewrite of inline reference tokens into human-readable labels
+    (an entity's x-airbyte-text-references block).
+
+    Display-only: the stored text and any embedding vectors keep the raw tokens.
+    ``pattern`` is the whole token grammar: the rewriter dereferences its ``sigil``
+    and ``id`` groups, and dispatches on the sigil to pick a ``resolve`` entry.
+    ``fields`` are the top-level record fields rewritten on the keyword search path.
+
+    Example YAML usage (on a context-store entity):
+        x-airbyte-text-references:
+          fields: [text]
+          pattern: '<(?P<sigil>[@#])(?P<id>[A-Z0-9]+)(\\|[^>]*)?>'
+          specials:
+            pattern: '<!(?P<command>here|channel|everyone)(\\|[^>]*)?>'
+            render: '@{command}'
+          resolve:
+            - { sigil: '@', target: users, key: id, render: '@{label}', label: ["profile.display_name"] }
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    fields: list[str] = Field(description="Top-level record fields to rewrite on the keyword path.")
+    pattern: str = Field(description="Regex matching an id-bearing token; must declare 'sigil' and 'id' named groups.")
+    specials: TextReferenceSpecials | None = Field(default=None, description="Optional id-less tokens rendered without a lookup.")
+    resolve: list[TextReferenceResolver] = Field(description="Per-sigil label lookups.")
+
+    @model_validator(mode="after")
+    def validate_grammar(self) -> "TextReferenceConfig":
+        """Require a rewritable field, a group-conformant pattern, and one resolver per distinct sigil."""
+        if not self.fields:
+            raise ValueError("x-airbyte-text-references: at least one 'fields' entry is required.")
+        if any(not field.strip() for field in self.fields):
+            raise ValueError("x-airbyte-text-references: 'fields' entries must be non-blank.")
+        if not self.resolve:
+            raise ValueError("x-airbyte-text-references: at least one 'resolve' entry is required.")
+        _compile_reference_pattern(self.pattern, "'pattern'", ("sigil", "id"))
+        if len({entry.sigil for entry in self.resolve}) != len(self.resolve):
+            raise ValueError("x-airbyte-text-references: duplicate 'sigil' in resolve.")
+        if self.specials is not None:
+            # The rewriter runs both halves as one alternation, so group names must not collide.
+            _compile_reference_pattern(
+                combined_reference_pattern(self.pattern, self.specials.pattern), "'pattern' + 'specials.pattern'", ("sigil", "id", "command")
+            )
+        return self
+
+
 def split_enrichment_path(path: str) -> tuple[str, ...]:
     """Split a dotted enrichment path, preserving array markers as segments."""
     segments: list[str] = []
@@ -647,6 +879,13 @@ class CacheEntityConfig(ExtensionAwareModel):
         description="Query-time enrichment joins for this entity: each entry looks up "
         "fields from another context-store entity and projects them onto each record "
         "at read time.",
+    )
+    x_airbyte_text_references: TextReferenceConfig | None = Field(
+        default=None,
+        alias="x-airbyte-text-references",
+        description="Read-time rewrite of inline reference tokens (e.g. Slack <@U123>) "
+        "into human-readable labels looked up from another context-store entity. "
+        "Display-only: stored text and embeddings keep the raw tokens.",
     )
 
     @property

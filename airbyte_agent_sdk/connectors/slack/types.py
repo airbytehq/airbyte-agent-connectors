@@ -612,6 +612,8 @@ class ChannelMessagesSearchFilter(TypedDict, total=False):
     """Message subtype."""
     ts: str | None
     """Message timestamp (unique identifier)."""
+    float_ts: float | None
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: str | None
     """User ID who sent the message."""
     text: str | None
@@ -640,8 +642,12 @@ class ChannelMessagesSearchFilter(TypedDict, total=False):
     """Bot ID if message was sent by a bot."""
     bot_profile: dict[str, Any] | None
     """Bot profile information."""
+    username: str | None
+    """Display name stamped on the message by incoming webhooks and legacy bot posts; absent on ordinary user messages and on most modern app messages, which carry bot_profile instead."""
     team: str | None
     """Team ID."""
+    channel_id: str | None
+    """Channel ID the message was posted in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 class ChannelMessagesInFilter(TypedDict, total=False):
@@ -652,6 +658,8 @@ class ChannelMessagesInFilter(TypedDict, total=False):
     """Message subtype."""
     ts: list[str]
     """Message timestamp (unique identifier)."""
+    float_ts: list[float]
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: list[str]
     """User ID who sent the message."""
     text: list[str]
@@ -680,8 +688,12 @@ class ChannelMessagesInFilter(TypedDict, total=False):
     """Bot ID if message was sent by a bot."""
     bot_profile: list[dict[str, Any]]
     """Bot profile information."""
+    username: list[str]
+    """Display name stamped on the message by incoming webhooks and legacy bot posts; absent on ordinary user messages and on most modern app messages, which carry bot_profile instead."""
     team: list[str]
     """Team ID."""
+    channel_id: list[str]
+    """Channel ID the message was posted in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 class ChannelMessagesAnyValueFilter(TypedDict, total=False):
@@ -692,6 +704,8 @@ class ChannelMessagesAnyValueFilter(TypedDict, total=False):
     """Message subtype."""
     ts: Any
     """Message timestamp (unique identifier)."""
+    float_ts: Any
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: Any
     """User ID who sent the message."""
     text: Any
@@ -720,8 +734,12 @@ class ChannelMessagesAnyValueFilter(TypedDict, total=False):
     """Bot ID if message was sent by a bot."""
     bot_profile: Any
     """Bot profile information."""
+    username: Any
+    """Display name stamped on the message by incoming webhooks and legacy bot posts; absent on ordinary user messages and on most modern app messages, which carry bot_profile instead."""
     team: Any
     """Team ID."""
+    channel_id: Any
+    """Channel ID the message was posted in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 class ChannelMessagesStringFilter(TypedDict, total=False):
@@ -732,6 +750,8 @@ class ChannelMessagesStringFilter(TypedDict, total=False):
     """Message subtype."""
     ts: str
     """Message timestamp (unique identifier)."""
+    float_ts: str
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: str
     """User ID who sent the message."""
     text: str
@@ -760,8 +780,12 @@ class ChannelMessagesStringFilter(TypedDict, total=False):
     """Bot ID if message was sent by a bot."""
     bot_profile: str
     """Bot profile information."""
+    username: str
+    """Display name stamped on the message by incoming webhooks and legacy bot posts; absent on ordinary user messages and on most modern app messages, which carry bot_profile instead."""
     team: str
     """Team ID."""
+    channel_id: str
+    """Channel ID the message was posted in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 class ChannelMessagesSortFilter(TypedDict, total=False):
@@ -772,6 +796,8 @@ class ChannelMessagesSortFilter(TypedDict, total=False):
     """Message subtype."""
     ts: AirbyteSortOrder
     """Message timestamp (unique identifier)."""
+    float_ts: AirbyteSortOrder
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: AirbyteSortOrder
     """User ID who sent the message."""
     text: AirbyteSortOrder
@@ -800,8 +826,12 @@ class ChannelMessagesSortFilter(TypedDict, total=False):
     """Bot ID if message was sent by a bot."""
     bot_profile: AirbyteSortOrder
     """Bot profile information."""
+    username: AirbyteSortOrder
+    """Display name stamped on the message by incoming webhooks and legacy bot posts; absent on ordinary user messages and on most modern app messages, which carry bot_profile instead."""
     team: AirbyteSortOrder
     """Team ID."""
+    channel_id: AirbyteSortOrder
+    """Channel ID the message was posted in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 # Entity-specific condition types for channel_messages
@@ -913,6 +943,8 @@ class ThreadsSearchFilter(TypedDict, total=False):
     """Message subtype."""
     ts: str | None
     """Message timestamp (unique identifier)."""
+    float_ts: float | None
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: str | None
     """User ID who sent the message."""
     text: str | None
@@ -939,6 +971,8 @@ class ThreadsSearchFilter(TypedDict, total=False):
     """Bot ID if message was sent by a bot."""
     team: str | None
     """Team ID."""
+    channel_id: str | None
+    """Channel ID the thread lives in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 class ThreadsInFilter(TypedDict, total=False):
@@ -949,6 +983,8 @@ class ThreadsInFilter(TypedDict, total=False):
     """Message subtype."""
     ts: list[str]
     """Message timestamp (unique identifier)."""
+    float_ts: list[float]
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: list[str]
     """User ID who sent the message."""
     text: list[str]
@@ -975,6 +1011,8 @@ class ThreadsInFilter(TypedDict, total=False):
     """Bot ID if message was sent by a bot."""
     team: list[str]
     """Team ID."""
+    channel_id: list[str]
+    """Channel ID the thread lives in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 class ThreadsAnyValueFilter(TypedDict, total=False):
@@ -985,6 +1023,8 @@ class ThreadsAnyValueFilter(TypedDict, total=False):
     """Message subtype."""
     ts: Any
     """Message timestamp (unique identifier)."""
+    float_ts: Any
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: Any
     """User ID who sent the message."""
     text: Any
@@ -1011,6 +1051,8 @@ class ThreadsAnyValueFilter(TypedDict, total=False):
     """Bot ID if message was sent by a bot."""
     team: Any
     """Team ID."""
+    channel_id: Any
+    """Channel ID the thread lives in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 class ThreadsStringFilter(TypedDict, total=False):
@@ -1021,6 +1063,8 @@ class ThreadsStringFilter(TypedDict, total=False):
     """Message subtype."""
     ts: str
     """Message timestamp (unique identifier)."""
+    float_ts: str
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: str
     """User ID who sent the message."""
     text: str
@@ -1047,6 +1091,8 @@ class ThreadsStringFilter(TypedDict, total=False):
     """Bot ID if message was sent by a bot."""
     team: str
     """Team ID."""
+    channel_id: str
+    """Channel ID the thread lives in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 class ThreadsSortFilter(TypedDict, total=False):
@@ -1057,6 +1103,8 @@ class ThreadsSortFilter(TypedDict, total=False):
     """Message subtype."""
     ts: AirbyteSortOrder
     """Message timestamp (unique identifier)."""
+    float_ts: AirbyteSortOrder
+    """Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API."""
     user: AirbyteSortOrder
     """User ID who sent the message."""
     text: AirbyteSortOrder
@@ -1083,6 +1131,8 @@ class ThreadsSortFilter(TypedDict, total=False):
     """Bot ID if message was sent by a bot."""
     team: AirbyteSortOrder
     """Team ID."""
+    channel_id: AirbyteSortOrder
+    """Channel ID the thread lives in. Added by the Airbyte Slack source; not returned by the Slack API."""
 
 
 # Entity-specific condition types for threads

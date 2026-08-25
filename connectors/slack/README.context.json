@@ -1980,6 +1980,16 @@
           "semantic": false
         },
         {
+          "name": "float_ts",
+          "python_name": "float_ts",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "json_example_value": 0.0,
+          "description": "Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API.",
+          "semantic": false
+        },
+        {
           "name": "user",
           "python_name": "user",
           "type": "str | None",
@@ -1997,7 +2007,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Message text content.",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "thread_ts",
@@ -2120,6 +2130,16 @@
           "semantic": false
         },
         {
+          "name": "username",
+          "python_name": "username",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Display name stamped on the message by incoming webhooks and legacy bot posts; absent on ordinary user messages and on most modern app messages, which carry bot_profile instead.",
+          "semantic": false
+        },
+        {
           "name": "team",
           "python_name": "team",
           "type": "str | None",
@@ -2128,14 +2148,65 @@
           "json_example_value": "<str>",
           "description": "Team ID.",
           "semantic": false
+        },
+        {
+          "name": "channel_id",
+          "python_name": "channel_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Channel ID the message was posted in. Added by the Airbyte Slack source; not returned by the Slack API.",
+          "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "text",
+          "description": "Message text content.",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "ts",
+          "type": "string"
+        },
+        {
+          "name": "float_ts",
+          "type": "string"
+        },
+        {
+          "name": "channel_id",
+          "type": "string"
+        },
+        {
+          "name": "thread_ts",
+          "type": "string"
+        },
+        {
+          "name": "user",
+          "type": "string"
+        },
+        {
+          "name": "subtype",
+          "type": "string"
+        },
+        {
+          "name": "botName",
+          "type": "string"
+        },
+        {
+          "name": "webhookName",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": [
         "authorName",
-        "authorDisplayName"
+        "authorDisplayName",
+        "channelName"
       ]
     },
     "threads": {
@@ -2183,6 +2254,16 @@
           "semantic": false
         },
         {
+          "name": "float_ts",
+          "python_name": "float_ts",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "json_example_value": 0.0,
+          "description": "Message timestamp as a float. Computed by the Airbyte Slack source as its stream cursor field; not returned by the Slack API.",
+          "semantic": false
+        },
+        {
           "name": "user",
           "python_name": "user",
           "type": "str | None",
@@ -2200,7 +2281,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Message text content.",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "thread_ts",
@@ -2311,14 +2392,57 @@
           "json_example_value": "<str>",
           "description": "Team ID.",
           "semantic": false
+        },
+        {
+          "name": "channel_id",
+          "python_name": "channel_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Channel ID the thread lives in. Added by the Airbyte Slack source; not returned by the Slack API.",
+          "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "text",
+          "description": "Message text content.",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "ts",
+          "type": "string"
+        },
+        {
+          "name": "float_ts",
+          "type": "string"
+        },
+        {
+          "name": "channel_id",
+          "type": "string"
+        },
+        {
+          "name": "thread_ts",
+          "type": "string"
+        },
+        {
+          "name": "user",
+          "type": "string"
+        },
+        {
+          "name": "subtype",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": [
         "authorName",
-        "authorDisplayName"
+        "authorDisplayName",
+        "channelName"
       ]
     },
     "users": {

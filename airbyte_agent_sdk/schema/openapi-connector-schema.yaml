@@ -340,6 +340,14 @@ $defs:
           up fields from another context-store entity and projects them onto each
           record at read time.'
         title: X-Airbyte-Enrichment
+      x-airbyte-text-references:
+        anyOf:
+        - $ref: '#/$defs/TextReferenceConfig'
+        - type: 'null'
+        default: null
+        description: 'Read-time rewrite of inline reference tokens (e.g. Slack <@U123>)
+          into human-readable labels looked up from another context-store entity.
+          Display-only: stored text and embeddings keep the raw tokens.'
     required:
     - entity
     title: CacheEntityConfig
@@ -2333,8 +2341,10 @@ $defs:
         default: null
         description: Template for the embedded context text. Each '{name}' placeholder
           is replaced with the named sample's value (the windowed sample's window
-          text, or a scalar sample's resolved value). Required when there are >=2
-          samples; forbidden for a single sample (which defaults to '{<windowed name>}').
+          text, or a scalar sample's resolved value). A '{a|b|c}' placeholder renders
+          the first named scalar sample that resolves non-empty, so mutually-exclusive-by-convention
+          samples never double-render. Required when there are >=2 samples; forbidden
+          for a single sample (which defaults to '{<windowed name>}').
         title: Template
     required:
     - model
@@ -2389,9 +2399,11 @@ $defs:
 
       units that get embedded and that drives table/column naming. Every other
 
-      sample is scalar: it resolves a single record-level value via ``path`` and is
+      sample is scalar: it resolves a single value -- from this record via `path`,
 
-      rendered into the embedding template alongside the windowed text.
+      or from a related record via `lookup` -- and is rendered into the embedding
+
+      template alongside the windowed text.
 
 
       Used inside x-airbyte-semantic-search on a context-store field.'
@@ -2409,6 +2421,39 @@ $defs:
         description: 'Scalar samples only: path to the record-level value (a leading
           ''/'' resolves from the record root).'
         title: Path
+      lookup:
+        anyOf:
+        - $ref: '#/$defs/SemanticSampleLookup'
+        - type: 'null'
+        default: null
+        description: 'Scalar samples only: resolve the value from a related record
+          (mutually exclusive with ''path'').'
+      max_chars:
+        anyOf:
+        - minimum: 1
+          type: integer
+        - type: 'null'
+        default: null
+        description: 'Scalar samples only: hard cap on the resolved value''s length;
+          longer values are truncated before templating, with an ellipsis appended
+          to mark the cut.'
+        title: Max Chars
+      prefix:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        description: 'Scalar samples only: literal prepended to the resolved value,
+          only when it is non-empty.'
+        title: Prefix
+      suffix:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        description: 'Scalar samples only: literal appended to the resolved value,
+          only when it is non-empty.'
+        title: Suffix
       windowed:
         default: false
         description: Whether this sample is the windowed sample (exactly one per field).
@@ -2424,6 +2469,58 @@ $defs:
     required:
     - name
     title: SemanticSample
+    type: object
+  SemanticSampleLookup:
+    additionalProperties: false
+    description: 'Lookup supplying a scalar sample''s value from a related record.
+
+
+      The embedding engine resolves the value with a join over raw rows: for each
+
+      record, the related record whose `foreign` column equals this record''s `local`
+
+      column is located (one related record per foreign value, latest version), and
+
+      its `from` column becomes the sample''s value. A record whose `local` column
+      is
+
+      null or unmatched resolves to no value.
+
+
+      The lookup side is this record''s own stream (a self-join), and a record that
+
+      is its own sibling resolves to no value; a lookup may only reference the same
+      stream.
+
+
+      `from` may be a dotted path (e.g. `profile.real_name`): the first segment is
+
+      the lookup-side column, and the remaining segments resolve within its value.
+
+
+      Used inside a scalar SemanticSample in place of `path`.'
+    properties:
+      local:
+        description: Column on this record whose value identifies the related record.
+        minLength: 1
+        title: Local
+        type: string
+      foreign:
+        description: Column on the related record matched against 'local'.
+        minLength: 1
+        title: Foreign
+        type: string
+      from:
+        description: Column on the related record supplying the sample's value; a
+          dotted path resolves nested values within that column.
+        minLength: 1
+        title: From
+        type: string
+    required:
+    - local
+    - foreign
+    - from
+    title: SemanticSampleLookup
     type: object
   SemanticSampling:
     additionalProperties: false
@@ -2668,6 +2765,112 @@ $defs:
     required:
     - name
     title: Tag
+    type: object
+  TextReferenceConfig:
+    additionalProperties: false
+    description: "Read-time rewrite of inline reference tokens into human-readable\
+      \ labels\n(an entity's x-airbyte-text-references block).\n\nDisplay-only: the\
+      \ stored text and any embedding vectors keep the raw tokens.\n``pattern`` is\
+      \ the whole token grammar: the rewriter dereferences its ``sigil``\nand ``id``\
+      \ groups, and dispatches on the sigil to pick a ``resolve`` entry.\n``fields``\
+      \ are the top-level record fields rewritten on the keyword search path.\n\n\
+      Example YAML usage (on a context-store entity):\n    x-airbyte-text-references:\n\
+      \      fields: [text]\n      pattern: '<(?P<sigil>[@#])(?P<id>[A-Z0-9]+)(\\\
+      |[^>]*)?>'\n      specials:\n        pattern: '<!(?P<command>here|channel|everyone)(\\\
+      |[^>]*)?>'\n        render: '@{command}'\n      resolve:\n        - { sigil:\
+      \ '@', target: users, key: id, render: '@{label}', label: [\"profile.display_name\"\
+      ] }"
+    properties:
+      fields:
+        description: Top-level record fields to rewrite on the keyword path.
+        items:
+          type: string
+        title: Fields
+        type: array
+      pattern:
+        description: Regex matching an id-bearing token; must declare 'sigil' and
+          'id' named groups.
+        title: Pattern
+        type: string
+      specials:
+        anyOf:
+        - $ref: '#/$defs/TextReferenceSpecials'
+        - type: 'null'
+        default: null
+        description: Optional id-less tokens rendered without a lookup.
+      resolve:
+        description: Per-sigil label lookups.
+        items:
+          $ref: '#/$defs/TextReferenceResolver'
+        title: Resolve
+        type: array
+    required:
+    - fields
+    - pattern
+    - resolve
+    title: TextReferenceConfig
+    type: object
+  TextReferenceResolver:
+    additionalProperties: false
+    description: 'One sigil resolved against a context-store entity (a `resolve` entry).
+
+
+      Used inside x-airbyte-text-references on a context-store entity.'
+    properties:
+      sigil:
+        description: Single character captured by the pattern's 'sigil' group.
+        title: Sigil
+        type: string
+      target:
+        description: Target context-store entity holding the labels.
+        title: Target
+        type: string
+      key:
+        description: Column on the target row carrying the token id.
+        title: Key
+        type: string
+      render:
+        description: Rendered replacement; must contain the '{label}' placeholder.
+        title: Render
+        type: string
+      label:
+        description: Ordered label paths on the target row; first non-blank wins.
+        items:
+          type: string
+        title: Label
+        type: array
+    required:
+    - sigil
+    - target
+    - key
+    - render
+    - label
+    title: TextReferenceResolver
+    type: object
+  TextReferenceSpecials:
+    additionalProperties: false
+    description: 'Id-less reference tokens rendered without any lookup (a `specials`
+      block).
+
+
+      Slack''s `<!here>` / `<!channel>` name an audience rather than a record, so
+      there is
+
+      nothing to resolve -- the captured command is substituted straight into `render`.'
+    properties:
+      pattern:
+        description: Regex matching an id-less token; must declare a 'command' named
+          group.
+        title: Pattern
+        type: string
+      render:
+        description: Rendered replacement; must contain the '{command}' placeholder.
+        title: Render
+        type: string
+    required:
+    - pattern
+    - render
+    title: TextReferenceSpecials
     type: object
 additionalProperties: false
 description: OpenAPI 3.0 specification extended with Airbyte-specific fields for defining
