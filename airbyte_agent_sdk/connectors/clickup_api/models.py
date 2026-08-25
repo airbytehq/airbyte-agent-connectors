@@ -96,19 +96,34 @@ class TeamsListResponse(BaseModel):
 
     teams: list[Team] | None = Field(default=None)
 
-class SpaceFeaturesSprints(BaseModel):
-    """Sprints feature settings"""
+class SpaceStatusesItem(BaseModel):
+    """Nested schema for Space.statuses_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    enabled: bool | None = Field(default=None, description="Whether sprints are enabled")
-    """Whether sprints are enabled"""
+    id: str | None = Field(default=None, description="Status ID")
+    """Status ID"""
+    status: str | None = Field(default=None, description="Status name")
+    """Status name"""
+    type_: str | None = Field(default=None, alias="type", description="Status type (open, custom, closed)")
+    """Status type (open, custom, closed)"""
+    orderindex: int | None = Field(default=None, description="Status order index")
+    """Status order index"""
+    color: str | None = Field(default=None, description="Status color hex code")
+    """Status color hex code"""
 
-class SpaceFeaturesPoints(BaseModel):
-    """Points feature settings"""
+class SpaceFeaturesRemapDependencies(BaseModel):
+    """Remap dependencies feature settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    enabled: bool | None = Field(default=None, description="Whether points are enabled")
-    """Whether points are enabled"""
+    enabled: bool | None = Field(default=None, description="Whether remap dependencies is enabled")
+    """Whether remap dependencies is enabled"""
+
+class SpaceFeaturesStatusPies(BaseModel):
+    """Status pies feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None = Field(default=None, description="Whether status pies are enabled")
+    """Whether status pies are enabled"""
 
 class SpaceFeaturesDependencyEnforcement(BaseModel):
     """Dependency enforcement settings"""
@@ -126,45 +141,12 @@ class SpaceFeaturesRescheduleClosedDependencies(BaseModel):
     enabled: bool | None = Field(default=None, description="Whether rescheduling closed dependencies is enabled")
     """Whether rescheduling closed dependencies is enabled"""
 
-class SpaceFeaturesCheckUnresolved(BaseModel):
-    """Check unresolved feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None = Field(default=None, description="Whether check unresolved is enabled")
-    """Whether check unresolved is enabled"""
-    subtasks: bool | None | None = Field(default=None, description="Check unresolved subtasks")
-    """Check unresolved subtasks"""
-    checklists: bool | None | None = Field(default=None, description="Check unresolved checklists")
-    """Check unresolved checklists"""
-    comments: bool | None | None = Field(default=None, description="Check unresolved comments")
-    """Check unresolved comments"""
-
-class SpaceFeaturesCustomFields(BaseModel):
-    """Custom fields feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None = Field(default=None, description="Whether custom fields are enabled")
-    """Whether custom fields are enabled"""
-
 class SpaceFeaturesMultipleAssignees(BaseModel):
     """Multiple assignees feature settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     enabled: bool | None = Field(default=None, description="Whether multiple assignees are enabled")
     """Whether multiple assignees are enabled"""
-
-class SpaceFeaturesDueDates(BaseModel):
-    """Due dates feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None = Field(default=None, description="Whether due dates are enabled")
-    """Whether due dates are enabled"""
-    start_date: bool | None = Field(default=None, description="Whether start dates are enabled")
-    """Whether start dates are enabled"""
-    remap_due_dates: bool | None = Field(default=None, description="Whether due dates are remapped")
-    """Whether due dates are remapped"""
-    remap_closed_due_date: bool | None = Field(default=None, description="Whether closed due dates are remapped")
-    """Whether closed due dates are remapped"""
 
 class SpaceFeaturesTags(BaseModel):
     """Tags feature settings"""
@@ -173,71 +155,12 @@ class SpaceFeaturesTags(BaseModel):
     enabled: bool | None = Field(default=None, description="Whether tags are enabled")
     """Whether tags are enabled"""
 
-class SpaceFeaturesDependencyWarning(BaseModel):
-    """Dependency warning feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None = Field(default=None, description="Whether dependency warnings are enabled")
-    """Whether dependency warnings are enabled"""
-
-class SpaceFeaturesStatusPies(BaseModel):
-    """Status pies feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None = Field(default=None, description="Whether status pies are enabled")
-    """Whether status pies are enabled"""
-
-class SpaceFeaturesEmails(BaseModel):
-    """Emails feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None = Field(default=None, description="Whether emails are enabled")
-    """Whether emails are enabled"""
-
-class SpaceFeaturesRemapDependencies(BaseModel):
-    """Remap dependencies feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None = Field(default=None, description="Whether remap dependencies is enabled")
-    """Whether remap dependencies is enabled"""
-
-class SpaceFeaturesTimeTracking(BaseModel):
-    """Time tracking feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None = Field(default=None, description="Whether time tracking is enabled")
-    """Whether time tracking is enabled"""
-    harvest: bool | None = Field(default=None, description="Whether Harvest integration is enabled")
-    """Whether Harvest integration is enabled"""
-    rollup: bool | None = Field(default=None, description="Whether time rollup is enabled")
-    """Whether time rollup is enabled"""
-    default_to_billable: int | None | None = Field(default=None, description="Default billable setting")
-    """Default billable setting"""
-
-class SpaceFeaturesMilestones(BaseModel):
-    """Milestones feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None = Field(default=None, description="Whether milestones are enabled")
-    """Whether milestones are enabled"""
-
 class SpaceFeaturesCustomItems(BaseModel):
     """Custom items feature settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     enabled: bool | None = Field(default=None, description="Whether custom items are enabled")
     """Whether custom items are enabled"""
-
-class SpaceFeaturesTimeEstimates(BaseModel):
-    """Time estimates feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None = Field(default=None, description="Whether time estimates are enabled")
-    """Whether time estimates are enabled"""
-    rollup: bool | None = Field(default=None, description="Whether time estimate rollup is enabled")
-    """Whether time estimate rollup is enabled"""
-    per_assignee: bool | None = Field(default=None, description="Whether per-assignee estimates are enabled")
-    """Whether per-assignee estimates are enabled"""
 
 class SpaceFeaturesPrioritiesPrioritiesItem(BaseModel):
     """Nested schema for SpaceFeaturesPriorities.priorities_item"""
@@ -260,6 +183,98 @@ class SpaceFeaturesPriorities(BaseModel):
     """Whether priorities are enabled"""
     priorities: list[SpaceFeaturesPrioritiesPrioritiesItem] | None = Field(default=None, description="Priority levels")
     """Priority levels"""
+
+class SpaceFeaturesDependencyWarning(BaseModel):
+    """Dependency warning feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None = Field(default=None, description="Whether dependency warnings are enabled")
+    """Whether dependency warnings are enabled"""
+
+class SpaceFeaturesTimeTracking(BaseModel):
+    """Time tracking feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None = Field(default=None, description="Whether time tracking is enabled")
+    """Whether time tracking is enabled"""
+    harvest: bool | None = Field(default=None, description="Whether Harvest integration is enabled")
+    """Whether Harvest integration is enabled"""
+    rollup: bool | None = Field(default=None, description="Whether time rollup is enabled")
+    """Whether time rollup is enabled"""
+    default_to_billable: int | None | None = Field(default=None, description="Default billable setting")
+    """Default billable setting"""
+
+class SpaceFeaturesCheckUnresolved(BaseModel):
+    """Check unresolved feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None = Field(default=None, description="Whether check unresolved is enabled")
+    """Whether check unresolved is enabled"""
+    subtasks: bool | None | None = Field(default=None, description="Check unresolved subtasks")
+    """Check unresolved subtasks"""
+    checklists: bool | None | None = Field(default=None, description="Check unresolved checklists")
+    """Check unresolved checklists"""
+    comments: bool | None | None = Field(default=None, description="Check unresolved comments")
+    """Check unresolved comments"""
+
+class SpaceFeaturesDueDates(BaseModel):
+    """Due dates feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None = Field(default=None, description="Whether due dates are enabled")
+    """Whether due dates are enabled"""
+    start_date: bool | None = Field(default=None, description="Whether start dates are enabled")
+    """Whether start dates are enabled"""
+    remap_due_dates: bool | None = Field(default=None, description="Whether due dates are remapped")
+    """Whether due dates are remapped"""
+    remap_closed_due_date: bool | None = Field(default=None, description="Whether closed due dates are remapped")
+    """Whether closed due dates are remapped"""
+
+class SpaceFeaturesTimeEstimates(BaseModel):
+    """Time estimates feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None = Field(default=None, description="Whether time estimates are enabled")
+    """Whether time estimates are enabled"""
+    rollup: bool | None = Field(default=None, description="Whether time estimate rollup is enabled")
+    """Whether time estimate rollup is enabled"""
+    per_assignee: bool | None = Field(default=None, description="Whether per-assignee estimates are enabled")
+    """Whether per-assignee estimates are enabled"""
+
+class SpaceFeaturesPoints(BaseModel):
+    """Points feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None = Field(default=None, description="Whether points are enabled")
+    """Whether points are enabled"""
+
+class SpaceFeaturesCustomFields(BaseModel):
+    """Custom fields feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None = Field(default=None, description="Whether custom fields are enabled")
+    """Whether custom fields are enabled"""
+
+class SpaceFeaturesEmails(BaseModel):
+    """Emails feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None = Field(default=None, description="Whether emails are enabled")
+    """Whether emails are enabled"""
+
+class SpaceFeaturesSprints(BaseModel):
+    """Sprints feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None = Field(default=None, description="Whether sprints are enabled")
+    """Whether sprints are enabled"""
+
+class SpaceFeaturesMilestones(BaseModel):
+    """Milestones feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None = Field(default=None, description="Whether milestones are enabled")
+    """Whether milestones are enabled"""
 
 class SpaceFeatures(BaseModel):
     """Feature flags for the space"""
@@ -305,21 +320,6 @@ class SpaceFeatures(BaseModel):
     """Dependency enforcement settings"""
     reschedule_closed_dependencies: SpaceFeaturesRescheduleClosedDependencies | None = Field(default=None, description="Reschedule closed dependencies settings")
     """Reschedule closed dependencies settings"""
-
-class SpaceStatusesItem(BaseModel):
-    """Nested schema for Space.statuses_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None, description="Status ID")
-    """Status ID"""
-    status: str | None = Field(default=None, description="Status name")
-    """Status name"""
-    type_: str | None = Field(default=None, alias="type", description="Status type (open, custom, closed)")
-    """Status type (open, custom, closed)"""
-    orderindex: int | None = Field(default=None, description="Status order index")
-    """Status order index"""
-    color: str | None = Field(default=None, description="Status color hex code")
-    """Status color hex code"""
 
 class Space(BaseModel):
     """Space type definition"""
@@ -443,23 +443,6 @@ class FoldersListResponse(BaseModel):
 
     folders: list[Folder] | None = Field(default=None)
 
-class ListStatusesItem(BaseModel):
-    """Nested schema for List.statuses_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None, description="Status ID")
-    """Status ID"""
-    status: str | None = Field(default=None, description="Status name")
-    """Status name"""
-    type_: str | None = Field(default=None, alias="type", description="Status type (open, custom, closed)")
-    """Status type (open, custom, closed)"""
-    orderindex: int | None = Field(default=None, description="Status order index")
-    """Status order index"""
-    color: str | None = Field(default=None, description="Status color hex code")
-    """Status color hex code"""
-    status_group: str | None | None = Field(default=None, description="Status group identifier")
-    """Status group identifier"""
-
 class ListFolder(BaseModel):
     """Parent folder reference"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -483,6 +466,23 @@ class ListSpace(BaseModel):
     """Space name"""
     access: bool | None | None = Field(default=None, description="Whether user has access")
     """Whether user has access"""
+
+class ListStatusesItem(BaseModel):
+    """Nested schema for List.statuses_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="Status ID")
+    """Status ID"""
+    status: str | None = Field(default=None, description="Status name")
+    """Status name"""
+    type_: str | None = Field(default=None, alias="type", description="Status type (open, custom, closed)")
+    """Status type (open, custom, closed)"""
+    orderindex: int | None = Field(default=None, description="Status order index")
+    """Status order index"""
+    color: str | None = Field(default=None, description="Status color hex code")
+    """Status color hex code"""
+    status_group: str | None | None = Field(default=None, description="Status group identifier")
+    """Status group identifier"""
 
 class List(BaseModel):
     """List type definition"""
@@ -513,23 +513,6 @@ class ListsListResponse(BaseModel):
 
     lists: list[List] | None = Field(default=None)
 
-class TaskWatchersItem(BaseModel):
-    """Nested schema for Task.watchers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None = Field(default=None, description="Watcher user ID")
-    """Watcher user ID"""
-    username: str | None = Field(default=None, description="Watcher username")
-    """Watcher username"""
-    color: str | None | None = Field(default=None, description="Watcher avatar color")
-    """Watcher avatar color"""
-    initials: str | None | None = Field(default=None, description="Watcher initials")
-    """Watcher initials"""
-    email: str | None = Field(default=None, description="Watcher email")
-    """Watcher email"""
-    profile_picture: str | None | None = Field(default=None, alias="profilePicture", description="Watcher profile picture URL")
-    """Watcher profile picture URL"""
-
 class TaskStatus(BaseModel):
     """Task status"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -559,6 +542,23 @@ class TaskCreator(BaseModel):
     """Creator email"""
     profile_picture: str | None | None = Field(default=None, alias="profilePicture", description="Creator profile picture URL")
     """Creator profile picture URL"""
+
+class TaskWatchersItem(BaseModel):
+    """Nested schema for Task.watchers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None = Field(default=None, description="Watcher user ID")
+    """Watcher user ID"""
+    username: str | None = Field(default=None, description="Watcher username")
+    """Watcher username"""
+    color: str | None | None = Field(default=None, description="Watcher avatar color")
+    """Watcher avatar color"""
+    initials: str | None | None = Field(default=None, description="Watcher initials")
+    """Watcher initials"""
+    email: str | None = Field(default=None, description="Watcher email")
+    """Watcher email"""
+    profile_picture: str | None | None = Field(default=None, alias="profilePicture", description="Watcher profile picture URL")
+    """Watcher profile picture URL"""
 
 class Task(BaseModel):
     """Task type definition"""

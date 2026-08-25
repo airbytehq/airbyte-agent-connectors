@@ -26,6 +26,12 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheFieldProperty,
     EntityRelationshipConfig,
     ScopingParamConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -3921,6 +3927,20 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
                         name='metadata',
                         type=['object', 'null'],
                         description='Issue metadata.',
+                        properties={
+                            'title': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'value': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'filename': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
                     ),
                     CacheFieldConfig(
                         name='numComments',
@@ -3992,6 +4012,96 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
                         name='title',
                         type=['string', 'null'],
                         description='Issue title.',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='culprit',
+                                    path='/culprit',
+                                ),
+                                SemanticSample(
+                                    name='value',
+                                    path='/metadata.value',
+                                ),
+                                SemanticSample(
+                                    name='issue_title',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='issue',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{issue_title}\n{culprit}\n{value}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='lastSeen',
+                                    path='/lastSeen',
+                                ),
+                                SemanticMetadataField(
+                                    name='shortId',
+                                    path='/shortId',
+                                ),
+                                SemanticMetadataField(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticMetadataField(
+                                    name='culprit',
+                                    path='/culprit',
+                                ),
+                                SemanticMetadataField(
+                                    name='level',
+                                    path='/level',
+                                ),
+                                SemanticMetadataField(
+                                    name='status',
+                                    path='/status',
+                                ),
+                                SemanticMetadataField(
+                                    name='substatus',
+                                    path='/substatus',
+                                ),
+                                SemanticMetadataField(
+                                    name='issueCategory',
+                                    path='/issueCategory',
+                                ),
+                                SemanticMetadataField(
+                                    name='platform',
+                                    path='/platform',
+                                ),
+                                SemanticMetadataField(
+                                    name='isUnhandled',
+                                    path='/isUnhandled',
+                                ),
+                                SemanticMetadataField(
+                                    name='firstSeen',
+                                    path='/firstSeen',
+                                ),
+                                SemanticMetadataField(
+                                    name='count',
+                                    path='/count',
+                                ),
+                                SemanticMetadataField(
+                                    name='userCount',
+                                    path='/userCount',
+                                ),
+                                SemanticMetadataField(
+                                    name='permalink',
+                                    path='/permalink',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='type',
@@ -4385,6 +4495,10 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
             'level',
             'logger',
             'metadata',
+            'metadata.title',
+            'metadata.type',
+            'metadata.value',
+            'metadata.filename',
             'numComments',
             'permalink',
             'platform',
@@ -4476,6 +4590,100 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
             'versionInfo.package',
             'versionInfo.buildHash',
         ],
+    },
+    semantic_search_fields={
+        'issues': {
+            'title': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='culprit',
+                        path='/culprit',
+                    ),
+                    SemanticSample(
+                        name='value',
+                        path='/metadata.value',
+                    ),
+                    SemanticSample(
+                        name='issue_title',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='issue',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{issue_title}\n{culprit}\n{value}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='lastSeen',
+                        path='/lastSeen',
+                    ),
+                    SemanticMetadataField(
+                        name='shortId',
+                        path='/shortId',
+                    ),
+                    SemanticMetadataField(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticMetadataField(
+                        name='culprit',
+                        path='/culprit',
+                    ),
+                    SemanticMetadataField(
+                        name='level',
+                        path='/level',
+                    ),
+                    SemanticMetadataField(
+                        name='status',
+                        path='/status',
+                    ),
+                    SemanticMetadataField(
+                        name='substatus',
+                        path='/substatus',
+                    ),
+                    SemanticMetadataField(
+                        name='issueCategory',
+                        path='/issueCategory',
+                    ),
+                    SemanticMetadataField(
+                        name='platform',
+                        path='/platform',
+                    ),
+                    SemanticMetadataField(
+                        name='isUnhandled',
+                        path='/isUnhandled',
+                    ),
+                    SemanticMetadataField(
+                        name='firstSeen',
+                        path='/firstSeen',
+                    ),
+                    SemanticMetadataField(
+                        name='count',
+                        path='/count',
+                    ),
+                    SemanticMetadataField(
+                        name='userCount',
+                        path='/userCount',
+                    ),
+                    SemanticMetadataField(
+                        name='permalink',
+                        path='/permalink',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[

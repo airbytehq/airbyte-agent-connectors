@@ -227,6 +227,15 @@ info:
       - name: metadata
         type: ["object", "null"]
         description: Issue metadata.
+        properties:
+          title:
+            type: ["null", "string"]
+          type:
+            type: ["null", "string"]
+          value:
+            type: ["null", "string"]
+          filename:
+            type: ["null", "string"]
       - name: numComments
         type: ["integer", "null"]
         description: Number of comments on the issue.
@@ -270,6 +279,34 @@ info:
       - name: title
         type: ["string", "null"]
         description: Issue title.
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+            - { name: culprit, path: "/culprit" }
+            - { name: value, path: "/metadata.value" }
+            - name: issue_title
+              windowed: true
+              sampling: { sample_type: whole, unit_label: issue }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{issue_title}\n{culprit}\n{value}"
+          metadata:
+            - { name: id, path: "/id", type: string }
+            - { name: lastSeen, path: "/lastSeen", type: string }
+            - { name: shortId, path: "/shortId", type: string }
+            - { name: title, path: "/title", type: string }
+            - { name: culprit, path: "/culprit", type: string }
+            - { name: level, path: "/level", type: string }
+            - { name: status, path: "/status", type: string }
+            - { name: substatus, path: "/substatus", type: string }
+            - { name: issueCategory, path: "/issueCategory", type: string }
+            - { name: platform, path: "/platform", type: string }
+            - { name: isUnhandled, path: "/isUnhandled", type: string }
+            - { name: firstSeen, path: "/firstSeen", type: string }
+            - { name: count, path: "/count", type: string }
+            - { name: userCount, path: "/userCount", type: string }
+            - { name: permalink, path: "/permalink", type: string }
       - name: type
         type: ["string", "null"]
         description: Issue type.

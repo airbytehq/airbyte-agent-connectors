@@ -86,7 +86,7 @@ class AmazonSellerPartnerConnector:
 
     connector_name = "amazon-seller-partner"
     connector_version = "1.0.5"
-    sdk_version = "0.1.325"
+    sdk_version = "0.1.326"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

@@ -1201,7 +1201,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Issue title.",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "type",
@@ -1224,8 +1224,76 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "title",
+          "description": "Issue title.",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "lastSeen",
+          "type": "string"
+        },
+        {
+          "name": "shortId",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "culprit",
+          "type": "string"
+        },
+        {
+          "name": "level",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "substatus",
+          "type": "string"
+        },
+        {
+          "name": "issueCategory",
+          "type": "string"
+        },
+        {
+          "name": "platform",
+          "type": "string"
+        },
+        {
+          "name": "isUnhandled",
+          "type": "string"
+        },
+        {
+          "name": "firstSeen",
+          "type": "string"
+        },
+        {
+          "name": "count",
+          "type": "string"
+        },
+        {
+          "name": "userCount",
+          "type": "string"
+        },
+        {
+          "name": "permalink",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
