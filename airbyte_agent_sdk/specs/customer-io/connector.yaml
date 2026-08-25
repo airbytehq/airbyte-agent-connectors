@@ -153,6 +153,36 @@ info:
           - name: body
             type: ["null", "string"]
             description: Action body content (HTML for emails)
+            # body is polymorphic by action type: an HTML document for `email`, plain text for
+            # `twilio`, a JSON string for `whatsapp`, a request payload for `webhook`. Only
+            # `email` carries prose -- filter on the `type` metadata column at query time.
+            x-airbyte-semantic-search:
+              content_type: html
+              samples:
+                - { name: action_name, path: "/name" }
+                - { name: subject, path: "/subject" }
+                - { name: preheader, path: "/preheader_text" }
+                - name: action_body
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: action }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{action_name}\n{subject}\n{preheader}\n\n{action_body}"
+              # Order is load-bearing: the first record-root entry is the record key and the
+              # second is the incremental cursor, taken positionally. Their names must equal
+              # their path segment because _required_raw_columns looks them up as physical raw
+              # columns. Renaming or reordering after vectors exist requires a table rebuild.
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated, path: "/updated", type: string }
+                - { name: campaign_id, path: "/campaign_id", type: string }
+                - { name: name, path: "/name", type: string }
+                - { name: subject, path: "/subject", type: string }
+                - { name: type, path: "/type", type: string }
+                - { name: sending_state, path: "/sending_state", type: string }
+                - { name: parent_action_id, path: "/parent_action_id", type: string }
+                - { name: created, path: "/created", type: string }
           - name: campaign_id
             type: ["null", "integer"]
             description: Parent campaign ID

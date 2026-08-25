@@ -2500,7 +2500,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Action body content (HTML for emails)",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "campaign_id",
@@ -2753,8 +2753,52 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "body",
+          "description": "Action body content (HTML for emails)",
+          "context_max_chars": 2048,
+          "content_type": "html"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated",
+          "type": "string"
+        },
+        {
+          "name": "campaign_id",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "subject",
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "sending_state",
+          "type": "string"
+        },
+        {
+          "name": "parent_action_id",
+          "type": "string"
+        },
+        {
+          "name": "created",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },

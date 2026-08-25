@@ -24,6 +24,12 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -4823,6 +4829,76 @@ CustomerIoConnectorModel: ConnectorModel = ConnectorModel(
                         name='body',
                         type=['null', 'string'],
                         description='Action body content (HTML for emails)',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='html',
+                            samples=[
+                                SemanticSample(
+                                    name='action_name',
+                                    path='/name',
+                                ),
+                                SemanticSample(
+                                    name='subject',
+                                    path='/subject',
+                                ),
+                                SemanticSample(
+                                    name='preheader',
+                                    path='/preheader_text',
+                                ),
+                                SemanticSample(
+                                    name='action_body',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='action',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{action_name}\n{subject}\n{preheader}\n\n{action_body}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated',
+                                    path='/updated',
+                                ),
+                                SemanticMetadataField(
+                                    name='campaign_id',
+                                    path='/campaign_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='name',
+                                    path='/name',
+                                ),
+                                SemanticMetadataField(
+                                    name='subject',
+                                    path='/subject',
+                                ),
+                                SemanticMetadataField(
+                                    name='type',
+                                    path='/type',
+                                ),
+                                SemanticMetadataField(
+                                    name='sending_state',
+                                    path='/sending_state',
+                                ),
+                                SemanticMetadataField(
+                                    name='parent_action_id',
+                                    path='/parent_action_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='created',
+                                    path='/created',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='campaign_id',
@@ -5075,6 +5151,80 @@ CustomerIoConnectorModel: ConnectorModel = ConnectorModel(
             'type',
             'updated',
         ],
+    },
+    semantic_search_fields={
+        'campaign_actions': {
+            'body': SemanticSearchConfig(
+                content_type='html',
+                samples=[
+                    SemanticSample(
+                        name='action_name',
+                        path='/name',
+                    ),
+                    SemanticSample(
+                        name='subject',
+                        path='/subject',
+                    ),
+                    SemanticSample(
+                        name='preheader',
+                        path='/preheader_text',
+                    ),
+                    SemanticSample(
+                        name='action_body',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='action',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{action_name}\n{subject}\n{preheader}\n\n{action_body}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated',
+                        path='/updated',
+                    ),
+                    SemanticMetadataField(
+                        name='campaign_id',
+                        path='/campaign_id',
+                    ),
+                    SemanticMetadataField(
+                        name='name',
+                        path='/name',
+                    ),
+                    SemanticMetadataField(
+                        name='subject',
+                        path='/subject',
+                    ),
+                    SemanticMetadataField(
+                        name='type',
+                        path='/type',
+                    ),
+                    SemanticMetadataField(
+                        name='sending_state',
+                        path='/sending_state',
+                    ),
+                    SemanticMetadataField(
+                        name='parent_action_id',
+                        path='/parent_action_id',
+                    ),
+                    SemanticMetadataField(
+                        name='created',
+                        path='/created',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[
