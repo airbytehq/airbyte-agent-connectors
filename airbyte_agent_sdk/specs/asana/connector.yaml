@@ -420,6 +420,29 @@ info:
         - 'null'
         - 'string'
         description: ''
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+          - { name: notes, path: "/notes" }
+          - name: project_name
+            windowed: true
+            sampling: { sample_type: whole, unit_label: project }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{project_name}\n\n{notes}"
+          metadata:
+          - { name: gid, path: "/gid", type: string }
+          - { name: modified_at, path: "/modified_at", type: string }
+          - { name: name, path: "/name", type: string }
+          - { name: permalink_url, path: "/permalink_url", type: string }
+          - { name: archived, path: "/archived", type: string }
+          - { name: is_template, path: "/is_template", type: string }
+          - { name: created_at, path: "/created_at", type: string }
+          - { name: due_on, path: "/due_on", type: string }
+          - { name: workspace_gid, path: "/workspace.gid", type: string }
+          - { name: team_gid, path: "/team.gid", type: string }
+          - { name: owner_gid, path: "/owner.gid", type: string }
       - name: notes
         type:
         - 'null'
@@ -752,6 +775,30 @@ info:
         - 'null'
         - 'string'
         description: ''
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+          - { name: notes, path: "/notes" }
+          - name: task_name
+            windowed: true
+            sampling: { sample_type: whole, unit_label: task }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{task_name}\n\n{notes}"
+          metadata:
+          - { name: gid, path: "/gid", type: string }
+          - { name: modified_at, path: "/modified_at", type: string }
+          - { name: name, path: "/name", type: string }
+          - { name: permalink_url, path: "/permalink_url", type: string }
+          - { name: completed, path: "/completed", type: string }
+          - { name: due_on, path: "/due_on", type: string }
+          - { name: created_at, path: "/created_at", type: string }
+          - { name: resource_subtype, path: "/resource_subtype", type: string }
+          - { name: assignee_gid, path: "/assignee.gid", type: string }
+          - { name: workspace_gid, path: "/workspace.gid", type: string }
+          - { name: parent_gid, path: "/parent.gid", type: string }
+          - { name: project_gids, path: "/projects[].gid", type: array }
       - name: notes
         type:
         - 'null'
@@ -862,6 +909,22 @@ info:
         - 'null'
         - 'string'
         description: ''
+        x-airbyte-semantic-search:
+          content_type: plaintext
+          samples:
+          - { name: description, path: "/description" }
+          - name: team_name
+            windowed: true
+            sampling: { sample_type: whole, unit_label: team }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{team_name}\n\n{description}"
+          metadata:
+          - { name: gid, path: "/gid", type: string }
+          - { name: permalink_url, path: "/permalink_url", type: string }
+          - { name: name, path: "/name", type: string }
+          - { name: organization_gid, path: "/organization.gid", type: string }
       - name: organization
         type:
         - 'null'

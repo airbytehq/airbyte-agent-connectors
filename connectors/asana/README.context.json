@@ -3733,7 +3733,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "notes",
@@ -3816,8 +3816,60 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "name",
+          "description": "",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "gid",
+          "type": "string"
+        },
+        {
+          "name": "modified_at",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "permalink_url",
+          "type": "string"
+        },
+        {
+          "name": "archived",
+          "type": "string"
+        },
+        {
+          "name": "is_template",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "due_on",
+          "type": "string"
+        },
+        {
+          "name": "workspace_gid",
+          "type": "string"
+        },
+        {
+          "name": "team_gid",
+          "type": "string"
+        },
+        {
+          "name": "owner_gid",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -4233,7 +4285,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "notes",
@@ -4356,8 +4408,64 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "name",
+          "description": "",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "gid",
+          "type": "string"
+        },
+        {
+          "name": "modified_at",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "permalink_url",
+          "type": "string"
+        },
+        {
+          "name": "completed",
+          "type": "string"
+        },
+        {
+          "name": "due_on",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "resource_subtype",
+          "type": "string"
+        },
+        {
+          "name": "assignee_gid",
+          "type": "string"
+        },
+        {
+          "name": "workspace_gid",
+          "type": "string"
+        },
+        {
+          "name": "parent_gid",
+          "type": "string"
+        },
+        {
+          "name": "project_gids",
+          "type": "array"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -4413,7 +4521,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "organization",
@@ -4446,8 +4554,32 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "name",
+          "description": "",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "gid",
+          "type": "string"
+        },
+        {
+          "name": "permalink_url",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "organization_gid",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
