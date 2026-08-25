@@ -24,6 +24,12 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     ScopingParamConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -6301,6 +6307,83 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                         name='ad_text',
                         type=['null', 'string'],
                         description='The text content of the ad',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='ad_copy',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='ad',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='ad_id',
+                                    path='/ad_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='modify_time',
+                                    path='/modify_time',
+                                ),
+                                SemanticMetadataField(
+                                    name='ad_name',
+                                    path='/ad_name',
+                                ),
+                                SemanticMetadataField(
+                                    name='ad_format',
+                                    path='/ad_format',
+                                ),
+                                SemanticMetadataField(
+                                    name='operation_status',
+                                    path='/operation_status',
+                                ),
+                                SemanticMetadataField(
+                                    name='secondary_status',
+                                    path='/secondary_status',
+                                ),
+                                SemanticMetadataField(
+                                    name='campaign_id',
+                                    path='/campaign_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='campaign_name',
+                                    path='/campaign_name',
+                                ),
+                                SemanticMetadataField(
+                                    name='adgroup_id',
+                                    path='/adgroup_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='adgroup_name',
+                                    path='/adgroup_name',
+                                ),
+                                SemanticMetadataField(
+                                    name='advertiser_id',
+                                    path='/advertiser_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='landing_page_url',
+                                    path='/landing_page_url',
+                                ),
+                                SemanticMetadataField(
+                                    name='create_time',
+                                    path='/create_time',
+                                ),
+                                SemanticMetadataField(
+                                    name='video_id',
+                                    path='/video_id',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='adgroup_id',
@@ -8282,6 +8365,87 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'real_time_app_install_cost',
             'app_install',
         ],
+    },
+    semantic_search_fields={
+        'ads': {
+            'ad_text': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='ad_copy',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='ad',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='ad_id',
+                        path='/ad_id',
+                    ),
+                    SemanticMetadataField(
+                        name='modify_time',
+                        path='/modify_time',
+                    ),
+                    SemanticMetadataField(
+                        name='ad_name',
+                        path='/ad_name',
+                    ),
+                    SemanticMetadataField(
+                        name='ad_format',
+                        path='/ad_format',
+                    ),
+                    SemanticMetadataField(
+                        name='operation_status',
+                        path='/operation_status',
+                    ),
+                    SemanticMetadataField(
+                        name='secondary_status',
+                        path='/secondary_status',
+                    ),
+                    SemanticMetadataField(
+                        name='campaign_id',
+                        path='/campaign_id',
+                    ),
+                    SemanticMetadataField(
+                        name='campaign_name',
+                        path='/campaign_name',
+                    ),
+                    SemanticMetadataField(
+                        name='adgroup_id',
+                        path='/adgroup_id',
+                    ),
+                    SemanticMetadataField(
+                        name='adgroup_name',
+                        path='/adgroup_name',
+                    ),
+                    SemanticMetadataField(
+                        name='advertiser_id',
+                        path='/advertiser_id',
+                    ),
+                    SemanticMetadataField(
+                        name='landing_page_url',
+                        path='/landing_page_url',
+                    ),
+                    SemanticMetadataField(
+                        name='create_time',
+                        path='/create_time',
+                    ),
+                    SemanticMetadataField(
+                        name='video_id',
+                        path='/video_id',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[

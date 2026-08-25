@@ -2665,7 +2665,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "The text content of the ad",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "adgroup_id",
@@ -2778,8 +2778,72 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "ad_text",
+          "description": "The text content of the ad",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "ad_id",
+          "type": "string"
+        },
+        {
+          "name": "modify_time",
+          "type": "string"
+        },
+        {
+          "name": "ad_name",
+          "type": "string"
+        },
+        {
+          "name": "ad_format",
+          "type": "string"
+        },
+        {
+          "name": "operation_status",
+          "type": "string"
+        },
+        {
+          "name": "secondary_status",
+          "type": "string"
+        },
+        {
+          "name": "campaign_id",
+          "type": "string"
+        },
+        {
+          "name": "campaign_name",
+          "type": "string"
+        },
+        {
+          "name": "adgroup_id",
+          "type": "string"
+        },
+        {
+          "name": "adgroup_name",
+          "type": "string"
+        },
+        {
+          "name": "advertiser_id",
+          "type": "string"
+        },
+        {
+          "name": "landing_page_url",
+          "type": "string"
+        },
+        {
+          "name": "create_time",
+          "type": "string"
+        },
+        {
+          "name": "video_id",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },

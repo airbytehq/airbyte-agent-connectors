@@ -265,6 +265,51 @@ info:
           - name: ad_text
             type: ["null", "string"]
             description: The text content of the ad
+            x-airbyte-semantic-search:
+              # Single windowed sample, deliberately no `embedding.template`. `ads` has no second
+              # human-authored text column: `ad_name` is TikTok's auto-generated
+              # "<creative filename>_<timestamp>" label (6/6 measured), and templating it in front
+              # of a 7-char ad copy makes the embedded context 93% machine-generated boilerplate.
+              # It is carried as metadata instead. With one sample the engine defaults the template
+              # to "{ad_copy}", so `context` is byte-identical to the ad copy -- which also matters
+              # because `_base_projection` strips the embedded column from `entity_data`, so a
+              # template would leave the clean copy unreachable. Do NOT add a template here: the
+              # schema forbids one for a single sample and `resolve_semantic_search_fields` fails
+              # soft, so it would silently disable this annotation.
+              #
+              # Only `ads` is annotated. The *_reports_* streams repeat this same `ad_text` on
+              # every date row and their primary keys are composite ([ad_id, stat_time_day] /
+              # [ad_id, stat_time_hour]), which `record_key_column` cannot express -- measured at
+              # 96.7% chunk_id collision and 97.2% wasted embedding spend on a 30-day projection.
+              #
+              # Metadata is now-or-never: the embeddings table is CREATE TABLE AS on first write
+              # and INSERT INTO ... (<explicit column list>) thereafter, with no ALTER, so adding
+              # an entry later fails the append with a BinderException and forces a full re-embed.
+              # A name absent from the raw table resolves to NULL rather than failing, so the set
+              # below is deliberately wider than today's known queries.
+              content_type: plaintext
+              samples:
+              - name: ad_copy
+                windowed: true
+                sampling: { sample_type: whole, unit_label: ad }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+              metadata:
+              - { name: ad_id, path: "/ad_id", type: string }
+              - { name: modify_time, path: "/modify_time", type: string }
+              - { name: ad_name, path: "/ad_name", type: string }
+              - { name: ad_format, path: "/ad_format", type: string }
+              - { name: operation_status, path: "/operation_status", type: string }
+              - { name: secondary_status, path: "/secondary_status", type: string }
+              - { name: campaign_id, path: "/campaign_id", type: string }
+              - { name: campaign_name, path: "/campaign_name", type: string }
+              - { name: adgroup_id, path: "/adgroup_id", type: string }
+              - { name: adgroup_name, path: "/adgroup_name", type: string }
+              - { name: advertiser_id, path: "/advertiser_id", type: string }
+              - { name: landing_page_url, path: "/landing_page_url", type: string }
+              - { name: create_time, path: "/create_time", type: string }
+              - { name: video_id, path: "/video_id", type: string }
           - name: adgroup_id
             type: ["null", "integer"]
             description: The unique identifier of the ad group
