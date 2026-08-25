@@ -306,7 +306,7 @@ class BoardsSearchFilter(TypedDict, total=False):
     creator: dict[str, Any] | None
     """Board creator"""
     description: str | None
-    """Board description"""
+    """Board description -- the charter a team writes to say what the board is for. Semantically searchable. Empty on boards created programmatically."""
     groups: list[Any] | None
     """Board groups"""
     id: str | None
@@ -350,7 +350,7 @@ class BoardsInFilter(TypedDict, total=False):
     creator: list[dict[str, Any]]
     """Board creator"""
     description: list[str]
-    """Board description"""
+    """Board description -- the charter a team writes to say what the board is for. Semantically searchable. Empty on boards created programmatically."""
     groups: list[list[Any]]
     """Board groups"""
     id: list[str]
@@ -394,7 +394,7 @@ class BoardsAnyValueFilter(TypedDict, total=False):
     creator: Any
     """Board creator"""
     description: Any
-    """Board description"""
+    """Board description -- the charter a team writes to say what the board is for. Semantically searchable. Empty on boards created programmatically."""
     groups: Any
     """Board groups"""
     id: Any
@@ -438,7 +438,7 @@ class BoardsStringFilter(TypedDict, total=False):
     creator: str
     """Board creator"""
     description: str
-    """Board description"""
+    """Board description -- the charter a team writes to say what the board is for. Semantically searchable. Empty on boards created programmatically."""
     groups: str
     """Board groups"""
     id: str
@@ -482,7 +482,7 @@ class BoardsSortFilter(TypedDict, total=False):
     creator: AirbyteSortOrder
     """Board creator"""
     description: AirbyteSortOrder
-    """Board description"""
+    """Board description -- the charter a team writes to say what the board is for. Semantically searchable. Empty on boards created programmatically."""
     groups: AirbyteSortOrder
     """Board groups"""
     id: AirbyteSortOrder
@@ -633,7 +633,7 @@ class ItemsSearchFilter(TypedDict, total=False):
     id: str | None
     """Unique item identifier"""
     name: str | None
-    """Item name"""
+    """Item name -- the task/row title, and the only always-populated human-readable text on an item. Semantically searchable, prefixed with its board name."""
     parent_item: dict[str, Any] | None
     """Parent item (for subitems)"""
     state: str | None
@@ -665,7 +665,7 @@ class ItemsInFilter(TypedDict, total=False):
     id: list[str]
     """Unique item identifier"""
     name: list[str]
-    """Item name"""
+    """Item name -- the task/row title, and the only always-populated human-readable text on an item. Semantically searchable, prefixed with its board name."""
     parent_item: list[dict[str, Any]]
     """Parent item (for subitems)"""
     state: list[str]
@@ -697,7 +697,7 @@ class ItemsAnyValueFilter(TypedDict, total=False):
     id: Any
     """Unique item identifier"""
     name: Any
-    """Item name"""
+    """Item name -- the task/row title, and the only always-populated human-readable text on an item. Semantically searchable, prefixed with its board name."""
     parent_item: Any
     """Parent item (for subitems)"""
     state: Any
@@ -729,7 +729,7 @@ class ItemsStringFilter(TypedDict, total=False):
     id: str
     """Unique item identifier"""
     name: str
-    """Item name"""
+    """Item name -- the task/row title, and the only always-populated human-readable text on an item. Semantically searchable, prefixed with its board name."""
     parent_item: str
     """Parent item (for subitems)"""
     state: str
@@ -761,7 +761,7 @@ class ItemsSortFilter(TypedDict, total=False):
     id: AirbyteSortOrder
     """Unique item identifier"""
     name: AirbyteSortOrder
-    """Item name"""
+    """Item name -- the task/row title, and the only always-populated human-readable text on an item. Semantically searchable, prefixed with its board name."""
     parent_item: AirbyteSortOrder
     """Parent item (for subitems)"""
     state: AirbyteSortOrder
@@ -1194,7 +1194,7 @@ class UpdatesSearchFilter(TypedDict, total=False):
     assets: list[Any] | None
     """Files attached to this update"""
     body: str | None
-    """Update body (HTML)"""
+    """Update body as HTML. Not semantically indexed -- the embedding engine has no HTML decoder. Use text_body for search; this field is for rendering only."""
     created_at: str | None
     """When the update was created"""
     creator_id: str | None
@@ -1204,9 +1204,9 @@ class UpdatesSearchFilter(TypedDict, total=False):
     item_id: str | None
     """ID of the item this update belongs to"""
     replies: list[Any] | None
-    """Replies to this update"""
+    """Replies to this update -- the threaded discussion beneath it, where the substance of a Monday conversation usually lives. Each reply's plain text is semantically indexed as its own unit; the parent update's text is appended as context."""
     text_body: str | None
-    """Update body (plain text)"""
+    """Update body as plain text -- the human comment posted on a Monday item. Semantically searchable. Empty for image-only updates, which therefore produce no embedding."""
     updated_at: str | None
     """When the update was last modified"""
 
@@ -1216,7 +1216,7 @@ class UpdatesInFilter(TypedDict, total=False):
     assets: list[list[Any]]
     """Files attached to this update"""
     body: list[str]
-    """Update body (HTML)"""
+    """Update body as HTML. Not semantically indexed -- the embedding engine has no HTML decoder. Use text_body for search; this field is for rendering only."""
     created_at: list[str]
     """When the update was created"""
     creator_id: list[str]
@@ -1226,9 +1226,9 @@ class UpdatesInFilter(TypedDict, total=False):
     item_id: list[str]
     """ID of the item this update belongs to"""
     replies: list[list[Any]]
-    """Replies to this update"""
+    """Replies to this update -- the threaded discussion beneath it, where the substance of a Monday conversation usually lives. Each reply's plain text is semantically indexed as its own unit; the parent update's text is appended as context."""
     text_body: list[str]
-    """Update body (plain text)"""
+    """Update body as plain text -- the human comment posted on a Monday item. Semantically searchable. Empty for image-only updates, which therefore produce no embedding."""
     updated_at: list[str]
     """When the update was last modified"""
 
@@ -1238,7 +1238,7 @@ class UpdatesAnyValueFilter(TypedDict, total=False):
     assets: Any
     """Files attached to this update"""
     body: Any
-    """Update body (HTML)"""
+    """Update body as HTML. Not semantically indexed -- the embedding engine has no HTML decoder. Use text_body for search; this field is for rendering only."""
     created_at: Any
     """When the update was created"""
     creator_id: Any
@@ -1248,9 +1248,9 @@ class UpdatesAnyValueFilter(TypedDict, total=False):
     item_id: Any
     """ID of the item this update belongs to"""
     replies: Any
-    """Replies to this update"""
+    """Replies to this update -- the threaded discussion beneath it, where the substance of a Monday conversation usually lives. Each reply's plain text is semantically indexed as its own unit; the parent update's text is appended as context."""
     text_body: Any
-    """Update body (plain text)"""
+    """Update body as plain text -- the human comment posted on a Monday item. Semantically searchable. Empty for image-only updates, which therefore produce no embedding."""
     updated_at: Any
     """When the update was last modified"""
 
@@ -1260,7 +1260,7 @@ class UpdatesStringFilter(TypedDict, total=False):
     assets: str
     """Files attached to this update"""
     body: str
-    """Update body (HTML)"""
+    """Update body as HTML. Not semantically indexed -- the embedding engine has no HTML decoder. Use text_body for search; this field is for rendering only."""
     created_at: str
     """When the update was created"""
     creator_id: str
@@ -1270,9 +1270,9 @@ class UpdatesStringFilter(TypedDict, total=False):
     item_id: str
     """ID of the item this update belongs to"""
     replies: str
-    """Replies to this update"""
+    """Replies to this update -- the threaded discussion beneath it, where the substance of a Monday conversation usually lives. Each reply's plain text is semantically indexed as its own unit; the parent update's text is appended as context."""
     text_body: str
-    """Update body (plain text)"""
+    """Update body as plain text -- the human comment posted on a Monday item. Semantically searchable. Empty for image-only updates, which therefore produce no embedding."""
     updated_at: str
     """When the update was last modified"""
 
@@ -1282,7 +1282,7 @@ class UpdatesSortFilter(TypedDict, total=False):
     assets: AirbyteSortOrder
     """Files attached to this update"""
     body: AirbyteSortOrder
-    """Update body (HTML)"""
+    """Update body as HTML. Not semantically indexed -- the embedding engine has no HTML decoder. Use text_body for search; this field is for rendering only."""
     created_at: AirbyteSortOrder
     """When the update was created"""
     creator_id: AirbyteSortOrder
@@ -1292,9 +1292,9 @@ class UpdatesSortFilter(TypedDict, total=False):
     item_id: AirbyteSortOrder
     """ID of the item this update belongs to"""
     replies: AirbyteSortOrder
-    """Replies to this update"""
+    """Replies to this update -- the threaded discussion beneath it, where the substance of a Monday conversation usually lives. Each reply's plain text is semantically indexed as its own unit; the parent update's text is appended as context."""
     text_body: AirbyteSortOrder
-    """Update body (plain text)"""
+    """Update body as plain text -- the human comment posted on a Monday item. Semantically searchable. Empty for image-only updates, which therefore produce no embedding."""
     updated_at: AirbyteSortOrder
     """When the update was last modified"""
 

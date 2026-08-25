@@ -678,8 +678,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Board description",
-          "semantic": false
+          "description": "Board description -- the charter a team writes to say what the board is for. Semantically searchable. Empty on boards created programmatically.",
+          "semantic": true
         },
         {
           "name": "groups",
@@ -832,8 +832,40 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "description",
+          "description": "Board description -- the charter a team writes to say what the board is for. Semantically searchable. Empty on boards created programmatically.",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "type": "string"
+        },
+        {
+          "name": "board_kind",
+          "type": "string"
+        },
+        {
+          "name": "workspace_id",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -928,8 +960,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Item name",
-          "semantic": false
+          "description": "Item name -- the task/row title, and the only always-populated human-readable text on an item. Semantically searchable, prefixed with its board name.",
+          "semantic": true
         },
         {
           "name": "parent_item",
@@ -992,8 +1024,48 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "name",
+          "description": "Item name -- the task/row title, and the only always-populated human-readable text on an item. Semantically searchable, prefixed with its board name.",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "creator_id",
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "type": "string"
+        },
+        {
+          "name": "board_id",
+          "type": "string"
+        },
+        {
+          "name": "group_id",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -1138,7 +1210,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Update body (HTML)",
+          "description": "Update body as HTML. Not semantically indexed -- the embedding engine has no HTML decoder. Use text_body for search; this field is for rendering only.",
           "semantic": false
         },
         {
@@ -1188,8 +1260,8 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Replies to this update",
-          "semantic": false
+          "description": "Replies to this update -- the threaded discussion beneath it, where the substance of a Monday conversation usually lives. Each reply's plain text is semantically indexed as its own unit; the parent update's text is appended as context.",
+          "semantic": true
         },
         {
           "name": "text_body",
@@ -1198,8 +1270,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Update body (plain text)",
-          "semantic": false
+          "description": "Update body as plain text -- the human comment posted on a Monday item. Semantically searchable. Empty for image-only updates, which therefore produce no embedding.",
+          "semantic": true
         },
         {
           "name": "updated_at",
@@ -1212,10 +1284,60 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
-      "semantic_metadata_fields": [],
-      "enrichment_outputs": []
+      "semantic_fields": [
+        {
+          "name": "replies",
+          "description": "Replies to this update -- the threaded discussion beneath it, where the substance of a Monday conversation usually lives. Each reply's plain text is semantically indexed as its own unit; the parent update's text is appended as context.",
+          "context_max_chars": 0,
+          "content_type": "json"
+        },
+        {
+          "name": "text_body",
+          "description": "Update body as plain text -- the human comment posted on a Monday item. Semantically searchable. Empty for image-only updates, which therefore produce no embedding.",
+          "context_max_chars": 2048,
+          "content_type": "plaintext"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "item_id",
+          "type": "string"
+        },
+        {
+          "name": "creator_id",
+          "type": "string"
+        }
+      ],
+      "semantic_metadata_fields": [
+        {
+          "name": "reply_id",
+          "type": "string"
+        },
+        {
+          "name": "reply_creator_id",
+          "type": "string"
+        },
+        {
+          "name": "reply_created_at",
+          "type": "string"
+        }
+      ],
+      "enrichment_outputs": [
+        "itemName",
+        "authorName"
+      ]
     },
     "users": {
       "entity": "users",

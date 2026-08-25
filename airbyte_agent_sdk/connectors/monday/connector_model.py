@@ -25,7 +25,16 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     CacheFieldProperty,
+    EnrichmentConfig,
+    EnrichmentMatch,
+    EnrichmentProjection,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -1973,11 +1982,11 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                                                 },
                                                 'body': {
                                                     'type': ['null', 'string'],
-                                                    'description': 'Update body (HTML)',
+                                                    'description': 'Update body as HTML. Use text_body for search; this field is for rendering only.',
                                                 },
                                                 'text_body': {
                                                     'type': ['null', 'string'],
-                                                    'description': 'Update body (plain text)',
+                                                    'description': 'Update body as plain text -- the human comment posted on a Monday item. Empty for image-only updates.',
                                                 },
                                                 'created_at': {
                                                     'type': ['null', 'string'],
@@ -2121,11 +2130,11 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                                                 },
                                                 'body': {
                                                     'type': ['null', 'string'],
-                                                    'description': 'Update body (HTML)',
+                                                    'description': 'Update body as HTML. Use text_body for search; this field is for rendering only.',
                                                 },
                                                 'text_body': {
                                                     'type': ['null', 'string'],
-                                                    'description': 'Update body (plain text)',
+                                                    'description': 'Update body as plain text -- the human comment posted on a Monday item. Empty for image-only updates.',
                                                 },
                                                 'created_at': {
                                                     'type': ['null', 'string'],
@@ -2249,11 +2258,11 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     'body': {
                         'type': ['null', 'string'],
-                        'description': 'Update body (HTML)',
+                        'description': 'Update body as HTML. Use text_body for search; this field is for rendering only.',
                     },
                     'text_body': {
                         'type': ['null', 'string'],
-                        'description': 'Update body (plain text)',
+                        'description': 'Update body as plain text -- the human comment posted on a Monday item. Empty for image-only updates.',
                     },
                     'created_at': {
                         'type': ['null', 'string'],
@@ -3039,7 +3048,57 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='description',
                         type=['null', 'string'],
-                        description='Board description',
+                        description='Board description -- the charter a team writes to say what the board is for. Semantically searchable. Empty on boards created programmatically.',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='board_name',
+                                    path='/name',
+                                ),
+                                SemanticSample(
+                                    name='board_description',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='board',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{board_name}\n\n{board_description}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='name',
+                                    path='/name',
+                                ),
+                                SemanticMetadataField(
+                                    name='state',
+                                    path='/state',
+                                ),
+                                SemanticMetadataField(
+                                    name='board_kind',
+                                    path='/board_kind',
+                                ),
+                                SemanticMetadataField(
+                                    name='workspace_id',
+                                    path='/workspace.id',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='groups',
@@ -3193,7 +3252,65 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='name',
                         type=['null', 'string'],
-                        description='Item name',
+                        description='Item name -- the task/row title, and the only always-populated human-readable text on an item. Semantically searchable, prefixed with its board name.',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='board_name',
+                                    path='/board.name',
+                                ),
+                                SemanticSample(
+                                    name='item_name',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='item',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{board_name}\n\n{item_name}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='name',
+                                    path='/name',
+                                ),
+                                SemanticMetadataField(
+                                    name='created_at',
+                                    path='/created_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='creator_id',
+                                    path='/creator_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='state',
+                                    path='/state',
+                                ),
+                                SemanticMetadataField(
+                                    name='board_id',
+                                    path='/board.id',
+                                ),
+                                SemanticMetadataField(
+                                    name='group_id',
+                                    path='/group.id',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='parent_item',
@@ -3294,7 +3411,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='body',
                         type=['null', 'string'],
-                        description='Update body (HTML)',
+                        description='Update body as HTML. Not semantically indexed -- the embedding engine has no HTML decoder. Use text_body for search; this field is for rendering only.',
                     ),
                     CacheFieldConfig(
                         name='created_at',
@@ -3319,17 +3436,147 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='replies',
                         type=['null', 'array'],
-                        description='Replies to this update',
+                        description="Replies to this update -- the threaded discussion beneath it, where the substance of a Monday conversation usually lives. Each reply's plain text is semantically indexed as its own unit; the parent update's text is appended as context.",
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='json',
+                            samples=[
+                                SemanticSample(
+                                    name='parent_body',
+                                    path='/text_body',
+                                ),
+                                SemanticSample(
+                                    name='reply_body',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='element',
+                                        unit_label='reply',
+                                        sample_path='[]',
+                                        text_path='text_body',
+                                    ),
+                                ),
+                            ],
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{reply_body}\n\nIn reply to: {parent_body}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='created_at',
+                                    path='/created_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='item_id',
+                                    path='/item_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='creator_id',
+                                    path='/creator_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='reply_id',
+                                    path='id',
+                                ),
+                                SemanticMetadataField(
+                                    name='reply_creator_id',
+                                    path='creator_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='reply_created_at',
+                                    path='created_at',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='text_body',
                         type=['null', 'string'],
-                        description='Update body (plain text)',
+                        description='Update body as plain text -- the human comment posted on a Monday item. Semantically searchable. Empty for image-only updates, which therefore produce no embedding.',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='update_body',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='update_body',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='created_at',
+                                    path='/created_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='item_id',
+                                    path='/item_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='creator_id',
+                                    path='/creator_id',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='updated_at',
                         type=['null', 'string'],
                         description='When the update was last modified',
+                    ),
+                ],
+                x_airbyte_enrichment=[
+                    EnrichmentConfig(
+                        target='items',
+                        match=[
+                            EnrichmentMatch(
+                                local='/item_id',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='itemName',
+                                from_='name',
+                            ),
+                        ],
+                    ),
+                    EnrichmentConfig(
+                        target='users',
+                        match=[
+                            EnrichmentMatch(
+                                local='/creator_id',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='authorName',
+                                from_='name',
+                            ),
+                        ],
                     ),
                 ],
             ),
@@ -3625,6 +3872,254 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
             'teams_subscribers[]',
             'users_subscribers',
             'users_subscribers[]',
+        ],
+    },
+    semantic_search_fields={
+        'boards': {
+            'description': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='board_name',
+                        path='/name',
+                    ),
+                    SemanticSample(
+                        name='board_description',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='board',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{board_name}\n\n{board_description}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='name',
+                        path='/name',
+                    ),
+                    SemanticMetadataField(
+                        name='state',
+                        path='/state',
+                    ),
+                    SemanticMetadataField(
+                        name='board_kind',
+                        path='/board_kind',
+                    ),
+                    SemanticMetadataField(
+                        name='workspace_id',
+                        path='/workspace.id',
+                    ),
+                ],
+            ),
+        },
+        'items': {
+            'name': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='board_name',
+                        path='/board.name',
+                    ),
+                    SemanticSample(
+                        name='item_name',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='item',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{board_name}\n\n{item_name}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='name',
+                        path='/name',
+                    ),
+                    SemanticMetadataField(
+                        name='created_at',
+                        path='/created_at',
+                    ),
+                    SemanticMetadataField(
+                        name='creator_id',
+                        path='/creator_id',
+                    ),
+                    SemanticMetadataField(
+                        name='state',
+                        path='/state',
+                    ),
+                    SemanticMetadataField(
+                        name='board_id',
+                        path='/board.id',
+                    ),
+                    SemanticMetadataField(
+                        name='group_id',
+                        path='/group.id',
+                    ),
+                ],
+            ),
+        },
+        'updates': {
+            'replies': SemanticSearchConfig(
+                content_type='json',
+                samples=[
+                    SemanticSample(
+                        name='parent_body',
+                        path='/text_body',
+                    ),
+                    SemanticSample(
+                        name='reply_body',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='element',
+                            unit_label='reply',
+                            sample_path='[]',
+                            text_path='text_body',
+                        ),
+                    ),
+                ],
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{reply_body}\n\nIn reply to: {parent_body}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='created_at',
+                        path='/created_at',
+                    ),
+                    SemanticMetadataField(
+                        name='item_id',
+                        path='/item_id',
+                    ),
+                    SemanticMetadataField(
+                        name='creator_id',
+                        path='/creator_id',
+                    ),
+                    SemanticMetadataField(
+                        name='reply_id',
+                        path='id',
+                    ),
+                    SemanticMetadataField(
+                        name='reply_creator_id',
+                        path='creator_id',
+                    ),
+                    SemanticMetadataField(
+                        name='reply_created_at',
+                        path='created_at',
+                    ),
+                ],
+            ),
+            'text_body': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='update_body',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='update_body',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='created_at',
+                        path='/created_at',
+                    ),
+                    SemanticMetadataField(
+                        name='item_id',
+                        path='/item_id',
+                    ),
+                    SemanticMetadataField(
+                        name='creator_id',
+                        path='/creator_id',
+                    ),
+                ],
+            ),
+        },
+    },
+    enrichment_configs={
+        'updates': [
+            EnrichmentConfig(
+                target='items',
+                match=[
+                    EnrichmentMatch(
+                        local='/item_id',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='itemName',
+                        from_='name',
+                    ),
+                ],
+            ),
+            EnrichmentConfig(
+                target='users',
+                match=[
+                    EnrichmentMatch(
+                        local='/creator_id',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='authorName',
+                        from_='name',
+                    ),
+                ],
+            ),
         ],
     },
     example_questions=ExampleQuestions(

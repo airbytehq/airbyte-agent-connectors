@@ -114,7 +114,37 @@ info:
                 type: ["null", "string"]
           - name: description
             type: ["null", "string"]
-            description: Board description
+            description: >-
+              Board description -- the charter a team writes to say what the board is for.
+              Semantically searchable. Empty on boards created programmatically.
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                # The board name leads: descriptions open mid-thought ("Welcome to your
+                # inventory management board...") and the name is what a query actually names.
+                - { name: board_name, path: "/name" }
+                - name: board_description
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: board }
+              # whole, not regex: a description that fits inside the cap renders a byte-identical
+              # context_text per paragraph unit -- N chunks, one distinct vector.
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{board_name}\n\n{board_description}"
+              # [0] record key, [1] cursor, positionally. workspace_id and board_kind are the
+              # scoping filters a "which board covers X" query narrows on, and the metadata set
+              # is now-or-never -- adding a column once vectors exist forces a rebuild.
+              # workspace_id reads the nested `workspace` struct: _canonical_raw_columns selects
+              # the path's FIRST segment, so `workspace` is materialised and the name is just the
+              # output key.
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: name, path: "/name", type: string }
+                - { name: state, path: "/state", type: string }
+                - { name: board_kind, path: "/board_kind", type: string }
+                - { name: workspace_id, path: "/workspace.id", type: string }
           - name: groups
             type: ["null", "array"]
             description: Board groups
@@ -207,7 +237,41 @@ info:
             description: Unique item identifier
           - name: name
             type: ["null", "string"]
-            description: Item name
+            description: >-
+              Item name -- the task/row title, and the only always-populated human-readable text
+              on an item. Semantically searchable, prefixed with its board name.
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                # The board name disambiguates titles that repeat across boards ("Task 1",
+                # "Design review"). It is read from the nested `board` struct on the item row --
+                # no lookup, and no cross-entity join, which does not exist at index time.
+                - { name: board_name, path: "/board.name" }
+                - name: item_name
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: item }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{board_name}\n\n{item_name}"
+              # [0] record key, [1] cursor, positionally. board_id and group_id are the two
+              # dimensions a scoped query narrows on and are otherwise unreachable -- an outer
+              # WHERE over semantic_search(...) runs after the inner top-k, so a dimension left
+              # out here cannot be recovered by joining the raw table.
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                # `name` is the windowed column, so without this declaration a hit would carry the
+                # item's ids and state but not its title -- readable only by parsing it back out of
+                # `context`. Declaring it as record-root metadata puts it in the `entity` block on
+                # the REST semantic path and keeps it in `entity_data` on the workspace-search path
+                # (which preserves embedded columns that are also record-root metadata).
+                - { name: name, path: "/name", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: creator_id, path: "/creator_id", type: string }
+                - { name: state, path: "/state", type: string }
+                - { name: board_id, path: "/board.id", type: string }
+                - { name: group_id, path: "/group.id", type: string }
           - name: parent_item
             type: ["null", "object"]
             description: Parent item (for subitems)
@@ -267,7 +331,9 @@ info:
             description: Files attached to this update
           - name: body
             type: ["null", "string"]
-            description: Update body (HTML)
+            description: >-
+              Update body as HTML. Not semantically indexed -- the embedding engine has no
+              HTML decoder. Use text_body for search; this field is for rendering only.
           - name: created_at
             type: ["null", "string"]
             description: When the update was created
@@ -282,13 +348,144 @@ info:
             description: ID of the item this update belongs to
           - name: replies
             type: ["null", "array"]
-            description: Replies to this update
+            description: >-
+              Replies to this update -- the threaded discussion beneath it, where the substance
+              of a Monday conversation usually lives. Each reply's plain text is semantically
+              indexed as its own unit; the parent update's text is appended as context.
+            x-airbyte-semantic-search:
+              # content_type json, not plaintext: the value is an array of reply objects, and
+              # plaintext over a list resolves to zero chunks SILENTLY rather than failing.
+              content_type: json
+              samples:
+                # The parent update's text, read straight off the same row. Slack needs a
+                # same-stream self-join for this because its replies are sibling rows; Monday
+                # nests replies under their parent, so a plain record-root scalar reaches it.
+                - { name: parent_body, path: "/text_body" }
+                # element with sample_path "[]": one unit per reply, mirroring gong's
+                # speaker_turn. The "[]" is what enters the array -- text_path "text_body"
+                # without it resolves to zero chunks silently, as does a missing sample_path
+                # (that one at least fails schema validation).
+                - name: reply_body
+                  windowed: true
+                  sampling: { sample_type: element, unit_label: reply, sample_path: "[]", text_path: "text_body" }
+              # context_max_chars 0 -- "embed the unit only" -- and NOT the house 2048.
+              # _context_window_around centres a window on each unit within the JOINED document,
+              # so at 2048 every reply in a thread that fits under the cap renders a
+              # byte-identical context_text: measured 3 replies -> 3 chunks / 1 distinct vector,
+              # 12 -> 12 / 1. That is the same duplicate-vector failure that disqualified regex
+              # for text_body. gong survives element-at-2048 only because call transcripts are
+              # long enough to force divergent windows; Monday replies are short. The cost of 0
+              # is that a reply over 2048 chars is emitted whole and silently truncated by
+              # MotherDuck's embedding() instead of sliding into sub-windows.
+              windowing: { context_max_chars: 0, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                # The reply LEADS and the parent TRAILS, matching Slack's threads annotation: a
+                # search hit's context is front-truncated at 200 chars, and with the parent
+                # leading, Slack measured 816 of 929 replies returning a context that showed only
+                # the parent. The label keeps the parent from reading as part of the reply.
+                # It renders unconditionally -- an image-only parent (text_body "") yields a
+                # dangling "\n\nIn reply to: ". Conditional sample prefixes are not in the schema
+                # on this branch.
+                template: "{reply_body}\n\nIn reply to: {parent_body}"
+              # [0] is the record key and [1] the cursor, positionally -- both the parent
+              # update's, since a reply has no independent identity in the raw table. All chunks
+              # of one update therefore share a record key; that is safe because the incremental
+              # delta swaps a record's chunks wholesale (DELETE by key + INSERT), so a newly
+              # added reply is picked up.
+              #
+              # item_id and creator_id are mandatory here, not optional context: the entity-level
+              # x-airbyte-enrichment below is resolved per ENTITY, not per field, so it applies to
+              # this field too and its join renders those columns against the ranked subquery.
+              # For the same reason a reply-author enrichment cannot be added -- it would render a
+              # column text_body's metadata does not project. reply_author is reachable at read
+              # time by following reply_creator_id.
+              #
+              # The trailing three are unit-relative (no leading "/"): they resolve against the
+              # matched reply and land in the hit's metadata block, which is the ONLY way a caller
+              # can tell which reply matched. Same shape as gong's speakerId.
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: item_id, path: "/item_id", type: string }
+                - { name: creator_id, path: "/creator_id", type: string }
+                - { name: reply_id, path: "id", type: string }
+                - { name: reply_creator_id, path: "creator_id", type: string }
+                - { name: reply_created_at, path: "created_at", type: string }
           - name: text_body
             type: ["null", "string"]
-            description: Update body (plain text)
+            description: >-
+              Update body as plain text -- the human comment posted on a Monday item.
+              Semantically searchable. Empty for image-only updates, which therefore
+              produce no embedding.
+            x-airbyte-semantic-search:
+              # text_body, not body: body is HTML and semantic_chunking._decode raises
+              # NotImplementedError for content_type html at embedding-job runtime (it passes
+              # YAML validation, then fails every sync). text_body is source-monday's
+              # plaintext twin of the same content, replicated on the same stream.
+              content_type: plaintext
+              samples:
+                # whole, not a regex paragraph split: the engine centres a full
+                # context_max_chars window on EVERY unit, so a record that fits inside the
+                # budget renders a byte-identical context_text per paragraph. No committed
+                # cassette update contains a blank-line break, so the two samplers are
+                # indistinguishable on the fixtures (24 chunks / 24 distinct either way);
+                # on a synthetic multi-paragraph corpus regex gives 23 chunks / 5 distinct
+                # texts against whole's 5 / 5. A body over the cap is not truncated -- whole
+                # slides it into overlapping sub-windows.
+                - name: update_body
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: update_body }
+              # 2048 is a platform ceiling, not a tuning choice: MotherDuck's embedding()
+              # silently truncates input at 2048 characters, so a higher cap would return a
+              # context containing text that was never embedded.
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding: { model: text-embedding-3-small }
+              # Order is load-bearing: the first record-root ('/') entry is the record key and
+              # the second is the cursor, taken positionally, and both names are resolved as
+              # physical raw-table columns. source-monday's updates stream is full-refresh
+              # with no declared cursor, so updated_at here is the sole supplier of the Athena
+              # dedupe ORDER BY.
+              #
+              # These names become physical embeddings-table columns, so the set is
+              # now-or-never: adding one after vectors exist forces a table rebuild. item_id
+              # and creator_id are here for two reasons -- they are exact filters (better than
+              # fuzzy-matching digits in the vector, which would spend 27-55% of a median
+              # update's embedded text on opaque ids), and each is the local match column of
+              # an x-airbyte-enrichment below, which renders as a column on the ranked
+              # subquery and therefore must be projected.
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: item_id, path: "/item_id", type: string }
+                - { name: creator_id, path: "/creator_id", type: string }
           - name: updated_at
             type: ["null", "string"]
             description: When the update was last modified
+        # Read-time only. The metadata entries above do reach the agent -- they land in a search
+        # hit's `entity` block -- but they are opaque integers, and an update carries no item
+        # name, no author name, and no constructible permalink. These projections make a hit
+        # readable ("which item? who wrote it?") without changing what it matches on.
+        #
+        # Availability is asymmetric. Workspace search fails soft: a denied or unresolvable
+        # target is dropped and the hit is unchanged. A semantic_search(...) call inside
+        # context_store_sql_query fails soft too unless it opts in with enrich => true (default
+        # false), in which case it is rejected outright while ANY declared target's native
+        # table is not yet ready. Both targets are suggested: true and small, so they land
+        # alongside updates; zendesk-support.ticket_comments carries the same two-target shape.
+        x-airbyte-enrichment:
+          - target: items
+            match:
+              - { local: "/item_id", foreign: id }
+            project:
+              - { name: itemName, from: name }
+          - target: users
+            match:
+              - { local: "/creator_id", foreign: id }
+            project:
+              - { name: authorName, from: name }
       - entity: users
         x-airbyte-name: users
         suggested: true
@@ -1892,10 +2089,12 @@ components:
           description: Unique update identifier
         body:
           type: ["null", "string"]
-          description: Update body (HTML)
+          description: Update body as HTML. Use text_body for search; this field is for rendering only.
         text_body:
           type: ["null", "string"]
-          description: Update body (plain text)
+          description: >-
+            Update body as plain text -- the human comment posted on a Monday item.
+            Empty for image-only updates.
         created_at:
           type: ["null", "string"]
           description: When the update was created
