@@ -664,7 +664,42 @@ info:
             type:
               - "null"
               - "string"
-            description: "The main content or message body of the conversation part."
+            description: >-
+              The reply or internal note text, as HTML. Semantically searchable. Null on
+              state-change parts (`assignment`, `ticket_state_updated_by_admin`, ...), which
+              index to nothing and cost nothing.
+            x-airbyte-semantic-search:
+              content_type: html
+              samples:
+                # The part carries no parent conversation text -- conversation_created_at /
+                # conversation_updated_at / conversation_total_parts are declared upstream but
+                # never written (NULL in 39/39 rows), and cross-stream lookups do not exist at
+                # index time. The author's name is the only identity on the row, so it is the
+                # lead; a reply reads as "who said it" plus what they said.
+                - { name: author_name, path: "/author.name" }
+                - name: part_body
+                  windowed: true
+                  # `whole`, matching conversations.source: the body is HTML with no blank
+                  # lines, so a paragraph regex can never split it, and when a record fits the
+                  # cap every regex unit renders a byte-identical context_text.
+                  sampling: { sample_type: whole, unit_label: part }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                # Newline-separated, not "Name: ": an unattributed part would otherwise embed a
+                # dangling colon, and conditional sample prefixes are not in the schema here.
+                template: "{author_name}\n\n{part_body}"
+              # [0] record key, [1] cursor, positionally. conversation_id is the join back to the
+              # parent thread and the only way a hit can be placed in context, so it is
+              # load-bearing rather than projection tax -- and metadata is now-or-never.
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: conversation_id, path: "/conversation_id", type: string }
+                - { name: part_type, path: "/part_type", type: string }
+                - { name: author_name, path: "/author.name", type: string }
+                - { name: author_type, path: "/author.type", type: string }
           - name: conversation_created_at
             type:
               - "null"
@@ -1002,7 +1037,46 @@ info:
             type:
               - "null"
               - "object"
-            description: "Source details of the conversation."
+            description: "Source details of the conversation, including the opening message body."
+            # The windowed field is `source`, not `conversation_message`: source-intercom declares
+            # both, but Intercom API 2.11 has no conversation_message, so that column is always NULL.
+            x-airbyte-semantic-search:
+              content_type: json
+              samples:
+                # Three scalar leads, because no single one is reliably present: `title` is set on
+                # Intercom-created conversations, `source.subject` only on email-initiated ones,
+                # and `source.author.name` names whoever opened it. Each renders empty when absent
+                # and they are newline-separated rather than punctuated, so a missing value leaves
+                # a blank line instead of a dangling "Name: " -- conditional sample prefixes are
+                # not in the schema on this branch.
+                - { name: title, path: "/title" }
+                - { name: subject, path: "/source.subject" }
+                - { name: author_name, path: "/source.author.name" }
+                - name: opening_message
+                  windowed: true
+                  # `whole`, not a paragraph regex: Intercom bodies are HTML with no blank lines,
+                  # so '\n\s*\n' never splits. `regex` would also bypass text_path and embed the
+                  # str() of the decoded source object -- reproduced, and it scores BETTER than the
+                  # correct config on chunk counts, so counts alone cannot detect it.
+                  # `text_content_type: html`: the `body` leaf is Intercom-authored HTML, so the
+                  # leaf is tag-stripped before embedding -- `content_type: json` decodes only the
+                  # containing object, never the selected text leaves.
+                  sampling: { sample_type: whole, unit_label: conversation, text_path: "body", text_content_type: html }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{title}\n{subject}\n{author_name}\n\n{opening_message}"
+              # Order matters: the first record-root entry is the record key, the second is the
+              # cursor, and both names must be real raw-table columns.
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: created_at, path: "/created_at", type: string }
+                - { name: state, path: "/state", type: string }
+                - { name: priority, path: "/priority", type: string }
+                - { name: title, path: "/title", type: string }
+                - { name: author_name, path: "/source.author.name", type: string }
+                - { name: delivered_as, path: "/source.delivered_as", type: string }
             properties:
               attachments:
                 type:
@@ -1012,6 +1086,23 @@ info:
                 type:
                   - "null"
                   - "object"
+                properties:
+                  email:
+                    type:
+                      - "null"
+                      - "string"
+                  id:
+                    type:
+                      - "null"
+                      - "string"
+                  name:
+                    type:
+                      - "null"
+                      - "string"
+                  type:
+                    type:
+                      - "null"
+                      - "string"
               body:
                 type:
                   - "null"
@@ -1044,7 +1135,7 @@ info:
             type:
               - "null"
               - "string"
-            description: "The state of the conversation (e.g., new, in progress)"
+            description: "The state of the conversation: open, closed, or snoozed"
           - name: statistics
             type:
               - "null"

@@ -139,6 +139,10 @@ class SemanticSampling(BaseModel):
         default=None,
         description="element/whole: path to text leaves under the anchor.",
     )
+    text_content_type: Literal["plaintext", "html"] = Field(
+        default="plaintext",
+        description="element/whole: how each text leaf selected by 'text_path' is decoded. Defaults to 'plaintext'.",
+    )
     stitch: str = Field(
         default="\n",
         description="Separator used to join multiple text leaves into a unit's text. Defaults to '\\n'.",
@@ -448,6 +452,19 @@ class SemanticSearchConfig(BaseModel):
                 raise ValueError(
                     "x-airbyte-semantic-search: sampling.sample_type 'whole' must not set "
                     "'sample_path' or 'split_pattern' (only an optional 'text_path' is allowed)."
+                )
+        if sampling.text_content_type != "plaintext":
+            if sample_type == "regex":
+                raise ValueError(
+                    "x-airbyte-semantic-search: sampling.text_content_type is not supported for "
+                    "sample_type 'regex' (regex sampling splits the container text and never reads text leaves)."
+                )
+            if not sampling.text_path:
+                raise ValueError("x-airbyte-semantic-search: sampling.text_content_type requires 'text_path' (it decodes the selected text leaves).")
+            if self.content_type != "json":
+                raise ValueError(
+                    "x-airbyte-semantic-search: sampling.text_content_type requires content_type 'json' "
+                    "(other content types decode to a string, so 'text_path' resolves no leaves and the record embeds nothing)."
                 )
 
         if self.windowing.context_boundary == "regex" and not self.windowing.context_boundary_pattern:

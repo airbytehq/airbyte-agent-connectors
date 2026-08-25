@@ -1207,9 +1207,9 @@ class ConversationsSearchFilter(TypedDict, total=False):
     snoozed_until: int | None
     """Timestamp until the conversation is snoozed"""
     source: dict[str, Any] | None
-    """Source details of the conversation."""
+    """Source details of the conversation, including the opening message body."""
     state: str | None
-    """The state of the conversation (e.g., new, in progress)"""
+    """The state of the conversation: open, closed, or snoozed"""
     statistics: dict[str, Any] | None
     """Statistics related to the conversation."""
     tags: dict[str, Any] | None
@@ -1277,9 +1277,9 @@ class ConversationsInFilter(TypedDict, total=False):
     snoozed_until: list[int]
     """Timestamp until the conversation is snoozed"""
     source: list[dict[str, Any]]
-    """Source details of the conversation."""
+    """Source details of the conversation, including the opening message body."""
     state: list[str]
-    """The state of the conversation (e.g., new, in progress)"""
+    """The state of the conversation: open, closed, or snoozed"""
     statistics: list[dict[str, Any]]
     """Statistics related to the conversation."""
     tags: list[dict[str, Any]]
@@ -1347,9 +1347,9 @@ class ConversationsAnyValueFilter(TypedDict, total=False):
     snoozed_until: Any
     """Timestamp until the conversation is snoozed"""
     source: Any
-    """Source details of the conversation."""
+    """Source details of the conversation, including the opening message body."""
     state: Any
-    """The state of the conversation (e.g., new, in progress)"""
+    """The state of the conversation: open, closed, or snoozed"""
     statistics: Any
     """Statistics related to the conversation."""
     tags: Any
@@ -1417,9 +1417,9 @@ class ConversationsStringFilter(TypedDict, total=False):
     snoozed_until: str
     """Timestamp until the conversation is snoozed"""
     source: str
-    """Source details of the conversation."""
+    """Source details of the conversation, including the opening message body."""
     state: str
-    """The state of the conversation (e.g., new, in progress)"""
+    """The state of the conversation: open, closed, or snoozed"""
     statistics: str
     """Statistics related to the conversation."""
     tags: str
@@ -1487,9 +1487,9 @@ class ConversationsSortFilter(TypedDict, total=False):
     snoozed_until: AirbyteSortOrder
     """Timestamp until the conversation is snoozed"""
     source: AirbyteSortOrder
-    """Source details of the conversation."""
+    """Source details of the conversation, including the opening message body."""
     state: AirbyteSortOrder
-    """The state of the conversation (e.g., new, in progress)"""
+    """The state of the conversation: open, closed, or snoozed"""
     statistics: AirbyteSortOrder
     """Statistics related to the conversation."""
     tags: AirbyteSortOrder

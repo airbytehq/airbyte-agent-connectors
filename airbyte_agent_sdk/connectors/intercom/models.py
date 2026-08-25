@@ -1043,9 +1043,9 @@ class ConversationsSearchData(BaseModel):
     snoozed_until: int | None = None
     """Timestamp until the conversation is snoozed"""
     source: dict[str, Any] | None = None
-    """Source details of the conversation."""
+    """Source details of the conversation, including the opening message body."""
     state: str | None = None
-    """The state of the conversation (e.g., new, in progress)"""
+    """The state of the conversation: open, closed, or snoozed"""
     statistics: dict[str, Any] | None = None
     """Statistics related to the conversation."""
     tags: dict[str, Any] | None = None

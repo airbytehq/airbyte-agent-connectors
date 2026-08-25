@@ -2562,6 +2562,15 @@ $defs:
         default: null
         description: 'element/whole: path to text leaves under the anchor.'
         title: Text Path
+      text_content_type:
+        default: plaintext
+        description: 'element/whole: how each text leaf selected by ''text_path''
+          is decoded. Defaults to ''plaintext''.'
+        enum:
+        - plaintext
+        - html
+        title: Text Content Type
+        type: string
       stitch:
         default: '
 

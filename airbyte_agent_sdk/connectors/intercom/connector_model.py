@@ -25,6 +25,12 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheFieldConfig,
     CacheFieldProperty,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -7429,7 +7435,61 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='body',
                         type=['null', 'string'],
-                        description='The main content or message body of the conversation part.',
+                        description='The reply or internal note text, as HTML. Semantically searchable. Null on state-change parts (`assignment`, `ticket_state_updated_by_admin`, ...), which index to nothing and cost nothing.',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='html',
+                            samples=[
+                                SemanticSample(
+                                    name='author_name',
+                                    path='/author.name',
+                                ),
+                                SemanticSample(
+                                    name='part_body',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='part',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{author_name}\n\n{part_body}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='created_at',
+                                    path='/created_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='conversation_id',
+                                    path='/conversation_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='part_type',
+                                    path='/part_type',
+                                ),
+                                SemanticMetadataField(
+                                    name='author_name',
+                                    path='/author.name',
+                                ),
+                                SemanticMetadataField(
+                                    name='author_type',
+                                    path='/author.type',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='conversation_created_at',
@@ -7739,13 +7799,27 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='source',
                         type=['null', 'object'],
-                        description='Source details of the conversation.',
+                        description='Source details of the conversation, including the opening message body.',
                         properties={
                             'attachments': CacheFieldProperty(
                                 type=['null', 'array'],
                             ),
                             'author': CacheFieldProperty(
                                 type=['null', 'object'],
+                                properties={
+                                    'email': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'id': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'name': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'type': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
                             ),
                             'body': CacheFieldProperty(
                                 type=['null', 'string'],
@@ -7769,11 +7843,79 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                                 type=['null', 'string'],
                             ),
                         },
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='json',
+                            samples=[
+                                SemanticSample(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticSample(
+                                    name='subject',
+                                    path='/source.subject',
+                                ),
+                                SemanticSample(
+                                    name='author_name',
+                                    path='/source.author.name',
+                                ),
+                                SemanticSample(
+                                    name='opening_message',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='conversation',
+                                        text_path='body',
+                                        text_content_type='html',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{title}\n{subject}\n{author_name}\n\n{opening_message}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated_at',
+                                    path='/updated_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='created_at',
+                                    path='/created_at',
+                                ),
+                                SemanticMetadataField(
+                                    name='state',
+                                    path='/state',
+                                ),
+                                SemanticMetadataField(
+                                    name='priority',
+                                    path='/priority',
+                                ),
+                                SemanticMetadataField(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticMetadataField(
+                                    name='author_name',
+                                    path='/source.author.name',
+                                ),
+                                SemanticMetadataField(
+                                    name='delivered_as',
+                                    path='/source.delivered_as',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='state',
                         type=['null', 'string'],
-                        description='The state of the conversation (e.g., new, in progress)',
+                        description='The state of the conversation: open, closed, or snoozed',
                     ),
                     CacheFieldConfig(
                         name='statistics',
@@ -8159,6 +8301,10 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
             'source.attachments',
             'source.attachments[]',
             'source.author',
+            'source.author.email',
+            'source.author.id',
+            'source.author.name',
+            'source.author.type',
             'source.body',
             'source.delivered_as',
             'source.id',
@@ -8213,6 +8359,134 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
             'name',
             'type',
         ],
+    },
+    semantic_search_fields={
+        'conversation_parts': {
+            'body': SemanticSearchConfig(
+                content_type='html',
+                samples=[
+                    SemanticSample(
+                        name='author_name',
+                        path='/author.name',
+                    ),
+                    SemanticSample(
+                        name='part_body',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='part',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{author_name}\n\n{part_body}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='created_at',
+                        path='/created_at',
+                    ),
+                    SemanticMetadataField(
+                        name='conversation_id',
+                        path='/conversation_id',
+                    ),
+                    SemanticMetadataField(
+                        name='part_type',
+                        path='/part_type',
+                    ),
+                    SemanticMetadataField(
+                        name='author_name',
+                        path='/author.name',
+                    ),
+                    SemanticMetadataField(
+                        name='author_type',
+                        path='/author.type',
+                    ),
+                ],
+            ),
+        },
+        'conversations': {
+            'source': SemanticSearchConfig(
+                content_type='json',
+                samples=[
+                    SemanticSample(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticSample(
+                        name='subject',
+                        path='/source.subject',
+                    ),
+                    SemanticSample(
+                        name='author_name',
+                        path='/source.author.name',
+                    ),
+                    SemanticSample(
+                        name='opening_message',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='conversation',
+                            text_path='body',
+                            text_content_type='html',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{title}\n{subject}\n{author_name}\n\n{opening_message}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated_at',
+                        path='/updated_at',
+                    ),
+                    SemanticMetadataField(
+                        name='created_at',
+                        path='/created_at',
+                    ),
+                    SemanticMetadataField(
+                        name='state',
+                        path='/state',
+                    ),
+                    SemanticMetadataField(
+                        name='priority',
+                        path='/priority',
+                    ),
+                    SemanticMetadataField(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticMetadataField(
+                        name='author_name',
+                        path='/source.author.name',
+                    ),
+                    SemanticMetadataField(
+                        name='delivered_as',
+                        path='/source.delivered_as',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[
