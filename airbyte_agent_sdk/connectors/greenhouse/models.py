@@ -472,7 +472,7 @@ class JobPostsSearchData(BaseModel):
     internal: bool | None = None
     """Flag indicating if the job post is internal or not."""
     internal_content: str | None = None
-    """Internal content or description of the job post."""
+    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
     job_id: int | None = None
     """ID of the job associated with the job post."""
     live: bool | None = None

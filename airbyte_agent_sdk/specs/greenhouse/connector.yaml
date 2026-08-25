@@ -410,6 +410,27 @@ info:
               - 'null'
               - 'string'
             description: 'Content or description of the job post.'
+            x-airbyte-semantic-search:
+              content_type: html
+              samples:
+                - { name: title, path: "/title" }
+                - name: job_post_content
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: job_post }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{title}\n\n{job_post_content}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: title, path: "/title", type: string }
+                - { name: job_id, path: "/job_id", type: string }
+                - { name: live, path: "/live", type: string }
+                - { name: internal, path: "/internal", type: string }
+                - { name: location, path: "/location.name", type: string }
+                - { name: first_published_at, path: "/first_published_at", type: string }
+                - { name: created_at, path: "/created_at", type: string }
           - name: created_at
             type:
               - 'null'
@@ -444,7 +465,48 @@ info:
             type:
               - 'null'
               - 'string'
-            description: 'Internal content or description of the job post.'
+            description: >-
+              The job post as written for the internal job board, present only when it differs
+              from the external one. Semantically searchable; HTML, same as `content`.
+            x-airbyte-semantic-search:
+              # Harvest defines this as "the text of the job post if posted to the internal job
+              # board, IF DIFFERENT than the external job board" -- so it is populated exactly
+              # when it is NOT a copy of `content`. Absent otherwise, which costs nothing: an
+              # empty windowed field yields zero chunks, zero rows and zero embedding calls.
+              # This is where internal-mobility detail lives (reporting line, band, team context)
+              # and it never appears in the candidate-facing post.
+              #
+              # A second annotated field on `job_posts` means the REST search path requires an
+              # explicit `semantic.field` for the entity -- it only defaults when exactly one is
+              # configured. That is free ONLY here: both fields land in the same unmerged PR, so
+              # no caller ever had the single-field default to lose. Adding it after merge would
+              # be a breaking query-contract change.
+              content_type: html
+              samples:
+                - { name: title, path: "/title" }
+                - name: internal_job_post_content
+                  windowed: true
+                  # Same reasoning as `content`: `whole` because job-post HTML carries no blank
+                  # lines, and the body must be the WINDOWED field because
+                  # `_resolve_scalar_samples` never calls `_decode` -- a scalar would embed raw
+                  # HTML and be hard-trimmed to ~1k chars with no sub-windowing.
+                  sampling: { sample_type: whole, unit_label: internal_job_post }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{title}\n\n{internal_job_post_content}"
+              # Same positional contract as `content`: [0] record key, [1] cursor, both resolved
+              # as physical raw columns by `_required_raw_columns`.
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: title, path: "/title", type: string }
+                - { name: job_id, path: "/job_id", type: string }
+                - { name: live, path: "/live", type: string }
+                - { name: internal, path: "/internal", type: string }
+                - { name: location, path: "/location.name", type: string }
+                - { name: first_published_at, path: "/first_published_at", type: string }
+                - { name: created_at, path: "/created_at", type: string }
           - name: job_id
             type:
               - 'null'
@@ -583,6 +645,42 @@ info:
               - 'null'
               - 'string'
             description: 'Additional notes or comments about the job'
+            x-airbyte-semantic-search:
+              # Harvest documents `notes` as "Notes on the hiring plan" and returns it as HTML,
+              # same as `job_posts.content` ("notes": "<p>Resistance to electro-magnetic radiation
+              # a plus!</p>"), so it needs the same decoder -- under `plaintext` the markup lands
+              # in the vector. This is the recruiter-facing counterpart to the candidate-facing
+              # job post: it holds the hiring plan, the sourcing strategy and the must-haves, none
+              # of which appear anywhere else in the schema.
+              content_type: html
+              samples:
+                - { name: name, path: "/name" }
+                - name: job_notes
+                  windowed: true
+                  # `notes` is nullable, so a job without one produces zero chunks and is not
+                  # findable by this field. That is the same trade the shipped `job_posts.content`
+                  # annotation makes -- the alternative, windowing `name` and carrying `notes` as
+                  # a scalar, is strictly worse: `_resolve_scalar_samples` never calls `_decode`,
+                  # so the HTML would go into the vector raw and be hard-trimmed with no
+                  # sub-windowing.
+                  sampling: { sample_type: whole, unit_label: job }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{name}\n\n{job_notes}"
+              # Entry [0] is the record key and entry [1] is the incremental cursor, taken
+              # positionally. `name` is re-declared here because the windowed column is EXCLUDEd
+              # from a hit's base-row projection -- without it a hit carries no job name.
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: updated_at, path: "/updated_at", type: string }
+                - { name: name, path: "/name", type: string }
+                - { name: status, path: "/status", type: string }
+                - { name: requisition_id, path: "/requisition_id", type: string }
+                - { name: confidential, path: "/confidential", type: string }
+                - { name: opened_at, path: "/opened_at", type: string }
+                - { name: closed_at, path: "/closed_at", type: string }
+                - { name: created_at, path: "/created_at", type: string }
           - name: offices
             type:
               - 'null'

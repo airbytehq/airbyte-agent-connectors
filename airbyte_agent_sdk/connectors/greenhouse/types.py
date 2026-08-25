@@ -1056,7 +1056,7 @@ class JobPostsSearchFilter(TypedDict, total=False):
     internal: bool | None
     """Flag indicating if the job post is internal or not."""
     internal_content: str | None
-    """Internal content or description of the job post."""
+    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
     job_id: int | None
     """ID of the job associated with the job post."""
     live: bool | None
@@ -1090,7 +1090,7 @@ class JobPostsInFilter(TypedDict, total=False):
     internal: list[bool]
     """Flag indicating if the job post is internal or not."""
     internal_content: list[str]
-    """Internal content or description of the job post."""
+    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
     job_id: list[int]
     """ID of the job associated with the job post."""
     live: list[bool]
@@ -1124,7 +1124,7 @@ class JobPostsAnyValueFilter(TypedDict, total=False):
     internal: Any
     """Flag indicating if the job post is internal or not."""
     internal_content: Any
-    """Internal content or description of the job post."""
+    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
     job_id: Any
     """ID of the job associated with the job post."""
     live: Any
@@ -1158,7 +1158,7 @@ class JobPostsStringFilter(TypedDict, total=False):
     internal: str
     """Flag indicating if the job post is internal or not."""
     internal_content: str
-    """Internal content or description of the job post."""
+    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
     job_id: str
     """ID of the job associated with the job post."""
     live: str
@@ -1192,7 +1192,7 @@ class JobPostsSortFilter(TypedDict, total=False):
     internal: AirbyteSortOrder
     """Flag indicating if the job post is internal or not."""
     internal_content: AirbyteSortOrder
-    """Internal content or description of the job post."""
+    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
     job_id: AirbyteSortOrder
     """ID of the job associated with the job post."""
     live: AirbyteSortOrder

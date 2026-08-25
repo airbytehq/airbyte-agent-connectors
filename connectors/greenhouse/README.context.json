@@ -1901,7 +1901,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Content or description of the job post.",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "created_at",
@@ -1970,8 +1970,8 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Internal content or description of the job post.",
-          "semantic": false
+          "description": "The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`.",
+          "semantic": true
         },
         {
           "name": "job_id",
@@ -2034,8 +2034,58 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "content",
+          "description": "Content or description of the job post.",
+          "context_max_chars": 2048,
+          "content_type": "html"
+        },
+        {
+          "name": "internal_content",
+          "description": "The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`.",
+          "context_max_chars": 2048,
+          "content_type": "html"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "job_id",
+          "type": "string"
+        },
+        {
+          "name": "live",
+          "type": "string"
+        },
+        {
+          "name": "internal",
+          "type": "string"
+        },
+        {
+          "name": "location",
+          "type": "string"
+        },
+        {
+          "name": "first_published_at",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },
@@ -2171,7 +2221,7 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Additional notes or comments about the job",
-          "semantic": false
+          "semantic": true
         },
         {
           "name": "offices",
@@ -2234,8 +2284,52 @@
           "semantic": false
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "notes",
+          "description": "Additional notes or comments about the job",
+          "context_max_chars": 2048,
+          "content_type": "html"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "updated_at",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "requisition_id",
+          "type": "string"
+        },
+        {
+          "name": "confidential",
+          "type": "string"
+        },
+        {
+          "name": "opened_at",
+          "type": "string"
+        },
+        {
+          "name": "closed_at",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     },

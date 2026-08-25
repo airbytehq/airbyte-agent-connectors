@@ -124,7 +124,7 @@ class GreenhouseConnector:
 
     connector_name = "greenhouse"
     connector_version = "0.1.8"
-    sdk_version = "0.1.318"
+    sdk_version = "0.1.319"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -2054,7 +2054,7 @@ class JobPostsQuery:
         - first_published_at: Date and time when the job post was first published.
         - id: Unique identifier of the job post.
         - internal: Flag indicating if the job post is internal or not.
-        - internal_content: Internal content or description of the job post.
+        - internal_content: The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`.
         - job_id: ID of the job associated with the job post.
         - live: Flag indicating if the job post is live or not.
         - location: Details about the job post location.
