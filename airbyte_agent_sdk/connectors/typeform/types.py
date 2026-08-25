@@ -1,6 +1,7 @@
 """
 Type definitions for typeform connector.
 """
+# ruff: noqa: E501
 from __future__ import annotations
 
 from airbyte_agent_sdk.types import AirbyteAuthConfig  # noqa: F401

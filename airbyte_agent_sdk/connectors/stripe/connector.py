@@ -1,6 +1,7 @@
 """
 Stripe connector.
 """
+# ruff: noqa: E501
 
 from __future__ import annotations
 
@@ -165,7 +166,7 @@ class StripeConnector:
 
     connector_name = "stripe"
     connector_version = "0.1.13"
-    sdk_version = "0.1.329"
+    sdk_version = "0.1.330"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

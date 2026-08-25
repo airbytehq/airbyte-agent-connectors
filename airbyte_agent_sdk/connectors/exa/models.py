@@ -4,6 +4,7 @@ Pydantic models for exa connector.
 This module contains Pydantic models used for authentication configuration
 and response envelope types.
 """
+# ruff: noqa: E501
 
 from __future__ import annotations
 
@@ -57,6 +58,28 @@ class SearchRequest(BaseModel):
     contents: SearchRequestContents | None = Field(default=None)
     moderation: bool | None = Field(default=None)
 
+class CostDollarsContents(BaseModel):
+    """Cost breakdown for contents retrieval."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    text: float | None = Field(default=None, description="Cost for text extraction.")
+    """Cost for text extraction."""
+
+class CostDollarsSearch(BaseModel):
+    """Nested schema for CostDollars.search"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    neural: float | None = Field(default=None, description="Cost for neural search.")
+    """Cost for neural search."""
+
+class CostDollars(BaseModel):
+    """Estimated cost breakdown for the request."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    total: float | None = Field(default=None)
+    search: CostDollarsSearch | None = Field(default=None)
+    contents: CostDollarsContents | None = Field(default=None)
+
 class SearchResult(BaseModel):
     """SearchResult type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -73,28 +96,6 @@ class SearchResult(BaseModel):
     highlight_scores: list[float] | None = Field(default=None, alias="highlightScores")
     summary: str | None = Field(default=None)
     score: float | None = Field(default=None)
-
-class CostDollarsSearch(BaseModel):
-    """Nested schema for CostDollars.search"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    neural: float | None = Field(default=None, description="Cost for neural search.")
-    """Cost for neural search."""
-
-class CostDollarsContents(BaseModel):
-    """Cost breakdown for contents retrieval."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    text: float | None = Field(default=None, description="Cost for text extraction.")
-    """Cost for text extraction."""
-
-class CostDollars(BaseModel):
-    """Estimated cost breakdown for the request."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    total: float | None = Field(default=None)
-    search: CostDollarsSearch | None = Field(default=None)
-    contents: CostDollarsContents | None = Field(default=None)
 
 class SearchResponse(BaseModel):
     """SearchResponse type definition"""

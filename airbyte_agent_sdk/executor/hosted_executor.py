@@ -2,18 +2,197 @@
 
 from __future__ import annotations
 
+import copy
 import os
-from typing import Any, overload
+import tempfile
+from typing import Any, AsyncIterator, overload
 
 from opentelemetry import trace
 
 from airbyte_agent_sdk.cloud_utils import AirbyteCloudClient
+from airbyte_agent_sdk.secrets_aws import hydrate_source_config
 
+from .local_executor import LocalExecutor
 from .models import (
     ExecutionConfig,
     ExecutionResult,
     find_check_operation,
 )
+
+MAX_TEXT_FIELD_CHARS = 200
+TRUNCATION_SUFFIX = "... [truncated — use `get` action with the record id to retrieve the full value]"
+COLLECTION_ACTIONS = frozenset({"list", "context_store_search", "context_store_sql_query"})
+_SENTINEL = object()
+_TRUE_ENV_VALUES = frozenset({"1", "true", "t", "yes", "y", "on"})
+
+
+def _get_nested_value(data: dict[str, Any], path: str) -> Any | None:
+    """Read a value from a nested dict using dot notation (e.g. ``credentials.api_key``)."""
+    current: Any = data
+    for key in path.split("."):
+        if isinstance(current, dict) and key in current:
+            current = current[key]
+        else:
+            return None
+    return current
+
+
+def _transform_execute_result(
+    result: ExecutionResult,
+    action: str,
+    select_fields: list[str] | None,
+    exclude_fields: list[str] | None,
+    skip_truncation: bool,
+) -> ExecutionResult:
+    data = result.data
+    records, envelope = _unwrap_records(data)
+    if select_fields:
+        records = _apply_to_records(records, lambda record: _pick_fields(record, select_fields))
+    elif exclude_fields:
+        records = _apply_to_records(records, lambda record: _drop_fields(record, exclude_fields))
+    if action in COLLECTION_ACTIONS and not skip_truncation:
+        records = _apply_to_records(records, lambda record: _truncate_long_text_deep(record, MAX_TEXT_FIELD_CHARS))
+    return ExecutionResult(
+        success=result.success,
+        data=_rewrap_records(records, envelope, data),
+        meta=result.meta,
+        error=result.error,
+    )
+
+
+def _pick_fields(record: Any, fields: list[str]) -> Any:
+    if not isinstance(record, dict):
+        return record
+    out: dict[str, Any] = {}
+    for field in fields:
+        if field in record:
+            out[field] = record[field]
+            continue
+        path = field.split(".")
+        value = _get_nested_path_value(record, path)
+        if value is not _SENTINEL:
+            _set_nested_path_value(out, path, value)
+    return out
+
+
+def _drop_fields(record: Any, fields: list[str]) -> Any:
+    if not isinstance(record, dict):
+        return record
+    out = copy.deepcopy(record)
+    for field in fields:
+        if field in out:
+            out.pop(field, None)
+            continue
+        _delete_nested_path_value(out, field.split("."))
+    return out
+
+
+def _truncate_long_text_deep(value: Any, max_chars: int) -> Any:
+    if isinstance(value, dict):
+        return {key: _truncate_long_text_deep(item, max_chars) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_truncate_long_text_deep(item, max_chars) for item in value]
+    if isinstance(value, str) and len(value) > max_chars:
+        return value[:max_chars] + TRUNCATION_SUFFIX
+    return value
+
+
+def _get_nested_path_value(data: dict[str, Any], path: list[str]) -> object:
+    current: Any = data
+    for key in path:
+        if isinstance(current, dict) and key in current:
+            current = current[key]
+        else:
+            return _SENTINEL
+    return current
+
+
+def _set_nested_path_value(data: dict[str, Any], path: list[str], value: object) -> None:
+    current = data
+    for key in path[:-1]:
+        current = current.setdefault(key, {})
+    current[path[-1]] = value
+
+
+def _delete_nested_path_value(data: dict[str, Any], path: list[str]) -> None:
+    current: Any = data
+    for key in path[:-1]:
+        if isinstance(current, dict) and key in current:
+            current = current[key]
+        else:
+            return
+    if isinstance(current, dict):
+        current.pop(path[-1], None)
+
+
+def _apply_to_records(value: Any, fn: Any) -> Any:
+    if isinstance(value, list):
+        return [fn(item) for item in value]
+    return fn(value)
+
+
+def _unwrap_records(result: Any) -> tuple[Any, str]:
+    if isinstance(result, dict) and "data" in result and isinstance(result["data"], list):
+        return result["data"], "data"
+    if isinstance(result, list):
+        return result, "bare_list"
+    return result, "single"
+
+
+def _rewrap_records(records: Any, envelope: str, original: Any) -> Any:
+    if envelope == "data":
+        wrapped = copy.deepcopy(original)
+        wrapped["data"] = records
+        return wrapped
+    return records
+
+
+def _secrets_configured_from_environment() -> bool:
+    return os.getenv("SECRETS_CONFIGURED_FROM_ENVIRONMENT", "").strip().lower() in _TRUE_ENV_VALUES
+
+
+def _is_async_iterator(value: Any) -> bool:
+    return hasattr(value, "__aiter__") and hasattr(value, "__anext__")
+
+
+class _ExecutorClosingAsyncIterator:
+    def __init__(self, iterator: AsyncIterator[bytes], executor: LocalExecutor):
+        self._iterator = iterator
+        self._executor = executor
+        self._closed = False
+
+    def __aiter__(self) -> _ExecutorClosingAsyncIterator:
+        return self
+
+    async def __anext__(self) -> bytes:
+        try:
+            return await self._iterator.__anext__()
+        except StopAsyncIteration:
+            await self.aclose()
+            raise
+        except BaseException:
+            await self.aclose()
+            raise
+
+    async def aclose(self) -> None:
+        if self._closed:
+            return
+        self._closed = True
+        aclose = getattr(self._iterator, "aclose", None)
+        if aclose is not None:
+            result = aclose()
+            if result is not None and hasattr(result, "__await__"):
+                await result
+        await self._executor.close()
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._iterator, name)
+
+
+def _local_executor_uses_refreshable_auth(executor: LocalExecutor) -> bool:
+    auth_config = getattr(executor.http_client, "auth_config", None)
+    config = getattr(auth_config, "config", None)
+    return isinstance(config, dict) and bool(config.get("refresh_url"))
 
 
 class HostedExecutor:
@@ -326,20 +505,34 @@ class HostedExecutor:
 
                 span.set_attribute("connector.connector_id", connector_id)
 
-                # Step 3: Execute the connector via the cloud API
-                response = await self._cloud_client.execute_connector(
-                    connector_id=connector_id,
-                    entity=execution_config.entity,
-                    action=execution_config.action,
-                    params=execution_config.params,
-                    select_fields=execution_config.select_fields,
-                    exclude_fields=execution_config.exclude_fields,
-                    skip_truncation=execution_config.skip_truncation,
-                    intent=execution_config.intent,
-                )
-
-                # Step 4: Parse the response into ExecutionResult
-                result = self._parse_execution_result(response)
+                if _secrets_configured_from_environment():
+                    response = await self._cloud_client.prepare_connector_execute(
+                        connector_id=connector_id,
+                        entity=execution_config.entity,
+                        action=execution_config.action,
+                        params=execution_config.params,
+                        select_fields=execution_config.select_fields,
+                        exclude_fields=execution_config.exclude_fields,
+                        skip_truncation=execution_config.skip_truncation,
+                        intent=execution_config.intent,
+                    )
+                    bundle = response.get("bundle")
+                    if not bundle:
+                        raise ValueError("Execute prepare response did not include an executable bundle.")
+                    span.set_attribute("connector.local_bundle", True)
+                    result = await self._execute_bundle_locally(bundle)
+                else:
+                    response = await self._cloud_client.execute_connector(
+                        connector_id=connector_id,
+                        entity=execution_config.entity,
+                        action=execution_config.action,
+                        params=execution_config.params,
+                        select_fields=execution_config.select_fields,
+                        exclude_fields=execution_config.exclude_fields,
+                        skip_truncation=execution_config.skip_truncation,
+                        intent=execution_config.intent,
+                    )
+                    result = self._parse_execution_result(response)
 
                 # Mark span as successful
                 span.set_attribute("connector.success", result.success)
@@ -427,6 +620,67 @@ class HostedExecutor:
             error=None,
         )
 
+    async def _execute_bundle_locally(self, bundle: dict[str, Any]) -> ExecutionResult:
+        """Run an executable bundle in the customer data plane via LocalExecutor.
+
+        Hydrates the bundle's unhydrated ``secret_coordinate::`` values from the
+        customer's AWS Secrets Manager, splits the hydrated config into auth vs
+        config, then dispatches through the existing LocalExecutor. Context-store
+        bundles cannot run locally and hard-fail before any secret is fetched.
+        """
+        entity = bundle["entity"]
+        action = bundle["action"]
+        params = bundle.get("params") or {}
+
+        # context_store_search is a hosted-only operation; fail closed before
+        # touching AWS Secrets Manager, mirroring LocalExecutor's own guard.
+        if action == "context_store_search":
+            raise NotImplementedError("context_store_search is only available in hosted execution mode and cannot run in the customer data plane.")
+
+        hydrated_config = hydrate_source_config(bundle["source_config"])
+        bundled_config_values = bundle.get("config_values")
+        hydrated_config_values = (
+            hydrate_source_config(bundled_config_values)
+            if isinstance(bundled_config_values, dict) and _has_secret_coordinate(bundled_config_values)
+            else bundled_config_values
+        )
+        auth_config, config_values = _split_hydrated_config(
+            hydrated_config,
+            bundle.get("replication_auth_key_mapping") or {},
+            hydrated_config_values,
+        )
+        executor = _build_local_executor(bundle["definition_yaml"], auth_config, config_values)
+        if _local_executor_uses_refreshable_auth(executor):
+            await executor.close()
+            raise NotImplementedError(
+                "Local executable-bundle execution does not currently support OAuth token refresh persistence. "
+                "Use hosted execution or a connector/auth scheme that does not rotate OAuth tokens."
+            )
+        should_close_executor = True
+        try:
+            result = await executor.execute(entity, action, params=params)
+            transformed = _transform_execute_result(
+                result,
+                action,
+                bundle.get("select_fields"),
+                bundle.get("exclude_fields"),
+                bundle.get("skip_truncation", True),
+            )
+            if _is_async_iterator(transformed.data):
+                should_close_executor = False
+                return ExecutionResult(
+                    success=transformed.success,
+                    data=_ExecutorClosingAsyncIterator(transformed.data, executor),
+                    meta=transformed.meta,
+                    error=transformed.error,
+                )
+            await executor.close()
+            return transformed
+        except Exception:
+            if should_close_executor:
+                await executor.close()
+            raise
+
     async def close(self):
         """Close the cloud client and cleanup resources.
 
@@ -448,3 +702,69 @@ class HostedExecutor:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         """Async context manager exit."""
         await self.close()
+
+
+def _split_hydrated_config(
+    hydrated_config: dict[str, Any],
+    replication_auth_key_mapping: dict[str, str],
+    mapped_config_values: dict[str, Any] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Split a hydrated source config into (auth_config, config_values) for LocalExecutor.
+
+    ``config_values`` carries the full hydrated config; LocalExecutor selects only
+    the server-variable keys it declares and ignores the rest, so environment
+    fields (e.g. ``subdomain``) are always available for URL substitution. Auth is
+    derived separately via ``replication_auth_key_mapping`` (source-config path ->
+    auth key) so secrets are routed through the connector's auth strategy. When the
+    mapping is empty (direct-only connectors), the connector's own ``auth_mapping``
+    consumes the raw config, so it is passed through unchanged as ``auth_config``.
+    """
+    config_values = dict(mapped_config_values) if mapped_config_values is not None else dict(hydrated_config)
+    if not replication_auth_key_mapping:
+        return dict(hydrated_config), config_values
+
+    auth_config: dict[str, Any] = {}
+    for source_path, auth_key in replication_auth_key_mapping.items():
+        value = _get_nested_value(hydrated_config, source_path)
+        if value is None:
+            continue
+        if isinstance(value, dict):
+            auth_config.update(value)
+        else:
+            auth_config[auth_key] = value
+    return auth_config, config_values
+
+
+def _has_secret_coordinate(value: Any) -> bool:
+    if isinstance(value, str):
+        return value.startswith("secret_coordinate::")
+    if isinstance(value, dict):
+        return any(_has_secret_coordinate(inner) for inner in value.values())
+    if isinstance(value, list):
+        return any(_has_secret_coordinate(inner) for inner in value)
+    return False
+
+
+def _build_local_executor(
+    definition_yaml: str,
+    auth_config: dict[str, Any],
+    config_values: dict[str, Any],
+) -> LocalExecutor:
+    """Build a LocalExecutor from connector YAML via a temp file.
+
+    LocalExecutor loads the connector model in ``__init__``, so the temp file can
+    be removed immediately once the executor is constructed.
+    """
+    temp_yaml_path = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
+            f.write(definition_yaml)
+            temp_yaml_path = f.name
+        return LocalExecutor(
+            config_path=temp_yaml_path,
+            auth_config=auth_config,
+            config_values=config_values,
+        )
+    finally:
+        if temp_yaml_path and os.path.exists(temp_yaml_path):
+            os.unlink(temp_yaml_path)

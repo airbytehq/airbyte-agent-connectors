@@ -1,6 +1,7 @@
 """
 Typeform connector.
 """
+# ruff: noqa: E501
 
 from __future__ import annotations
 
@@ -92,7 +93,7 @@ class TypeformConnector:
 
     connector_name = "typeform"
     connector_version = "1.0.4"
-    sdk_version = "0.1.329"
+    sdk_version = "0.1.330"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

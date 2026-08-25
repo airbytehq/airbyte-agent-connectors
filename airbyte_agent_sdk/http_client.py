@@ -147,7 +147,7 @@ class HTTPClient:
         # Substitute server variables in base_url (e.g., {subdomain} -> "mycompany")
         self.base_url = self._base_url_template
         for var_name, var_value in self.config_values.items():
-            self.base_url = self.base_url.replace(f"{{{var_name}}}", var_value)
+            self.base_url = self.base_url.replace(f"{{{var_name}}}", str(var_value))
 
         self.auth_config = auth_config
         assert (
@@ -337,7 +337,7 @@ class HTTPClient:
         # Re-render base_url with updated config_values
         self.base_url = self._base_url_template
         for var_name, var_value in self.config_values.items():
-            self.base_url = self.base_url.replace(f"{{{var_name}}}", var_value)
+            self.base_url = self.base_url.replace(f"{{{var_name}}}", str(var_value))
 
     def _should_retry(
         self,

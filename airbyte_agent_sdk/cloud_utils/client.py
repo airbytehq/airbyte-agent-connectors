@@ -298,7 +298,7 @@ class AirbyteCloudClient:
             intent: Optional short description of why this execution is being performed (max 512 chars)
 
         Returns:
-            Raw JSON response dict from the API
+            Raw JSON response dict from the hosted execute API.
 
         Raises:
             ValueError: If intent exceeds 512 characters
@@ -321,6 +321,44 @@ class AirbyteCloudClient:
 
         token = await self.get_bearer_token()
         url = f"{self.API_BASE_URL}/api/v1/integrations/connectors/{connector_id}/execute"
+        headers = self._build_headers(token=token)
+        request_body = {
+            "entity": entity,
+            "action": action,
+            "skip_truncation": skip_truncation,
+        }
+        if params is not None:
+            request_body["params"] = params
+        if select_fields is not None:
+            request_body["select_fields"] = select_fields
+        if exclude_fields is not None:
+            request_body["exclude_fields"] = exclude_fields
+        if intent is not None:
+            request_body["intent"] = intent
+
+        response = await self._http_client.post(url, json=request_body, headers=headers)
+        _raise_with_body(response)
+
+        return response.json()
+
+    async def prepare_connector_execute(
+        self,
+        connector_id: str,
+        entity: str,
+        action: str,
+        params: dict[str, Any] | None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True,
+        intent: str | None = None,
+    ) -> dict[str, Any]:
+        """Prepare an executable bundle for opt-in local secret hydration."""
+        if intent is not None and len(intent) > INTENT_MAX_LENGTH:
+            raise ValueError(f"intent must be at most {INTENT_MAX_LENGTH} characters, got {len(intent)}")
+
+        token = await self.get_bearer_token()
+        url = f"{self.API_BASE_URL}/api/v1/integrations/connectors/{connector_id}/execute/prepare"
         headers = self._build_headers(token=token)
         request_body = {
             "entity": entity,

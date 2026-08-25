@@ -4,6 +4,7 @@ Pydantic models for airtable connector.
 This module contains Pydantic models used for authentication configuration
 and response envelope types.
 """
+# ruff: noqa: E501
 
 from __future__ import annotations
 

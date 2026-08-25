@@ -4,6 +4,7 @@ Pydantic models for facebook-marketing connector.
 This module contains Pydantic models used for authentication configuration
 and response envelope types.
 """
+# ruff: noqa: E501
 
 from __future__ import annotations
 
@@ -467,15 +468,6 @@ class VideosList(BaseModel):
     data: list[Video] | None = Field(default=None)
     paging: Paging | None = Field(default=None)
 
-class PixelOwnerAdAccount(BaseModel):
-    """Ad account that owns the pixel"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    account_id: str | None | None = Field(default=None, description="Owner ad account ID")
-    """Owner ad account ID"""
-    id: str | None | None = Field(default=None, description="Owner ad account ID (with act_ prefix)")
-    """Owner ad account ID (with act_ prefix)"""
-
 class PixelCreator(BaseModel):
     """User who created the pixel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -493,6 +485,15 @@ class PixelOwnerBusiness(BaseModel):
     """Owner business ID"""
     name: str | None | None = Field(default=None, description="Owner business name")
     """Owner business name"""
+
+class PixelOwnerAdAccount(BaseModel):
+    """Ad account that owns the pixel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    account_id: str | None | None = Field(default=None, description="Owner ad account ID")
+    """Owner ad account ID"""
+    id: str | None | None = Field(default=None, description="Owner ad account ID (with act_ prefix)")
+    """Owner ad account ID (with act_ prefix)"""
 
 class Pixel(BaseModel):
     """Facebook Ads Pixel"""
@@ -689,6 +690,24 @@ class AdUpdateParams(BaseModel):
     tracking_specs: str | None = Field(default=None)
     bid_amount: str | None = Field(default=None)
 
+class AdLibraryAdSpend(BaseModel):
+    """Amount spent on the ad as a range"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    lower_bound: int | None | None = Field(default=None, description="Lower bound of spend")
+    """Lower bound of spend"""
+    upper_bound: int | None | None = Field(default=None, description="Upper bound of spend")
+    """Upper bound of spend"""
+
+class AdLibraryAdDeliveryByRegionItem(BaseModel):
+    """Nested schema for AdLibraryAd.delivery_by_region_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    region: str | None | None = Field(default=None, description="Region name")
+    """Region name"""
+    percentage: str | None | None = Field(default=None, description="Percentage of audience in this region")
+    """Percentage of audience in this region"""
+
 class AdLibraryAdImpressions(BaseModel):
     """Number of impressions as a range"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -717,24 +736,6 @@ class AdLibraryAdDemographicDistributionItem(BaseModel):
     """Gender category"""
     percentage: str | None | None = Field(default=None, description="Percentage of audience in this demographic")
     """Percentage of audience in this demographic"""
-
-class AdLibraryAdSpend(BaseModel):
-    """Amount spent on the ad as a range"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    lower_bound: int | None | None = Field(default=None, description="Lower bound of spend")
-    """Lower bound of spend"""
-    upper_bound: int | None | None = Field(default=None, description="Upper bound of spend")
-    """Upper bound of spend"""
-
-class AdLibraryAdDeliveryByRegionItem(BaseModel):
-    """Nested schema for AdLibraryAd.delivery_by_region_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    region: str | None | None = Field(default=None, description="Region name")
-    """Region name"""
-    percentage: str | None | None = Field(default=None, description="Percentage of audience in this region")
-    """Percentage of audience in this region"""
 
 class AdLibraryAd(BaseModel):
     """An archived ad from the Facebook Ad Library, containing ad creative content, delivery information, spend data, and demographic reach breakdowns."""

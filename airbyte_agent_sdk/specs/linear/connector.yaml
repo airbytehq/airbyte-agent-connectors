@@ -43,6 +43,9 @@ info:
     - type: rate_limits
       title: Linear API Rate Limits
       url: https://linear.app/developers/rate-limiting
+  x-airbyte-skip-suggested-streams:
+    - cycles
+    - issue_labels
   x-airbyte-example-questions:
     direct:
       - "Show me the open issues assigned to my team this week"

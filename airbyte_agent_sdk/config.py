@@ -76,3 +76,63 @@ def resolve_credentials(
             "or set AIRBYTE_CLIENT_ID/AIRBYTE_CLIENT_SECRET environment variables."
         )
     return resolved_id, resolved_secret, resolved_org, resolved_ws
+
+
+@dataclass(frozen=True)
+class AWSDataPlaneCredentials:
+    """AWS credentials for the customer's data plane.
+
+    Consulted only on the local hydration path, which is enabled by
+    ``SECRETS_CONFIGURED_FROM_ENVIRONMENT=true``. Any field may be ``None``:
+    when explicit keys are absent, boto3 falls back to its default provider
+    chain (e.g. an implicit IAM role).
+    """
+
+    access_key_id: str | None = None
+    secret_access_key: str | None = None
+    session_token: str | None = None
+    region_name: str | None = None
+
+    @property
+    def has_explicit_keys(self) -> bool:
+        return bool(self.access_key_id and self.secret_access_key)
+
+
+def resolve_aws_credentials(
+    *,
+    access_key_id: str | None = None,
+    secret_access_key: str | None = None,
+    session_token: str | None = None,
+    region_name: str | None = None,
+) -> AWSDataPlaneCredentials:
+    """Resolve AWS data-plane credentials: explicit arg -> env var.
+
+    Prefer the enterprise-flex secret-manager convention, then fall back to the
+    standard AWS SDK environment variables. When no explicit keys are resolved,
+    the returned credentials allow boto3 to source an implicit IAM role. Only
+    consulted when ``SECRETS_CONFIGURED_FROM_ENVIRONMENT=true``.
+    """
+    resolved_access_key_id = access_key_id or os.environ.get("AWS_SECRET_MANAGER_ACCESS_KEY_ID") or os.environ.get("AWS_ACCESS_KEY_ID")
+    resolved_secret_access_key = (
+        secret_access_key or os.environ.get("AWS_SECRET_MANAGER_SECRET_ACCESS_KEY") or os.environ.get("AWS_SECRET_ACCESS_KEY")
+    )
+    resolved_session_token = session_token or os.environ.get("AWS_SECRET_MANAGER_SESSION_TOKEN") or os.environ.get("AWS_SESSION_TOKEN")
+    if bool(resolved_access_key_id) != bool(resolved_secret_access_key):
+        raise ValueError(
+            "AWS_SECRET_MANAGER_ACCESS_KEY_ID and AWS_SECRET_MANAGER_SECRET_ACCESS_KEY must be configured together "
+            "for local executable-bundle secret hydration. If you want to use the AWS default provider chain, omit both."
+        )
+    if resolved_session_token and not (resolved_access_key_id and resolved_secret_access_key):
+        raise ValueError(
+            "AWS_SECRET_MANAGER_SESSION_TOKEN requires AWS_SECRET_MANAGER_ACCESS_KEY_ID and "
+            "AWS_SECRET_MANAGER_SECRET_ACCESS_KEY for local executable-bundle secret hydration."
+        )
+    return AWSDataPlaneCredentials(
+        access_key_id=resolved_access_key_id,
+        secret_access_key=resolved_secret_access_key,
+        session_token=resolved_session_token,
+        region_name=region_name
+        or os.environ.get("AWS_SECRET_MANAGER_REGION")
+        or os.environ.get("AWS_REGION")
+        or os.environ.get("AWS_DEFAULT_REGION"),
+    )

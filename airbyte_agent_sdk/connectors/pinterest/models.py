@@ -4,6 +4,7 @@ Pydantic models for pinterest connector.
 This module contains Pydantic models used for authentication configuration
 and response envelope types.
 """
+# ruff: noqa: E501
 
 from __future__ import annotations
 
@@ -66,13 +67,6 @@ class AdAccountsList(BaseModel):
     items: list[AdAccount] | None = Field(default=None)
     bookmark: str | None = Field(default=None)
 
-class BoardOwner(BaseModel):
-    """Board owner details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    username: str | None | None = Field(default=None, description="Username of the board owner")
-    """Username of the board owner"""
-
 class BoardMedia(BaseModel):
     """Media content for the board"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -81,6 +75,13 @@ class BoardMedia(BaseModel):
     """Cover image URL"""
     pin_thumbnail_urls: list[str] | None | None = Field(default=None, description="Thumbnail URLs of pins")
     """Thumbnail URLs of pins"""
+
+class BoardOwner(BaseModel):
+    """Board owner details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    username: str | None | None = Field(default=None, description="Username of the board owner")
+    """Username of the board owner"""
 
 class Board(BaseModel):
     """Pinterest board object"""
@@ -287,19 +288,19 @@ class BoardSectionsList(BaseModel):
     items: list[BoardSection] | None = Field(default=None)
     bookmark: str | None = Field(default=None)
 
-class BoardPinBoardOwner(BaseModel):
-    """Board owner info"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    username: str | None | None = Field(default=None, description="Username of the board owner")
-    """Username of the board owner"""
-
 class BoardPinMedia(BaseModel):
     """Media content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     media_type: str | None | None = Field(default=None, description="Type of media")
     """Type of media"""
+
+class BoardPinBoardOwner(BaseModel):
+    """Board owner info"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    username: str | None | None = Field(default=None, description="Username of the board owner")
+    """Username of the board owner"""
 
 class BoardPin(BaseModel):
     """Pinterest pin on a board"""

@@ -4,6 +4,7 @@ Pydantic models for zendesk-chat connector.
 This module contains Pydantic models used for authentication configuration
 and response envelope types.
 """
+# ruff: noqa: E501
 
 from __future__ import annotations
 
@@ -149,15 +150,24 @@ class WebpathItem(BaseModel):
     from_: str | None = Field(default=None, alias="from")
     timestamp: str | None = Field(default=None)
 
-class ChatConversion(BaseModel):
-    """ChatConversion type definition"""
+class ChatHistoryItem(BaseModel):
+    """ChatHistoryItem type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: str | None = Field(default=None)
-    goal_id: int | None = Field(default=None)
-    goal_name: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
     timestamp: str | None = Field(default=None)
-    attribution: Any | None = Field(default=None)
+    name: str | None = Field(default=None)
+    nick: str | None = Field(default=None)
+    msg: str | None = Field(default=None)
+    msg_id: str | None = Field(default=None)
+    channel: str | None = Field(default=None)
+    department_id: int | None = Field(default=None)
+    department_name: str | None = Field(default=None)
+    rating: str | None = Field(default=None)
+    new_rating: str | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+    new_tags: list[str] | None = Field(default=None)
+    options: str | None = Field(default=None)
 
 class ChatEngagement(BaseModel):
     """ChatEngagement type definition"""
@@ -180,24 +190,15 @@ class ChatEngagement(BaseModel):
     skills_requested: list[int] | None = Field(default=None)
     skills_fulfilled: bool | None = Field(default=None)
 
-class ChatHistoryItem(BaseModel):
-    """ChatHistoryItem type definition"""
+class ChatConversion(BaseModel):
+    """ChatConversion type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: str | None = Field(default=None, alias="type")
+    id: str | None = Field(default=None)
+    goal_id: int | None = Field(default=None)
+    goal_name: str | None = Field(default=None)
     timestamp: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    nick: str | None = Field(default=None)
-    msg: str | None = Field(default=None)
-    msg_id: str | None = Field(default=None)
-    channel: str | None = Field(default=None)
-    department_id: int | None = Field(default=None)
-    department_name: str | None = Field(default=None)
-    rating: str | None = Field(default=None)
-    new_rating: str | None = Field(default=None)
-    tags: list[str] | None = Field(default=None)
-    new_tags: list[str] | None = Field(default=None)
-    options: str | None = Field(default=None)
+    attribution: Any | None = Field(default=None)
 
 class Chat(BaseModel):
     """Chat conversation transcript"""

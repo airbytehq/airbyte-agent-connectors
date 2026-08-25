@@ -1,6 +1,7 @@
 """
 Paypal-Transaction connector.
 """
+# ruff: noqa: E501
 
 from __future__ import annotations
 
@@ -98,7 +99,7 @@ class PaypalTransactionConnector:
 
     connector_name = "paypal-transaction"
     connector_version = "1.0.3"
-    sdk_version = "0.1.329"
+    sdk_version = "0.1.330"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

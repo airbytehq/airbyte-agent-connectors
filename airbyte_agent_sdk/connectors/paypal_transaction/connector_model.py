@@ -4,6 +4,7 @@ Connector model for paypal-transaction.
 This file is auto-generated from the connector definition at build time.
 DO NOT EDIT MANUALLY - changes will be overwritten on next generation.
 """
+# ruff: noqa: E501
 
 from __future__ import annotations
 

@@ -4,6 +4,7 @@ Pydantic models for tiktok-marketing connector.
 This module contains Pydantic models used for authentication configuration
 and response envelope types.
 """
+# ruff: noqa: E501
 
 from __future__ import annotations
 
@@ -314,32 +315,6 @@ class CreativeAssetVideo(BaseModel):
     fix_task_id: str | None = Field(default=None)
     flaw_types: list[Any] | None = Field(default=None)
 
-class SparkAdUserInfo(BaseModel):
-    """Information about the TikTok account"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    tiktok_name: str | None | None = Field(default=None, description="The user name of the TikTok account")
-    """The user name of the TikTok account"""
-    identity_id: str | None | None = Field(default=None, description="Identity ID")
-    """Identity ID"""
-    identity_type: str | None | None = Field(default=None, description="Identity type")
-    """Identity type"""
-
-class SparkAdItemInfo(BaseModel):
-    """Information about the Spark Ads post"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    item_id: str | None | None = Field(default=None, description="The ID of the Spark Ads post")
-    """The ID of the Spark Ads post"""
-    auth_code: str | None | None = Field(default=None, description="The authorization code for the Spark Ads post")
-    """The authorization code for the Spark Ads post"""
-    text: str | None | None = Field(default=None, description="The description of the Spark Ads post")
-    """The description of the Spark Ads post"""
-    status: str | None | None = Field(default=None, description="Item status (e.g. HESITATE_RECOMMEND)")
-    """Item status (e.g. HESITATE_RECOMMEND)"""
-    item_type: str | None | None = Field(default=None, description="The type of Spark Ads post (VIDEO or CAROUSEL)")
-    """The type of Spark Ads post (VIDEO or CAROUSEL)"""
-
 class SparkAdVideoInfo(BaseModel):
     """Information about the video post"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -369,6 +344,32 @@ class SparkAdAuthInfo(BaseModel):
     """The time when the authorization code expires (UTC+0)"""
     ad_auth_status: str | None | None = Field(default=None, description="The authorization status (e.g. AUTHORIZED)")
     """The authorization status (e.g. AUTHORIZED)"""
+
+class SparkAdItemInfo(BaseModel):
+    """Information about the Spark Ads post"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    item_id: str | None | None = Field(default=None, description="The ID of the Spark Ads post")
+    """The ID of the Spark Ads post"""
+    auth_code: str | None | None = Field(default=None, description="The authorization code for the Spark Ads post")
+    """The authorization code for the Spark Ads post"""
+    text: str | None | None = Field(default=None, description="The description of the Spark Ads post")
+    """The description of the Spark Ads post"""
+    status: str | None | None = Field(default=None, description="Item status (e.g. HESITATE_RECOMMEND)")
+    """Item status (e.g. HESITATE_RECOMMEND)"""
+    item_type: str | None | None = Field(default=None, description="The type of Spark Ads post (VIDEO or CAROUSEL)")
+    """The type of Spark Ads post (VIDEO or CAROUSEL)"""
+
+class SparkAdUserInfo(BaseModel):
+    """Information about the TikTok account"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    tiktok_name: str | None | None = Field(default=None, description="The user name of the TikTok account")
+    """The user name of the TikTok account"""
+    identity_id: str | None | None = Field(default=None, description="Identity ID")
+    """Identity ID"""
+    identity_type: str | None | None = Field(default=None, description="Identity type")
+    """Identity type"""
 
 class SparkAd(BaseModel):
     """TikTok Spark Ad post authorization"""
