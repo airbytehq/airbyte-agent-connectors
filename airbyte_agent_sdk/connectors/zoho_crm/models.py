@@ -82,7 +82,7 @@ class Lead(BaseModel):
     phone: str | None = Field(default=None, alias="Phone")
     mobile: str | None = Field(default=None, alias="Mobile")
     fax: str | None = Field(default=None, alias="Fax")
-    title: str | None = Field(default=None, alias="Title")
+    designation: str | None = Field(default=None, alias="Designation")
     lead_source: str | None = Field(default=None, alias="Lead_Source")
     industry: str | None = Field(default=None, alias="Industry")
     annual_revenue: float | None = Field(default=None, alias="Annual_Revenue")
@@ -316,7 +316,7 @@ class Event(BaseModel):
     start_date_time: str | None = Field(default=None, alias="Start_DateTime")
     end_date_time: str | None = Field(default=None, alias="End_DateTime")
     all_day: bool | None = Field(default=None, alias="All_day")
-    location: str | None = Field(default=None, alias="Location")
+    venue: str | None = Field(default=None, alias="Venue")
     participants: list[EventParticipantsItem] | None = Field(default=None, alias="Participants")
     who_id: Any | None = Field(default=None, alias="Who_Id")
     what_id: Any | None = Field(default=None, alias="What_Id")
@@ -353,7 +353,8 @@ class Call(BaseModel):
     what_id: Any | None = Field(default=None, alias="What_Id")
     description: str | None = Field(default=None, alias="Description")
     caller_id: str | None = Field(default=None, alias="Caller_ID")
-    outgoing_call_status: str | None = Field(default=None, alias="Outgoing_Call_Status")
+    call_status: str | None = Field(default=None, alias="Call_Status")
+    call_agenda: str | None = Field(default=None, alias="Call_Agenda")
     created_time: str | None = Field(default=None, alias="Created_Time")
     modified_time: str | None = Field(default=None, alias="Modified_Time")
     created_by: Any | None = Field(default=None, alias="Created_By")
@@ -493,6 +494,25 @@ class InvoicesList(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     data: list[Invoice] | None = Field(default=None)
+    info: PaginationInfo | None = Field(default=None)
+
+class Note(BaseModel):
+    """Zoho CRM note object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str
+    owner: Any | None = Field(default=None, alias="Owner")
+    note_title: str | None = Field(default=None, alias="Note_Title")
+    note_content: str | None = Field(default=None, alias="Note_Content")
+    parent_id: Any | None = Field(default=None, alias="Parent_Id")
+    created_time: str | None = Field(default=None, alias="Created_Time")
+    modified_time: str | None = Field(default=None, alias="Modified_Time")
+
+class NotesList(BaseModel):
+    """Paginated list of notes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: list[Note] | None = Field(default=None)
     info: PaginationInfo | None = Field(default=None)
 
 class WriteResponseDetail(BaseModel):
@@ -994,6 +1014,13 @@ class InvoicesListResultMeta(BaseModel):
     more_records: bool | None = Field(default=None)
     page: int | None = Field(default=None)
 
+class NotesListResultMeta(BaseModel):
+    """Metadata for notes.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    more_records: bool | None = Field(default=None)
+    page: int | None = Field(default=None)
+
 # ===== CHECK RESULT MODEL =====
 
 class ZohoCrmCheckResult(BaseModel):
@@ -1065,8 +1092,9 @@ class LeadsSearchData(BaseModel):
     """Lead's mobile number"""
     company: str | None = None
     """Company the lead is associated with"""
-    title: str | None = None
-    """Lead's job title"""
+    designation: str | None = None
+    """Lead's job title. Zoho names this `Designation` on Leads and `Title` on Contacts; there is no `Title` field on the Leads module.
+"""
     lead_source: str | None = None
     """Source from which the lead was generated"""
     industry: str | None = None
@@ -1117,6 +1145,8 @@ class ContactsSearchData(BaseModel):
     """Contact's job title"""
     department: str | None = None
     """Department the contact belongs to"""
+    account_name: dict[str, Any] | None = None
+    """Account the contact belongs to, as a lookup object with `name` and `id`"""
     lead_source: str | None = None
     """Source from which the contact was generated"""
     date_of_birth: str | None = None
@@ -1183,6 +1213,8 @@ class DealsSearchData(BaseModel):
     """Unique record identifier"""
     deal_name: str | None = None
     """Name of the deal"""
+    account_name: dict[str, Any] | None = None
+    """Account the deal belongs to, as a lookup object with `name` and `id`"""
     amount: float | None = None
     """Monetary value of the deal"""
     stage: str | None = None
@@ -1247,6 +1279,10 @@ class TasksSearchData(BaseModel):
     """Unique record identifier"""
     subject: str | None = None
     """Subject or title of the task"""
+    who_id: dict[str, Any] | None = None
+    """Contact or lead the task is with, as a lookup object with `name` and `id`"""
+    what_id: dict[str, Any] | None = None
+    """Account, deal, or other record the task is linked to, as a lookup object with `name` and `id`"""
     due_date: str | None = None
     """Due date for the task"""
     status: str | None = None
@@ -1273,14 +1309,19 @@ class EventsSearchData(BaseModel):
     """Unique record identifier"""
     event_title: str | None = None
     """Title of the event"""
+    who_id: dict[str, Any] | None = None
+    """Contact or lead invited to the event, as a lookup object with `name` and `id`"""
+    what_id: dict[str, Any] | None = None
+    """Account, deal, or other record the event is linked to, as a lookup object with `name` and `id`"""
     start_date_time: str | None = None
     """Event start date and time"""
     end_date_time: str | None = None
     """Event end date and time"""
     all_day: bool | None = None
     """Whether this is an all-day event"""
-    location: str | None = None
-    """Event location"""
+    venue: str | None = None
+    """Event location. Zoho names this field `Venue`; there is no `Location` field on the Events module.
+"""
     description: str | None = None
     """Description or notes about the event"""
     created_time: str | None = None
@@ -1297,6 +1338,10 @@ class CallsSearchData(BaseModel):
     """Unique record identifier"""
     subject: str | None = None
     """Subject of the call"""
+    who_id: dict[str, Any] | None = None
+    """Contact or lead on the call, as a lookup object with `name` and `id`"""
+    what_id: dict[str, Any] | None = None
+    """Account, deal, or other record the call is linked to, as a lookup object with `name` and `id`"""
     call_type: str | None = None
     """Type of call (Inbound or Outbound)"""
     call_start_time: str | None = None
@@ -1311,8 +1356,11 @@ class CallsSearchData(BaseModel):
     """Result or outcome of the call"""
     caller_id: str | None = None
     """Caller ID number"""
-    outgoing_call_status: str | None = None
-    """Status of outgoing calls"""
+    call_status: str | None = None
+    """Disposition of the call (Missed, Received, Overdue, Scheduled). Zoho names this field `Call_Status`; there is no `Outgoing_Call_Status` field on the Calls module.
+"""
+    call_agenda: str | None = None
+    """Free-text agenda written before the call"""
     description: str | None = None
     """Description or notes about the call"""
     created_time: str | None = None
@@ -1433,6 +1481,25 @@ class InvoicesSearchData(BaseModel):
     """Time the record was last modified"""
 
 
+class NotesSearchData(BaseModel):
+    """Search result data for notes entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str = None
+    """Unique record identifier"""
+    note_content: str | None = None
+    """Body of the note. This is where rep-authored free text actually accumulates in Zoho CRM -- notes attach to any module record and, unlike the per-record `Description` textarea, are mandatory content by construction.
+"""
+    note_title: str | None = None
+    """Optional short title for the note"""
+    parent_id: dict[str, Any] | None = None
+    """Record the note is attached to, as a lookup object with `name` and `id`"""
+    created_time: str | None = None
+    """Time the record was created"""
+    modified_time: str | None = None
+    """Time the record was last modified"""
+
+
 # ===== GENERIC SEARCH RESULT TYPES =====
 
 class AirbyteSearchMeta(BaseModel):
@@ -1492,6 +1559,9 @@ QuotesSearchResult = AirbyteSearchResult[QuotesSearchData]
 InvoicesSearchResult = AirbyteSearchResult[InvoicesSearchData]
 """Search result type for invoices entity."""
 
+NotesSearchResult = AirbyteSearchResult[NotesSearchData]
+"""Search result type for notes entity."""
+
 
 
 # ===== OPERATION RESULT TYPE ALIASES =====
@@ -1531,4 +1601,7 @@ QuotesListResult = ZohoCrmExecuteResultWithMeta[list[Quote], QuotesListResultMet
 
 InvoicesListResult = ZohoCrmExecuteResultWithMeta[list[Invoice], InvoicesListResultMeta]
 """Result type for invoices.list operation with data and metadata."""
+
+NotesListResult = ZohoCrmExecuteResultWithMeta[list[Note], NotesListResultMeta]
+"""Result type for notes.list operation with data and metadata."""
 

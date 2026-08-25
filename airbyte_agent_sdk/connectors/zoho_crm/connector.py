@@ -51,6 +51,8 @@ from .types import (
     LeadsListParams,
     LeadsUpdateParams,
     LeadsUpdateParamsDataItem,
+    NotesGetParams,
+    NotesListParams,
     ProductsGetParams,
     ProductsListParams,
     QuotesGetParams,
@@ -84,6 +86,8 @@ from .types import (
     QuotesSearchQuery,
     InvoicesSearchFilter,
     InvoicesSearchQuery,
+    NotesSearchFilter,
+    NotesSearchQuery,
 )
 from .models import ZohoCrmAuthConfig
 
@@ -103,6 +107,7 @@ from .models import (
     ProductsListResult,
     QuotesListResult,
     InvoicesListResult,
+    NotesListResult,
     Account,
     Call,
     Campaign,
@@ -111,6 +116,7 @@ from .models import (
     Event,
     Invoice,
     Lead,
+    Note,
     Product,
     Quote,
     Task,
@@ -139,6 +145,8 @@ from .models import (
     QuotesSearchResult,
     InvoicesSearchData,
     InvoicesSearchResult,
+    NotesSearchData,
+    NotesSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -156,7 +164,7 @@ class ZohoCrmConnector:
 
     connector_name = "zoho-crm"
     connector_version = "1.0.3"
-    sdk_version = "0.1.322"
+    sdk_version = "0.1.323"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -192,6 +200,8 @@ class ZohoCrmConnector:
         ("quotes", "get"): None,
         ("invoices", "list"): True,
         ("invoices", "get"): None,
+        ("notes", "list"): True,
+        ("notes", "get"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -229,6 +239,8 @@ class ZohoCrmConnector:
         ('quotes', 'get'): {'id': 'id'},
         ('invoices', 'list'): {'page': 'page', 'per_page': 'per_page', 'page_token': 'page_token', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
         ('invoices', 'get'): {'id': 'id'},
+        ('notes', 'list'): {'page': 'page', 'per_page': 'per_page', 'page_token': 'page_token', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('notes', 'get'): {'id': 'id'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -343,6 +355,7 @@ class ZohoCrmConnector:
         self.products = ProductsQuery(self)
         self.quotes = QuotesQuery(self)
         self.invoices = InvoicesQuery(self)
+        self.notes = NotesQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -724,6 +737,30 @@ class ZohoCrmConnector:
         entity: Literal["invoices"],
         action: Literal["get"],
         params: "InvoicesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["notes"],
+        action: Literal["list"],
+        params: "NotesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "NotesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["notes"],
+        action: Literal["get"],
+        params: "NotesGetParams",
         *,
         select_fields: list[str] | None = ...,
         exclude_fields: list[str] | None = ...,
@@ -1312,7 +1349,8 @@ class LeadsQuery:
         - phone: Lead's phone number
         - mobile: Lead's mobile number
         - company: Company the lead is associated with
-        - title: Lead's job title
+        - designation: Lead's job title. Zoho names this `Designation` on Leads and `Title` on Contacts; there is no `Title` field on the Leads module.
+
         - lead_source: Source from which the lead was generated
         - industry: Industry the lead belongs to
         - annual_revenue: Annual revenue of the lead's company
@@ -1518,6 +1556,7 @@ class ContactsQuery:
         - mobile: Contact's mobile number
         - title: Contact's job title
         - department: Department the contact belongs to
+        - account_name: Account the contact belongs to, as a lookup object with `name` and `id`
         - lead_source: Source from which the contact was generated
         - date_of_birth: Contact's date of birth
         - mailing_city: Mailing address city
@@ -1911,6 +1950,7 @@ class DealsQuery:
         Available filter fields (DealsSearchFilter):
         - id: Unique record identifier
         - deal_name: Name of the deal
+        - account_name: Account the deal belongs to, as a lookup object with `name` and `id`
         - amount: Monetary value of the deal
         - stage: Current stage of the deal in the pipeline
         - probability: Probability of closing the deal (percentage)
@@ -2250,6 +2290,8 @@ class TasksQuery:
         Available filter fields (TasksSearchFilter):
         - id: Unique record identifier
         - subject: Subject or title of the task
+        - who_id: Contact or lead the task is with, as a lookup object with `name` and `id`
+        - what_id: Account, deal, or other record the task is linked to, as a lookup object with `name` and `id`
         - due_date: Due date for the task
         - status: Current status (e.g., Not Started, In Progress, Completed)
         - priority: Priority level (e.g., High, Highest, Low, Lowest, Normal)
@@ -2390,10 +2432,13 @@ class EventsQuery:
         Available filter fields (EventsSearchFilter):
         - id: Unique record identifier
         - event_title: Title of the event
+        - who_id: Contact or lead invited to the event, as a lookup object with `name` and `id`
+        - what_id: Account, deal, or other record the event is linked to, as a lookup object with `name` and `id`
         - start_date_time: Event start date and time
         - end_date_time: Event end date and time
         - all_day: Whether this is an all-day event
-        - location: Event location
+        - venue: Event location. Zoho names this field `Venue`; there is no `Location` field on the Events module.
+
         - description: Description or notes about the event
         - created_time: Time the record was created
         - modified_time: Time the record was last modified
@@ -2529,6 +2574,8 @@ class CallsQuery:
         Available filter fields (CallsSearchFilter):
         - id: Unique record identifier
         - subject: Subject of the call
+        - who_id: Contact or lead on the call, as a lookup object with `name` and `id`
+        - what_id: Account, deal, or other record the call is linked to, as a lookup object with `name` and `id`
         - call_type: Type of call (Inbound or Outbound)
         - call_start_time: Start time of the call
         - call_duration: Duration of the call as a formatted string
@@ -2536,7 +2583,9 @@ class CallsQuery:
         - call_purpose: Purpose of the call
         - call_result: Result or outcome of the call
         - caller_id: Caller ID number
-        - outgoing_call_status: Status of outgoing calls
+        - call_status: Disposition of the call (Missed, Received, Overdue, Scheduled). Zoho names this field `Call_Status`; there is no `Outgoing_Call_Status` field on the Calls module.
+
+        - call_agenda: Free-text agenda written before the call
         - description: Description or notes about the call
         - created_time: Time the record was created
         - modified_time: Time the record was last modified
@@ -3008,6 +3057,143 @@ class InvoicesQuery:
         return InvoicesSearchResult(
             data=[
                 InvoicesSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class NotesQuery:
+    """
+    Query class for Notes entity operations.
+    """
+
+    def __init__(self, connector: ZohoCrmConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        page: int | None = None,
+        per_page: int | None = None,
+        page_token: str | None = None,
+        sort_by: str | None = None,
+        sort_order: str | None = None,
+        **kwargs
+    ) -> NotesListResult:
+        """
+        Returns a paginated list of notes
+
+        Args:
+            page: Page number
+            per_page: Number of records per page
+            page_token: Page token for fetching beyond 2000 records
+            sort_by: Field to sort by
+            sort_order: Sort order
+            **kwargs: Additional parameters
+
+        Returns:
+            NotesListResult
+        """
+        params = {k: v for k, v in {
+            "page": page,
+            "per_page": per_page,
+            "page_token": page_token,
+            "sort_by": sort_by,
+            "sort_order": sort_order,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("notes", "list", params)
+        # Cast generic envelope to concrete typed result
+        return NotesListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Get a single note by ID
+
+        Args:
+            id: Note ID
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("notes", "get", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: NotesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> NotesSearchResult:
+        """
+        Search notes records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (NotesSearchFilter):
+        - id: Unique record identifier
+        - note_content: Body of the note. This is where rep-authored free text actually accumulates in Zoho CRM -- notes attach to any module record and, unlike the per-record `Description` textarea, are mandatory content by construction.
+
+        - note_title: Optional short title for the note
+        - parent_id: Record the note is attached to, as a lookup object with `name` and `id`
+        - created_time: Time the record was created
+        - modified_time: Time the record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
+                   in, startswith, endswith, contains, fuzzy, keyword, not, and, or.
+                   Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            NotesSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("notes", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return NotesSearchResult(
+            data=[
+                NotesSearchData(**row)
                 for row in result.get("data", [])
                 if isinstance(row, dict)
             ],

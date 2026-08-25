@@ -89,6 +89,31 @@ info:
           - name: Full_Name
             type: ["null", "string"]
             description: Lead's full name
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: job_title, path: "/Designation" }
+                - { name: company, path: "/Company" }
+                - { name: notes, path: "/Description" }
+                - name: lead_name
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: lead }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{lead_name}\n{job_title}\n{company}\n\n{notes}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: Modified_Time, path: "/Modified_Time", type: string }
+                - { name: Created_Time, path: "/Created_Time", type: string }
+                - { name: Full_Name, path: "/Full_Name", type: string }
+                - { name: Designation, path: "/Designation", type: string }
+                - { name: Company, path: "/Company", type: string }
+                - { name: Lead_Status, path: "/Lead_Status", type: string }
+                - { name: Lead_Source, path: "/Lead_Source", type: string }
+                - { name: Industry, path: "/Industry", type: string }
+                - { name: State, path: "/State", type: string }
+                - { name: Country, path: "/Country", type: string }
           - name: Email
             type: ["null", "string"]
             description: Lead's email address
@@ -101,9 +126,11 @@ info:
           - name: Company
             type: ["null", "string"]
             description: Company the lead is associated with
-          - name: Title
+          - name: Designation
             type: ["null", "string"]
-            description: Lead's job title
+            description: >
+              Lead's job title. Zoho names this `Designation` on Leads and `Title` on Contacts;
+              there is no `Title` field on the Leads module.
           - name: Lead_Source
             type: ["null", "string"]
             description: Source from which the lead was generated
@@ -159,6 +186,30 @@ info:
           - name: Full_Name
             type: ["null", "string"]
             description: Contact's full name
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: job_title, path: "/Title" }
+                - { name: account, path: "/Account_Name.name" }
+                - { name: notes, path: "/Description" }
+                - name: contact_name
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: contact }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{contact_name}\n{job_title}\n{account}\n\n{notes}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: Modified_Time, path: "/Modified_Time", type: string }
+                - { name: Created_Time, path: "/Created_Time", type: string }
+                - { name: Full_Name, path: "/Full_Name", type: string }
+                - { name: Title, path: "/Title", type: string }
+                - { name: Department, path: "/Department", type: string }
+                - { name: account_name, path: "/Account_Name.name", type: string }
+                - { name: Lead_Source, path: "/Lead_Source", type: string }
+                - { name: Mailing_State, path: "/Mailing_State", type: string }
+                - { name: Mailing_Country, path: "/Mailing_Country", type: string }
           - name: Email
             type: ["null", "string"]
             description: Contact's email address
@@ -174,6 +225,14 @@ info:
           - name: Department
             type: ["null", "string"]
             description: Department the contact belongs to
+          - name: Account_Name
+            type: ["null", "object"]
+            description: Account the contact belongs to, as a lookup object with `name` and `id`
+            properties:
+              name:
+                type: ["null", "string"]
+              id:
+                type: ["null", "string"]
           - name: Lead_Source
             type: ["null", "string"]
             description: Source from which the contact was generated
@@ -208,6 +267,27 @@ info:
           - name: Account_Name
             type: ["null", "string"]
             description: Name of the account or company
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: notes, path: "/Description" }
+                - name: account_name
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: account }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{account_name}\n\n{notes}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: Modified_Time, path: "/Modified_Time", type: string }
+                - { name: Created_Time, path: "/Created_Time", type: string }
+                - { name: Account_Name, path: "/Account_Name", type: string }
+                - { name: Industry, path: "/Industry", type: string }
+                - { name: Account_Type, path: "/Account_Type", type: string }
+                - { name: Website, path: "/Website", type: string }
+                - { name: Billing_State, path: "/Billing_State", type: string }
+                - { name: Billing_Country, path: "/Billing_Country", type: string }
           - name: Account_Number
             type: ["null", "string"]
             description: Account number
@@ -263,6 +343,37 @@ info:
           - name: Deal_Name
             type: ["null", "string"]
             description: Name of the deal
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: account, path: "/Account_Name.name" }
+                - { name: notes, path: "/Description" }
+                - { name: next_step, path: "/Next_Step" }
+                - name: deal_name
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: deal }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{deal_name}\n{account}\n\n{notes}\n{next_step}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: Modified_Time, path: "/Modified_Time", type: string }
+                - { name: Created_Time, path: "/Created_Time", type: string }
+                - { name: Deal_Name, path: "/Deal_Name", type: string }
+                - { name: Stage, path: "/Stage", type: string }
+                - { name: Type, path: "/Type", type: string }
+                - { name: Closing_Date, path: "/Closing_Date", type: string }
+                - { name: Lead_Source, path: "/Lead_Source", type: string }
+                - { name: account_name, path: "/Account_Name.name", type: string }
+          - name: Account_Name
+            type: ["null", "object"]
+            description: Account the deal belongs to, as a lookup object with `name` and `id`
+            properties:
+              name:
+                type: ["null", "string"]
+              id:
+                type: ["null", "string"]
           - name: Amount
             type: ["null", "number"]
             description: Monetary value of the deal
@@ -303,6 +414,26 @@ info:
           - name: Campaign_Name
             type: ["null", "string"]
             description: Name of the campaign
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: notes, path: "/Description" }
+                - name: campaign_name
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: campaign }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{campaign_name}\n\n{notes}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: Modified_Time, path: "/Modified_Time", type: string }
+                - { name: Created_Time, path: "/Created_Time", type: string }
+                - { name: Campaign_Name, path: "/Campaign_Name", type: string }
+                - { name: Type, path: "/Type", type: string }
+                - { name: Status, path: "/Status", type: string }
+                - { name: Start_Date, path: "/Start_Date", type: string }
+                - { name: End_Date, path: "/End_Date", type: string }
           - name: Type
             type: ["null", "string"]
             description: Type of campaign (e.g., Email, Webinar, Conference)
@@ -348,6 +479,46 @@ info:
           - name: Subject
             type: ["null", "string"]
             description: Subject or title of the task
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: contact, path: "/Who_Id.name" }
+                - { name: related_to, path: "/What_Id.name" }
+                - { name: notes, path: "/Description" }
+                - name: task_subject
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: task }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{task_subject}\n{contact}\n{related_to}\n\n{notes}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: Modified_Time, path: "/Modified_Time", type: string }
+                - { name: Created_Time, path: "/Created_Time", type: string }
+                - { name: Subject, path: "/Subject", type: string }
+                - { name: Status, path: "/Status", type: string }
+                - { name: Priority, path: "/Priority", type: string }
+                - { name: Due_Date, path: "/Due_Date", type: string }
+                - { name: Closed_Time, path: "/Closed_Time", type: string }
+                - { name: related_to, path: "/What_Id.name", type: string }
+                - { name: contact_name, path: "/Who_Id.name", type: string }
+          - name: Who_Id
+            type: ["null", "object"]
+            description: Contact or lead the task is with, as a lookup object with `name` and `id`
+            properties:
+              name:
+                type: ["null", "string"]
+              id:
+                type: ["null", "string"]
+          - name: What_Id
+            type: ["null", "object"]
+            description: Account, deal, or other record the task is linked to, as a lookup object with `name` and `id`
+            properties:
+              name:
+                type: ["null", "string"]
+              id:
+                type: ["null", "string"]
           - name: Due_Date
             type: ["null", "string"]
             description: Due date for the task
@@ -381,6 +552,46 @@ info:
           - name: Event_Title
             type: ["null", "string"]
             description: Title of the event
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: contact, path: "/Who_Id.name" }
+                - { name: related_to, path: "/What_Id.name" }
+                - { name: notes, path: "/Description" }
+                - name: event_title
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: event }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{event_title}\n{contact}\n{related_to}\n\n{notes}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: Modified_Time, path: "/Modified_Time", type: string }
+                - { name: Created_Time, path: "/Created_Time", type: string }
+                - { name: Event_Title, path: "/Event_Title", type: string }
+                - { name: Start_DateTime, path: "/Start_DateTime", type: string }
+                - { name: End_DateTime, path: "/End_DateTime", type: string }
+                - { name: All_day, path: "/All_day", type: string }
+                - { name: Venue, path: "/Venue", type: string }
+                - { name: related_to, path: "/What_Id.name", type: string }
+                - { name: contact_name, path: "/Who_Id.name", type: string }
+          - name: Who_Id
+            type: ["null", "object"]
+            description: Contact or lead invited to the event, as a lookup object with `name` and `id`
+            properties:
+              name:
+                type: ["null", "string"]
+              id:
+                type: ["null", "string"]
+          - name: What_Id
+            type: ["null", "object"]
+            description: Account, deal, or other record the event is linked to, as a lookup object with `name` and `id`
+            properties:
+              name:
+                type: ["null", "string"]
+              id:
+                type: ["null", "string"]
           - name: Start_DateTime
             type: ["null", "string"]
             description: Event start date and time
@@ -390,9 +601,11 @@ info:
           - name: All_day
             type: ["null", "boolean"]
             description: Whether this is an all-day event
-          - name: Location
+          - name: Venue
             type: ["null", "string"]
-            description: Event location
+            description: >
+              Event location. Zoho names this field `Venue`; there is no `Location` field on the
+              Events module.
           - name: Description
             type: ["null", "string"]
             description: Description or notes about the event
@@ -411,6 +624,48 @@ info:
           - name: Subject
             type: ["null", "string"]
             description: Subject of the call
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: contact, path: "/Who_Id.name" }
+                - { name: related_to, path: "/What_Id.name" }
+                - { name: agenda, path: "/Call_Agenda" }
+                - { name: notes, path: "/Description" }
+                - { name: result, path: "/Call_Result" }
+                - name: call_subject
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: call }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{call_subject}\n{contact}\n{related_to}\n\n{agenda}\n{notes}\n{result}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: Modified_Time, path: "/Modified_Time", type: string }
+                - { name: Created_Time, path: "/Created_Time", type: string }
+                - { name: Subject, path: "/Subject", type: string }
+                - { name: Call_Type, path: "/Call_Type", type: string }
+                - { name: Call_Status, path: "/Call_Status", type: string }
+                - { name: Call_Purpose, path: "/Call_Purpose", type: string }
+                - { name: Call_Start_Time, path: "/Call_Start_Time", type: string }
+                - { name: related_to, path: "/What_Id.name", type: string }
+                - { name: contact_name, path: "/Who_Id.name", type: string }
+          - name: Who_Id
+            type: ["null", "object"]
+            description: Contact or lead on the call, as a lookup object with `name` and `id`
+            properties:
+              name:
+                type: ["null", "string"]
+              id:
+                type: ["null", "string"]
+          - name: What_Id
+            type: ["null", "object"]
+            description: Account, deal, or other record the call is linked to, as a lookup object with `name` and `id`
+            properties:
+              name:
+                type: ["null", "string"]
+              id:
+                type: ["null", "string"]
           - name: Call_Type
             type: ["null", "string"]
             description: Type of call (Inbound or Outbound)
@@ -432,9 +687,14 @@ info:
           - name: Caller_ID
             type: ["null", "string"]
             description: Caller ID number
-          - name: Outgoing_Call_Status
+          - name: Call_Status
             type: ["null", "string"]
-            description: Status of outgoing calls
+            description: >
+              Disposition of the call (Missed, Received, Overdue, Scheduled). Zoho names this
+              field `Call_Status`; there is no `Outgoing_Call_Status` field on the Calls module.
+          - name: Call_Agenda
+            type: ["null", "string"]
+            description: Free-text agenda written before the call
           - name: Description
             type: ["null", "string"]
             description: Description or notes about the call
@@ -454,6 +714,26 @@ info:
           - name: Product_Name
             type: ["null", "string"]
             description: Name of the product
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: notes, path: "/Description" }
+                - name: product_name
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: product }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{product_name}\n\n{notes}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: Modified_Time, path: "/Modified_Time", type: string }
+                - { name: Created_Time, path: "/Created_Time", type: string }
+                - { name: Product_Name, path: "/Product_Name", type: string }
+                - { name: Product_Code, path: "/Product_Code", type: string }
+                - { name: Product_Category, path: "/Product_Category", type: string }
+                - { name: Manufacturer, path: "/Manufacturer", type: string }
+                - { name: Product_Active, path: "/Product_Active", type: string }
           - name: Product_Code
             type: ["null", "string"]
             description: Product code or SKU
@@ -591,6 +871,55 @@ info:
           - name: Description
             type: ["null", "string"]
             description: Description or notes about the invoice
+          - name: Created_Time
+            type: ["null", "string"]
+            description: Time the record was created
+          - name: Modified_Time
+            type: ["null", "string"]
+            description: Time the record was last modified
+      - entity: notes
+        suggested: true
+        x-airbyte-name: incremental_notes_zoho_crm_stream
+        fields:
+          - name: id
+            type: ["string"]
+            description: Unique record identifier
+          - name: Note_Content
+            type: ["null", "string"]
+            description: >
+              Body of the note. This is where rep-authored free text actually accumulates in Zoho
+              CRM -- notes attach to any module record and, unlike the per-record `Description`
+              textarea, are mandatory content by construction.
+            x-airbyte-semantic-search:
+              content_type: plaintext
+              samples:
+                - { name: note_title, path: "/Note_Title" }
+                - { name: parent, path: "/Parent_Id.name" }
+                - name: note
+                  windowed: true
+                  sampling: { sample_type: whole, unit_label: note }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding:
+                model: text-embedding-3-small
+                template: "{note}\n\n{note_title}\n{parent}"
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: Modified_Time, path: "/Modified_Time", type: string }
+                - { name: Created_Time, path: "/Created_Time", type: string }
+                - { name: Note_Title, path: "/Note_Title", type: string }
+                - { name: parent_id, path: "/Parent_Id.id", type: string }
+                - { name: parent_name, path: "/Parent_Id.name", type: string }
+          - name: Note_Title
+            type: ["null", "string"]
+            description: Optional short title for the note
+          - name: Parent_Id
+            type: ["null", "object"]
+            description: Record the note is attached to, as a lookup object with `name` and `id`
+            properties:
+              name:
+                type: ["null", "string"]
+              id:
+                type: ["null", "string"]
           - name: Created_Time
             type: ["null", "string"]
             description: Time the record was created
@@ -1752,6 +2081,85 @@ paths:
         "404":
           description: Invoice not found
 
+  # ── Notes ──────────────────────────────────────────────────────────────
+  "/crm/v2/Notes":
+    get:
+      summary: List notes
+      description: Returns a paginated list of notes
+      operationId: listNotes
+      x-airbyte-entity: notes
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        more_records: $.info.more_records
+        page: $.info.page
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: per_page
+          in: query
+          description: Number of records per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 200
+        - name: page_token
+          in: query
+          description: Page token for fetching beyond 2000 records
+          schema:
+            type: string
+        - name: sort_by
+          in: query
+          description: Field to sort by
+          schema:
+            type: string
+        - name: sort_order
+          in: query
+          description: Sort order
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+      responses:
+        "200":
+          description: List of notes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotesList"
+
+  "/crm/v2/Notes/{id}":
+    get:
+      summary: Get a note
+      description: Get a single note by ID
+      operationId: getNote
+      x-airbyte-entity: notes
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.data[0]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Note ID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Note object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotesList"
+        "404":
+          description: Note not found
+
 components:
   securitySchemes:
     oauth2:
@@ -1932,7 +2340,7 @@ components:
         Fax:
           type: ["null", "string"]
           description: Fax number
-        Title:
+        Designation:
           type: ["null", "string"]
           description: Job title
         Lead_Source:
@@ -2588,7 +2996,7 @@ components:
         All_day:
           type: ["null", "boolean"]
           description: Whether this is an all-day event
-        Location:
+        Venue:
           type: ["null", "string"]
           description: Event location
         Participants:
@@ -2717,9 +3125,12 @@ components:
         Caller_ID:
           type: ["null", "string"]
           description: Caller ID
-        Outgoing_Call_Status:
+        Call_Status:
           type: ["null", "string"]
-          description: Outgoing call status
+          description: Call status
+        Call_Agenda:
+          type: ["null", "string"]
+          description: Agenda of the call
         Created_Time:
           type: ["null", "string"]
           format: date-time
@@ -3144,6 +3555,60 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Invoice"
+        info:
+          $ref: "#/components/schemas/PaginationInfo"
+
+    # ── Note ───────────────────────────────────────────────────────────
+    Note:
+      type: object
+      x-airbyte-entity-name: notes
+      x-airbyte-stream-name: incremental_notes_zoho_crm_stream
+      x-airbyte-ai-hints:
+        summary: "Free-text notes attached to CRM records such as leads, contacts, accounts, and deals"
+        when_to_use: "Questions about note content or comments reps left on CRM records"
+        trigger_phrases: ["zoho note", "CRM note", "notes on"]
+        freshness: live
+        search_strategy: "Search note content, or filter by the parent record"
+        example_questions:
+          - "Show notes on the Acme account"
+      description: Zoho CRM note object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Unique note identifier
+        Owner:
+          oneOf:
+            - $ref: "#/components/schemas/Owner"
+            - type: "null"
+        Note_Title:
+          type: ["null", "string"]
+          description: Optional short title for the note
+        Note_Content:
+          type: ["null", "string"]
+          description: Body of the note
+        Parent_Id:
+          oneOf:
+            - $ref: "#/components/schemas/LookupRef"
+            - type: "null"
+        Created_Time:
+          type: ["null", "string"]
+          format: date-time
+          description: Creation timestamp
+        Modified_Time:
+          type: ["null", "string"]
+          format: date-time
+          description: Last modification timestamp
+
+    NotesList:
+      type: object
+      description: Paginated list of notes
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
         info:
           $ref: "#/components/schemas/PaginationInfo"
 

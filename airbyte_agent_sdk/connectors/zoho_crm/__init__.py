@@ -31,6 +31,8 @@ from .models import (
     QuotesSearchResult,
     InvoicesSearchData,
     InvoicesSearchResult,
+    NotesSearchData,
+    NotesSearchResult,
 )
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
@@ -62,4 +64,6 @@ __all__ = [
     "QuotesSearchResult",
     "InvoicesSearchData",
     "InvoicesSearchResult",
+    "NotesSearchData",
+    "NotesSearchResult",
 ]

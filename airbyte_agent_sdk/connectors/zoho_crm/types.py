@@ -368,6 +368,18 @@ class InvoicesGetParams(TypedDict):
     """Parameters for invoices.get operation"""
     id: str
 
+class NotesListParams(TypedDict):
+    """Parameters for notes.list operation"""
+    page: NotRequired[int]
+    per_page: NotRequired[int]
+    page_token: NotRequired[str]
+    sort_by: NotRequired[str]
+    sort_order: NotRequired[str]
+
+class NotesGetParams(TypedDict):
+    """Parameters for notes.get operation"""
+    id: str
+
 # ===== SEARCH TYPES =====
 
 # Sort specification
@@ -393,8 +405,9 @@ class LeadsSearchFilter(TypedDict, total=False):
     """Lead's mobile number"""
     company: str | None
     """Company the lead is associated with"""
-    title: str | None
-    """Lead's job title"""
+    designation: str | None
+    """Lead's job title. Zoho names this `Designation` on Leads and `Title` on Contacts; there is no `Title` field on the Leads module.
+"""
     lead_source: str | None
     """Source from which the lead was generated"""
     industry: str | None
@@ -441,8 +454,9 @@ class LeadsInFilter(TypedDict, total=False):
     """Lead's mobile number"""
     company: list[str]
     """Company the lead is associated with"""
-    title: list[str]
-    """Lead's job title"""
+    designation: list[str]
+    """Lead's job title. Zoho names this `Designation` on Leads and `Title` on Contacts; there is no `Title` field on the Leads module.
+"""
     lead_source: list[str]
     """Source from which the lead was generated"""
     industry: list[str]
@@ -489,8 +503,9 @@ class LeadsAnyValueFilter(TypedDict, total=False):
     """Lead's mobile number"""
     company: Any
     """Company the lead is associated with"""
-    title: Any
-    """Lead's job title"""
+    designation: Any
+    """Lead's job title. Zoho names this `Designation` on Leads and `Title` on Contacts; there is no `Title` field on the Leads module.
+"""
     lead_source: Any
     """Source from which the lead was generated"""
     industry: Any
@@ -537,8 +552,9 @@ class LeadsStringFilter(TypedDict, total=False):
     """Lead's mobile number"""
     company: str
     """Company the lead is associated with"""
-    title: str
-    """Lead's job title"""
+    designation: str
+    """Lead's job title. Zoho names this `Designation` on Leads and `Title` on Contacts; there is no `Title` field on the Leads module.
+"""
     lead_source: str
     """Source from which the lead was generated"""
     industry: str
@@ -585,8 +601,9 @@ class LeadsSortFilter(TypedDict, total=False):
     """Lead's mobile number"""
     company: AirbyteSortOrder
     """Company the lead is associated with"""
-    title: AirbyteSortOrder
-    """Lead's job title"""
+    designation: AirbyteSortOrder
+    """Lead's job title. Zoho names this `Designation` on Leads and `Title` on Contacts; there is no `Title` field on the Leads module.
+"""
     lead_source: AirbyteSortOrder
     """Source from which the lead was generated"""
     industry: AirbyteSortOrder
@@ -736,6 +753,8 @@ class ContactsSearchFilter(TypedDict, total=False):
     """Contact's job title"""
     department: str | None
     """Department the contact belongs to"""
+    account_name: dict[str, Any] | None
+    """Account the contact belongs to, as a lookup object with `name` and `id`"""
     lead_source: str | None
     """Source from which the contact was generated"""
     date_of_birth: str | None
@@ -774,6 +793,8 @@ class ContactsInFilter(TypedDict, total=False):
     """Contact's job title"""
     department: list[str]
     """Department the contact belongs to"""
+    account_name: list[dict[str, Any]]
+    """Account the contact belongs to, as a lookup object with `name` and `id`"""
     lead_source: list[str]
     """Source from which the contact was generated"""
     date_of_birth: list[str]
@@ -812,6 +833,8 @@ class ContactsAnyValueFilter(TypedDict, total=False):
     """Contact's job title"""
     department: Any
     """Department the contact belongs to"""
+    account_name: Any
+    """Account the contact belongs to, as a lookup object with `name` and `id`"""
     lead_source: Any
     """Source from which the contact was generated"""
     date_of_birth: Any
@@ -850,6 +873,8 @@ class ContactsStringFilter(TypedDict, total=False):
     """Contact's job title"""
     department: str
     """Department the contact belongs to"""
+    account_name: str
+    """Account the contact belongs to, as a lookup object with `name` and `id`"""
     lead_source: str
     """Source from which the contact was generated"""
     date_of_birth: str
@@ -888,6 +913,8 @@ class ContactsSortFilter(TypedDict, total=False):
     """Contact's job title"""
     department: AirbyteSortOrder
     """Department the contact belongs to"""
+    account_name: AirbyteSortOrder
+    """Account the contact belongs to, as a lookup object with `name` and `id`"""
     lead_source: AirbyteSortOrder
     """Source from which the contact was generated"""
     date_of_birth: AirbyteSortOrder
@@ -1304,6 +1331,8 @@ class DealsSearchFilter(TypedDict, total=False):
     """Unique record identifier"""
     deal_name: str | None
     """Name of the deal"""
+    account_name: dict[str, Any] | None
+    """Account the deal belongs to, as a lookup object with `name` and `id`"""
     amount: float | None
     """Monetary value of the deal"""
     stage: str | None
@@ -1332,6 +1361,8 @@ class DealsInFilter(TypedDict, total=False):
     """Unique record identifier"""
     deal_name: list[str]
     """Name of the deal"""
+    account_name: list[dict[str, Any]]
+    """Account the deal belongs to, as a lookup object with `name` and `id`"""
     amount: list[float]
     """Monetary value of the deal"""
     stage: list[str]
@@ -1360,6 +1391,8 @@ class DealsAnyValueFilter(TypedDict, total=False):
     """Unique record identifier"""
     deal_name: Any
     """Name of the deal"""
+    account_name: Any
+    """Account the deal belongs to, as a lookup object with `name` and `id`"""
     amount: Any
     """Monetary value of the deal"""
     stage: Any
@@ -1388,6 +1421,8 @@ class DealsStringFilter(TypedDict, total=False):
     """Unique record identifier"""
     deal_name: str
     """Name of the deal"""
+    account_name: str
+    """Account the deal belongs to, as a lookup object with `name` and `id`"""
     amount: str
     """Monetary value of the deal"""
     stage: str
@@ -1416,6 +1451,8 @@ class DealsSortFilter(TypedDict, total=False):
     """Unique record identifier"""
     deal_name: AirbyteSortOrder
     """Name of the deal"""
+    account_name: AirbyteSortOrder
+    """Account the deal belongs to, as a lookup object with `name` and `id`"""
     amount: AirbyteSortOrder
     """Monetary value of the deal"""
     stage: AirbyteSortOrder
@@ -1806,6 +1843,10 @@ class TasksSearchFilter(TypedDict, total=False):
     """Unique record identifier"""
     subject: str | None
     """Subject or title of the task"""
+    who_id: dict[str, Any] | None
+    """Contact or lead the task is with, as a lookup object with `name` and `id`"""
+    what_id: dict[str, Any] | None
+    """Account, deal, or other record the task is linked to, as a lookup object with `name` and `id`"""
     due_date: str | None
     """Due date for the task"""
     status: str | None
@@ -1830,6 +1871,10 @@ class TasksInFilter(TypedDict, total=False):
     """Unique record identifier"""
     subject: list[str]
     """Subject or title of the task"""
+    who_id: list[dict[str, Any]]
+    """Contact or lead the task is with, as a lookup object with `name` and `id`"""
+    what_id: list[dict[str, Any]]
+    """Account, deal, or other record the task is linked to, as a lookup object with `name` and `id`"""
     due_date: list[str]
     """Due date for the task"""
     status: list[str]
@@ -1854,6 +1899,10 @@ class TasksAnyValueFilter(TypedDict, total=False):
     """Unique record identifier"""
     subject: Any
     """Subject or title of the task"""
+    who_id: Any
+    """Contact or lead the task is with, as a lookup object with `name` and `id`"""
+    what_id: Any
+    """Account, deal, or other record the task is linked to, as a lookup object with `name` and `id`"""
     due_date: Any
     """Due date for the task"""
     status: Any
@@ -1878,6 +1927,10 @@ class TasksStringFilter(TypedDict, total=False):
     """Unique record identifier"""
     subject: str
     """Subject or title of the task"""
+    who_id: str
+    """Contact or lead the task is with, as a lookup object with `name` and `id`"""
+    what_id: str
+    """Account, deal, or other record the task is linked to, as a lookup object with `name` and `id`"""
     due_date: str
     """Due date for the task"""
     status: str
@@ -1902,6 +1955,10 @@ class TasksSortFilter(TypedDict, total=False):
     """Unique record identifier"""
     subject: AirbyteSortOrder
     """Subject or title of the task"""
+    who_id: AirbyteSortOrder
+    """Contact or lead the task is with, as a lookup object with `name` and `id`"""
+    what_id: AirbyteSortOrder
+    """Account, deal, or other record the task is linked to, as a lookup object with `name` and `id`"""
     due_date: AirbyteSortOrder
     """Due date for the task"""
     status: AirbyteSortOrder
@@ -2027,14 +2084,19 @@ class EventsSearchFilter(TypedDict, total=False):
     """Unique record identifier"""
     event_title: str | None
     """Title of the event"""
+    who_id: dict[str, Any] | None
+    """Contact or lead invited to the event, as a lookup object with `name` and `id`"""
+    what_id: dict[str, Any] | None
+    """Account, deal, or other record the event is linked to, as a lookup object with `name` and `id`"""
     start_date_time: str | None
     """Event start date and time"""
     end_date_time: str | None
     """Event end date and time"""
     all_day: bool | None
     """Whether this is an all-day event"""
-    location: str | None
-    """Event location"""
+    venue: str | None
+    """Event location. Zoho names this field `Venue`; there is no `Location` field on the Events module.
+"""
     description: str | None
     """Description or notes about the event"""
     created_time: str | None
@@ -2049,14 +2111,19 @@ class EventsInFilter(TypedDict, total=False):
     """Unique record identifier"""
     event_title: list[str]
     """Title of the event"""
+    who_id: list[dict[str, Any]]
+    """Contact or lead invited to the event, as a lookup object with `name` and `id`"""
+    what_id: list[dict[str, Any]]
+    """Account, deal, or other record the event is linked to, as a lookup object with `name` and `id`"""
     start_date_time: list[str]
     """Event start date and time"""
     end_date_time: list[str]
     """Event end date and time"""
     all_day: list[bool]
     """Whether this is an all-day event"""
-    location: list[str]
-    """Event location"""
+    venue: list[str]
+    """Event location. Zoho names this field `Venue`; there is no `Location` field on the Events module.
+"""
     description: list[str]
     """Description or notes about the event"""
     created_time: list[str]
@@ -2071,14 +2138,19 @@ class EventsAnyValueFilter(TypedDict, total=False):
     """Unique record identifier"""
     event_title: Any
     """Title of the event"""
+    who_id: Any
+    """Contact or lead invited to the event, as a lookup object with `name` and `id`"""
+    what_id: Any
+    """Account, deal, or other record the event is linked to, as a lookup object with `name` and `id`"""
     start_date_time: Any
     """Event start date and time"""
     end_date_time: Any
     """Event end date and time"""
     all_day: Any
     """Whether this is an all-day event"""
-    location: Any
-    """Event location"""
+    venue: Any
+    """Event location. Zoho names this field `Venue`; there is no `Location` field on the Events module.
+"""
     description: Any
     """Description or notes about the event"""
     created_time: Any
@@ -2093,14 +2165,19 @@ class EventsStringFilter(TypedDict, total=False):
     """Unique record identifier"""
     event_title: str
     """Title of the event"""
+    who_id: str
+    """Contact or lead invited to the event, as a lookup object with `name` and `id`"""
+    what_id: str
+    """Account, deal, or other record the event is linked to, as a lookup object with `name` and `id`"""
     start_date_time: str
     """Event start date and time"""
     end_date_time: str
     """Event end date and time"""
     all_day: str
     """Whether this is an all-day event"""
-    location: str
-    """Event location"""
+    venue: str
+    """Event location. Zoho names this field `Venue`; there is no `Location` field on the Events module.
+"""
     description: str
     """Description or notes about the event"""
     created_time: str
@@ -2115,14 +2192,19 @@ class EventsSortFilter(TypedDict, total=False):
     """Unique record identifier"""
     event_title: AirbyteSortOrder
     """Title of the event"""
+    who_id: AirbyteSortOrder
+    """Contact or lead invited to the event, as a lookup object with `name` and `id`"""
+    what_id: AirbyteSortOrder
+    """Account, deal, or other record the event is linked to, as a lookup object with `name` and `id`"""
     start_date_time: AirbyteSortOrder
     """Event start date and time"""
     end_date_time: AirbyteSortOrder
     """Event end date and time"""
     all_day: AirbyteSortOrder
     """Whether this is an all-day event"""
-    location: AirbyteSortOrder
-    """Event location"""
+    venue: AirbyteSortOrder
+    """Event location. Zoho names this field `Venue`; there is no `Location` field on the Events module.
+"""
     description: AirbyteSortOrder
     """Description or notes about the event"""
     created_time: AirbyteSortOrder
@@ -2238,6 +2320,10 @@ class CallsSearchFilter(TypedDict, total=False):
     """Unique record identifier"""
     subject: str | None
     """Subject of the call"""
+    who_id: dict[str, Any] | None
+    """Contact or lead on the call, as a lookup object with `name` and `id`"""
+    what_id: dict[str, Any] | None
+    """Account, deal, or other record the call is linked to, as a lookup object with `name` and `id`"""
     call_type: str | None
     """Type of call (Inbound or Outbound)"""
     call_start_time: str | None
@@ -2252,8 +2338,11 @@ class CallsSearchFilter(TypedDict, total=False):
     """Result or outcome of the call"""
     caller_id: str | None
     """Caller ID number"""
-    outgoing_call_status: str | None
-    """Status of outgoing calls"""
+    call_status: str | None
+    """Disposition of the call (Missed, Received, Overdue, Scheduled). Zoho names this field `Call_Status`; there is no `Outgoing_Call_Status` field on the Calls module.
+"""
+    call_agenda: str | None
+    """Free-text agenda written before the call"""
     description: str | None
     """Description or notes about the call"""
     created_time: str | None
@@ -2268,6 +2357,10 @@ class CallsInFilter(TypedDict, total=False):
     """Unique record identifier"""
     subject: list[str]
     """Subject of the call"""
+    who_id: list[dict[str, Any]]
+    """Contact or lead on the call, as a lookup object with `name` and `id`"""
+    what_id: list[dict[str, Any]]
+    """Account, deal, or other record the call is linked to, as a lookup object with `name` and `id`"""
     call_type: list[str]
     """Type of call (Inbound or Outbound)"""
     call_start_time: list[str]
@@ -2282,8 +2375,11 @@ class CallsInFilter(TypedDict, total=False):
     """Result or outcome of the call"""
     caller_id: list[str]
     """Caller ID number"""
-    outgoing_call_status: list[str]
-    """Status of outgoing calls"""
+    call_status: list[str]
+    """Disposition of the call (Missed, Received, Overdue, Scheduled). Zoho names this field `Call_Status`; there is no `Outgoing_Call_Status` field on the Calls module.
+"""
+    call_agenda: list[str]
+    """Free-text agenda written before the call"""
     description: list[str]
     """Description or notes about the call"""
     created_time: list[str]
@@ -2298,6 +2394,10 @@ class CallsAnyValueFilter(TypedDict, total=False):
     """Unique record identifier"""
     subject: Any
     """Subject of the call"""
+    who_id: Any
+    """Contact or lead on the call, as a lookup object with `name` and `id`"""
+    what_id: Any
+    """Account, deal, or other record the call is linked to, as a lookup object with `name` and `id`"""
     call_type: Any
     """Type of call (Inbound or Outbound)"""
     call_start_time: Any
@@ -2312,8 +2412,11 @@ class CallsAnyValueFilter(TypedDict, total=False):
     """Result or outcome of the call"""
     caller_id: Any
     """Caller ID number"""
-    outgoing_call_status: Any
-    """Status of outgoing calls"""
+    call_status: Any
+    """Disposition of the call (Missed, Received, Overdue, Scheduled). Zoho names this field `Call_Status`; there is no `Outgoing_Call_Status` field on the Calls module.
+"""
+    call_agenda: Any
+    """Free-text agenda written before the call"""
     description: Any
     """Description or notes about the call"""
     created_time: Any
@@ -2328,6 +2431,10 @@ class CallsStringFilter(TypedDict, total=False):
     """Unique record identifier"""
     subject: str
     """Subject of the call"""
+    who_id: str
+    """Contact or lead on the call, as a lookup object with `name` and `id`"""
+    what_id: str
+    """Account, deal, or other record the call is linked to, as a lookup object with `name` and `id`"""
     call_type: str
     """Type of call (Inbound or Outbound)"""
     call_start_time: str
@@ -2342,8 +2449,11 @@ class CallsStringFilter(TypedDict, total=False):
     """Result or outcome of the call"""
     caller_id: str
     """Caller ID number"""
-    outgoing_call_status: str
-    """Status of outgoing calls"""
+    call_status: str
+    """Disposition of the call (Missed, Received, Overdue, Scheduled). Zoho names this field `Call_Status`; there is no `Outgoing_Call_Status` field on the Calls module.
+"""
+    call_agenda: str
+    """Free-text agenda written before the call"""
     description: str
     """Description or notes about the call"""
     created_time: str
@@ -2358,6 +2468,10 @@ class CallsSortFilter(TypedDict, total=False):
     """Unique record identifier"""
     subject: AirbyteSortOrder
     """Subject of the call"""
+    who_id: AirbyteSortOrder
+    """Contact or lead on the call, as a lookup object with `name` and `id`"""
+    what_id: AirbyteSortOrder
+    """Account, deal, or other record the call is linked to, as a lookup object with `name` and `id`"""
     call_type: AirbyteSortOrder
     """Type of call (Inbound or Outbound)"""
     call_start_time: AirbyteSortOrder
@@ -2372,8 +2486,11 @@ class CallsSortFilter(TypedDict, total=False):
     """Result or outcome of the call"""
     caller_id: AirbyteSortOrder
     """Caller ID number"""
-    outgoing_call_status: AirbyteSortOrder
-    """Status of outgoing calls"""
+    call_status: AirbyteSortOrder
+    """Disposition of the call (Missed, Received, Overdue, Scheduled). Zoho names this field `Call_Status`; there is no `Outgoing_Call_Status` field on the Calls module.
+"""
+    call_agenda: AirbyteSortOrder
+    """Free-text agenda written before the call"""
     description: AirbyteSortOrder
     """Description or notes about the call"""
     created_time: AirbyteSortOrder
@@ -3312,6 +3429,192 @@ class InvoicesSearchQuery(TypedDict, total=False):
     """Search query for invoices entity."""
     filter: InvoicesCondition
     sort: list[InvoicesSortFilter]
+
+
+# ===== NOTES SEARCH TYPES =====
+
+class NotesSearchFilter(TypedDict, total=False):
+    """Available fields for filtering notes search queries."""
+    id: str
+    """Unique record identifier"""
+    note_content: str | None
+    """Body of the note. This is where rep-authored free text actually accumulates in Zoho CRM -- notes attach to any module record and, unlike the per-record `Description` textarea, are mandatory content by construction.
+"""
+    note_title: str | None
+    """Optional short title for the note"""
+    parent_id: dict[str, Any] | None
+    """Record the note is attached to, as a lookup object with `name` and `id`"""
+    created_time: str | None
+    """Time the record was created"""
+    modified_time: str | None
+    """Time the record was last modified"""
+
+
+class NotesInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[str]
+    """Unique record identifier"""
+    note_content: list[str]
+    """Body of the note. This is where rep-authored free text actually accumulates in Zoho CRM -- notes attach to any module record and, unlike the per-record `Description` textarea, are mandatory content by construction.
+"""
+    note_title: list[str]
+    """Optional short title for the note"""
+    parent_id: list[dict[str, Any]]
+    """Record the note is attached to, as a lookup object with `name` and `id`"""
+    created_time: list[str]
+    """Time the record was created"""
+    modified_time: list[str]
+    """Time the record was last modified"""
+
+
+class NotesAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique record identifier"""
+    note_content: Any
+    """Body of the note. This is where rep-authored free text actually accumulates in Zoho CRM -- notes attach to any module record and, unlike the per-record `Description` textarea, are mandatory content by construction.
+"""
+    note_title: Any
+    """Optional short title for the note"""
+    parent_id: Any
+    """Record the note is attached to, as a lookup object with `name` and `id`"""
+    created_time: Any
+    """Time the record was created"""
+    modified_time: Any
+    """Time the record was last modified"""
+
+
+class NotesStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
+    id: str
+    """Unique record identifier"""
+    note_content: str
+    """Body of the note. This is where rep-authored free text actually accumulates in Zoho CRM -- notes attach to any module record and, unlike the per-record `Description` textarea, are mandatory content by construction.
+"""
+    note_title: str
+    """Optional short title for the note"""
+    parent_id: str
+    """Record the note is attached to, as a lookup object with `name` and `id`"""
+    created_time: str
+    """Time the record was created"""
+    modified_time: str
+    """Time the record was last modified"""
+
+
+class NotesSortFilter(TypedDict, total=False):
+    """Available fields for sorting notes search results."""
+    id: AirbyteSortOrder
+    """Unique record identifier"""
+    note_content: AirbyteSortOrder
+    """Body of the note. This is where rep-authored free text actually accumulates in Zoho CRM -- notes attach to any module record and, unlike the per-record `Description` textarea, are mandatory content by construction.
+"""
+    note_title: AirbyteSortOrder
+    """Optional short title for the note"""
+    parent_id: AirbyteSortOrder
+    """Record the note is attached to, as a lookup object with `name` and `id`"""
+    created_time: AirbyteSortOrder
+    """Time the record was created"""
+    modified_time: AirbyteSortOrder
+    """Time the record was last modified"""
+
+
+# Entity-specific condition types for notes
+class NotesEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: NotesSearchFilter
+
+
+class NotesNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: NotesSearchFilter
+
+
+class NotesGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: NotesSearchFilter
+
+
+class NotesGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: NotesSearchFilter
+
+
+class NotesLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: NotesSearchFilter
+
+
+class NotesLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: NotesSearchFilter
+
+
+class NotesStartswithCondition(TypedDict, total=False):
+    """Literal case-insensitive prefix match."""
+    startswith: NotesStringFilter
+
+
+class NotesEndswithCondition(TypedDict, total=False):
+    """Literal case-insensitive suffix match."""
+    endswith: NotesStringFilter
+
+
+class NotesFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: NotesStringFilter
+
+
+class NotesKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: NotesStringFilter
+
+
+class NotesContainsCondition(TypedDict, total=False):
+    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    contains: NotesAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+NotesInCondition = TypedDict("NotesInCondition", {"in": NotesInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+NotesNotCondition = TypedDict("NotesNotCondition", {"not": "NotesCondition"}, total=False)
+"""Negates the nested condition."""
+
+NotesAndCondition = TypedDict("NotesAndCondition", {"and": "list[NotesCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+NotesOrCondition = TypedDict("NotesOrCondition", {"or": "list[NotesCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+NotesAnyCondition = TypedDict("NotesAnyCondition", {"any": NotesAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all notes condition types
+NotesCondition = (
+    NotesEqCondition
+    | NotesNeqCondition
+    | NotesGtCondition
+    | NotesGteCondition
+    | NotesLtCondition
+    | NotesLteCondition
+    | NotesInCondition
+    | NotesStartswithCondition
+    | NotesEndswithCondition
+    | NotesFuzzyCondition
+    | NotesKeywordCondition
+    | NotesContainsCondition
+    | NotesNotCondition
+    | NotesAndCondition
+    | NotesOrCondition
+    | NotesAnyCondition
+)
+
+
+class NotesSearchQuery(TypedDict, total=False):
+    """Search query for notes entity."""
+    filter: NotesCondition
+    sort: list[NotesSortFilter]
 
 
 

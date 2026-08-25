@@ -23,6 +23,13 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheConfig,
     CacheEntityConfig,
     CacheFieldConfig,
+    CacheFieldProperty,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -180,7 +187,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['null', 'string'],
                                             'description': 'Fax number',
                                         },
-                                        'Title': {
+                                        'Designation': {
                                             'type': ['null', 'string'],
                                             'description': 'Job title',
                                         },
@@ -487,7 +494,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['null', 'string'],
                                             'description': 'Fax number',
                                         },
-                                        'Title': {
+                                        'Designation': {
                                             'type': ['null', 'string'],
                                             'description': 'Job title',
                                         },
@@ -773,7 +780,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         'type': ['null', 'string'],
                         'description': 'Fax number',
                     },
-                    'Title': {
+                    'Designation': {
                         'type': ['null', 'string'],
                         'description': 'Job title',
                     },
@@ -4498,7 +4505,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['null', 'boolean'],
                                             'description': 'Whether this is an all-day event',
                                         },
-                                        'Location': {
+                                        'Venue': {
                                             'type': ['null', 'string'],
                                             'description': 'Event location',
                                         },
@@ -4680,7 +4687,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['null', 'boolean'],
                                             'description': 'Whether this is an all-day event',
                                         },
-                                        'Location': {
+                                        'Venue': {
                                             'type': ['null', 'string'],
                                             'description': 'Event location',
                                         },
@@ -4839,7 +4846,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         'type': ['null', 'boolean'],
                         'description': 'Whether this is an all-day event',
                     },
-                    'Location': {
+                    'Venue': {
                         'type': ['null', 'string'],
                         'description': 'Event location',
                     },
@@ -5057,9 +5064,13 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['null', 'string'],
                                             'description': 'Caller ID',
                                         },
-                                        'Outgoing_Call_Status': {
+                                        'Call_Status': {
                                             'type': ['null', 'string'],
-                                            'description': 'Outgoing call status',
+                                            'description': 'Call status',
+                                        },
+                                        'Call_Agenda': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Agenda of the call',
                                         },
                                         'Created_Time': {
                                             'type': ['null', 'string'],
@@ -5231,9 +5242,13 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['null', 'string'],
                                             'description': 'Caller ID',
                                         },
-                                        'Outgoing_Call_Status': {
+                                        'Call_Status': {
                                             'type': ['null', 'string'],
-                                            'description': 'Outgoing call status',
+                                            'description': 'Call status',
+                                        },
+                                        'Call_Agenda': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Agenda of the call',
                                         },
                                         'Created_Time': {
                                             'type': ['null', 'string'],
@@ -5368,9 +5383,13 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         'type': ['null', 'string'],
                         'description': 'Caller ID',
                     },
-                    'Outgoing_Call_Status': {
+                    'Call_Status': {
                         'type': ['null', 'string'],
-                        'description': 'Outgoing call status',
+                        'description': 'Call status',
+                    },
+                    'Call_Agenda': {
+                        'type': ['null', 'string'],
+                        'description': 'Agenda of the call',
                     },
                     'Created_Time': {
                         'type': ['null', 'string'],
@@ -7385,6 +7404,285 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                 'search_strategy': 'Filter by account, date, or status',
             },
         ),
+        EntityDefinition(
+            name='notes',
+            stream_name='incremental_notes_zoho_crm_stream',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v2/Notes',
+                    action=Action.LIST,
+                    description='Returns a paginated list of notes',
+                    query_params=[
+                        'page',
+                        'per_page',
+                        'page_token',
+                        'sort_by',
+                        'sort_order',
+                    ],
+                    query_params_schema={
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 1,
+                            'minimum': 1,
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 200,
+                            'minimum': 1,
+                            'maximum': 200,
+                        },
+                        'page_token': {'type': 'string', 'required': False},
+                        'sort_by': {'type': 'string', 'required': False},
+                        'sort_order': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': ['asc', 'desc'],
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of notes',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zoho CRM note object',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'Unique note identifier'},
+                                        'Owner': {
+                                            'oneOf': [
+                                                {
+                                                    'type': 'object',
+                                                    'description': 'Record owner reference',
+                                                    'properties': {
+                                                        'name': {'type': 'string', 'description': 'Owner name'},
+                                                        'id': {'type': 'string', 'description': 'Owner ID'},
+                                                        'email': {'type': 'string', 'description': 'Owner email address'},
+                                                    },
+                                                },
+                                                {'type': 'null'},
+                                            ],
+                                        },
+                                        'Note_Title': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Optional short title for the note',
+                                        },
+                                        'Note_Content': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Body of the note',
+                                        },
+                                        'Parent_Id': {
+                                            'oneOf': [
+                                                {
+                                                    'type': 'object',
+                                                    'description': 'Lookup reference to another record',
+                                                    'properties': {
+                                                        'name': {'type': 'string', 'description': 'Referenced record name'},
+                                                        'id': {'type': 'string', 'description': 'Referenced record ID'},
+                                                    },
+                                                },
+                                                {'type': 'null'},
+                                            ],
+                                        },
+                                        'Created_Time': {
+                                            'type': ['null', 'string'],
+                                            'format': 'date-time',
+                                            'description': 'Creation timestamp',
+                                        },
+                                        'Modified_Time': {
+                                            'type': ['null', 'string'],
+                                            'format': 'date-time',
+                                            'description': 'Last modification timestamp',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'notes',
+                                    'x-airbyte-stream-name': 'incremental_notes_zoho_crm_stream',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Free-text notes attached to CRM records such as leads, contacts, accounts, and deals',
+                                        'when_to_use': 'Questions about note content or comments reps left on CRM records',
+                                        'trigger_phrases': ['zoho note', 'CRM note', 'notes on'],
+                                        'freshness': 'live',
+                                        'example_questions': ['Show notes on the Acme account'],
+                                        'search_strategy': 'Search note content, or filter by the parent record',
+                                    },
+                                },
+                            },
+                            'info': {
+                                'type': 'object',
+                                'description': 'Pagination metadata',
+                                'properties': {
+                                    'per_page': {'type': 'integer', 'description': 'Records per page'},
+                                    'count': {'type': 'integer', 'description': 'Number of records in current page'},
+                                    'page': {'type': 'integer', 'description': 'Current page number'},
+                                    'more_records': {'type': 'boolean', 'description': 'Whether more records exist'},
+                                    'sort_by': {'type': 'string', 'description': 'Field sorted by'},
+                                    'sort_order': {'type': 'string', 'description': 'Sort direction'},
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data',
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v2/Notes/{id}',
+                    action=Action.GET,
+                    description='Get a single note by ID',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of notes',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zoho CRM note object',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'Unique note identifier'},
+                                        'Owner': {
+                                            'oneOf': [
+                                                {
+                                                    'type': 'object',
+                                                    'description': 'Record owner reference',
+                                                    'properties': {
+                                                        'name': {'type': 'string', 'description': 'Owner name'},
+                                                        'id': {'type': 'string', 'description': 'Owner ID'},
+                                                        'email': {'type': 'string', 'description': 'Owner email address'},
+                                                    },
+                                                },
+                                                {'type': 'null'},
+                                            ],
+                                        },
+                                        'Note_Title': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Optional short title for the note',
+                                        },
+                                        'Note_Content': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Body of the note',
+                                        },
+                                        'Parent_Id': {
+                                            'oneOf': [
+                                                {
+                                                    'type': 'object',
+                                                    'description': 'Lookup reference to another record',
+                                                    'properties': {
+                                                        'name': {'type': 'string', 'description': 'Referenced record name'},
+                                                        'id': {'type': 'string', 'description': 'Referenced record ID'},
+                                                    },
+                                                },
+                                                {'type': 'null'},
+                                            ],
+                                        },
+                                        'Created_Time': {
+                                            'type': ['null', 'string'],
+                                            'format': 'date-time',
+                                            'description': 'Creation timestamp',
+                                        },
+                                        'Modified_Time': {
+                                            'type': ['null', 'string'],
+                                            'format': 'date-time',
+                                            'description': 'Last modification timestamp',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'notes',
+                                    'x-airbyte-stream-name': 'incremental_notes_zoho_crm_stream',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Free-text notes attached to CRM records such as leads, contacts, accounts, and deals',
+                                        'when_to_use': 'Questions about note content or comments reps left on CRM records',
+                                        'trigger_phrases': ['zoho note', 'CRM note', 'notes on'],
+                                        'freshness': 'live',
+                                        'example_questions': ['Show notes on the Acme account'],
+                                        'search_strategy': 'Search note content, or filter by the parent record',
+                                    },
+                                },
+                            },
+                            'info': {
+                                'type': 'object',
+                                'description': 'Pagination metadata',
+                                'properties': {
+                                    'per_page': {'type': 'integer', 'description': 'Records per page'},
+                                    'count': {'type': 'integer', 'description': 'Number of records in current page'},
+                                    'page': {'type': 'integer', 'description': 'Current page number'},
+                                    'more_records': {'type': 'boolean', 'description': 'Whether more records exist'},
+                                    'sort_by': {'type': 'string', 'description': 'Field sorted by'},
+                                    'sort_order': {'type': 'string', 'description': 'Sort direction'},
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data[0]',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zoho CRM note object',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Unique note identifier'},
+                    'Owner': {
+                        'oneOf': [
+                            {'$ref': '#/components/schemas/Owner'},
+                            {'type': 'null'},
+                        ],
+                    },
+                    'Note_Title': {
+                        'type': ['null', 'string'],
+                        'description': 'Optional short title for the note',
+                    },
+                    'Note_Content': {
+                        'type': ['null', 'string'],
+                        'description': 'Body of the note',
+                    },
+                    'Parent_Id': {
+                        'oneOf': [
+                            {'$ref': '#/components/schemas/LookupRef'},
+                            {'type': 'null'},
+                        ],
+                    },
+                    'Created_Time': {
+                        'type': ['null', 'string'],
+                        'format': 'date-time',
+                        'description': 'Creation timestamp',
+                    },
+                    'Modified_Time': {
+                        'type': ['null', 'string'],
+                        'format': 'date-time',
+                        'description': 'Last modification timestamp',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'notes',
+                'x-airbyte-stream-name': 'incremental_notes_zoho_crm_stream',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Free-text notes attached to CRM records such as leads, contacts, accounts, and deals',
+                    'when_to_use': 'Questions about note content or comments reps left on CRM records',
+                    'trigger_phrases': ['zoho note', 'CRM note', 'notes on'],
+                    'freshness': 'live',
+                    'example_questions': ['Show notes on the Acme account'],
+                    'search_strategy': 'Search note content, or filter by the parent record',
+                },
+            },
+            ai_hints={
+                'summary': 'Free-text notes attached to CRM records such as leads, contacts, accounts, and deals',
+                'when_to_use': 'Questions about note content or comments reps left on CRM records',
+                'trigger_phrases': ['zoho note', 'CRM note', 'notes on'],
+                'freshness': 'live',
+                'example_questions': ['Show notes on the Acme account'],
+                'search_strategy': 'Search note content, or filter by the parent record',
+            },
+        ),
     ],
     context_store=CacheConfig(
         entities=[
@@ -7412,6 +7710,84 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         name='Full_Name',
                         type=['null', 'string'],
                         description="Lead's full name",
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='job_title',
+                                    path='/Designation',
+                                ),
+                                SemanticSample(
+                                    name='company',
+                                    path='/Company',
+                                ),
+                                SemanticSample(
+                                    name='notes',
+                                    path='/Description',
+                                ),
+                                SemanticSample(
+                                    name='lead_name',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='lead',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{lead_name}\n{job_title}\n{company}\n\n{notes}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='Modified_Time',
+                                    path='/Modified_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Created_Time',
+                                    path='/Created_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Full_Name',
+                                    path='/Full_Name',
+                                ),
+                                SemanticMetadataField(
+                                    name='Designation',
+                                    path='/Designation',
+                                ),
+                                SemanticMetadataField(
+                                    name='Company',
+                                    path='/Company',
+                                ),
+                                SemanticMetadataField(
+                                    name='Lead_Status',
+                                    path='/Lead_Status',
+                                ),
+                                SemanticMetadataField(
+                                    name='Lead_Source',
+                                    path='/Lead_Source',
+                                ),
+                                SemanticMetadataField(
+                                    name='Industry',
+                                    path='/Industry',
+                                ),
+                                SemanticMetadataField(
+                                    name='State',
+                                    path='/State',
+                                ),
+                                SemanticMetadataField(
+                                    name='Country',
+                                    path='/Country',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='Email',
@@ -7434,9 +7810,9 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         description='Company the lead is associated with',
                     ),
                     CacheFieldConfig(
-                        name='Title',
+                        name='Designation',
                         type=['null', 'string'],
-                        description="Lead's job title",
+                        description="Lead's job title. Zoho names this `Designation` on Leads and `Title` on Contacts; there is no `Title` field on the Leads module.\n",
                     ),
                     CacheFieldConfig(
                         name='Lead_Source',
@@ -7529,6 +7905,80 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         name='Full_Name',
                         type=['null', 'string'],
                         description="Contact's full name",
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='job_title',
+                                    path='/Title',
+                                ),
+                                SemanticSample(
+                                    name='account',
+                                    path='/Account_Name.name',
+                                ),
+                                SemanticSample(
+                                    name='notes',
+                                    path='/Description',
+                                ),
+                                SemanticSample(
+                                    name='contact_name',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='contact',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{contact_name}\n{job_title}\n{account}\n\n{notes}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='Modified_Time',
+                                    path='/Modified_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Created_Time',
+                                    path='/Created_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Full_Name',
+                                    path='/Full_Name',
+                                ),
+                                SemanticMetadataField(
+                                    name='Title',
+                                    path='/Title',
+                                ),
+                                SemanticMetadataField(
+                                    name='Department',
+                                    path='/Department',
+                                ),
+                                SemanticMetadataField(
+                                    name='account_name',
+                                    path='/Account_Name.name',
+                                ),
+                                SemanticMetadataField(
+                                    name='Lead_Source',
+                                    path='/Lead_Source',
+                                ),
+                                SemanticMetadataField(
+                                    name='Mailing_State',
+                                    path='/Mailing_State',
+                                ),
+                                SemanticMetadataField(
+                                    name='Mailing_Country',
+                                    path='/Mailing_Country',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='Email',
@@ -7554,6 +8004,19 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         name='Department',
                         type=['null', 'string'],
                         description='Department the contact belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='Account_Name',
+                        type=['null', 'object'],
+                        description='Account the contact belongs to, as a lookup object with `name` and `id`',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
                     ),
                     CacheFieldConfig(
                         name='Lead_Source',
@@ -7611,6 +8074,68 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         name='Account_Name',
                         type=['null', 'string'],
                         description='Name of the account or company',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='notes',
+                                    path='/Description',
+                                ),
+                                SemanticSample(
+                                    name='account_name',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='account',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{account_name}\n\n{notes}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='Modified_Time',
+                                    path='/Modified_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Created_Time',
+                                    path='/Created_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Account_Name',
+                                    path='/Account_Name',
+                                ),
+                                SemanticMetadataField(
+                                    name='Industry',
+                                    path='/Industry',
+                                ),
+                                SemanticMetadataField(
+                                    name='Account_Type',
+                                    path='/Account_Type',
+                                ),
+                                SemanticMetadataField(
+                                    name='Website',
+                                    path='/Website',
+                                ),
+                                SemanticMetadataField(
+                                    name='Billing_State',
+                                    path='/Billing_State',
+                                ),
+                                SemanticMetadataField(
+                                    name='Billing_Country',
+                                    path='/Billing_Country',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='Account_Number',
@@ -7703,6 +8228,89 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         name='Deal_Name',
                         type=['null', 'string'],
                         description='Name of the deal',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='account',
+                                    path='/Account_Name.name',
+                                ),
+                                SemanticSample(
+                                    name='notes',
+                                    path='/Description',
+                                ),
+                                SemanticSample(
+                                    name='next_step',
+                                    path='/Next_Step',
+                                ),
+                                SemanticSample(
+                                    name='deal_name',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='deal',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{deal_name}\n{account}\n\n{notes}\n{next_step}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='Modified_Time',
+                                    path='/Modified_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Created_Time',
+                                    path='/Created_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Deal_Name',
+                                    path='/Deal_Name',
+                                ),
+                                SemanticMetadataField(
+                                    name='Stage',
+                                    path='/Stage',
+                                ),
+                                SemanticMetadataField(
+                                    name='Type',
+                                    path='/Type',
+                                ),
+                                SemanticMetadataField(
+                                    name='Closing_Date',
+                                    path='/Closing_Date',
+                                ),
+                                SemanticMetadataField(
+                                    name='Lead_Source',
+                                    path='/Lead_Source',
+                                ),
+                                SemanticMetadataField(
+                                    name='account_name',
+                                    path='/Account_Name.name',
+                                ),
+                            ],
+                        ),
+                    ),
+                    CacheFieldConfig(
+                        name='Account_Name',
+                        type=['null', 'object'],
+                        description='Account the deal belongs to, as a lookup object with `name` and `id`',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
                     ),
                     CacheFieldConfig(
                         name='Amount',
@@ -7770,6 +8378,64 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         name='Campaign_Name',
                         type=['null', 'string'],
                         description='Name of the campaign',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='notes',
+                                    path='/Description',
+                                ),
+                                SemanticSample(
+                                    name='campaign_name',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='campaign',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{campaign_name}\n\n{notes}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='Modified_Time',
+                                    path='/Modified_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Created_Time',
+                                    path='/Created_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Campaign_Name',
+                                    path='/Campaign_Name',
+                                ),
+                                SemanticMetadataField(
+                                    name='Type',
+                                    path='/Type',
+                                ),
+                                SemanticMetadataField(
+                                    name='Status',
+                                    path='/Status',
+                                ),
+                                SemanticMetadataField(
+                                    name='Start_Date',
+                                    path='/Start_Date',
+                                ),
+                                SemanticMetadataField(
+                                    name='End_Date',
+                                    path='/End_Date',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='Type',
@@ -7846,6 +8512,106 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         name='Subject',
                         type=['null', 'string'],
                         description='Subject or title of the task',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='contact',
+                                    path='/Who_Id.name',
+                                ),
+                                SemanticSample(
+                                    name='related_to',
+                                    path='/What_Id.name',
+                                ),
+                                SemanticSample(
+                                    name='notes',
+                                    path='/Description',
+                                ),
+                                SemanticSample(
+                                    name='task_subject',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='task',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{task_subject}\n{contact}\n{related_to}\n\n{notes}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='Modified_Time',
+                                    path='/Modified_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Created_Time',
+                                    path='/Created_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Subject',
+                                    path='/Subject',
+                                ),
+                                SemanticMetadataField(
+                                    name='Status',
+                                    path='/Status',
+                                ),
+                                SemanticMetadataField(
+                                    name='Priority',
+                                    path='/Priority',
+                                ),
+                                SemanticMetadataField(
+                                    name='Due_Date',
+                                    path='/Due_Date',
+                                ),
+                                SemanticMetadataField(
+                                    name='Closed_Time',
+                                    path='/Closed_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='related_to',
+                                    path='/What_Id.name',
+                                ),
+                                SemanticMetadataField(
+                                    name='contact_name',
+                                    path='/Who_Id.name',
+                                ),
+                            ],
+                        ),
+                    ),
+                    CacheFieldConfig(
+                        name='Who_Id',
+                        type=['null', 'object'],
+                        description='Contact or lead the task is with, as a lookup object with `name` and `id`',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='What_Id',
+                        type=['null', 'object'],
+                        description='Account, deal, or other record the task is linked to, as a lookup object with `name` and `id`',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
                     ),
                     CacheFieldConfig(
                         name='Due_Date',
@@ -7902,6 +8668,106 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         name='Event_Title',
                         type=['null', 'string'],
                         description='Title of the event',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='contact',
+                                    path='/Who_Id.name',
+                                ),
+                                SemanticSample(
+                                    name='related_to',
+                                    path='/What_Id.name',
+                                ),
+                                SemanticSample(
+                                    name='notes',
+                                    path='/Description',
+                                ),
+                                SemanticSample(
+                                    name='event_title',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='event',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{event_title}\n{contact}\n{related_to}\n\n{notes}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='Modified_Time',
+                                    path='/Modified_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Created_Time',
+                                    path='/Created_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Event_Title',
+                                    path='/Event_Title',
+                                ),
+                                SemanticMetadataField(
+                                    name='Start_DateTime',
+                                    path='/Start_DateTime',
+                                ),
+                                SemanticMetadataField(
+                                    name='End_DateTime',
+                                    path='/End_DateTime',
+                                ),
+                                SemanticMetadataField(
+                                    name='All_day',
+                                    path='/All_day',
+                                ),
+                                SemanticMetadataField(
+                                    name='Venue',
+                                    path='/Venue',
+                                ),
+                                SemanticMetadataField(
+                                    name='related_to',
+                                    path='/What_Id.name',
+                                ),
+                                SemanticMetadataField(
+                                    name='contact_name',
+                                    path='/Who_Id.name',
+                                ),
+                            ],
+                        ),
+                    ),
+                    CacheFieldConfig(
+                        name='Who_Id',
+                        type=['null', 'object'],
+                        description='Contact or lead invited to the event, as a lookup object with `name` and `id`',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='What_Id',
+                        type=['null', 'object'],
+                        description='Account, deal, or other record the event is linked to, as a lookup object with `name` and `id`',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
                     ),
                     CacheFieldConfig(
                         name='Start_DateTime',
@@ -7919,9 +8785,9 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         description='Whether this is an all-day event',
                     ),
                     CacheFieldConfig(
-                        name='Location',
+                        name='Venue',
                         type=['null', 'string'],
-                        description='Event location',
+                        description='Event location. Zoho names this field `Venue`; there is no `Location` field on the Events module.\n',
                     ),
                     CacheFieldConfig(
                         name='Description',
@@ -7953,6 +8819,114 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         name='Subject',
                         type=['null', 'string'],
                         description='Subject of the call',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='contact',
+                                    path='/Who_Id.name',
+                                ),
+                                SemanticSample(
+                                    name='related_to',
+                                    path='/What_Id.name',
+                                ),
+                                SemanticSample(
+                                    name='agenda',
+                                    path='/Call_Agenda',
+                                ),
+                                SemanticSample(
+                                    name='notes',
+                                    path='/Description',
+                                ),
+                                SemanticSample(
+                                    name='result',
+                                    path='/Call_Result',
+                                ),
+                                SemanticSample(
+                                    name='call_subject',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='call',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{call_subject}\n{contact}\n{related_to}\n\n{agenda}\n{notes}\n{result}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='Modified_Time',
+                                    path='/Modified_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Created_Time',
+                                    path='/Created_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Subject',
+                                    path='/Subject',
+                                ),
+                                SemanticMetadataField(
+                                    name='Call_Type',
+                                    path='/Call_Type',
+                                ),
+                                SemanticMetadataField(
+                                    name='Call_Status',
+                                    path='/Call_Status',
+                                ),
+                                SemanticMetadataField(
+                                    name='Call_Purpose',
+                                    path='/Call_Purpose',
+                                ),
+                                SemanticMetadataField(
+                                    name='Call_Start_Time',
+                                    path='/Call_Start_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='related_to',
+                                    path='/What_Id.name',
+                                ),
+                                SemanticMetadataField(
+                                    name='contact_name',
+                                    path='/Who_Id.name',
+                                ),
+                            ],
+                        ),
+                    ),
+                    CacheFieldConfig(
+                        name='Who_Id',
+                        type=['null', 'object'],
+                        description='Contact or lead on the call, as a lookup object with `name` and `id`',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='What_Id',
+                        type=['null', 'object'],
+                        description='Account, deal, or other record the call is linked to, as a lookup object with `name` and `id`',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
                     ),
                     CacheFieldConfig(
                         name='Call_Type',
@@ -7990,9 +8964,14 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         description='Caller ID number',
                     ),
                     CacheFieldConfig(
-                        name='Outgoing_Call_Status',
+                        name='Call_Status',
                         type=['null', 'string'],
-                        description='Status of outgoing calls',
+                        description='Disposition of the call (Missed, Received, Overdue, Scheduled). Zoho names this field `Call_Status`; there is no `Outgoing_Call_Status` field on the Calls module.\n',
+                    ),
+                    CacheFieldConfig(
+                        name='Call_Agenda',
+                        type=['null', 'string'],
+                        description='Free-text agenda written before the call',
                     ),
                     CacheFieldConfig(
                         name='Description',
@@ -8025,6 +9004,64 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         name='Product_Name',
                         type=['null', 'string'],
                         description='Name of the product',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='notes',
+                                    path='/Description',
+                                ),
+                                SemanticSample(
+                                    name='product_name',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='product',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{product_name}\n\n{notes}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='Modified_Time',
+                                    path='/Modified_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Created_Time',
+                                    path='/Created_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Product_Name',
+                                    path='/Product_Name',
+                                ),
+                                SemanticMetadataField(
+                                    name='Product_Code',
+                                    path='/Product_Code',
+                                ),
+                                SemanticMetadataField(
+                                    name='Product_Category',
+                                    path='/Product_Category',
+                                ),
+                                SemanticMetadataField(
+                                    name='Manufacturer',
+                                    path='/Manufacturer',
+                                ),
+                                SemanticMetadataField(
+                                    name='Product_Active',
+                                    path='/Product_Active',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='Product_Code',
@@ -8267,6 +9304,105 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                 ],
             ),
+            CacheEntityConfig(
+                entity='notes',
+                suggested=True,
+                x_airbyte_name='incremental_notes_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='Note_Content',
+                        type=['null', 'string'],
+                        description='Body of the note. This is where rep-authored free text actually accumulates in Zoho CRM -- notes attach to any module record and, unlike the per-record `Description` textarea, are mandatory content by construction.\n',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='plaintext',
+                            samples=[
+                                SemanticSample(
+                                    name='note_title',
+                                    path='/Note_Title',
+                                ),
+                                SemanticSample(
+                                    name='parent',
+                                    path='/Parent_Id.name',
+                                ),
+                                SemanticSample(
+                                    name='note',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='note',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{note}\n\n{note_title}\n{parent}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='Modified_Time',
+                                    path='/Modified_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Created_Time',
+                                    path='/Created_Time',
+                                ),
+                                SemanticMetadataField(
+                                    name='Note_Title',
+                                    path='/Note_Title',
+                                ),
+                                SemanticMetadataField(
+                                    name='parent_id',
+                                    path='/Parent_Id.id',
+                                ),
+                                SemanticMetadataField(
+                                    name='parent_name',
+                                    path='/Parent_Id.name',
+                                ),
+                            ],
+                        ),
+                    ),
+                    CacheFieldConfig(
+                        name='Note_Title',
+                        type=['null', 'string'],
+                        description='Optional short title for the note',
+                    ),
+                    CacheFieldConfig(
+                        name='Parent_Id',
+                        type=['null', 'object'],
+                        description='Record the note is attached to, as a lookup object with `name` and `id`',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                ],
+            ),
         ],
         disable_compaction=True,
     ),
@@ -8280,7 +9416,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
             'Phone',
             'Mobile',
             'Company',
-            'Title',
+            'Designation',
             'Lead_Source',
             'Industry',
             'Annual_Revenue',
@@ -8305,6 +9441,9 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
             'Mobile',
             'Title',
             'Department',
+            'Account_Name',
+            'Account_Name.name',
+            'Account_Name.id',
             'Lead_Source',
             'Date_of_Birth',
             'Mailing_City',
@@ -8336,6 +9475,9 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
         'deals': [
             'id',
             'Deal_Name',
+            'Account_Name',
+            'Account_Name.name',
+            'Account_Name.id',
             'Amount',
             'Stage',
             'Probability',
@@ -8366,6 +9508,12 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
         'tasks': [
             'id',
             'Subject',
+            'Who_Id',
+            'Who_Id.name',
+            'Who_Id.id',
+            'What_Id',
+            'What_Id.name',
+            'What_Id.id',
             'Due_Date',
             'Status',
             'Priority',
@@ -8378,10 +9526,16 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
         'events': [
             'id',
             'Event_Title',
+            'Who_Id',
+            'Who_Id.name',
+            'Who_Id.id',
+            'What_Id',
+            'What_Id.name',
+            'What_Id.id',
             'Start_DateTime',
             'End_DateTime',
             'All_day',
-            'Location',
+            'Venue',
             'Description',
             'Created_Time',
             'Modified_Time',
@@ -8389,6 +9543,12 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
         'calls': [
             'id',
             'Subject',
+            'Who_Id',
+            'Who_Id.name',
+            'Who_Id.id',
+            'What_Id',
+            'What_Id.name',
+            'What_Id.id',
             'Call_Type',
             'Call_Start_Time',
             'Call_Duration',
@@ -8396,7 +9556,8 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
             'Call_Purpose',
             'Call_Result',
             'Caller_ID',
-            'Outgoing_Call_Status',
+            'Call_Status',
+            'Call_Agenda',
             'Description',
             'Created_Time',
             'Modified_Time',
@@ -8454,6 +9615,722 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
             'Created_Time',
             'Modified_Time',
         ],
+        'notes': [
+            'id',
+            'Note_Content',
+            'Note_Title',
+            'Parent_Id',
+            'Parent_Id.name',
+            'Parent_Id.id',
+            'Created_Time',
+            'Modified_Time',
+        ],
+    },
+    semantic_search_fields={
+        'leads': {
+            'Full_Name': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='job_title',
+                        path='/Designation',
+                    ),
+                    SemanticSample(
+                        name='company',
+                        path='/Company',
+                    ),
+                    SemanticSample(
+                        name='notes',
+                        path='/Description',
+                    ),
+                    SemanticSample(
+                        name='lead_name',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='lead',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{lead_name}\n{job_title}\n{company}\n\n{notes}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='Modified_Time',
+                        path='/Modified_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Created_Time',
+                        path='/Created_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Full_Name',
+                        path='/Full_Name',
+                    ),
+                    SemanticMetadataField(
+                        name='Designation',
+                        path='/Designation',
+                    ),
+                    SemanticMetadataField(
+                        name='Company',
+                        path='/Company',
+                    ),
+                    SemanticMetadataField(
+                        name='Lead_Status',
+                        path='/Lead_Status',
+                    ),
+                    SemanticMetadataField(
+                        name='Lead_Source',
+                        path='/Lead_Source',
+                    ),
+                    SemanticMetadataField(
+                        name='Industry',
+                        path='/Industry',
+                    ),
+                    SemanticMetadataField(
+                        name='State',
+                        path='/State',
+                    ),
+                    SemanticMetadataField(
+                        name='Country',
+                        path='/Country',
+                    ),
+                ],
+            ),
+        },
+        'contacts': {
+            'Full_Name': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='job_title',
+                        path='/Title',
+                    ),
+                    SemanticSample(
+                        name='account',
+                        path='/Account_Name.name',
+                    ),
+                    SemanticSample(
+                        name='notes',
+                        path='/Description',
+                    ),
+                    SemanticSample(
+                        name='contact_name',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='contact',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{contact_name}\n{job_title}\n{account}\n\n{notes}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='Modified_Time',
+                        path='/Modified_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Created_Time',
+                        path='/Created_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Full_Name',
+                        path='/Full_Name',
+                    ),
+                    SemanticMetadataField(
+                        name='Title',
+                        path='/Title',
+                    ),
+                    SemanticMetadataField(
+                        name='Department',
+                        path='/Department',
+                    ),
+                    SemanticMetadataField(
+                        name='account_name',
+                        path='/Account_Name.name',
+                    ),
+                    SemanticMetadataField(
+                        name='Lead_Source',
+                        path='/Lead_Source',
+                    ),
+                    SemanticMetadataField(
+                        name='Mailing_State',
+                        path='/Mailing_State',
+                    ),
+                    SemanticMetadataField(
+                        name='Mailing_Country',
+                        path='/Mailing_Country',
+                    ),
+                ],
+            ),
+        },
+        'accounts': {
+            'Account_Name': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='notes',
+                        path='/Description',
+                    ),
+                    SemanticSample(
+                        name='account_name',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='account',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{account_name}\n\n{notes}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='Modified_Time',
+                        path='/Modified_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Created_Time',
+                        path='/Created_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Account_Name',
+                        path='/Account_Name',
+                    ),
+                    SemanticMetadataField(
+                        name='Industry',
+                        path='/Industry',
+                    ),
+                    SemanticMetadataField(
+                        name='Account_Type',
+                        path='/Account_Type',
+                    ),
+                    SemanticMetadataField(
+                        name='Website',
+                        path='/Website',
+                    ),
+                    SemanticMetadataField(
+                        name='Billing_State',
+                        path='/Billing_State',
+                    ),
+                    SemanticMetadataField(
+                        name='Billing_Country',
+                        path='/Billing_Country',
+                    ),
+                ],
+            ),
+        },
+        'deals': {
+            'Deal_Name': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='account',
+                        path='/Account_Name.name',
+                    ),
+                    SemanticSample(
+                        name='notes',
+                        path='/Description',
+                    ),
+                    SemanticSample(
+                        name='next_step',
+                        path='/Next_Step',
+                    ),
+                    SemanticSample(
+                        name='deal_name',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='deal',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{deal_name}\n{account}\n\n{notes}\n{next_step}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='Modified_Time',
+                        path='/Modified_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Created_Time',
+                        path='/Created_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Deal_Name',
+                        path='/Deal_Name',
+                    ),
+                    SemanticMetadataField(
+                        name='Stage',
+                        path='/Stage',
+                    ),
+                    SemanticMetadataField(
+                        name='Type',
+                        path='/Type',
+                    ),
+                    SemanticMetadataField(
+                        name='Closing_Date',
+                        path='/Closing_Date',
+                    ),
+                    SemanticMetadataField(
+                        name='Lead_Source',
+                        path='/Lead_Source',
+                    ),
+                    SemanticMetadataField(
+                        name='account_name',
+                        path='/Account_Name.name',
+                    ),
+                ],
+            ),
+        },
+        'campaigns': {
+            'Campaign_Name': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='notes',
+                        path='/Description',
+                    ),
+                    SemanticSample(
+                        name='campaign_name',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='campaign',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{campaign_name}\n\n{notes}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='Modified_Time',
+                        path='/Modified_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Created_Time',
+                        path='/Created_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Campaign_Name',
+                        path='/Campaign_Name',
+                    ),
+                    SemanticMetadataField(
+                        name='Type',
+                        path='/Type',
+                    ),
+                    SemanticMetadataField(
+                        name='Status',
+                        path='/Status',
+                    ),
+                    SemanticMetadataField(
+                        name='Start_Date',
+                        path='/Start_Date',
+                    ),
+                    SemanticMetadataField(
+                        name='End_Date',
+                        path='/End_Date',
+                    ),
+                ],
+            ),
+        },
+        'tasks': {
+            'Subject': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='contact',
+                        path='/Who_Id.name',
+                    ),
+                    SemanticSample(
+                        name='related_to',
+                        path='/What_Id.name',
+                    ),
+                    SemanticSample(
+                        name='notes',
+                        path='/Description',
+                    ),
+                    SemanticSample(
+                        name='task_subject',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='task',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{task_subject}\n{contact}\n{related_to}\n\n{notes}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='Modified_Time',
+                        path='/Modified_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Created_Time',
+                        path='/Created_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Subject',
+                        path='/Subject',
+                    ),
+                    SemanticMetadataField(
+                        name='Status',
+                        path='/Status',
+                    ),
+                    SemanticMetadataField(
+                        name='Priority',
+                        path='/Priority',
+                    ),
+                    SemanticMetadataField(
+                        name='Due_Date',
+                        path='/Due_Date',
+                    ),
+                    SemanticMetadataField(
+                        name='Closed_Time',
+                        path='/Closed_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='related_to',
+                        path='/What_Id.name',
+                    ),
+                    SemanticMetadataField(
+                        name='contact_name',
+                        path='/Who_Id.name',
+                    ),
+                ],
+            ),
+        },
+        'events': {
+            'Event_Title': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='contact',
+                        path='/Who_Id.name',
+                    ),
+                    SemanticSample(
+                        name='related_to',
+                        path='/What_Id.name',
+                    ),
+                    SemanticSample(
+                        name='notes',
+                        path='/Description',
+                    ),
+                    SemanticSample(
+                        name='event_title',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='event',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{event_title}\n{contact}\n{related_to}\n\n{notes}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='Modified_Time',
+                        path='/Modified_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Created_Time',
+                        path='/Created_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Event_Title',
+                        path='/Event_Title',
+                    ),
+                    SemanticMetadataField(
+                        name='Start_DateTime',
+                        path='/Start_DateTime',
+                    ),
+                    SemanticMetadataField(
+                        name='End_DateTime',
+                        path='/End_DateTime',
+                    ),
+                    SemanticMetadataField(
+                        name='All_day',
+                        path='/All_day',
+                    ),
+                    SemanticMetadataField(
+                        name='Venue',
+                        path='/Venue',
+                    ),
+                    SemanticMetadataField(
+                        name='related_to',
+                        path='/What_Id.name',
+                    ),
+                    SemanticMetadataField(
+                        name='contact_name',
+                        path='/Who_Id.name',
+                    ),
+                ],
+            ),
+        },
+        'calls': {
+            'Subject': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='contact',
+                        path='/Who_Id.name',
+                    ),
+                    SemanticSample(
+                        name='related_to',
+                        path='/What_Id.name',
+                    ),
+                    SemanticSample(
+                        name='agenda',
+                        path='/Call_Agenda',
+                    ),
+                    SemanticSample(
+                        name='notes',
+                        path='/Description',
+                    ),
+                    SemanticSample(
+                        name='result',
+                        path='/Call_Result',
+                    ),
+                    SemanticSample(
+                        name='call_subject',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='call',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{call_subject}\n{contact}\n{related_to}\n\n{agenda}\n{notes}\n{result}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='Modified_Time',
+                        path='/Modified_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Created_Time',
+                        path='/Created_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Subject',
+                        path='/Subject',
+                    ),
+                    SemanticMetadataField(
+                        name='Call_Type',
+                        path='/Call_Type',
+                    ),
+                    SemanticMetadataField(
+                        name='Call_Status',
+                        path='/Call_Status',
+                    ),
+                    SemanticMetadataField(
+                        name='Call_Purpose',
+                        path='/Call_Purpose',
+                    ),
+                    SemanticMetadataField(
+                        name='Call_Start_Time',
+                        path='/Call_Start_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='related_to',
+                        path='/What_Id.name',
+                    ),
+                    SemanticMetadataField(
+                        name='contact_name',
+                        path='/Who_Id.name',
+                    ),
+                ],
+            ),
+        },
+        'products': {
+            'Product_Name': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='notes',
+                        path='/Description',
+                    ),
+                    SemanticSample(
+                        name='product_name',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='product',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{product_name}\n\n{notes}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='Modified_Time',
+                        path='/Modified_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Created_Time',
+                        path='/Created_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Product_Name',
+                        path='/Product_Name',
+                    ),
+                    SemanticMetadataField(
+                        name='Product_Code',
+                        path='/Product_Code',
+                    ),
+                    SemanticMetadataField(
+                        name='Product_Category',
+                        path='/Product_Category',
+                    ),
+                    SemanticMetadataField(
+                        name='Manufacturer',
+                        path='/Manufacturer',
+                    ),
+                    SemanticMetadataField(
+                        name='Product_Active',
+                        path='/Product_Active',
+                    ),
+                ],
+            ),
+        },
+        'notes': {
+            'Note_Content': SemanticSearchConfig(
+                content_type='plaintext',
+                samples=[
+                    SemanticSample(
+                        name='note_title',
+                        path='/Note_Title',
+                    ),
+                    SemanticSample(
+                        name='parent',
+                        path='/Parent_Id.name',
+                    ),
+                    SemanticSample(
+                        name='note',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='note',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{note}\n\n{note_title}\n{parent}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='Modified_Time',
+                        path='/Modified_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Created_Time',
+                        path='/Created_Time',
+                    ),
+                    SemanticMetadataField(
+                        name='Note_Title',
+                        path='/Note_Title',
+                    ),
+                    SemanticMetadataField(
+                        name='parent_id',
+                        path='/Parent_Id.id',
+                    ),
+                    SemanticMetadataField(
+                        name='parent_name',
+                        path='/Parent_Id.name',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[
