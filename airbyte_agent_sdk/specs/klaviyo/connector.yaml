@@ -10,8 +10,8 @@ info:
     email templates for marketing analytics and customer engagement insights.
   x-airbyte-connector-name: klaviyo
   x-airbyte-connector-definition-id: 95e8cffd-b8c4-4039-968e-d32fb4a69bde
-  x-airbyte-replication-version: "3.0.0"
-  x-airbyte-replication-compatibility: ">=3.0.0, <4.0.0"
+  x-airbyte-replication-version: "3.0.1"
+  x-airbyte-replication-compatibility: ">=3.0.1, <4.0.0"
   x-airbyte-external-documentation-urls:
     - title: Klaviyo API Reference
       type: api_reference
