@@ -4955,11 +4955,43 @@
           "example_value_json": "[]",
           "json_example_value": [],
           "description": "Content of the comment as rich text.",
-          "semantic": false
+          "semantic": true
         }
       ],
-      "semantic_fields": [],
-      "semantic_entity_fields": [],
+      "semantic_fields": [
+        {
+          "name": "rich_text",
+          "description": "Content of the comment as rich text.",
+          "context_max_chars": 2048,
+          "content_type": "json"
+        }
+      ],
+      "semantic_entity_fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "last_edited_time",
+          "type": "string"
+        },
+        {
+          "name": "page_id",
+          "type": "string"
+        },
+        {
+          "name": "block_id",
+          "type": "string"
+        },
+        {
+          "name": "discussion_id",
+          "type": "string"
+        },
+        {
+          "name": "created_by_id",
+          "type": "string"
+        }
+      ],
       "semantic_metadata_fields": [],
       "enrichment_outputs": []
     }

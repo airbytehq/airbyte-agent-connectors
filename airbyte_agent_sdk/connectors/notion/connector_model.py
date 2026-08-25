@@ -25,6 +25,12 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -10155,6 +10161,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
             ),
             CacheEntityConfig(
                 entity='comments',
+                suggested=True,
                 x_airbyte_name='comments',
                 fields=[
                     CacheFieldConfig(
@@ -10196,6 +10203,53 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                         name='rich_text',
                         type=['null', 'array'],
                         description='Content of the comment as rich text.',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='json',
+                            samples=[
+                                SemanticSample(
+                                    name='comment_body',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='comment_body',
+                                        text_path='[].plain_text',
+                                        stitch=' ',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='last_edited_time',
+                                    path='/last_edited_time',
+                                ),
+                                SemanticMetadataField(
+                                    name='page_id',
+                                    path='/parent.page_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='block_id',
+                                    path='/parent.block_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='discussion_id',
+                                    path='/discussion_id',
+                                ),
+                                SemanticMetadataField(
+                                    name='created_by_id',
+                                    path='/created_by.id',
+                                ),
+                            ],
+                        ),
                     ),
                 ],
             ),
@@ -10305,6 +10359,57 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
             'rich_text',
             'rich_text[]',
         ],
+    },
+    semantic_search_fields={
+        'comments': {
+            'rich_text': SemanticSearchConfig(
+                content_type='json',
+                samples=[
+                    SemanticSample(
+                        name='comment_body',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='comment_body',
+                            text_path='[].plain_text',
+                            stitch=' ',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='last_edited_time',
+                        path='/last_edited_time',
+                    ),
+                    SemanticMetadataField(
+                        name='page_id',
+                        path='/parent.page_id',
+                    ),
+                    SemanticMetadataField(
+                        name='block_id',
+                        path='/parent.block_id',
+                    ),
+                    SemanticMetadataField(
+                        name='discussion_id',
+                        path='/discussion_id',
+                    ),
+                    SemanticMetadataField(
+                        name='created_by_id',
+                        path='/created_by.id',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[

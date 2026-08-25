@@ -454,6 +454,7 @@ info:
             description: Represents a video block.
       - entity: comments
         x-airbyte-name: comments
+        suggested: true
         fields:
           - name: created_by
             type:
@@ -495,6 +496,25 @@ info:
               - 'null'
               - array
             description: Content of the comment as rich text.
+            x-airbyte-semantic-search:
+              content_type: json
+              samples:
+                - name: comment_body
+                  windowed: true
+                  sampling:
+                    sample_type: whole
+                    unit_label: comment_body
+                    text_path: "[].plain_text"
+                    stitch: " "
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding: { model: text-embedding-3-small }
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: last_edited_time, path: "/last_edited_time", type: string }
+                - { name: page_id, path: "/parent.page_id", type: string }
+                - { name: block_id, path: "/parent.block_id", type: string }
+                - { name: discussion_id, path: "/discussion_id", type: string }
+                - { name: created_by_id, path: "/created_by.id", type: string }
   x-airbyte-example-questions:
     direct:
       - "List all users in my Notion workspace"
