@@ -16,13 +16,17 @@ uv pip install airbyte-agent-sdk
 
 Full documentation is available at [docs.airbyte.com/ai-agents/about/](https://docs.airbyte.com/ai-agents/about/).
 
+- [SDK guides](https://docs.airbyte.com/ai-agents/interfaces/sdk) — authentication, adding connectors, executing operations.
+- [SDK API reference](https://docs.airbyte.com/ai-agents/reference/sdk) — generated from the SDK's docstrings.
+- [pdoc site](https://airbytehq.github.io/sonar/airbyte_agent_sdk.html) — the same reference rendered by pdoc; requires access to the `airbytehq/sonar` repo.
+
 ## Tool integration
 
 The SDK ships a hosted tool builder and two decorators for turning connector calls into LLM tools with retry-aware exception translation, output-size guards, and framework-specific error signalling.
 
 - **`build_connector_tools(connector, framework="...")`** — preferred for hosted connector agents. Returns `inspect_connector`, `read_skill_docs`, and `execute` callables bound to one connector. Hosted connectors, or local connectors passed an explicit `docs_provider`, use outline-only guidance and tell the agent to inspect/read docs before execution; local/offline connectors without a docs provider keep generated YAML-derived rich docs. Pass `use_progressive_docs=False` to make `tools.as_list()` expose only `execute` with the legacy rich description.
 - **`@<Connector>.agent_tool(...)`** — preferred when you write your own tool functions, especially on frameworks the SDK does not natively support. The progressive-docs sibling of `tool_utils`: decorate three functions (execute, inspect, docs) and the execute docstring steers the agent through the inspect → docs → execute flow instead of embedding the full entity/action reference. Tool failures raise `AirbyteToolError` by default (`framework="none"`, no auto-detection); pass `framework="..."` to target a supported framework's signal.
-- **`@<Connector>.tool_utils`** — preferred for typed connectors on supported frameworks. Auto-detects the installed framework (pydantic-ai, LangChain, OpenAI Agents, or FastMCP; falls back to `framework="none"` with a warning when none is installed) and composes [`translate_exceptions`](https://airbytehq.github.io/airbyte-embedded/airbyte_agent_sdk/translation.html) under the hood. Pass `framework="..."` to override auto-detection. Forwards `update_docstring`, `max_output_chars`, `framework`, `internal_retries`, `should_internal_retry`, and `exhausted_runtime_failure_message`.
+- **`@<Connector>.tool_utils`** — preferred for typed connectors on supported frameworks. Auto-detects the installed framework (pydantic-ai, LangChain, OpenAI Agents, or FastMCP; falls back to `framework="none"` with a warning when none is installed) and composes [`translate_exceptions`](https://airbytehq.github.io/sonar/airbyte_agent_sdk/translation.html) under the hood. Pass `framework="..."` to override auto-detection. Forwards `update_docstring`, `max_output_chars`, `framework`, `internal_retries`, `should_internal_retry`, and `exhausted_runtime_failure_message`.
 - **`@translate_exceptions`** — same translation behaviour for any callable that is not a generated `Connector` (custom helpers, eval harnesses, ad-hoc tools).
 
 The builder and decorators preserve async callables, `__name__`, and `__doc__`. Transient runtime failures (429/5xx, network, timeout) can be retried silently via `internal_retries=N`. Output exceeding `max_output_chars` (default 100 KB) is converted to the framework's retry signal so the LLM can narrow the query.
@@ -176,7 +180,7 @@ async def list_customers(limit: int = 10) -> list[dict]:
 
 Failures raise `fastmcp.exceptions.ToolError`, which FastMCP serialises as an MCP error response to the client.
 
-See the [`translate_exceptions`](https://airbytehq.github.io/airbyte-embedded/airbyte_agent_sdk/translation.html) reference for advanced kwargs (`internal_retries`, `should_internal_retry`, `exhausted_runtime_failure_message`).
+See the [`translate_exceptions`](https://airbytehq.github.io/sonar/airbyte_agent_sdk/translation.html) reference for advanced kwargs (`internal_retries`, `should_internal_retry`, `exhausted_runtime_failure_message`).
 
 ## How to install the skills
 
