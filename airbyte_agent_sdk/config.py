@@ -84,7 +84,7 @@ class AWSDataPlaneCredentials:
     """AWS credentials for the customer's data plane.
 
     Consulted only on the local hydration path, which is enabled by
-    ``SECRETS_CONFIGURED_FROM_ENVIRONMENT=true``. Any field may be ``None``:
+    `SECRETS_CONFIGURED_FROM_ENVIRONMENT=true`. Any field may be `None`:
     when explicit keys are absent, boto3 falls back to its default provider
     chain (e.g. an implicit IAM role).
     """
@@ -111,7 +111,7 @@ def resolve_aws_credentials(
     Prefer the enterprise-flex secret-manager convention, then fall back to the
     standard AWS SDK environment variables. When no explicit keys are resolved,
     the returned credentials allow boto3 to source an implicit IAM role. Only
-    consulted when ``SECRETS_CONFIGURED_FROM_ENVIRONMENT=true``.
+    consulted when `SECRETS_CONFIGURED_FROM_ENVIRONMENT=true`.
     """
     resolved_access_key_id = access_key_id or os.environ.get("AWS_SECRET_MANAGER_ACCESS_KEY_ID") or os.environ.get("AWS_ACCESS_KEY_ID")
     resolved_secret_access_key = (
@@ -147,9 +147,24 @@ class GCPDataPlaneCredentials:
     """GCP credentials for the customer's data plane.
 
     Consulted only on the local hydration path, which is enabled by
-    ``SECRETS_CONFIGURED_FROM_ENVIRONMENT=true``. If explicit credentials are
+    `SECRETS_CONFIGURED_FROM_ENVIRONMENT=true`. If explicit credentials are
     absent, the Google client library falls back to Application Default
     Credentials.
+
+    Fields, and the environment variables `resolve_gcp_credentials` reads
+    for each:
+
+    - `project_id` -- `GCP_SECRET_MANAGER_PROJECT_ID`, then
+      `GOOGLE_CLOUD_PROJECT`, then `GCLOUD_PROJECT`. Needed only for bare
+      (non `projects/...`) secret coordinates, and otherwise inferred from the
+      resolved credentials.
+    - `credentials_json` -- `GCP_SECRET_MANAGER_CREDENTIALS_JSON`, inline
+      service-account JSON.
+    - `credentials_path` -- `GCP_SECRET_MANAGER_CREDENTIALS_PATH`, then
+      `GOOGLE_APPLICATION_CREDENTIALS`. Mutually exclusive with
+      `credentials_json`.
+    - `secret_version` -- `GCP_SECRET_MANAGER_SECRET_VERSION`, defaulting to
+      `latest`.
     """
 
     project_id: str | None = None
@@ -159,7 +174,21 @@ class GCPDataPlaneCredentials:
 
 
 def resolve_secret_manager_provider(provider: str | None = None) -> SecretManagerProvider:
-    """Resolve which customer-owned secret manager should hydrate bundles."""
+    """Resolve which customer-owned secret manager should hydrate bundles.
+
+    Consulted only on the local hydration path, which is enabled by
+    `SECRETS_CONFIGURED_FROM_ENVIRONMENT=true`. Precedence:
+
+    1. The explicit *provider* argument, then `SECRET_MANAGER_PROVIDER`
+       (`aws` or `gcp`); any other value raises.
+    2. `gcp` when any of `GCP_SECRET_MANAGER_PROJECT_ID`,
+       `GCP_SECRET_MANAGER_CREDENTIALS_JSON`, or
+       `GCP_SECRET_MANAGER_CREDENTIALS_PATH` is set. The generic
+       `GOOGLE_APPLICATION_CREDENTIALS` / `GOOGLE_CLOUD_PROJECT` variables
+       are deliberately excluded here so an unrelated Google credential in the
+       environment cannot switch providers.
+    3. `aws` otherwise.
+    """
     resolved_provider = (provider or os.environ.get("SECRET_MANAGER_PROVIDER") or "").strip().lower()
     if resolved_provider:
         if resolved_provider not in {"aws", "gcp"}:
@@ -186,7 +215,14 @@ def resolve_gcp_credentials(
     credentials_path: str | None = None,
     secret_version: str | None = None,
 ) -> GCPDataPlaneCredentials:
-    """Resolve GCP Secret Manager credentials: explicit arg -> env var."""
+    """Resolve GCP Secret Manager credentials: explicit arg -> env var.
+
+    See `GCPDataPlaneCredentials` for the environment variables consulted
+    per field. Supplying both inline credentials JSON and a credentials path
+    raises, since the effective identity would be ambiguous. When neither is
+    supplied, the Google client library falls back to Application Default
+    Credentials.
+    """
     resolved_credentials_json = credentials_json or os.environ.get("GCP_SECRET_MANAGER_CREDENTIALS_JSON")
     resolved_credentials_path = (
         credentials_path or os.environ.get("GCP_SECRET_MANAGER_CREDENTIALS_PATH") or os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")

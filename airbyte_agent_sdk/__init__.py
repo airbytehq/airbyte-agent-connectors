@@ -106,7 +106,7 @@ Advanced users who need to inspect a connector's `ConnectorModel` or
 traverse tool-call records should import from the submodules directly:
 `airbyte_agent_sdk.types` for auth/spec types and
 `airbyte_agent_sdk.executor.models` for nested result dataclasses. See
-[`docs/CONTRIBUTING.md`](https://github.com/airbytehq/airbyte-embedded/blob/main/connector-sdk/docs/CONTRIBUTING.md)
+[`docs/CONTRIBUTING.md`](https://github.com/airbytehq/sonar/blob/main/connector-sdk/docs/CONTRIBUTING.md)
 for the public-API contract.
 
 Anything not listed in `__all__` is internal and may change between
