@@ -19,8 +19,8 @@ from airbyte_agent_sdk.config import AWSDataPlaneCredentials, resolve_aws_creden
 _SECRET_COORDINATE_PREFIX = "secret_coordinate::"
 
 _INSTALL_HINT = "Install it with: pip install airbyte-agent-sdk[secrets-aws]"
-_AWS_ONLY_HINT = (
-    "Local executable-bundle hydration currently supports AWS Secrets Manager only. "
+_AWS_HINT = (
+    "Local executable-bundle hydration currently supports AWS and GCP secret managers. "
     "Verify your AWS secret store configuration "
     "(AWS_SECRET_MANAGER_ACCESS_KEY_ID / AWS_SECRET_MANAGER_SECRET_ACCESS_KEY, "
     "optional AWS_SECRET_MANAGER_SESSION_TOKEN, and AWS_SECRET_MANAGER_REGION) "
@@ -103,13 +103,13 @@ def _fetch_secret(client: Any, secret_id: str) -> str:
         response = client.get_secret_value(SecretId=secret_id)
     except NoCredentialsError as exc:
         raise ValueError(
-            "AWS credentials are required to hydrate the executable bundle in your data plane, " f"but none were found. {_AWS_ONLY_HINT}"
+            "AWS credentials are required to hydrate the executable bundle in your data plane, " f"but none were found. {_AWS_HINT}"
         ) from exc
     except ClientError as exc:
         error_code = exc.response.get("Error", {}).get("Code")
         if error_code == "ResourceNotFoundException":
-            raise ValueError(f"Secret coordinate '{secret_id}' was not found in AWS Secrets Manager. {_AWS_ONLY_HINT}") from exc
-        raise ValueError(f"Failed to resolve secret coordinate '{secret_id}' from AWS Secrets Manager. {_AWS_ONLY_HINT} Details: {exc}") from exc
+            raise ValueError(f"Secret coordinate '{secret_id}' was not found in AWS Secrets Manager. {_AWS_HINT}") from exc
+        raise ValueError(f"Failed to resolve secret coordinate '{secret_id}' from AWS Secrets Manager. {_AWS_HINT} Details: {exc}") from exc
     except BotoCoreError as exc:
         raise ValueError(f"AWS Secrets Manager request failed while resolving '{secret_id}': {exc}") from exc
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "airbyte-agent-sdk"
-version = "0.1.330"
+version = "0.1.331"
 description = "Airbyte Agent SDK: typed connectors that give AI agents access to 50+ third-party APIs"
 authors = [{ name = "Airbyte", email = "contact@airbyte.io" }]
 readme = "README.md"
@@ -31,6 +31,9 @@ dependencies = [
 [project.optional-dependencies]
 secrets-aws = [
     "boto3>=1.34.0",
+]
+secrets-gcp = [
+    "google-cloud-secret-manager>=2.20.0",
 ]
 dev = [
     "pytest>=7.0.0",

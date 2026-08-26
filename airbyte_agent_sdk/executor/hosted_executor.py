@@ -10,7 +10,9 @@ from typing import Any, AsyncIterator, overload
 from opentelemetry import trace
 
 from airbyte_agent_sdk.cloud_utils import AirbyteCloudClient
-from airbyte_agent_sdk.secrets_aws import hydrate_source_config
+from airbyte_agent_sdk.config import resolve_secret_manager_provider
+from airbyte_agent_sdk.secrets_aws import hydrate_source_config as hydrate_aws_source_config
+from airbyte_agent_sdk.secrets_gcp import hydrate_source_config as hydrate_gcp_source_config
 
 from .local_executor import LocalExecutor
 from .models import (
@@ -624,26 +626,32 @@ class HostedExecutor:
         """Run an executable bundle in the customer data plane via LocalExecutor.
 
         Hydrates the bundle's unhydrated ``secret_coordinate::`` values from the
-        customer's AWS Secrets Manager, splits the hydrated config into auth vs
-        config, then dispatches through the existing LocalExecutor. Context-store
-        bundles cannot run locally and hard-fail before any secret is fetched.
+        configured customer secret manager, splits the hydrated config into auth
+        vs config, then dispatches through the existing LocalExecutor.
+        Context-store bundles cannot run locally and hard-fail before any secret
+        is fetched.
         """
         entity = bundle["entity"]
         action = bundle["action"]
         params = bundle.get("params") or {}
 
         # context_store_search is a hosted-only operation; fail closed before
-        # touching AWS Secrets Manager, mirroring LocalExecutor's own guard.
+        # touching the customer's secret manager, mirroring LocalExecutor's own guard.
         if action == "context_store_search":
             raise NotImplementedError("context_store_search is only available in hosted execution mode and cannot run in the customer data plane.")
 
-        hydrated_config = hydrate_source_config(bundle["source_config"])
+        provider = resolve_secret_manager_provider()
+        if provider == "gcp":
+            hydrated_config = hydrate_gcp_source_config(bundle["source_config"])
+        else:
+            hydrated_config = hydrate_aws_source_config(bundle["source_config"])
         bundled_config_values = bundle.get("config_values")
-        hydrated_config_values = (
-            hydrate_source_config(bundled_config_values)
-            if isinstance(bundled_config_values, dict) and _has_secret_coordinate(bundled_config_values)
-            else bundled_config_values
-        )
+        if isinstance(bundled_config_values, dict) and _has_secret_coordinate(bundled_config_values):
+            hydrated_config_values = (
+                hydrate_gcp_source_config(bundled_config_values) if provider == "gcp" else hydrate_aws_source_config(bundled_config_values)
+            )
+        else:
+            hydrated_config_values = bundled_config_values
         auth_config, config_values = _split_hydrated_config(
             hydrated_config,
             bundle.get("replication_auth_key_mapping") or {},

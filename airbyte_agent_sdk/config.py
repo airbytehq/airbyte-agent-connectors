@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import threading
 from dataclasses import dataclass
+from typing import Literal, cast
 
 
 @dataclass(frozen=True)
@@ -135,4 +136,72 @@ def resolve_aws_credentials(
         or os.environ.get("AWS_SECRET_MANAGER_REGION")
         or os.environ.get("AWS_REGION")
         or os.environ.get("AWS_DEFAULT_REGION"),
+    )
+
+
+SecretManagerProvider = Literal["aws", "gcp"]
+
+
+@dataclass(frozen=True)
+class GCPDataPlaneCredentials:
+    """GCP credentials for the customer's data plane.
+
+    Consulted only on the local hydration path, which is enabled by
+    ``SECRETS_CONFIGURED_FROM_ENVIRONMENT=true``. If explicit credentials are
+    absent, the Google client library falls back to Application Default
+    Credentials.
+    """
+
+    project_id: str | None = None
+    credentials_json: str | None = None
+    credentials_path: str | None = None
+    secret_version: str = "latest"
+
+
+def resolve_secret_manager_provider(provider: str | None = None) -> SecretManagerProvider:
+    """Resolve which customer-owned secret manager should hydrate bundles."""
+    resolved_provider = (provider or os.environ.get("SECRET_MANAGER_PROVIDER") or "").strip().lower()
+    if resolved_provider:
+        if resolved_provider not in {"aws", "gcp"}:
+            raise ValueError("SECRET_MANAGER_PROVIDER must be either 'aws' or 'gcp' for local executable-bundle secret hydration.")
+        return cast(SecretManagerProvider, resolved_provider)
+
+    has_gcp_config = any(
+        os.environ.get(name)
+        for name in (
+            "GCP_SECRET_MANAGER_PROJECT_ID",
+            "GCP_SECRET_MANAGER_CREDENTIALS_JSON",
+            "GCP_SECRET_MANAGER_CREDENTIALS_PATH",
+        )
+    )
+    if has_gcp_config:
+        return "gcp"
+    return "aws"
+
+
+def resolve_gcp_credentials(
+    *,
+    project_id: str | None = None,
+    credentials_json: str | None = None,
+    credentials_path: str | None = None,
+    secret_version: str | None = None,
+) -> GCPDataPlaneCredentials:
+    """Resolve GCP Secret Manager credentials: explicit arg -> env var."""
+    resolved_credentials_json = credentials_json or os.environ.get("GCP_SECRET_MANAGER_CREDENTIALS_JSON")
+    resolved_credentials_path = (
+        credentials_path or os.environ.get("GCP_SECRET_MANAGER_CREDENTIALS_PATH") or os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+    )
+    if resolved_credentials_json and resolved_credentials_path:
+        raise ValueError(
+            "GCP_SECRET_MANAGER_CREDENTIALS_JSON and GCP_SECRET_MANAGER_CREDENTIALS_PATH/GOOGLE_APPLICATION_CREDENTIALS "
+            "cannot both be configured for local executable-bundle secret hydration."
+        )
+    return GCPDataPlaneCredentials(
+        project_id=project_id
+        or os.environ.get("GCP_SECRET_MANAGER_PROJECT_ID")
+        or os.environ.get("GOOGLE_CLOUD_PROJECT")
+        or os.environ.get("GCLOUD_PROJECT"),
+        credentials_json=resolved_credentials_json,
+        credentials_path=resolved_credentials_path,
+        secret_version=secret_version or os.environ.get("GCP_SECRET_MANAGER_SECRET_VERSION") or "latest",
     )

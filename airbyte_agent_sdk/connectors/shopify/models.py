@@ -1382,24 +1382,6 @@ class ProductVariantsDeleteResponse(BaseModel):
 
     data: ProductVariantsDeleteResponseData | None = Field(default=None)
 
-class OrderCreateParamsOptions(BaseModel):
-    """OrderCreateOptionsInput"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    inventory_behaviour: str | None = Field(default=None, alias="inventoryBehaviour")
-
-class OrderCreateParamsOrderShippingaddress(BaseModel):
-    """Nested schema for OrderCreateParamsOrder.shippingAddress"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address1: str | None = Field(default=None)
-    city: str | None = Field(default=None)
-    province_code: str | None = Field(default=None, alias="provinceCode")
-    zip: str | None = Field(default=None)
-    country_code: str | None = Field(default=None, alias="countryCode")
-    first_name: str | None = Field(default=None, alias="firstName")
-    last_name: str | None = Field(default=None, alias="lastName")
-
 class OrderCreateParamsOrderLineitemsItemPricesetShopmoney(BaseModel):
     """Nested schema for OrderCreateParamsOrderLineitemsItemPriceset.shopMoney"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1425,6 +1407,18 @@ class OrderCreateParamsOrderLineitemsItem(BaseModel):
     """Custom title (for custom line items without a variant)"""
     price_set: OrderCreateParamsOrderLineitemsItemPriceset | None = Field(default=None, alias="priceSet")
 
+class OrderCreateParamsOrderShippingaddress(BaseModel):
+    """Nested schema for OrderCreateParamsOrder.shippingAddress"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address1: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province_code: str | None = Field(default=None, alias="provinceCode")
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
+    first_name: str | None = Field(default=None, alias="firstName")
+    last_name: str | None = Field(default=None, alias="lastName")
+
 class OrderCreateParamsOrder(BaseModel):
     """OrderCreateOrderInput object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1440,6 +1434,12 @@ class OrderCreateParamsOrder(BaseModel):
     tags: list[str] | None = Field(default=None, description="Order tags")
     """Order tags"""
     shipping_address: OrderCreateParamsOrderShippingaddress | None = Field(default=None, alias="shippingAddress")
+
+class OrderCreateParamsOptions(BaseModel):
+    """OrderCreateOptionsInput"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    inventory_behaviour: str | None = Field(default=None, alias="inventoryBehaviour")
 
 class OrderCreateParams(BaseModel):
     """Parameters for creating an order.
@@ -1597,16 +1597,6 @@ class OrderCancelResponse(BaseModel):
 
     data: OrderCancelResponseData | None = Field(default=None)
 
-class DraftOrderCreateParamsInputShippingaddress(BaseModel):
-    """Nested schema for DraftOrderCreateParamsInput.shippingAddress"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address1: str | None = Field(default=None)
-    city: str | None = Field(default=None)
-    province_code: str | None = Field(default=None, alias="provinceCode")
-    zip: str | None = Field(default=None)
-    country_code: str | None = Field(default=None, alias="countryCode")
-
 class DraftOrderCreateParamsInputLineitemsItem(BaseModel):
     """Nested schema for DraftOrderCreateParamsInput.lineItems_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1619,6 +1609,16 @@ class DraftOrderCreateParamsInputLineitemsItem(BaseModel):
     """Custom title"""
     original_unit_price: str | None = Field(default=None, alias="originalUnitPrice", description="Unit price")
     """Unit price"""
+
+class DraftOrderCreateParamsInputShippingaddress(BaseModel):
+    """Nested schema for DraftOrderCreateParamsInput.shippingAddress"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address1: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province_code: str | None = Field(default=None, alias="provinceCode")
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
 
 class DraftOrderCreateParamsInput(BaseModel):
     """DraftOrderInput object"""
@@ -1903,13 +1903,6 @@ class DiscountCodeCreateParamsBasiccodediscountCustomerselection(BaseModel):
     all: bool | None = Field(default=None, description="Set to true for all customers")
     """Set to true for all customers"""
 
-class DiscountCodeCreateParamsBasiccodediscountCustomergetsItems(BaseModel):
-    """Which items the discount applies to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    all: bool | None = Field(default=None, description="Set to true for all items")
-    """Set to true for all items"""
-
 class DiscountCodeCreateParamsBasiccodediscountCustomergetsValueDiscountamount(BaseModel):
     """Nested schema for DiscountCodeCreateParamsBasiccodediscountCustomergetsValue.discountAmount"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1924,6 +1917,13 @@ class DiscountCodeCreateParamsBasiccodediscountCustomergetsValue(BaseModel):
     percentage: float | None = Field(default=None, description="Percentage discount (e.g. 0.1 for 10%)")
     """Percentage discount (e.g. 0.1 for 10%)"""
     discount_amount: DiscountCodeCreateParamsBasiccodediscountCustomergetsValueDiscountamount | None = Field(default=None, alias="discountAmount")
+
+class DiscountCodeCreateParamsBasiccodediscountCustomergetsItems(BaseModel):
+    """Which items the discount applies to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    all: bool | None = Field(default=None, description="Set to true for all items")
+    """Set to true for all items"""
 
 class DiscountCodeCreateParamsBasiccodediscountCustomergets(BaseModel):
     """What the customer gets from this discount"""
