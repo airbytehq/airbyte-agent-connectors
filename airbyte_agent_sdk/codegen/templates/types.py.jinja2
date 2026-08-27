@@ -196,8 +196,13 @@ class {{ schema.condition_prefix }}KeywordCondition(TypedDict, total=False):
 
 
 class {{ schema.condition_prefix }}ContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: {{ schema.any_value_filter_type_name }}
+
+
+class {{ schema.condition_prefix }}ArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: {{ schema.any_value_filter_type_name }}
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -230,6 +235,7 @@ class {{ schema.condition_prefix }}ContainsCondition(TypedDict, total=False):
     | {{ schema.condition_prefix }}FuzzyCondition
     | {{ schema.condition_prefix }}KeywordCondition
     | {{ schema.condition_prefix }}ContainsCondition
+    | {{ schema.condition_prefix }}ArrayContainsCondition
     | {{ schema.condition_prefix }}NotCondition
     | {{ schema.condition_prefix }}AndCondition
     | {{ schema.condition_prefix }}OrCondition

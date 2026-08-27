@@ -231,8 +231,13 @@ class NotesKeywordCondition(TypedDict, total=False):
 
 
 class NotesContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: NotesAnyValueFilter
+
+
+class NotesArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: NotesAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -265,6 +270,7 @@ NotesCondition = (
     | NotesFuzzyCondition
     | NotesKeywordCondition
     | NotesContainsCondition
+    | NotesArrayContainsCondition
     | NotesNotCondition
     | NotesAndCondition
     | NotesOrCondition

@@ -208,8 +208,13 @@ class SitesKeywordCondition(TypedDict, total=False):
 
 
 class SitesContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: SitesAnyValueFilter
+
+
+class SitesArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: SitesAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -242,6 +247,7 @@ SitesCondition = (
     | SitesFuzzyCondition
     | SitesKeywordCondition
     | SitesContainsCondition
+    | SitesArrayContainsCondition
     | SitesNotCondition
     | SitesAndCondition
     | SitesOrCondition
@@ -419,8 +425,13 @@ class SitemapsKeywordCondition(TypedDict, total=False):
 
 
 class SitemapsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: SitemapsAnyValueFilter
+
+
+class SitemapsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: SitemapsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -453,6 +464,7 @@ SitemapsCondition = (
     | SitemapsFuzzyCondition
     | SitemapsKeywordCondition
     | SitemapsContainsCondition
+    | SitemapsArrayContainsCondition
     | SitemapsNotCondition
     | SitemapsAndCondition
     | SitemapsOrCondition
@@ -650,8 +662,13 @@ class SearchAnalyticsAllFieldsKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsAllFieldsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: SearchAnalyticsAllFieldsAnyValueFilter
+
+
+class SearchAnalyticsAllFieldsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: SearchAnalyticsAllFieldsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -684,6 +701,7 @@ SearchAnalyticsAllFieldsCondition = (
     | SearchAnalyticsAllFieldsFuzzyCondition
     | SearchAnalyticsAllFieldsKeywordCondition
     | SearchAnalyticsAllFieldsContainsCondition
+    | SearchAnalyticsAllFieldsArrayContainsCondition
     | SearchAnalyticsAllFieldsNotCondition
     | SearchAnalyticsAllFieldsAndCondition
     | SearchAnalyticsAllFieldsOrCondition
@@ -851,8 +869,13 @@ class SearchAnalyticsByCountryKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsByCountryContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: SearchAnalyticsByCountryAnyValueFilter
+
+
+class SearchAnalyticsByCountryArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: SearchAnalyticsByCountryAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -885,6 +908,7 @@ SearchAnalyticsByCountryCondition = (
     | SearchAnalyticsByCountryFuzzyCondition
     | SearchAnalyticsByCountryKeywordCondition
     | SearchAnalyticsByCountryContainsCondition
+    | SearchAnalyticsByCountryArrayContainsCondition
     | SearchAnalyticsByCountryNotCondition
     | SearchAnalyticsByCountryAndCondition
     | SearchAnalyticsByCountryOrCondition
@@ -1042,8 +1066,13 @@ class SearchAnalyticsByDateKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsByDateContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: SearchAnalyticsByDateAnyValueFilter
+
+
+class SearchAnalyticsByDateArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: SearchAnalyticsByDateAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1076,6 +1105,7 @@ SearchAnalyticsByDateCondition = (
     | SearchAnalyticsByDateFuzzyCondition
     | SearchAnalyticsByDateKeywordCondition
     | SearchAnalyticsByDateContainsCondition
+    | SearchAnalyticsByDateArrayContainsCondition
     | SearchAnalyticsByDateNotCondition
     | SearchAnalyticsByDateAndCondition
     | SearchAnalyticsByDateOrCondition
@@ -1243,8 +1273,13 @@ class SearchAnalyticsByDeviceKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsByDeviceContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: SearchAnalyticsByDeviceAnyValueFilter
+
+
+class SearchAnalyticsByDeviceArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: SearchAnalyticsByDeviceAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1277,6 +1312,7 @@ SearchAnalyticsByDeviceCondition = (
     | SearchAnalyticsByDeviceFuzzyCondition
     | SearchAnalyticsByDeviceKeywordCondition
     | SearchAnalyticsByDeviceContainsCondition
+    | SearchAnalyticsByDeviceArrayContainsCondition
     | SearchAnalyticsByDeviceNotCondition
     | SearchAnalyticsByDeviceAndCondition
     | SearchAnalyticsByDeviceOrCondition
@@ -1444,8 +1480,13 @@ class SearchAnalyticsByPageKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsByPageContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: SearchAnalyticsByPageAnyValueFilter
+
+
+class SearchAnalyticsByPageArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: SearchAnalyticsByPageAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1478,6 +1519,7 @@ SearchAnalyticsByPageCondition = (
     | SearchAnalyticsByPageFuzzyCondition
     | SearchAnalyticsByPageKeywordCondition
     | SearchAnalyticsByPageContainsCondition
+    | SearchAnalyticsByPageArrayContainsCondition
     | SearchAnalyticsByPageNotCondition
     | SearchAnalyticsByPageAndCondition
     | SearchAnalyticsByPageOrCondition
@@ -1645,8 +1687,13 @@ class SearchAnalyticsByQueryKeywordCondition(TypedDict, total=False):
 
 
 class SearchAnalyticsByQueryContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: SearchAnalyticsByQueryAnyValueFilter
+
+
+class SearchAnalyticsByQueryArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: SearchAnalyticsByQueryAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1679,6 +1726,7 @@ SearchAnalyticsByQueryCondition = (
     | SearchAnalyticsByQueryFuzzyCondition
     | SearchAnalyticsByQueryKeywordCondition
     | SearchAnalyticsByQueryContainsCondition
+    | SearchAnalyticsByQueryArrayContainsCondition
     | SearchAnalyticsByQueryNotCondition
     | SearchAnalyticsByQueryAndCondition
     | SearchAnalyticsByQueryOrCondition

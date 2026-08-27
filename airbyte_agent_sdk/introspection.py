@@ -32,12 +32,14 @@ FILTER_OPERATORS = (
     '  Starts with:    {"query": {"filter": {"startswith": {"externalId": "CUS-"}}}}\n'
     '  Ends with:      {"query": {"filter": {"endswith": {"email": "@acme.com"}}}}\n'
     '  Contains:       {"query": {"filter": {"contains": {"name": "pro"}}}}  '
-    "(case-insensitive substring for scalar fields; exact membership for arrays)\n"
+    "(case-insensitive substring on a SCALAR field)\n"
+    '  Array contains: {"query": {"filter": {"array_contains": {"tags": "premium"}}}}  '
+    "(exact membership in an ARRAY field)\n"
     '  Greater-or-eq:  {"query": {"filter": {"gte":   {"started": "2026-01-01T00:00:00Z"}}}}\n'
     '  Less than:      {"query": {"filter": {"lt":    {"amount": 1000}}}}\n'
     '  Set membership: {"query": {"filter": {"in":    {"stage": ["discovery", "negotiation"]}}}}\n'
     '  Combined (AND): {"query": {"filter": {"gte": {"started": "..."}, "eq": {"status": "completed"}}}}\n'
-    "Available operators: eq, neq, gt, gte, lt, lte, in, startswith, endswith, fuzzy, keyword, contains, any\n"
+    "Available operators: eq, neq, gt, gte, lt, lte, in, startswith, endswith, fuzzy, keyword, contains, array_contains, any\n"
     'Compose with and/or/not: {"and": [cond1, cond2]}, {"or": [...]}, {"not": cond}'
 )
 
@@ -1052,7 +1054,7 @@ def generate_tool_description(
         lines.append('  Example: {"query": {"filter": {"eq": {"title": "Intro to Airbyte | Miinto"}}}, "limit": 1,')
         lines.append('            "fields": ["id", "title", "started", "primaryUserId"]}')
         lines.append("  Conditions are composable:")
-        lines.append("    - eq, neq, gt, gte, lt, lte, in, startswith, endswith, fuzzy, keyword, contains, any")
+        lines.append("    - eq, neq, gt, gte, lt, lte, in, startswith, endswith, fuzzy, keyword, contains, array_contains, any")
         lines.append('    - and/or/not to combine conditions (e.g., {"and": [cond1, cond2]})')
 
     # Shared constants — these are the single source of truth, also composed into

@@ -1651,8 +1651,13 @@ class PagesKeywordCondition(TypedDict, total=False):
 
 
 class PagesContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: PagesAnyValueFilter
+
+
+class PagesArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: PagesAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1685,6 +1690,7 @@ PagesCondition = (
     | PagesFuzzyCondition
     | PagesKeywordCondition
     | PagesContainsCondition
+    | PagesArrayContainsCondition
     | PagesNotCondition
     | PagesAndCondition
     | PagesOrCondition
@@ -1842,8 +1848,13 @@ class UsersKeywordCondition(TypedDict, total=False):
 
 
 class UsersContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: UsersAnyValueFilter
+
+
+class UsersArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: UsersAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1876,6 +1887,7 @@ UsersCondition = (
     | UsersFuzzyCondition
     | UsersKeywordCondition
     | UsersContainsCondition
+    | UsersArrayContainsCondition
     | UsersNotCondition
     | UsersAndCondition
     | UsersOrCondition
@@ -2133,8 +2145,13 @@ class DataSourcesKeywordCondition(TypedDict, total=False):
 
 
 class DataSourcesContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: DataSourcesAnyValueFilter
+
+
+class DataSourcesArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: DataSourcesAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -2167,6 +2184,7 @@ DataSourcesCondition = (
     | DataSourcesFuzzyCondition
     | DataSourcesKeywordCondition
     | DataSourcesContainsCondition
+    | DataSourcesArrayContainsCondition
     | DataSourcesNotCondition
     | DataSourcesAndCondition
     | DataSourcesOrCondition
@@ -2674,8 +2692,13 @@ class BlocksKeywordCondition(TypedDict, total=False):
 
 
 class BlocksContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: BlocksAnyValueFilter
+
+
+class BlocksArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: BlocksAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -2708,6 +2731,7 @@ BlocksCondition = (
     | BlocksFuzzyCondition
     | BlocksKeywordCondition
     | BlocksContainsCondition
+    | BlocksArrayContainsCondition
     | BlocksNotCondition
     | BlocksAndCondition
     | BlocksOrCondition
@@ -2875,8 +2899,13 @@ class CommentsKeywordCondition(TypedDict, total=False):
 
 
 class CommentsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: CommentsAnyValueFilter
+
+
+class CommentsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: CommentsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -2909,6 +2938,7 @@ CommentsCondition = (
     | CommentsFuzzyCondition
     | CommentsKeywordCondition
     | CommentsContainsCondition
+    | CommentsArrayContainsCondition
     | CommentsNotCondition
     | CommentsAndCondition
     | CommentsOrCondition

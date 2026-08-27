@@ -269,8 +269,13 @@ class ProfilesKeywordCondition(TypedDict, total=False):
 
 
 class ProfilesContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: ProfilesAnyValueFilter
+
+
+class ProfilesArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: ProfilesAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -303,6 +308,7 @@ ProfilesCondition = (
     | ProfilesFuzzyCondition
     | ProfilesKeywordCondition
     | ProfilesContainsCondition
+    | ProfilesArrayContainsCondition
     | ProfilesNotCondition
     | ProfilesAndCondition
     | ProfilesOrCondition

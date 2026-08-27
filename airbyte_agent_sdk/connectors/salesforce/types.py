@@ -980,8 +980,13 @@ class AccountsKeywordCondition(TypedDict, total=False):
 
 
 class AccountsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: AccountsAnyValueFilter
+
+
+class AccountsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: AccountsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1014,6 +1019,7 @@ AccountsCondition = (
     | AccountsFuzzyCondition
     | AccountsKeywordCondition
     | AccountsContainsCondition
+    | AccountsArrayContainsCondition
     | AccountsNotCondition
     | AccountsAndCondition
     | AccountsOrCondition
@@ -1361,8 +1367,13 @@ class ContactsKeywordCondition(TypedDict, total=False):
 
 
 class ContactsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: ContactsAnyValueFilter
+
+
+class ContactsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: ContactsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1395,6 +1406,7 @@ ContactsCondition = (
     | ContactsFuzzyCondition
     | ContactsKeywordCondition
     | ContactsContainsCondition
+    | ContactsArrayContainsCondition
     | ContactsNotCondition
     | ContactsAndCondition
     | ContactsOrCondition
@@ -1822,8 +1834,13 @@ class LeadsKeywordCondition(TypedDict, total=False):
 
 
 class LeadsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: LeadsAnyValueFilter
+
+
+class LeadsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: LeadsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1856,6 +1873,7 @@ LeadsCondition = (
     | LeadsFuzzyCondition
     | LeadsKeywordCondition
     | LeadsContainsCondition
+    | LeadsArrayContainsCondition
     | LeadsNotCondition
     | LeadsAndCondition
     | LeadsOrCondition
@@ -2203,8 +2221,13 @@ class OpportunitiesKeywordCondition(TypedDict, total=False):
 
 
 class OpportunitiesContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: OpportunitiesAnyValueFilter
+
+
+class OpportunitiesArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: OpportunitiesAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -2237,6 +2260,7 @@ OpportunitiesCondition = (
     | OpportunitiesFuzzyCondition
     | OpportunitiesKeywordCondition
     | OpportunitiesContainsCondition
+    | OpportunitiesArrayContainsCondition
     | OpportunitiesNotCondition
     | OpportunitiesAndCondition
     | OpportunitiesOrCondition
@@ -2564,8 +2588,13 @@ class TasksKeywordCondition(TypedDict, total=False):
 
 
 class TasksContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: TasksAnyValueFilter
+
+
+class TasksArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: TasksAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -2598,6 +2627,7 @@ TasksCondition = (
     | TasksFuzzyCondition
     | TasksKeywordCondition
     | TasksContainsCondition
+    | TasksArrayContainsCondition
     | TasksNotCondition
     | TasksAndCondition
     | TasksOrCondition
@@ -3005,8 +3035,13 @@ class UsersKeywordCondition(TypedDict, total=False):
 
 
 class UsersContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: UsersAnyValueFilter
+
+
+class UsersArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: UsersAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -3039,6 +3074,7 @@ UsersCondition = (
     | UsersFuzzyCondition
     | UsersKeywordCondition
     | UsersContainsCondition
+    | UsersArrayContainsCondition
     | UsersNotCondition
     | UsersAndCondition
     | UsersOrCondition
@@ -3286,8 +3322,13 @@ class OpportunityStagesKeywordCondition(TypedDict, total=False):
 
 
 class OpportunityStagesContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: OpportunityStagesAnyValueFilter
+
+
+class OpportunityStagesArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: OpportunityStagesAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -3320,6 +3361,7 @@ OpportunityStagesCondition = (
     | OpportunityStagesFuzzyCondition
     | OpportunityStagesKeywordCondition
     | OpportunityStagesContainsCondition
+    | OpportunityStagesArrayContainsCondition
     | OpportunityStagesNotCondition
     | OpportunityStagesAndCondition
     | OpportunityStagesOrCondition

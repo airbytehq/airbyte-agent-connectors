@@ -268,8 +268,13 @@ class AuditKeywordCondition(TypedDict, total=False):
 
 
 class AuditContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: AuditAnyValueFilter
+
+
+class AuditArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: AuditAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -302,6 +307,7 @@ AuditCondition = (
     | AuditFuzzyCondition
     | AuditKeywordCondition
     | AuditContainsCondition
+    | AuditArrayContainsCondition
     | AuditNotCondition
     | AuditAndCondition
     | AuditOrCondition
@@ -479,8 +485,13 @@ class BlogPostsKeywordCondition(TypedDict, total=False):
 
 
 class BlogPostsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: BlogPostsAnyValueFilter
+
+
+class BlogPostsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: BlogPostsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -513,6 +524,7 @@ BlogPostsCondition = (
     | BlogPostsFuzzyCondition
     | BlogPostsKeywordCondition
     | BlogPostsContainsCondition
+    | BlogPostsArrayContainsCondition
     | BlogPostsNotCondition
     | BlogPostsAndCondition
     | BlogPostsOrCondition
@@ -640,8 +652,13 @@ class GroupsKeywordCondition(TypedDict, total=False):
 
 
 class GroupsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: GroupsAnyValueFilter
+
+
+class GroupsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: GroupsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -674,6 +691,7 @@ GroupsCondition = (
     | GroupsFuzzyCondition
     | GroupsKeywordCondition
     | GroupsContainsCondition
+    | GroupsArrayContainsCondition
     | GroupsNotCondition
     | GroupsAndCondition
     | GroupsOrCondition
@@ -901,8 +919,13 @@ class PagesKeywordCondition(TypedDict, total=False):
 
 
 class PagesContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: PagesAnyValueFilter
+
+
+class PagesArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: PagesAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -935,6 +958,7 @@ PagesCondition = (
     | PagesFuzzyCondition
     | PagesKeywordCondition
     | PagesContainsCondition
+    | PagesArrayContainsCondition
     | PagesNotCondition
     | PagesAndCondition
     | PagesOrCondition
@@ -1132,8 +1156,13 @@ class SpacesKeywordCondition(TypedDict, total=False):
 
 
 class SpacesContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: SpacesAnyValueFilter
+
+
+class SpacesArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: SpacesAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1166,6 +1195,7 @@ SpacesCondition = (
     | SpacesFuzzyCondition
     | SpacesKeywordCondition
     | SpacesContainsCondition
+    | SpacesArrayContainsCondition
     | SpacesNotCondition
     | SpacesAndCondition
     | SpacesOrCondition

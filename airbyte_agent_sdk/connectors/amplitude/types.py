@@ -172,8 +172,13 @@ class AnnotationsKeywordCondition(TypedDict, total=False):
 
 
 class AnnotationsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: AnnotationsAnyValueFilter
+
+
+class AnnotationsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: AnnotationsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -206,6 +211,7 @@ AnnotationsCondition = (
     | AnnotationsFuzzyCondition
     | AnnotationsKeywordCondition
     | AnnotationsContainsCondition
+    | AnnotationsArrayContainsCondition
     | AnnotationsNotCondition
     | AnnotationsAndCondition
     | AnnotationsOrCondition
@@ -553,8 +559,13 @@ class CohortsKeywordCondition(TypedDict, total=False):
 
 
 class CohortsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: CohortsAnyValueFilter
+
+
+class CohortsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: CohortsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -587,6 +598,7 @@ CohortsCondition = (
     | CohortsFuzzyCondition
     | CohortsKeywordCondition
     | CohortsContainsCondition
+    | CohortsArrayContainsCondition
     | CohortsNotCondition
     | CohortsAndCondition
     | CohortsOrCondition
@@ -814,8 +826,13 @@ class EventsListKeywordCondition(TypedDict, total=False):
 
 
 class EventsListContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: EventsListAnyValueFilter
+
+
+class EventsListArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: EventsListAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -848,6 +865,7 @@ EventsListCondition = (
     | EventsListFuzzyCondition
     | EventsListKeywordCondition
     | EventsListContainsCondition
+    | EventsListArrayContainsCondition
     | EventsListNotCondition
     | EventsListAndCondition
     | EventsListOrCondition
@@ -955,8 +973,13 @@ class ActiveUsersKeywordCondition(TypedDict, total=False):
 
 
 class ActiveUsersContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: ActiveUsersAnyValueFilter
+
+
+class ActiveUsersArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: ActiveUsersAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -989,6 +1012,7 @@ ActiveUsersCondition = (
     | ActiveUsersFuzzyCondition
     | ActiveUsersKeywordCondition
     | ActiveUsersContainsCondition
+    | ActiveUsersArrayContainsCondition
     | ActiveUsersNotCondition
     | ActiveUsersAndCondition
     | ActiveUsersOrCondition
@@ -1096,8 +1120,13 @@ class AverageSessionLengthKeywordCondition(TypedDict, total=False):
 
 
 class AverageSessionLengthContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: AverageSessionLengthAnyValueFilter
+
+
+class AverageSessionLengthArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: AverageSessionLengthAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1130,6 +1159,7 @@ AverageSessionLengthCondition = (
     | AverageSessionLengthFuzzyCondition
     | AverageSessionLengthKeywordCondition
     | AverageSessionLengthContainsCondition
+    | AverageSessionLengthArrayContainsCondition
     | AverageSessionLengthNotCondition
     | AverageSessionLengthAndCondition
     | AverageSessionLengthOrCondition

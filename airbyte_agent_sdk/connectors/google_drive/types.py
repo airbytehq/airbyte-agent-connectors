@@ -316,8 +316,13 @@ class FilesKeywordCondition(TypedDict, total=False):
 
 
 class FilesContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: FilesAnyValueFilter
+
+
+class FilesArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: FilesAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -350,6 +355,7 @@ FilesCondition = (
     | FilesFuzzyCondition
     | FilesKeywordCondition
     | FilesContainsCondition
+    | FilesArrayContainsCondition
     | FilesNotCondition
     | FilesAndCondition
     | FilesOrCondition

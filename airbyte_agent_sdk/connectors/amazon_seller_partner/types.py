@@ -503,8 +503,13 @@ class OrdersKeywordCondition(TypedDict, total=False):
 
 
 class OrdersContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: OrdersAnyValueFilter
+
+
+class OrdersArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: OrdersAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -537,6 +542,7 @@ OrdersCondition = (
     | OrdersFuzzyCondition
     | OrdersKeywordCondition
     | OrdersContainsCondition
+    | OrdersArrayContainsCondition
     | OrdersNotCondition
     | OrdersAndCondition
     | OrdersOrCondition
@@ -994,8 +1000,13 @@ class OrderItemsKeywordCondition(TypedDict, total=False):
 
 
 class OrderItemsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: OrderItemsAnyValueFilter
+
+
+class OrderItemsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: OrderItemsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1028,6 +1039,7 @@ OrderItemsCondition = (
     | OrderItemsFuzzyCondition
     | OrderItemsKeywordCondition
     | OrderItemsContainsCondition
+    | OrderItemsArrayContainsCondition
     | OrderItemsNotCondition
     | OrderItemsAndCondition
     | OrderItemsOrCondition
@@ -1225,8 +1237,13 @@ class ListFinancialEventGroupsKeywordCondition(TypedDict, total=False):
 
 
 class ListFinancialEventGroupsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: ListFinancialEventGroupsAnyValueFilter
+
+
+class ListFinancialEventGroupsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: ListFinancialEventGroupsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1259,6 +1276,7 @@ ListFinancialEventGroupsCondition = (
     | ListFinancialEventGroupsFuzzyCondition
     | ListFinancialEventGroupsKeywordCondition
     | ListFinancialEventGroupsContainsCondition
+    | ListFinancialEventGroupsArrayContainsCondition
     | ListFinancialEventGroupsNotCondition
     | ListFinancialEventGroupsAndCondition
     | ListFinancialEventGroupsOrCondition
@@ -1696,8 +1714,13 @@ class ListFinancialEventsKeywordCondition(TypedDict, total=False):
 
 
 class ListFinancialEventsContainsCondition(TypedDict, total=False):
-    """Literal case-insensitive substring on scalar fields or exact array membership."""
+    """Case-insensitive substring match on a scalar field. Example: {"contains": {"subject": "billing"}}"""
     contains: ListFinancialEventsAnyValueFilter
+
+
+class ListFinancialEventsArrayContainsCondition(TypedDict, total=False):
+    """Exact membership test on an array field. Example: {"array_contains": {"tags": "premium"}}"""
+    array_contains: ListFinancialEventsAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
@@ -1730,6 +1753,7 @@ ListFinancialEventsCondition = (
     | ListFinancialEventsFuzzyCondition
     | ListFinancialEventsKeywordCondition
     | ListFinancialEventsContainsCondition
+    | ListFinancialEventsArrayContainsCondition
     | ListFinancialEventsNotCondition
     | ListFinancialEventsAndCondition
     | ListFinancialEventsOrCondition
