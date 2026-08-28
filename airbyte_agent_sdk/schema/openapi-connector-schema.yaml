@@ -1389,10 +1389,11 @@ $defs:
         default: null
         description: Field in metadata response containing the download URL. The field
           path uses the executor's dot-separated field-path syntax with optional bracket
-          indexing (e.g., calls[0].media.audioUrl) and templated bracket segments
-          (e.g., attachments[{attachment_index}].url). This is NOT a JSONPath expression
-          — do not prefix with "$.". For JSONPath-based extractors, see x-airbyte-record-extractor
-          and x-airbyte-meta-extractor. Required when x-airbyte-action is 'download'.
+          indexing (e.g., calls[0].media.audioUrl or [0].url) and templated bracket
+          segments (e.g., attachments[{attachment_index}].url). This is NOT a JSONPath
+          expression — do not prefix with "$.". For JSONPath-based extractors, see
+          x-airbyte-record-extractor and x-airbyte-meta-extractor. Required when x-airbyte-action
+          is 'download'.
         title: X-Airbyte-File-Url
       x-airbyte-untested:
         anyOf:

@@ -5,24 +5,27 @@ openapi: 3.1.0
 
 info:
   title: Greenhouse Harvest API Connector
-  version: 0.1.8
+  version: 0.2.0
   description: |
     Greenhouse is an applicant tracking system (ATS) that helps companies manage their
-    hiring process. This connector provides access to candidates, applications, jobs,
-    offers, users, departments, offices, job posts, sources, and scheduled interviews
-    for recruiting analytics and talent acquisition insights.
+    hiring process via the Harvest v3 API with OAuth 2.0 authentication. This connector
+    provides access to candidates, applications, jobs, offers, users, departments,
+    offices, job posts, sources, and interviews for recruiting analytics and talent
+    acquisition insights.
   x-airbyte-connector-name: greenhouse
   x-airbyte-connector-definition-id: 59f1e50a-331f-4f09-b3e8-2e8d4d355f44
-  x-airbyte-replication-version: "0.8.0"
-  x-airbyte-replication-compatibility: ">=0.8.0, <1.0.0"
+  x-airbyte-replication-version: "1.0.0"
+  x-airbyte-replication-compatibility: ">=1.0.0, <2.0.0"
+  x-airbyte-skip-auth-methods:
+    - basic
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Greenhouse API Reference documentation
-      url: "https://developers.greenhouse.io/harvest.html"
+      url: "https://harvestdocs.greenhouse.io/"
   x-airbyte-example-questions:
     direct:
       - "List all open jobs"
-      - "Show me upcoming interviews this week"
+      - "Show me recent interviews"
       - "Show me recent job offers"
       - "List recent applications"
     search:
@@ -48,180 +51,137 @@ info:
         x-airbyte-name: applications
         suggested: true
         fields:
+          - name: agency_note_id
+            type:
+              - 'null'
+              - integer
+            description: Id of the note created when the candidate was submitted by an agency, or `null` if the application did not come through an agency.
           - name: answers
             type:
               - 'null'
-              - 'array'
-            description: 'Answers provided in the application.'
-          - name: applied_at
-            type:
-              - 'null'
-              - 'string'
-            description: 'Timestamp when the candidate applied.'
-          - name: attachments
-            type:
-              - 'null'
-              - 'array'
-            description: 'Attachments uploaded with the application.'
+              - array
+            description: Free-text answers the candidate provided on the job post application form. Each entry pairs the question text with the candidate's
+              answer.
           - name: candidate_id
             type:
               - 'null'
-              - 'integer'
-            description: 'Unique identifier for the candidate.'
-          - name: credited_to
+              - integer
+            description: Id of the candidate (person) this application belongs to.
+          - name: coordinator_id
             type:
               - 'null'
-              - 'object'
-            description: 'Information about the employee who credited the application.'
-            properties:
-              employee_id:
-                type:
-                  - 'null'
-                  - 'string'
-              first_name:
-                type:
-                  - 'null'
-                  - 'string'
-              id:
-                type:
-                  - 'null'
-                  - 'integer'
-              last_name:
-                type:
-                  - 'null'
-                  - 'string'
-              name:
-                type:
-                  - 'null'
-                  - 'string'
-          - name: current_stage
+              - integer
+            description: Id of the user assigned as coordinator on the application's job, or `null` when unassigned.
+          - name: created_at
             type:
               - 'null'
-              - 'object'
-            description: 'Current stage of the application process.'
-            properties:
-              id:
-                type:
-                  - 'null'
-                  - 'integer'
-              name:
-                type:
-                  - 'null'
-                  - 'string'
+              - string
+            description: Created at from the Greenhouse v3 applications record.
+          - name: custom_fields
+            type:
+              - 'null'
+              - object
+            description: Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.
           - name: id
             type:
               - 'null'
-              - 'integer'
-            description: 'Unique identifier for the application.'
+              - integer
+            description: Id from the Greenhouse v3 applications record.
+          - name: job_id
+            type:
+              - 'null'
+              - integer
+            description: Id of the job this application is on. `null` for jobless prospect applications.
+          - name: job_interview_stage_id
+            type:
+              - 'null'
+              - integer
+            description: Id of the job interview stage definition (see `GET /v3/job_interview_stages`) the candidate is currently in for this application.
+              `null` for prospect applications and applications in a terminal state.
           - name: job_post_id
             type:
-              - 'integer'
               - 'null'
-            description: ''
-          - name: jobs
-            type:
-              - 'null'
-              - 'array'
-            description: 'Jobs applied for by the candidate.'
+              - integer
+            description: Id of the job post the candidate applied through, or `null` if the application was created internally rather than from a posted
+              role.
           - name: last_activity_at
             type:
               - 'null'
-              - 'string'
-            description: 'Timestamp of the last activity on the application.'
-          - name: location
+              - string
+            description: Timestamp of the most recent activity on this application (notes, emails, stage changes, etc.), in ISO 8601.
+          - name: location_address
             type:
               - 'null'
-              - 'string'
-            description: 'Location related to the application.'
+              - string
+            description: Free-form location string captured on the application (typically from the job post's location question).
+          - name: needs_decision
+            type:
+              - 'null'
+              - boolean
+            description: '`true` when the application is waiting on a hiring-team decision (scorecard completion, advance/reject, etc.) in its current stage.'
           - name: prospect
             type:
               - 'null'
-              - 'boolean'
-            description: 'Status of the application prospect.'
-          - name: prospect_detail
+              - boolean
+            description: '`true` for prospect applications (sourced candidates not yet attached to a single job), `false` for candidate applications on
+              a specific job.'
+          - name: prospective_job_ids
             type:
               - 'null'
-              - 'object'
-            description: 'Details related to the application prospect.'
-            properties:
-              prospect_owner:
-                type:
-                  - 'null'
-                  - 'object'
-              prospect_pool:
-                type:
-                  - 'null'
-                  - 'string'
-              prospect_stage:
-                type:
-                  - 'null'
-                  - 'string'
-          - name: prospective_department
+              - array
+            description: For prospect applications, the ids of jobs the prospect is being considered for. Empty for non-prospect applications and for jobless
+              prospects.
+          - name: recruiter_id
             type:
               - 'null'
-              - 'string'
-            description: 'Prospective department for the candidate.'
-          - name: prospective_office
+              - integer
+            description: Id of the user assigned as recruiter on the application's job, or `null` when unassigned.
+          - name: referrer_id
             type:
               - 'null'
-              - 'string'
-            description: 'Prospective office for the candidate.'
+              - integer
+            description: Id of the referrer who credited this application, or `null` if there was no referral. References a referrer, not a Greenhouse user.
           - name: rejected_at
             type:
               - 'null'
-              - 'string'
-            description: 'Timestamp when the application was rejected.'
-          - name: rejection_details
+              - string
+            description: Timestamp the application was rejected, in ISO 8601. `null` for applications that have not been rejected.
+          - name: rejection_reason_id
             type:
               - 'null'
-              - 'object'
-            description: 'Details related to the application rejection.'
-            properties:
-              custom_fields:
-                type:
-                  - 'null'
-                  - 'object'
-              keyed_custom_fields:
-                type:
-                  - 'null'
-                  - 'object'
-          - name: rejection_reason
+              - integer
+            description: Id of the rejection reason selected for the application. References a `/v3/rejection_reasons` row scoped to the organization. `null`
+              when the application was rejected without a reason, or has not been rejected.
+          - name: source_id
             type:
               - 'null'
-              - 'object'
-            description: 'Reason for the application rejection.'
-            properties:
-              id:
-                type:
-                  - 'null'
-                  - 'integer'
-              name:
-                type:
-                  - 'null'
-                  - 'string'
-              type:
-                type:
-                  - 'null'
-                  - 'object'
-          - name: source
+              - integer
+            description: Id of the source the application is attributed to (e.g. a job board, an event, an employee referral source). `null` if no source
+              is set.
+          - name: stage_id
             type:
               - 'null'
-              - 'object'
-            description: 'Source of the application.'
-            properties:
-              id:
-                type:
-                  - 'null'
-                  - 'integer'
-              public_name:
-                type:
-                  - 'null'
-                  - 'string'
+              - integer
+            description: Id of the interview stage the candidate is currently in for this application. `null` for prospect applications and applications
+              in a terminal state.
+          - name: stage_name
+            type:
+              - 'null'
+              - string
+            description: Display name of the candidate's current interview stage on this application.
           - name: status
             type:
               - 'null'
-              - 'string'
-            description: 'Status of the application.'
+              - string
+            description: Lifecycle status of the application. `in_process` for active candidates, `rejected` for rejected applications, `hired` once an
+              offer is closed and the hire endpoint has fired, and `converted` for prospect applications that have been promoted to a candidate application
+              via `convert_to_candidate`.
+          - name: updated_at
+            type:
+              - 'null'
+              - string
+            description: Updated at from the Greenhouse v3 applications record.
+
       - entity: candidates
         x-airbyte-name: candidates
         suggested: true
@@ -229,173 +189,142 @@ info:
           - name: addresses
             type:
               - 'null'
-              - 'array'
-            description: 'Candidate''s addresses'
-          - name: application_ids
-            type:
-              - 'null'
-              - 'array'
-            description: 'List of application IDs'
-          - name: applications
-            type:
-              - 'null'
-              - 'array'
-            description: 'An array of all applications made by candidates.'
-          - name: attachments
-            type:
-              - 'null'
-              - 'array'
-            description: 'Attachments related to the candidate'
+              - array
+            description: Postal addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `home`, `work`, or `other`.
           - name: can_email
             type:
               - 'null'
-              - 'boolean'
-            description: 'Indicates if candidate can be emailed'
+              - boolean
+            description: Whether this candidate has consented to receive email communication from your organization.
           - name: company
             type:
               - 'null'
-              - 'string'
-            description: 'Company where the candidate is associated'
-          - name: coordinator
-            type:
-              - 'null'
-              - 'string'
-            description: 'Coordinator assigned to the candidate'
+              - string
+            description: Candidate's current company, as entered on their profile.
           - name: created_at
             type:
               - 'null'
-              - 'string'
-            description: 'Date and time of creation'
+              - string
+            description: Created at from the Greenhouse v3 candidates record.
           - name: custom_fields
             type:
               - 'null'
-              - 'object'
-            description: 'Custom fields associated with the candidate'
-            properties:
-          - name: educations
-            type:
-              - 'null'
-              - 'array'
-            description: 'List of candidate''s educations'
+              - object
+            description: Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.
           - name: email_addresses
             type:
               - 'null'
-              - 'array'
-            description: 'Candidate''s email addresses'
-          - name: employments
-            type:
-              - 'null'
-              - 'array'
-            description: 'List of candidate''s employments'
+              - array
+            description: Email addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `work`, or `other`.
           - name: first_name
             type:
               - 'null'
-              - 'string'
-            description: 'Candidate''s first name'
+              - string
+            description: First name from the Greenhouse v3 candidates record.
           - name: id
             type:
               - 'null'
-              - 'integer'
-            description: 'Candidate''s ID'
-          - name: is_private
+              - integer
+            description: Id from the Greenhouse v3 candidates record.
+          - name: last_activity_at
             type:
               - 'null'
-              - 'boolean'
-            description: 'Indicates if the candidate''s data is private'
-          - name: keyed_custom_fields
-            type:
-              - 'null'
-              - 'object'
-            description: 'Keyed custom fields associated with the candidate'
-            properties:
-          - name: last_activity
-            type:
-              - 'null'
-              - 'string'
-            description: 'Details of the last activity related to the candidate'
+              - string
+            description: Timestamp of the most recent activity on any of the candidate's applications (notes, emails, stage changes, etc.), in ISO 8601.
           - name: last_name
             type:
               - 'null'
-              - 'string'
-            description: 'Candidate''s last name'
+              - string
+            description: Last name from the Greenhouse v3 candidates record.
+          - name: linked_user_ids
+            type:
+              - 'null'
+              - array
+            description: Ids of Greenhouse users linked to this candidate (employees represented by both a user record and a candidate record).
           - name: phone_numbers
             type:
               - 'null'
-              - 'array'
-            description: 'Candidate''s phone numbers'
-          - name: photo_url
+              - array
+            description: Phone numbers on the candidate's profile. Each entry pairs the `value` with a `type` such as `mobile`, `home`, `work`, `skype`,
+              or `other`.
+          - name: preferred_name
             type:
               - 'null'
-              - 'string'
-            description: 'URL of the candidate''s profile photo'
-          - name: recruiter
+              - string
+            description: Preferred or chosen name the candidate goes by, when different from their legal first name.
+          - name: private
             type:
               - 'null'
-              - 'string'
-            description: 'Recruiter assigned to the candidate'
+              - boolean
+            description: If true, the candidate is restricted to users with `View Private Candidates` access. Defaults to `false`.
           - name: social_media_addresses
             type:
               - 'null'
-              - 'array'
-            description: 'Candidate''s social media addresses'
+              - array
+            description: Social media handles or URLs on the candidate's profile. Social entries are untyped — only the `value` is returned.
           - name: tags
             type:
               - 'null'
-              - 'array'
-            description: 'Tags associated with the candidate'
+              - array
+            description: Candidate tag names applied to this candidate within your organization.
+          - name: time_zone
+            type:
+              - 'null'
+              - string
+            description: Candidate's time zone as a Rails-style identifier (for example `Eastern Time (US & Canada)`).
           - name: title
             type:
               - 'null'
-              - 'string'
-            description: 'Candidate''s title (e.g., Mr., Mrs., Dr.)'
+              - string
+            description: Candidate's current job title, as entered on their profile.
           - name: updated_at
             type:
               - 'null'
-              - 'string'
-            description: 'Date and time of last update'
+              - string
+            description: Updated at from the Greenhouse v3 candidates record.
           - name: website_addresses
             type:
               - 'null'
-              - 'array'
-            description: 'List of candidate''s website addresses'
+              - array
+            description: Personal websites or portfolio URLs on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`,
+              `company`, `portfolio`, `blog`, or `other`.
+
       - entity: departments
         x-airbyte-name: departments
         fields:
-          - name: child_department_external_ids
+          - name: created_at
             type:
               - 'null'
-              - 'array'
-            description: 'External IDs of child departments associated with this department.'
-          - name: child_ids
-            type:
-              - 'null'
-              - 'array'
-            description: 'Unique IDs of child departments associated with this department.'
+              - string
+            description: Created at from the Greenhouse v3 departments record.
           - name: external_id
             type:
               - 'null'
-              - 'string'
-            description: 'External ID of this department.'
+              - string
+            description: Partner-supplied identifier for the department, typically the matching id from an HRIS or other external system. Free-form string
+              and `null` when no external id has been set.
           - name: id
             type:
               - 'null'
-              - 'integer'
-            description: 'Unique ID of this department.'
+              - integer
+            description: Id from the Greenhouse v3 departments record.
           - name: name
             type:
               - 'null'
-              - 'string'
-            description: 'Name of the department.'
-          - name: parent_department_external_id
-            type:
-              - 'null'
-              - 'string'
-            description: 'External ID of the parent department of this department.'
+              - string
+            description: Display name of the department (e.g. `Engineering`, `Marketing`).
           - name: parent_id
             type:
               - 'null'
-              - 'integer'
-            description: 'Unique ID of the parent department of this department.'
+              - integer
+            description: Id of the parent department in the organization's department tree. `null` for top-level departments. References another `/v3/departments`
+              row.
+          - name: updated_at
+            type:
+              - 'null'
+              - string
+            description: Updated at from the Greenhouse v3 departments record.
+
       - entity: job_posts
         x-airbyte-name: job_posts
         suggested: true
@@ -403,157 +332,191 @@ info:
           - name: active
             type:
               - 'null'
-              - 'boolean'
-            description: 'Flag indicating if the job post is active or not.'
+              - boolean
+            description: If `true`, the post has not been deleted. Deleted posts are excluded by default; pass `active=false` on the list endpoint to retrieve
+              them.
           - name: content
             type:
               - 'null'
-              - 'string'
-            description: 'Content or description of the job post.'
+              - string
+            description: HTML body of the post shown to candidates on the job board. For internal posts this returns the `internal_content` instead. Sanitized
+              server-side — only a limited element/attribute allowlist (including `iframe`, `video`, `source`) survives. `null` while the post is still
+              being scaffolded.
             x-airbyte-semantic-search:
               content_type: html
               samples:
-                - { name: title, path: "/title" }
+                - name: title
+                  path: /title
                 - name: job_post_content
                   windowed: true
-                  sampling: { sample_type: whole, unit_label: job_post }
-              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+                  sampling:
+                    sample_type: whole
+                    unit_label: job_post
+              windowing:
+                context_max_chars: 2048
+                context_boundary: whole_unit
               embedding:
                 model: text-embedding-3-small
-                template: "{title}\n\n{job_post_content}"
+                template: '{title}
+
+
+                  {job_post_content}'
               metadata:
-                - { name: id, path: "/id", type: string }
-                - { name: updated_at, path: "/updated_at", type: string }
-                - { name: title, path: "/title", type: string }
-                - { name: job_id, path: "/job_id", type: string }
-                - { name: live, path: "/live", type: string }
-                - { name: internal, path: "/internal", type: string }
-                - { name: location, path: "/location.name", type: string }
-                - { name: first_published_at, path: "/first_published_at", type: string }
-                - { name: created_at, path: "/created_at", type: string }
+                - name: id
+                  path: /id
+                  type: string
+                - name: updated_at
+                  path: /updated_at
+                  type: string
+                - name: title
+                  path: /title
+                  type: string
+                - name: job_id
+                  path: /job_id
+                  type: string
+                - name: live
+                  path: /live
+                  type: string
+                - name: internal
+                  path: /internal
+                  type: string
+                - name: first_published_at
+                  path: /first_published_at
+                  type: string
+                - name: created_at
+                  path: /created_at
+                  type: string
           - name: created_at
             type:
               - 'null'
-              - 'string'
-            description: 'Date and time when the job post was created.'
+              - string
+            description: Created at from the Greenhouse v3 job posts record.
           - name: demographic_question_set_id
             type:
               - 'null'
-              - 'integer'
-            description: 'ID of the demographic question set associated with the job post.'
-          - name: external
+              - integer
+            description: Id of the demographic question set surfaced to candidates on this post for diversity, equity, and inclusion (DE&I) reporting. `null`
+              when the post does not collect demographic data.
+          - name: featured
             type:
               - 'null'
-              - 'boolean'
-            description: 'Flag indicating if the job post is external or not.'
+              - boolean
+            description: If `true`, the post is currently featured on the organization's internal job board and surfaces in the weekly internal-jobs email.
+              Only internal posts can be featured, and at most three can be featured at a time.
           - name: first_published_at
             type:
               - 'null'
-              - 'string'
-            description: 'Date and time when the job post was first published.'
+              - string
+            description: Timestamp the post first transitioned to `live`, in ISO 8601. `null` for posts that have never been published.
           - name: id
             type:
               - 'null'
-              - 'integer'
-            description: 'Unique identifier of the job post.'
+              - integer
+            description: Id from the Greenhouse v3 job posts record.
           - name: internal
             type:
               - 'null'
-              - 'boolean'
-            description: 'Flag indicating if the job post is internal or not.'
+              - boolean
+            description: If `true`, the post lives on an internal job board and is visible only to existing employees signed in to the internal board. If
+              `false`, the post is external and lives on a public-facing `job_board`. Set by the board the post is associated with at create time.
           - name: internal_content
             type:
               - 'null'
-              - 'string'
-            description: >-
-              The job post as written for the internal job board, present only when it differs
-              from the external one. Semantically searchable; HTML, same as `content`.
+              - string
+            description: HTML body shown on the internal job board when the post is also configured as internal. `null` for external-only posts. Same sanitization
+              rules as `content`.
             x-airbyte-semantic-search:
-              # Harvest defines this as "the text of the job post if posted to the internal job
-              # board, IF DIFFERENT than the external job board" -- so it is populated exactly
-              # when it is NOT a copy of `content`. Absent otherwise, which costs nothing: an
-              # empty windowed field yields zero chunks, zero rows and zero embedding calls.
-              # This is where internal-mobility detail lives (reporting line, band, team context)
-              # and it never appears in the candidate-facing post.
-              #
-              # A second annotated field on `job_posts` means the REST search path requires an
-              # explicit `semantic.field` for the entity -- it only defaults when exactly one is
-              # configured. That is free ONLY here: both fields land in the same unmerged PR, so
-              # no caller ever had the single-field default to lose. Adding it after merge would
-              # be a breaking query-contract change.
               content_type: html
               samples:
-                - { name: title, path: "/title" }
+                - name: title
+                  path: /title
                 - name: internal_job_post_content
                   windowed: true
-                  # Same reasoning as `content`: `whole` because job-post HTML carries no blank
-                  # lines, and the body must be the WINDOWED field because
-                  # `_resolve_scalar_samples` never calls `_decode` -- a scalar would embed raw
-                  # HTML and be hard-trimmed to ~1k chars with no sub-windowing.
-                  sampling: { sample_type: whole, unit_label: internal_job_post }
-              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+                  sampling:
+                    sample_type: whole
+                    unit_label: internal_job_post
+              windowing:
+                context_max_chars: 2048
+                context_boundary: whole_unit
               embedding:
                 model: text-embedding-3-small
-                template: "{title}\n\n{internal_job_post_content}"
-              # Same positional contract as `content`: [0] record key, [1] cursor, both resolved
-              # as physical raw columns by `_required_raw_columns`.
+                template: '{title}
+
+
+                  {internal_job_post_content}'
               metadata:
-                - { name: id, path: "/id", type: string }
-                - { name: updated_at, path: "/updated_at", type: string }
-                - { name: title, path: "/title", type: string }
-                - { name: job_id, path: "/job_id", type: string }
-                - { name: live, path: "/live", type: string }
-                - { name: internal, path: "/internal", type: string }
-                - { name: location, path: "/location.name", type: string }
-                - { name: first_published_at, path: "/first_published_at", type: string }
-                - { name: created_at, path: "/created_at", type: string }
+                - name: id
+                  path: /id
+                  type: string
+                - name: updated_at
+                  path: /updated_at
+                  type: string
+                - name: title
+                  path: /title
+                  type: string
+                - name: job_id
+                  path: /job_id
+                  type: string
+                - name: live
+                  path: /live
+                  type: string
+                - name: internal
+                  path: /internal
+                  type: string
+                - name: first_published_at
+                  path: /first_published_at
+                  type: string
+                - name: created_at
+                  path: /created_at
+                  type: string
+          - name: job_board_id
+            type:
+              - 'null'
+              - integer
+            description: Id of the `job_board` this post is published to. Resolves to either an external (careers site, syndicated board) or internal job
+              board depending on `internal`. Each post belongs to exactly one board at a time.
           - name: job_id
             type:
               - 'null'
-              - 'integer'
-            description: 'ID of the job associated with the job post.'
+              - integer
+            description: Id of the parent job (requisition) this post belongs to. A single job can have multiple posts; the job is the source of truth for
+              the hiring team, openings, and interview plan.
+          - name: language
+            type:
+              - 'null'
+              - string
+            description: ISO 639-1 locale of the post, used to render the candidate-facing application form in the matching language (e.g. `en`, `fr`, `ja`).
+              `null` when no locale has been chosen.
           - name: live
             type:
               - 'null'
-              - 'boolean'
-            description: 'Flag indicating if the job post is live or not.'
-          - name: location
+              - boolean
+            description: If `true`, the post is published (`job_application_status` is `live`) and its job board is also live. A post on an unpublished
+              board is **not** `live` — its `public_url` returns a 404 until the board is enabled.
+          - name: public_url
             type:
               - 'null'
-              - 'object'
-            description: 'Details about the job post location.'
-            properties:
-              id:
-                type:
-                  - 'null'
-                  - 'integer'
-              job_post_location_type:
-                type:
-                  - 'null'
-                  - 'object'
-              name:
-                type:
-                  - 'null'
-                  - 'string'
-              office_id:
-                type:
-                  - 'null'
-                  - 'integer'
+              - string
+            description: Canonical public URL of the post on its job board, including the `gh_jid` tracking parameter. `null` when the post has no associated
+              job board or the board has no public URL configured.
           - name: questions
             type:
               - 'null'
-              - 'array'
-            description: 'List of questions related to the job post.'
+              - array
+            description: Application form questions presented to candidates on this post, including default questions (resume, cover letter, basic info)
+              and any custom questions configured by the hiring team. Ordered as they appear on the form.
           - name: title
             type:
               - 'null'
-              - 'string'
-            description: 'Title or headline of the job post.'
+              - string
+            description: Public-facing title shown to candidates on the job board (e.g. `Senior Backend Engineer, Remote`). Distinct from the internal `job.name`
+              — a single job can have several posts with different titles, one per board, language, or geography.
           - name: updated_at
             type:
               - 'null'
-              - 'string'
-            description: 'Date and time when the job post was last updated.'
+              - string
+            description: Updated at from the Greenhouse v3 job posts record.
+
       - entity: jobs
         x-airbyte-name: jobs
         suggested: true
@@ -561,156 +524,131 @@ info:
           - name: closed_at
             type:
               - 'null'
-              - 'string'
-            description: 'The date and time the job was closed'
+              - string
+            description: Timestamp the job most recently transitioned to `closed`, in ISO 8601. `null` for jobs that are still `open` or `draft`.
           - name: confidential
             type:
               - 'null'
-              - 'boolean'
-            description: 'Indicates if the job details are confidential'
+              - boolean
+            description: If `true`, the job is restricted to users explicitly granted access on the Hiring Team. The legacy Confidential Jobs feature has
+              been sunset — this flag cannot be set on new jobs and is preserved for jobs that already had it enabled.
           - name: copied_from_id
             type:
               - 'null'
-              - 'integer'
-            description: 'The ID of the job from which this job was copied'
+              - integer
+            description: Id of the job (typically a template) this job was copied from on creation. `null` when the job was not created from another job.
           - name: created_at
             type:
               - 'null'
-              - 'string'
-            description: 'The date and time the job was created'
+              - string
+            description: Created at from the Greenhouse v3 jobs record.
           - name: custom_fields
             type:
               - 'null'
-              - 'object'
-            description: 'Custom fields related to the job'
-            properties:
-              employment_type:
-                type:
-                  - 'null'
-                  - 'string'
-          - name: departments
+              - object
+            description: Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.
+          - name: department_id
             type:
               - 'null'
-              - 'array'
-            description: 'Departments associated with the job'
-          - name: hiring_team
-            type:
-              - 'null'
-              - 'object'
-            description: 'Members of the hiring team for the job'
-            properties:
-              coordinators:
-                type:
-                  - 'null'
-                  - 'array'
-              hiring_managers:
-                type:
-                  - 'null'
-                  - 'array'
-              recruiters:
-                type:
-                  - 'null'
-                  - 'array'
-              sourcers:
-                type:
-                  - 'null'
-                  - 'array'
+              - integer
+            description: Id of the department this job is assigned to. `null` when no department is set.
           - name: id
             type:
               - 'null'
-              - 'integer'
-            description: 'Unique ID of the job'
+              - integer
+            description: Id from the Greenhouse v3 jobs record.
           - name: is_template
             type:
               - 'null'
-              - 'boolean'
-            description: 'Indicates if the job is a template'
-          - name: keyed_custom_fields
-            type:
-              - 'null'
-              - 'object'
-            description: 'Keyed custom fields related to the job'
-            properties:
-              employment_type:
-                type:
-                  - 'null'
-                  - 'object'
+              - boolean
+            description: If `true`, this job is a template used as the source for new jobs rather than a real requisition. Templates do not accept applications;
+              reference them via `template_job_id` on `POST /v3/jobs`.
           - name: name
             type:
               - 'null'
-              - 'string'
-            description: 'Name of the job'
+              - string
+            description: Internal job title shown to the hiring team in Greenhouse (e.g. `Senior Backend Engineer`). Distinct from the external-facing title
+              on each `job_post`.
           - name: notes
             type:
               - 'null'
-              - 'string'
-            description: 'Additional notes or comments about the job'
+              - string
+            description: Internal HTML notes about the job, surfaced to the hiring team in the Greenhouse UI. Not exposed on public job posts.
             x-airbyte-semantic-search:
-              # Harvest documents `notes` as "Notes on the hiring plan" and returns it as HTML,
-              # same as `job_posts.content` ("notes": "<p>Resistance to electro-magnetic radiation
-              # a plus!</p>"), so it needs the same decoder -- under `plaintext` the markup lands
-              # in the vector. This is the recruiter-facing counterpart to the candidate-facing
-              # job post: it holds the hiring plan, the sourcing strategy and the must-haves, none
-              # of which appear anywhere else in the schema.
               content_type: html
               samples:
-                - { name: name, path: "/name" }
+                - name: name
+                  path: /name
                 - name: job_notes
                   windowed: true
-                  # `notes` is nullable, so a job without one produces zero chunks and is not
-                  # findable by this field. That is the same trade the shipped `job_posts.content`
-                  # annotation makes -- the alternative, windowing `name` and carrying `notes` as
-                  # a scalar, is strictly worse: `_resolve_scalar_samples` never calls `_decode`,
-                  # so the HTML would go into the vector raw and be hard-trimmed with no
-                  # sub-windowing.
-                  sampling: { sample_type: whole, unit_label: job }
-              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+                  sampling:
+                    sample_type: whole
+                    unit_label: job
+              windowing:
+                context_max_chars: 2048
+                context_boundary: whole_unit
               embedding:
                 model: text-embedding-3-small
-                template: "{name}\n\n{job_notes}"
-              # Entry [0] is the record key and entry [1] is the incremental cursor, taken
-              # positionally. `name` is re-declared here because the windowed column is EXCLUDEd
-              # from a hit's base-row projection -- without it a hit carries no job name.
+                template: '{name}
+
+
+                  {job_notes}'
               metadata:
-                - { name: id, path: "/id", type: string }
-                - { name: updated_at, path: "/updated_at", type: string }
-                - { name: name, path: "/name", type: string }
-                - { name: status, path: "/status", type: string }
-                - { name: requisition_id, path: "/requisition_id", type: string }
-                - { name: confidential, path: "/confidential", type: string }
-                - { name: opened_at, path: "/opened_at", type: string }
-                - { name: closed_at, path: "/closed_at", type: string }
-                - { name: created_at, path: "/created_at", type: string }
-          - name: offices
+                - name: id
+                  path: /id
+                  type: string
+                - name: updated_at
+                  path: /updated_at
+                  type: string
+                - name: name
+                  path: /name
+                  type: string
+                - name: status
+                  path: /status
+                  type: string
+                - name: requisition_id
+                  path: /requisition_id
+                  type: string
+                - name: confidential
+                  path: /confidential
+                  type: string
+                - name: opened_at
+                  path: /opened_at
+                  type: string
+                - name: closed_at
+                  path: /closed_at
+                  type: string
+                - name: created_at
+                  path: /created_at
+                  type: string
+          - name: office_ids
             type:
               - 'null'
-              - 'array'
-            description: 'Offices associated with the job'
+              - array
+            description: Ids of the offices this job is assigned to. A job can span multiple offices; empty array or `null` when no offices are set.
           - name: opened_at
             type:
               - 'null'
-              - 'string'
-            description: 'The date and time the job was opened'
-          - name: openings
-            type:
-              - 'null'
-              - 'array'
-            description: 'Openings associated with the job'
+              - string
+            description: Timestamp the job first transitioned to `open`, in ISO 8601. `null` while the job is still in `draft`.
           - name: requisition_id
             type:
               - 'null'
-              - 'string'
-            description: 'ID associated with the job requisition'
+              - string
+            description: Partner-supplied external identifier for the requisition (e.g. an HRIS or ATS code). Free-form string, not unique across the organization,
+              and `null` when no external id has been set.
           - name: status
             type:
               - 'null'
-              - 'string'
-            description: 'Current status of the job'
+              - string
+            description: Lifecycle status of the job. `draft` while it is being scaffolded, `open` once it has at least one open opening, and `closed` after
+              every opening is closed. A job moves to `closed` automatically when its last open opening is closed via `PATCH /v3/openings/{id}`.
           - name: updated_at
             type:
               - 'null'
-              - 'string'
-            description: 'The date and time the job was last updated'
+              - string
+            description: Updated at from the Greenhouse v3 jobs record.
+
       - entity: offers
         x-airbyte-name: offers
         suggested: true
@@ -718,1114 +656,1061 @@ info:
           - name: application_id
             type:
               - 'null'
-              - 'integer'
-            description: 'Unique identifier for the application associated with the offer'
+              - integer
+            description: Id of the application this offer is extended on. Every offer belongs to exactly one application; the offer is voided if the application
+              is rejected or deleted.
           - name: candidate_id
             type:
               - 'null'
-              - 'integer'
-            description: 'Unique identifier for the candidate associated with the offer'
+              - integer
+            description: Id of the candidate (person) receiving this offer. Resolved through the offer's application.
           - name: created_at
             type:
               - 'null'
-              - 'string'
-            description: 'Timestamp indicating when the offer was created'
+              - string
+            description: Created at from the Greenhouse v3 offers record.
           - name: custom_fields
             type:
               - 'null'
-              - 'object'
-            description: 'Additional custom fields related to the offer'
-            properties:
-              employment_type:
-                type:
-                  - 'null'
-                  - 'string'
+              - object
+            description: Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.
           - name: id
             type:
               - 'null'
-              - 'integer'
-            description: 'Unique identifier for the offer'
+              - integer
+            description: Id from the Greenhouse v3 offers record.
           - name: job_id
             type:
               - 'null'
-              - 'integer'
-            description: 'Unique identifier for the job associated with the offer'
-          - name: keyed_custom_fields
+              - integer
+            description: Id of the job this offer's application is on.
+          - name: opening_id
             type:
               - 'null'
-              - 'object'
-            description: 'Keyed custom fields associated with the offer'
-            properties:
-              employment_type:
-                type:
-                  - 'null'
-                  - 'object'
-          - name: opening
-            type:
-              - 'null'
-              - 'object'
-            description: 'Details about the job opening'
-            properties:
-              application_id:
-                type:
-                  - 'null'
-                  - 'integer'
-              close_reason:
-                type:
-                  - 'null'
-                  - 'string'
-              closed_at:
-                type:
-                  - 'null'
-                  - 'string'
-              id:
-                type:
-                  - 'null'
-                  - 'integer'
-              opened_at:
-                type:
-                  - 'null'
-                  - 'string'
-              opening_id:
-                type:
-                  - 'null'
-                  - 'string'
-              status:
-                type:
-                  - 'null'
-                  - 'string'
+              - integer
+            description: Id of the specific opening this offer is being extended for. `null` when the offer has not yet been linked to an opening.
           - name: resolved_at
             type:
               - 'null'
-              - 'string'
-            description: 'Timestamp indicating when the offer was resolved'
-          - name: sent_at
+              - string
+            description: Timestamp the offer was resolved (`Accepted` or `Rejected`), in ISO 8601. Date updates submitted through `PATCH /v3/offers/{id}`
+              are normalized to noon UTC on the supplied date. `null` while the offer is still `Created` or has been superseded as `Deprecated` without
+              a resolution.
+          - name: sent_on
             type:
               - 'null'
-              - 'string'
-            description: 'Timestamp indicating when the offer was sent'
-          - name: starts_at
+              - string
+            description: Date the offer was sent to the candidate, in ISO 8601 (YYYY-MM-DD). `null` until the offer has been sent.
+          - name: starts_on
             type:
               - 'null'
-              - 'string'
-            description: 'Timestamp indicating when the offer starts'
+              - string
+            description: Candidate's proposed start date, in ISO 8601 (YYYY-MM-DD). `null` when no start date has been set on the offer.
           - name: status
             type:
               - 'null'
-              - 'string'
-            description: 'Status of the offer'
+              - string
+            description: Lifecycle status of the offer. `Created` for offers still being drafted or pending approval, `Accepted` once the candidate accepts,
+              `Rejected` if declined or withdrawn, and `Deprecated` for superseded prior versions (a new offer version replaces an earlier one with this
+              status).
           - name: updated_at
             type:
               - 'null'
-              - 'string'
-            description: 'Timestamp indicating when the offer was last updated'
+              - string
+            description: Updated at from the Greenhouse v3 offers record.
           - name: version
             type:
               - 'null'
-              - 'integer'
-            description: 'Version of the offer data'
+              - integer
+            description: Revision number of this offer within its application. Greenhouse creates a new offer row (incrementing `version`) whenever a tracked
+              field on an existing offer changes — typically `starts_on`, `opening_id`, or a custom field configured to trigger a new version. Pair with
+              `current_only=true` to filter the list endpoint down to the latest version per application.
+
       - entity: offices
         x-airbyte-name: offices
-        fields:
-          - name: child_ids
-            type:
-              - 'null'
-              - 'array'
-            description: 'IDs of child offices associated with this office'
-          - name: child_office_external_ids
-            type:
-              - 'null'
-              - 'array'
-            description: 'External IDs of child offices associated with this office'
-          - name: external_id
-            type:
-              - 'null'
-              - 'string'
-            description: 'Unique identifier for this office in the external system'
-          - name: id
-            type:
-              - 'null'
-              - 'integer'
-            description: 'Unique identifier for this office in the API system'
-          - name: location
-            type:
-              - 'null'
-              - 'object'
-            description: 'Location details of this office'
-            properties:
-              name:
-                type:
-                  - 'null'
-                  - 'string'
-          - name: name
-            type:
-              - 'null'
-              - 'string'
-            description: 'Name of the office'
-          - name: parent_id
-            type:
-              - 'null'
-              - 'integer'
-            description: 'ID of the parent office, if this office is a branch office'
-          - name: parent_office_external_id
-            type:
-              - 'null'
-              - 'string'
-            description: 'External ID of the parent office in the external system'
-          - name: primary_contact_user_id
-            type:
-              - 'null'
-              - 'integer'
-            description: 'User ID of the primary contact person for this office'
-      - entity: sources
-        x-airbyte-name: sources
-        fields:
-          - name: id
-            type:
-              - 'null'
-              - 'integer'
-            description: 'The unique identifier for the source.'
-          - name: name
-            type:
-              - 'null'
-              - 'string'
-            description: 'The name of the source.'
-          - name: type
-            type:
-              - 'null'
-              - 'object'
-            description: 'Type of the data source'
-            properties:
-              id:
-                type:
-                  - 'null'
-                  - 'integer'
-              name:
-                type:
-                  - 'null'
-                  - 'string'
-      - entity: users
-        x-airbyte-name: users
         fields:
           - name: created_at
             type:
               - 'null'
-              - 'string'
-            description: 'The date and time when the user account was created.'
-          - name: departments
+              - string
+            description: Created at from the Greenhouse v3 offices record.
+          - name: external_id
             type:
               - 'null'
-              - 'array'
-            description: 'List of departments associated with users'
-          - name: disabled
-            type:
-              - 'null'
-              - 'boolean'
-            description: 'Indicates whether the user account is disabled.'
-          - name: emails
-            type:
-              - 'null'
-              - 'array'
-            description: 'Email addresses of the users'
-          - name: employee_id
-            type:
-              - 'null'
-              - 'string'
-            description: 'Employee identifier for the user.'
-          - name: first_name
-            type:
-              - 'null'
-              - 'string'
-            description: 'The first name of the user.'
+              - string
+            description: Stable identifier supplied by the customer or HRIS for cross-system reconciliation. `null` when no external id has been set. Available
+              when the `org_structure_external_id` product flag is enabled.
           - name: id
             type:
               - 'null'
-              - 'integer'
-            description: 'Unique identifier for the user.'
-          - name: last_name
+              - integer
+            description: Id from the Greenhouse v3 offices record.
+          - name: location
             type:
               - 'null'
-              - 'string'
-            description: 'The last name of the user.'
-          - name: linked_candidate_ids
-            type:
-              - 'null'
-              - 'array'
-            description: 'IDs of candidates linked to the user.'
+              - string
+            description: Free-form physical location string for the office (e.g. `New York, NY, USA`). `null` for offices that have no location set, including
+              most remote offices.
           - name: name
             type:
               - 'null'
-              - 'string'
-            description: 'The full name of the user.'
-          - name: offices
+              - string
+            description: Display name of the office (e.g. `San Francisco`, `Remote (US)`). Unique among active offices in the same organization.
+          - name: parent_id
             type:
               - 'null'
-              - 'array'
-            description: 'List of office locations where users are based'
-          - name: primary_email_address
+              - integer
+            description: Id of the parent office when offices are organized hierarchically. `null` for top-level offices. References another `/v3/offices`
+              row in the same organization.
+          - name: primary_in_house_contact_user_id
             type:
               - 'null'
-              - 'string'
-            description: 'The primary email address of the user.'
-          - name: site_admin
-            type:
-              - 'null'
-              - 'boolean'
-            description: 'Indicates whether the user is a site administrator.'
+              - integer
+            description: Id of the Greenhouse user designated as the office's primary internal contact, typically the local recruiting lead. References
+              a `/v3/users` row. `null` when no contact has been assigned.
           - name: updated_at
             type:
               - 'null'
-              - 'string'
-            description: 'The date and time when the user account was last updated.'
+              - string
+            description: Updated at from the Greenhouse v3 offices record.
+
+      - entity: sources
+        x-airbyte-name: sources
+        fields:
+          - name: created_at
+            type:
+              - 'null'
+              - string
+            description: Created at from the Greenhouse v3 sources record.
+          - name: id
+            type:
+              - 'null'
+              - integer
+            description: Id from the Greenhouse v3 sources record.
+          - name: name
+            type:
+              - 'null'
+              - string
+            description: Display name of the source as recruiters see it in Greenhouse (e.g. `LinkedIn (Prospecting)`, `Indeed`, `Referral`, `Internal Applicant`,
+              or a custom agency name). For organization-specific sources this is the label the org configured; for global Greenhouse sources it is the
+              standard public name.
+          - name: type
+            type:
+              - 'null'
+              - object
+            description: The sourcing strategy this source rolls up to — the broader category used for reporting. Sources are grouped under sourcing strategies
+              such as `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`, `Company marketing`, `In person event`, `MyGreenhouse`,
+              and `Other`. Use the strategy when aggregating candidate volume by channel; use the source itself when reporting on a specific channel within
+              that category.
+            properties:
+              id:
+                type:
+                  - 'null'
+                  - integer
+              name:
+                type:
+                  - 'null'
+                  - string
+          - name: updated_at
+            type:
+              - 'null'
+              - string
+            description: Updated at from the Greenhouse v3 sources record.
+
+      - entity: users
+        x-airbyte-name: users
+        fields:
+          - name: agency_id
+            type:
+              - 'null'
+              - integer
+            description: Id of the staffing agency this user belongs to, when the user is an external agency recruiter rather than an employee of your organization.
+              `null` for in-house users.
+          - name: created_at
+            type:
+              - 'null'
+              - string
+            description: Created at from the Greenhouse v3 users record.
+          - name: custom_fields
+            type:
+              - 'null'
+              - object
+            description: Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.
+          - name: deactivated
+            type:
+              - 'null'
+              - boolean
+            description: Whether the user has been deactivated. Deactivated users cannot sign in or be assigned to new jobs, but their historical activity
+              (notes, scorecards, emails) is preserved. Toggle via `POST /v3/users/{id}/deactivate` and `POST /v3/users/{id}/activate`.
+          - name: department_ids
+            type:
+              - 'null'
+              - array
+            description: Ids of the departments this user is assigned to. Used to scope future job permissions and to filter the user list by department.
+              Empty when the user is not pinned to any department.
+          - name: emails
+            type:
+              - 'null'
+              - array
+            description: All email addresses on the user's account, including the primary address and any additional verified addresses.
+          - name: employee_id
+            type:
+              - 'null'
+              - string
+            description: Partner-supplied external employee identifier, typically the user's HRIS or payroll id. Free-form string; not unique across organizations
+              and `null` when no employee id has been set.
+          - name: first_name
+            type:
+              - 'null'
+              - string
+            description: First name from the Greenhouse v3 users record.
+          - name: id
+            type:
+              - 'null'
+              - integer
+            description: Id from the Greenhouse v3 users record.
+          - name: interviewer_tags
+            type:
+              - 'null'
+              - array
+            description: Interviewer tags applied to this user — the labeled skill or panel groupings (e.g. `Senior Engineer`, `Bar Raiser`) used to suggest
+              qualified interviewers when building an interview plan. Each entry pairs the tag's `id` with its `name`.
+          - name: job_title
+            type:
+              - 'null'
+              - string
+            description: Free-form job title set on the user's Greenhouse profile (e.g. `Senior Recruiter`). Not synchronized with any HRIS title.
+          - name: last_name
+            type:
+              - 'null'
+              - string
+            description: Last name from the Greenhouse v3 users record.
+          - name: linked_candidate_ids
+            type:
+              - 'null'
+              - array
+            description: Ids of candidate records linked to this user. Populated when an employee is represented by both a user record (for Greenhouse access)
+              and a candidate record (for past or internal applications).
+          - name: name
+            type:
+              - 'null'
+              - string
+            description: Concatenation of `first_name` and `last_name` rendered as a single display string. Provided for convenience; partners that need
+              either component should read `first_name`/`last_name` directly.
+          - name: office_ids
+            type:
+              - 'null'
+              - array
+            description: Ids of the offices this user is assigned to. Used to scope future job permissions and to filter the user list by office. Empty
+              when the user is not pinned to any office.
+          - name: primary_email
+            type:
+              - 'null'
+              - string
+            description: Primary email address on the user's account. Sign-in identifier and the address Greenhouse uses for outbound mail; additional verified
+              addresses are not surfaced here. Service accounts (integration/ISU users) have no email and are excluded from this endpoint by default; when
+              included via `show_service_accounts=true`, their `primary_email` is an empty string.
+          - name: site_admin
+            type:
+              - 'null'
+              - boolean
+            description: Whether the user holds the Site Admin role. Site admins have unrestricted access to every non-confidential job and to organization-level
+              settings. Demote a site admin to a Basic user with `POST /v3/users/{id}/revoke_permissions`.
+          - name: updated_at
+            type:
+              - 'null'
+              - string
+            description: Updated at from the Greenhouse v3 users record.
 
 servers:
-  - url: https://harvest.greenhouse.io/v1
-    description: Greenhouse Harvest API server
+  - url: https://harvest.greenhouse.io/v3
+    description: Greenhouse Harvest v3 API server
 
 security:
-  - basicAuth: []
+  - oauth2: []
 
 paths:
-  "/candidates":
-    get:
-      summary: List candidates
-      description: Returns a paginated list of all candidates in the organization
-      operationId: listCandidates
-      x-airbyte-entity: candidates
-      x-airbyte-action: list
-      x-airbyte-preferred-for-check: true
-      x-airbyte-meta-extractor:
-        next: "@link.next"
-      parameters:
-        - name: per_page
-          in: query
-          description: Number of items to return per page (max 500)
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 500
-            default: 100
-        - name: page
-          in: query
-          description: Page number for pagination
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-      responses:
-        "200":
-          description: List of candidates
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Candidate"
-        "401":
-          description: Unauthorized
-        "422":
-          description: Unprocessable Entity
-
-  "/candidates/{id}":
-    get:
-      summary: Get a candidate
-      description: Get a single candidate by ID
-      operationId: getCandidate
-      x-airbyte-entity: candidates
-      x-airbyte-action: get
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Candidate ID
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Candidate object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Candidate"
-        "404":
-          description: Candidate not found
-        "401":
-          description: Unauthorized
-
-  "/applications":
+  /applications:
     get:
       summary: List applications
-      description: Returns a paginated list of all applications
-      operationId: listApplications
+      description: Returns a cursor-paginated list of applications.
+      operationId: listApplication
       x-airbyte-entity: applications
       x-airbyte-action: list
       x-airbyte-meta-extractor:
-        next: "@link.next"
+        next: '@link.next'
       parameters:
+        - name: cursor
+          in: query
+          required: false
+          description: Cursor from the previous response Link header. Do not combine with any other parameter.
+          schema:
+            type: string
         - name: per_page
           in: query
-          description: Number of items to return per page (max 500)
+          required: false
+          description: Number of records to return on the first page.
           schema:
             type: integer
             minimum: 1
             maximum: 500
-            default: 100
-        - name: page
+            default: 500
+        - name: ids
           in: query
-          description: Page number for pagination
+          required: false
+          description: Return only records with these IDs (maximum 50).
           schema:
-            type: integer
-            minimum: 1
-            default: 1
-        - name: created_before
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+        - name: updated_at
           in: query
-          description: Filter by applications created before this timestamp
-          schema:
-            type: string
-            format: date-time
-        - name: created_after
-          in: query
-          description: Filter by applications created after this timestamp
-          schema:
-            type: string
-            format: date-time
-        - name: last_activity_after
-          in: query
-          description: Filter by applications with activity after this timestamp
+          required: false
+          description: Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.
           schema:
             type: string
-            format: date-time
-        - name: job_id
-          in: query
-          description: Filter by job ID
-          schema:
-            type: integer
-        - name: status
-          in: query
-          description: Filter by application status
-          schema:
-            type: string
-            enum: [active, rejected, hired]
       responses:
-        "200":
+        '200':
           description: List of applications
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Application"
-        "401":
+                  $ref: '#/components/schemas/Application'
+        '401':
           description: Unauthorized
-        "422":
-          description: Unprocessable Entity
-
-  "/applications/{id}":
+        '403':
+          description: Missing OAuth scope or authorizing user is not a Site Admin
+        '422':
+          description: Invalid cursor or query parameter combination
+  /candidates:
     get:
-      summary: Get an application
-      description: Get a single application by ID
-      operationId: getApplication
-      x-airbyte-entity: applications
-      x-airbyte-action: get
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Application ID
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Application object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Application"
-        "404":
-          description: Application not found
-        "401":
-          description: Unauthorized
-
-  "/jobs":
-    get:
-      summary: List jobs
-      description: Returns a paginated list of all jobs in the organization
-      operationId: listJobs
-      x-airbyte-entity: jobs
+      summary: List candidates
+      description: Returns a cursor-paginated list of candidates.
+      operationId: listCandidate
+      x-airbyte-entity: candidates
       x-airbyte-action: list
       x-airbyte-meta-extractor:
-        next: "@link.next"
+        next: '@link.next'
       parameters:
+        - name: cursor
+          in: query
+          required: false
+          description: Cursor from the previous response Link header. Do not combine with any other parameter.
+          schema:
+            type: string
         - name: per_page
           in: query
-          description: Number of items to return per page (max 500)
+          required: false
+          description: Number of records to return on the first page.
           schema:
             type: integer
             minimum: 1
             maximum: 500
-            default: 100
-        - name: page
+            default: 500
+        - name: ids
           in: query
-          description: Page number for pagination
+          required: false
+          description: Return only records with these IDs (maximum 50).
           schema:
-            type: integer
-            minimum: 1
-            default: 1
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+        - name: updated_at
+          in: query
+          required: false
+          description: Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.
+          schema:
+            type: string
       responses:
-        "200":
-          description: List of jobs
+        '200':
+          description: List of candidates
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Job"
-        "401":
+                  $ref: '#/components/schemas/Candidate'
+        '401':
           description: Unauthorized
-        "422":
-          description: Unprocessable Entity
-
-  "/jobs/{id}":
-    get:
-      summary: Get a job
-      description: Get a single job by ID
-      operationId: getJob
-      x-airbyte-entity: jobs
-      x-airbyte-action: get
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Job ID
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Job object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Job"
-        "404":
-          description: Job not found
-        "401":
-          description: Unauthorized
-
-  # ============ OFFERS ============
-  "/offers":
-    get:
-      summary: List offers
-      description: Returns a paginated list of all offers
-      operationId: listOffers
-      x-airbyte-entity: offers
-      x-airbyte-action: list
-      x-airbyte-meta-extractor:
-        next: "@link.next"
-      parameters:
-        - name: per_page
-          in: query
-          description: Number of items to return per page (max 500)
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 500
-            default: 100
-        - name: page
-          in: query
-          description: Page number for pagination
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-        - name: created_before
-          in: query
-          description: Filter by offers created before this timestamp
-          schema:
-            type: string
-            format: date-time
-        - name: created_after
-          in: query
-          description: Filter by offers created after this timestamp
-          schema:
-            type: string
-            format: date-time
-        - name: resolved_after
-          in: query
-          description: Filter by offers resolved after this timestamp
-          schema:
-            type: string
-            format: date-time
-      responses:
-        "200":
-          description: List of offers
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Offer"
-        "401":
-          description: Unauthorized
-
-  "/offers/{id}":
-    get:
-      summary: Get an offer
-      description: Get a single offer by ID
-      operationId: getOffer
-      x-airbyte-entity: offers
-      x-airbyte-action: get
-      x-airbyte-untested: true
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Offer ID
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Offer object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Offer"
-        "404":
-          description: Offer not found
-        "401":
-          description: Unauthorized
-
-  # ============ USERS ============
-  "/users":
-    get:
-      summary: List users
-      description: Returns a paginated list of all users
-      operationId: listUsers
-      x-airbyte-entity: users
-      x-airbyte-action: list
-      x-airbyte-meta-extractor:
-        next: "@link.next"
-      parameters:
-        - name: per_page
-          in: query
-          description: Number of items to return per page (max 500)
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 500
-            default: 100
-        - name: page
-          in: query
-          description: Page number for pagination
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-        - name: created_before
-          in: query
-          description: Filter by users created before this timestamp
-          schema:
-            type: string
-            format: date-time
-        - name: created_after
-          in: query
-          description: Filter by users created after this timestamp
-          schema:
-            type: string
-            format: date-time
-        - name: updated_before
-          in: query
-          description: Filter by users updated before this timestamp
-          schema:
-            type: string
-            format: date-time
-        - name: updated_after
-          in: query
-          description: Filter by users updated after this timestamp
-          schema:
-            type: string
-            format: date-time
-      responses:
-        "200":
-          description: List of users
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
-        "401":
-          description: Unauthorized
-
-  "/users/{id}":
-    get:
-      summary: Get a user
-      description: Get a single user by ID
-      operationId: getUser
-      x-airbyte-entity: users
-      x-airbyte-action: get
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: User ID
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: User object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "404":
-          description: User not found
-        "401":
-          description: Unauthorized
-
-  # ============ DEPARTMENTS ============
-  "/departments":
+        '403':
+          description: Missing OAuth scope or authorizing user is not a Site Admin
+        '422':
+          description: Invalid cursor or query parameter combination
+      x-airbyte-preferred-for-check: true
+  /departments:
     get:
       summary: List departments
-      description: Returns a paginated list of all departments
-      operationId: listDepartments
+      description: Returns a cursor-paginated list of departments.
+      operationId: listDepartment
       x-airbyte-entity: departments
       x-airbyte-action: list
       x-airbyte-meta-extractor:
-        next: "@link.next"
+        next: '@link.next'
       parameters:
+        - name: cursor
+          in: query
+          required: false
+          description: Cursor from the previous response Link header. Do not combine with any other parameter.
+          schema:
+            type: string
         - name: per_page
           in: query
-          description: Number of items to return per page (max 500)
+          required: false
+          description: Number of records to return on the first page.
           schema:
             type: integer
             minimum: 1
             maximum: 500
-            default: 100
-        - name: page
+            default: 500
+        - name: ids
           in: query
-          description: Page number for pagination
+          required: false
+          description: Return only records with these IDs (maximum 50).
           schema:
-            type: integer
-            minimum: 1
-            default: 1
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
       responses:
-        "200":
+        '200':
           description: List of departments
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Department"
-        "401":
+                  $ref: '#/components/schemas/Department'
+        '401':
           description: Unauthorized
-
-  "/departments/{id}":
+        '403':
+          description: Missing OAuth scope or authorizing user is not a Site Admin
+        '422':
+          description: Invalid cursor or query parameter combination
+  /interviews:
     get:
-      summary: Get a department
-      description: Get a single department by ID
-      operationId: getDepartment
-      x-airbyte-entity: departments
-      x-airbyte-action: get
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Department ID
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Department object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Department"
-        "404":
-          description: Department not found
-        "401":
-          description: Unauthorized
-
-  # ============ OFFICES ============
-  "/offices":
-    get:
-      summary: List offices
-      description: Returns a paginated list of all offices
-      operationId: listOffices
-      x-airbyte-entity: offices
+      summary: List interviews
+      description: Returns a cursor-paginated list of interviews.
+      operationId: listInterview
+      x-airbyte-entity: interviews
       x-airbyte-action: list
       x-airbyte-meta-extractor:
-        next: "@link.next"
+        next: '@link.next'
       parameters:
+        - name: cursor
+          in: query
+          required: false
+          description: Cursor from the previous response Link header. Do not combine with any other parameter.
+          schema:
+            type: string
         - name: per_page
           in: query
-          description: Number of items to return per page (max 500)
+          required: false
+          description: Number of records to return on the first page.
           schema:
             type: integer
             minimum: 1
             maximum: 500
-            default: 100
-        - name: page
+            default: 500
+        - name: ids
           in: query
-          description: Page number for pagination
+          required: false
+          description: Return only records with these IDs (maximum 50).
           schema:
-            type: integer
-            minimum: 1
-            default: 1
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+        - name: updated_at
+          in: query
+          required: false
+          description: Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.
+          schema:
+            type: string
       responses:
-        "200":
-          description: List of offices
+        '200':
+          description: List of interviews
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Office"
-        "401":
+                  $ref: '#/components/schemas/Interview'
+        '401':
           description: Unauthorized
-
-  "/offices/{id}":
-    get:
-      summary: Get an office
-      description: Get a single office by ID
-      operationId: getOffice
-      x-airbyte-entity: offices
-      x-airbyte-action: get
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Office ID
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Office object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Office"
-        "404":
-          description: Office not found
-        "401":
-          description: Unauthorized
-
-  # ============ JOB POSTS ============
-  "/job_posts":
+        '403':
+          description: Missing OAuth scope or authorizing user is not a Site Admin
+        '422':
+          description: Invalid cursor or query parameter combination
+  /job_posts:
     get:
       summary: List job posts
-      description: Returns a paginated list of all job posts
-      operationId: listJobPosts
+      description: Returns a cursor-paginated list of job posts.
+      operationId: listJobPost
       x-airbyte-entity: job_posts
       x-airbyte-action: list
       x-airbyte-meta-extractor:
-        next: "@link.next"
+        next: '@link.next'
       parameters:
+        - name: cursor
+          in: query
+          required: false
+          description: Cursor from the previous response Link header. Do not combine with any other parameter.
+          schema:
+            type: string
         - name: per_page
           in: query
-          description: Number of items to return per page (max 500)
+          required: false
+          description: Number of records to return on the first page.
           schema:
             type: integer
             minimum: 1
             maximum: 500
-            default: 100
-        - name: page
+            default: 500
+        - name: ids
           in: query
-          description: Page number for pagination
+          required: false
+          description: Return only records with these IDs (maximum 50).
           schema:
-            type: integer
-            minimum: 1
-            default: 1
-        - name: live
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+        - name: updated_at
           in: query
-          description: Filter by live status
+          required: false
+          description: Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.
           schema:
-            type: boolean
+            type: string
         - name: active
           in: query
-          description: Filter by active status
+          required: false
+          description: Filter by active status.
           schema:
             type: boolean
       responses:
-        "200":
+        '200':
           description: List of job posts
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/JobPost"
-        "401":
+                  $ref: '#/components/schemas/JobPost'
+        '401':
           description: Unauthorized
-
-  "/job_posts/{id}":
+        '403':
+          description: Missing OAuth scope or authorizing user is not a Site Admin
+        '422':
+          description: Invalid cursor or query parameter combination
+  /jobs:
     get:
-      summary: Get a job post
-      description: Get a single job post by ID
-      operationId: getJobPost
-      x-airbyte-entity: job_posts
-      x-airbyte-action: get
-      x-airbyte-untested: true
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Job Post ID
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Job Post object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/JobPost"
-        "404":
-          description: Job Post not found
-        "401":
-          description: Unauthorized
-
-  # ============ SOURCES ============
-  "/sources":
-    get:
-      summary: List sources
-      description: Returns a paginated list of all sources
-      operationId: listSources
-      x-airbyte-entity: sources
+      summary: List jobs
+      description: Returns a cursor-paginated list of jobs.
+      operationId: listJob
+      x-airbyte-entity: jobs
       x-airbyte-action: list
       x-airbyte-meta-extractor:
-        next: "@link.next"
+        next: '@link.next'
       parameters:
+        - name: cursor
+          in: query
+          required: false
+          description: Cursor from the previous response Link header. Do not combine with any other parameter.
+          schema:
+            type: string
         - name: per_page
           in: query
-          description: Number of items to return per page (max 500)
+          required: false
+          description: Number of records to return on the first page.
           schema:
             type: integer
             minimum: 1
             maximum: 500
-            default: 100
-        - name: page
+            default: 500
+        - name: ids
           in: query
-          description: Page number for pagination
+          required: false
+          description: Return only records with these IDs (maximum 50).
+          schema:
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+        - name: updated_at
+          in: query
+          required: false
+          description: Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing OAuth scope or authorizing user is not a Site Admin
+        '422':
+          description: Invalid cursor or query parameter combination
+  /offers:
+    get:
+      summary: List offers
+      description: Returns a cursor-paginated list of offers.
+      operationId: listOffer
+      x-airbyte-entity: offers
+      x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: '@link.next'
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          description: Cursor from the previous response Link header. Do not combine with any other parameter.
+          schema:
+            type: string
+        - name: per_page
+          in: query
+          required: false
+          description: Number of records to return on the first page.
           schema:
             type: integer
             minimum: 1
-            default: 1
+            maximum: 500
+            default: 500
+        - name: ids
+          in: query
+          required: false
+          description: Return only records with these IDs (maximum 50).
+          schema:
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+        - name: updated_at
+          in: query
+          required: false
+          description: Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.
+          schema:
+            type: string
       responses:
-        "200":
+        '200':
+          description: List of offers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Offer'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing OAuth scope or authorizing user is not a Site Admin
+        '422':
+          description: Invalid cursor or query parameter combination
+  /offices:
+    get:
+      summary: List offices
+      description: Returns a cursor-paginated list of offices.
+      operationId: listOffice
+      x-airbyte-entity: offices
+      x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: '@link.next'
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          description: Cursor from the previous response Link header. Do not combine with any other parameter.
+          schema:
+            type: string
+        - name: per_page
+          in: query
+          required: false
+          description: Number of records to return on the first page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+        - name: ids
+          in: query
+          required: false
+          description: Return only records with these IDs (maximum 50).
+          schema:
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+      responses:
+        '200':
+          description: List of offices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Office'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing OAuth scope or authorizing user is not a Site Admin
+        '422':
+          description: Invalid cursor or query parameter combination
+  /sources:
+    get:
+      summary: List sources
+      description: Returns a cursor-paginated list of sources.
+      operationId: listSource
+      x-airbyte-entity: sources
+      x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: '@link.next'
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          description: Cursor from the previous response Link header. Do not combine with any other parameter.
+          schema:
+            type: string
+        - name: per_page
+          in: query
+          required: false
+          description: Number of records to return on the first page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+        - name: ids
+          in: query
+          required: false
+          description: Return only records with these IDs (maximum 50).
+          schema:
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+      responses:
+        '200':
           description: List of sources
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Source"
-        "401":
+                  $ref: '#/components/schemas/Source'
+        '401':
           description: Unauthorized
-
-  # ============ SCHEDULED INTERVIEWS ============
-  "/scheduled_interviews":
+        '403':
+          description: Missing OAuth scope or authorizing user is not a Site Admin
+        '422':
+          description: Invalid cursor or query parameter combination
+  /users:
     get:
-      summary: List scheduled interviews
-      description: Returns a paginated list of all scheduled interviews
-      operationId: listScheduledInterviews
-      x-airbyte-entity: scheduled_interviews
+      summary: List users
+      description: Returns a cursor-paginated list of users.
+      operationId: listUser
+      x-airbyte-entity: users
       x-airbyte-action: list
       x-airbyte-meta-extractor:
-        next: "@link.next"
+        next: '@link.next'
       parameters:
+        - name: cursor
+          in: query
+          required: false
+          description: Cursor from the previous response Link header. Do not combine with any other parameter.
+          schema:
+            type: string
         - name: per_page
           in: query
-          description: Number of items to return per page (max 500)
+          required: false
+          description: Number of records to return on the first page.
           schema:
             type: integer
             minimum: 1
             maximum: 500
-            default: 100
-        - name: page
+            default: 500
+        - name: ids
           in: query
-          description: Page number for pagination
+          required: false
+          description: Return only records with these IDs (maximum 50).
           schema:
-            type: integer
-            minimum: 1
-            default: 1
-        - name: created_before
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+        - name: updated_at
           in: query
-          description: Filter by interviews created before this timestamp
-          schema:
-            type: string
-            format: date-time
-        - name: created_after
-          in: query
-          description: Filter by interviews created after this timestamp
-          schema:
-            type: string
-            format: date-time
-        - name: updated_before
-          in: query
-          description: Filter by interviews updated before this timestamp
+          required: false
+          description: Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.
           schema:
             type: string
-            format: date-time
-        - name: updated_after
+        - name: show_service_accounts
           in: query
-          description: Filter by interviews updated after this timestamp
+          required: false
+          description: Include Greenhouse service accounts.
           schema:
-            type: string
-            format: date-time
-        - name: starts_after
-          in: query
-          description: Filter by interviews starting after this timestamp
-          schema:
-            type: string
-            format: date-time
-        - name: ends_before
-          in: query
-          description: Filter by interviews ending before this timestamp
-          schema:
-            type: string
-            format: date-time
+            type: boolean
+            default: true
       responses:
-        "200":
-          description: List of scheduled interviews
+        '200':
+          description: List of users
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/ScheduledInterview"
-        "401":
+                  $ref: '#/components/schemas/User'
+        '401':
           description: Unauthorized
-
-  "/scheduled_interviews/{id}":
+        '403':
+          description: Missing OAuth scope or authorizing user is not a Site Admin
+        '422':
+          description: Invalid cursor or query parameter combination
+  /attachments:
     get:
-      summary: Get a scheduled interview
-      description: Get a single scheduled interview by ID
-      operationId: getScheduledInterview
-      x-airbyte-entity: scheduled_interviews
-      x-airbyte-action: get
-      x-airbyte-untested: true
+      summary: List attachments
+      description: Returns a cursor-paginated list of attachments.
+      operationId: listAttachment
+      x-airbyte-entity: attachments
+      x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: '@link.next'
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: Scheduled Interview ID
+        - name: cursor
+          in: query
+          required: false
+          description: Cursor from the previous response Link header. Do not combine with any other parameter.
+          schema:
+            type: string
+        - name: per_page
+          in: query
+          required: false
+          description: Number of records to return on the first page.
           schema:
             type: integer
+            minimum: 1
+            maximum: 500
+            default: 500
+        - name: ids
+          in: query
+          required: false
+          description: Return only records with these IDs (maximum 50).
+          schema:
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+        - name: updated_at
+          in: query
+          required: false
+          description: Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.
+          schema:
+            type: string
+        - name: application_ids
+          in: query
+          required: false
+          description: Return attachments associated with these application IDs (maximum 50).
+          schema:
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+        - name: candidate_ids
+          in: query
+          required: false
+          description: Return attachments belonging to these candidate IDs (maximum 50).
+          schema:
+            type: array
+            items:
+              type: integer
+            maxItems: 50
+          style: form
+          explode: false
+        - name: type
+          in: query
+          required: false
+          description: Filter by attachment type.
+          schema:
+            type: string
+            enum:
+              - resume
+              - cover_letter
+              - take_home_test
+              - offer_packet
+              - offer_letter
+              - signed_offer_letter
+              - other
+              - form_attachment
+              - midfunnel_agreement
+              - automated_agreement
       responses:
-        "200":
-          description: Scheduled Interview object
+        '200':
+          description: List of attachments
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ScheduledInterview"
-        "404":
-          description: Scheduled Interview not found
-        "401":
+                type: array
+                items:
+                  $ref: '#/components/schemas/Attachment'
+        '401':
           description: Unauthorized
-
-  # ============ ATTACHMENT DOWNLOADS ============
-  "/applications/{id}/attachment:download/{attachment_index}":
+        '403':
+          description: Missing OAuth scope or authorizing user is not a Site Admin
+        '422':
+          description: Invalid cursor or query parameter combination
+  /attachments:download:
     get:
-      summary: Download application attachment
-      description: |
-        Downloads an attachment (resume, cover letter, etc.) for an application by index.
-        The attachment URL is a temporary signed AWS S3 URL that expires within 7 days.
-        Files should be downloaded immediately after retrieval.
-      operationId: downloadApplicationAttachment
-      x-airbyte-entity: application_attachment
+      summary: Download attachment
+      description: Looks up an attachment by ID and follows its current time-limited download URL.
+      operationId: downloadAttachment
+      x-airbyte-entity: attachments
       x-airbyte-action: download
-      x-airbyte-file-url: attachments[{attachment_index}].url
+      x-airbyte-file-url: '[0].url'
       x-airbyte-path-override:
-        path: /applications/{id}
+        path: /attachments
       parameters:
-        - name: id
-          in: path
+        - name: ids
+          in: query
           required: true
-          description: Application ID
+          description: The single attachment ID to download.
           schema:
-            type: integer
-        - name: attachment_index
-          in: path
-          required: true
-          description: Index of the attachment to download (0-based)
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
+            type: array
+            items:
+              type: integer
+            minItems: 1
+            maxItems: 1
+          style: form
+          explode: false
       responses:
-        "200":
-          description: Application with attachment URLs
+        '200':
+          description: Attachment metadata used to resolve the download URL
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Application"
-        "404":
-          description: Application not found
-        "401":
+                type: array
+                items:
+                  $ref: '#/components/schemas/Attachment'
+        '401':
           description: Unauthorized
-
-  "/candidates/{id}/attachment:download/{attachment_index}":
-    get:
-      summary: Download candidate attachment
-      description: |
-        Downloads an attachment (resume, cover letter, etc.) for a candidate by index.
-        The attachment URL is a temporary signed AWS S3 URL that expires within 7 days.
-        Files should be downloaded immediately after retrieval.
-      operationId: downloadCandidateAttachment
-      x-airbyte-entity: candidate_attachment
-      x-airbyte-action: download
-      x-airbyte-file-url: attachments[{attachment_index}].url
-      x-airbyte-path-override:
-        path: /candidates/{id}
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Candidate ID
-          schema:
-            type: integer
-        - name: attachment_index
-          in: path
-          required: true
-          description: Index of the attachment to download (0-based)
-          schema:
-            type: integer
-            minimum: 0
-            default: 0
-      responses:
-        "200":
-          description: Candidate with attachment URLs
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Candidate"
-        "404":
-          description: Candidate not found
-        "401":
-          description: Unauthorized
+        '403':
+          description: Missing attachments scope
+        '422':
+          description: Invalid attachment ID
 
 components:
   securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-      description: HTTP Basic authentication (API token as username, blank password)
+    oauth2:
+      type: oauth2
+      description: Greenhouse Harvest v3 OAuth 2.0 authentication with rotating refresh tokens
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.greenhouse.io/authorize
+          tokenUrl: https://auth.greenhouse.io/token
+          refreshUrl: https://auth.greenhouse.io/token
+          scopes:
+            harvest:applications:list: List applications
+            harvest:approval_flows:list: List approval flows
+            harvest:attachments:list: List attachments
+            harvest:candidate_tags:list: List candidate tags
+            harvest:candidates:list: List candidates
+            harvest:close_reasons:list: List close reasons
+            harvest:custom_field_options:list: List custom field options
+            harvest:custom_fields:list: List custom fields
+            harvest:demographic_answer_options:list: List demographic answer options
+            harvest:demographic_answers:list: List demographic answers
+            harvest:demographic_question_sets:list: List demographic question sets
+            harvest:demographic_questions:list: List demographic questions
+            harvest:departments:list: List departments
+            harvest:eeoc:list: List EEOC records
+            harvest:email_templates:list: List email templates
+            harvest:interviews:list: List interviews
+            harvest:job_interview_stages:list: List job interview stages
+            harvest:job_posts:list: List job posts
+            harvest:jobs:list: List jobs
+            harvest:notes:list: List notes
+            harvest:offers:list: List offers
+            harvest:offices:list: List offices
+            harvest:openings:list: List openings
+            harvest:prospect_pools:list: List prospect pools
+            harvest:rejection_reasons:list: List rejection reasons
+            harvest:scorecards:list: List scorecards
+            harvest:sources:list: List sources
+            harvest:user_job_permissions:list: List user job permissions
+            harvest:user_roles:list: List user roles
+            harvest:users:list: List users
+      x-airbyte-token-refresh:
+        auth_style: basic
+        body_format: form
       x-airbyte-auth-config:
-        title: "Harvest API Key Authentication"
+        title: "Greenhouse OAuth 2.0"
         type: object
         required:
-          - api_key
+          - client_id
+          - client_secret
+          - refresh_token
         properties:
-          api_key:
+          client_id:
             type: string
-            title: "Harvest API Key"
-            description: "Your Greenhouse Harvest API Key from the Dev Center"
+            title: "Client ID"
+            description: "Client ID from the Greenhouse OAuth application"
+          client_secret:
+            type: string
+            title: "Client Secret"
+            description: "Client secret from the Greenhouse OAuth application"
+          refresh_token:
+            type: string
+            title: "Refresh Token"
+            description: "Refresh token generated through the Greenhouse OAuth consent flow"
+          access_token:
+            type: string
+            title: "Access Token"
+            description: "Access token generated through the Greenhouse OAuth consent flow (optional if refresh_token is provided)"
         auth_mapping:
-          username: "${api_key}"
-          password: ""
+          client_id: "${client_id}"
+          client_secret: "${client_secret}"
+          refresh_token: "${refresh_token}"
+          access_token: "${access_token}"
         replication_auth_key_mapping:
-          api_key: "api_key"
+          credentials.client_id: "client_id"
+          credentials.client_secret: "client_secret"
+          credentials.refresh_token: "refresh_token"
+          credentials.access_token: "access_token"
+        replication_auth_key_constants:
+          credentials.auth_type: "Client"
 
   schemas:
     Candidate:
@@ -1843,92 +1728,195 @@ components:
           - "List recent candidates"
       description: Greenhouse candidate object
       properties:
-        id:
-          type: integer
-          description: Unique candidate identifier
-        first_name:
-          type: string
-          description: Candidate's first name
-        last_name:
-          type: string
-          description: Candidate's last name
-        company:
-          type: [string, "null"]
-          description: Candidate's current company
-        title:
-          type: [string, "null"]
-          description: Candidate's current title
-        created_at:
-          type: string
-          format: date-time
-          description: When the candidate was created
-        updated_at:
-          type: string
-          format: date-time
-          description: When the candidate was last updated
-        last_activity:
-          type: string
-          format: date-time
-          description: When the last activity occurred
-        is_private:
-          type: boolean
-          description: Whether the candidate is private
-        photo_url:
-          type: [string, "null"]
-          description: URL to candidate's photo
-        attachments:
-          type: array
-          items:
-            $ref: "#/components/schemas/Attachment"
-          description: Candidate attachments (resumes, cover letters, etc.)
-        application_ids:
-          type: array
-          items:
-            type: integer
-          description: IDs of candidate's applications
-        phone_numbers:
-          type: array
-          items:
-            type: object
-          description: Candidate phone numbers
         addresses:
-          type: array
+          description: Postal addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `home`, `work`, or `other`.
+          type:
+            - 'null'
+            - array
           items:
-            type: object
-          description: Candidate addresses
-        email_addresses:
-          type: array
-          items:
-            type: object
-          description: Candidate email addresses
-        website_addresses:
-          type: array
-          items:
-            type: object
-          description: Candidate website addresses
-        social_media_addresses:
-          type: array
-          items:
-            type: object
-          description: Candidate social media addresses
-        recruiter:
-          type: [object, "null"]
-          description: Recruiter information
-        coordinator:
-          type: [object, "null"]
-          description: Coordinator information
+            type:
+              - 'null'
+              - object
+            properties:
+              type:
+                type:
+                  - 'null'
+                  - string
+              value:
+                type:
+                  - 'null'
+                  - string
         can_email:
-          type: boolean
-          description: Whether the candidate can be emailed
-        tags:
-          type: array
-          items:
-            type: string
-          description: Candidate tags
+          description: Whether this candidate has consented to receive email communication from your organization.
+          type:
+            - 'null'
+            - boolean
+        company:
+          description: Candidate's current company, as entered on their profile.
+          type:
+            - 'null'
+            - string
+        created_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
         custom_fields:
-          type: object
-          description: Custom field values
-
+          description: Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.
+          type:
+            - 'null'
+            - object
+          additionalProperties:
+            type: object
+            properties:
+              name:
+                type:
+                  - 'null'
+                  - string
+              type:
+                type:
+                  - 'null'
+                  - string
+              value:
+                type:
+                  - 'null'
+                  - string
+                  - number
+                  - integer
+                  - boolean
+                  - object
+                  - array
+        email_addresses:
+          description: Email addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `work`, or `other`.
+          type:
+            - 'null'
+            - array
+          items:
+            type:
+              - 'null'
+              - object
+            properties:
+              type:
+                type:
+                  - 'null'
+                  - string
+              value:
+                type:
+                  - 'null'
+                  - string
+        first_name:
+          type:
+            - 'null'
+            - string
+        id:
+          type:
+            - 'null'
+            - integer
+        last_activity_at:
+          description: Timestamp of the most recent activity on any of the candidate's applications (notes, emails, stage changes, etc.), in ISO 8601.
+          type:
+            - 'null'
+            - string
+          format: date-time
+        last_name:
+          type:
+            - 'null'
+            - string
+        linked_user_ids:
+          description: Ids of Greenhouse users linked to this candidate (employees represented by both a user record and a candidate record).
+          type:
+            - 'null'
+            - array
+          items:
+            type:
+              - 'null'
+              - integer
+        phone_numbers:
+          description: Phone numbers on the candidate's profile. Each entry pairs the `value` with a `type` such as `mobile`, `home`, `work`, `skype`,
+            or `other`.
+          type:
+            - 'null'
+            - array
+          items:
+            type:
+              - 'null'
+              - object
+            properties:
+              type:
+                type:
+                  - 'null'
+                  - string
+              value:
+                type:
+                  - 'null'
+                  - string
+        preferred_name:
+          description: Preferred or chosen name the candidate goes by, when different from their legal first name.
+          type:
+            - 'null'
+            - string
+        private:
+          description: If true, the candidate is restricted to users with `View Private Candidates` access. Defaults to `false`.
+          type:
+            - 'null'
+            - boolean
+        social_media_addresses:
+          description: Social media handles or URLs on the candidate's profile. Social entries are untyped — only the `value` is returned.
+          type:
+            - 'null'
+            - array
+          items:
+            type:
+              - 'null'
+              - object
+            properties:
+              value:
+                type:
+                  - 'null'
+                  - string
+        tags:
+          description: Candidate tag names applied to this candidate within your organization.
+          type:
+            - 'null'
+            - array
+          items:
+            type:
+              - 'null'
+              - string
+        time_zone:
+          description: Candidate's time zone as a Rails-style identifier (for example `Eastern Time (US & Canada)`).
+          type:
+            - 'null'
+            - string
+        title:
+          description: Candidate's current job title, as entered on their profile.
+          type:
+            - 'null'
+            - string
+        updated_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
+        website_addresses:
+          description: Personal websites or portfolio URLs on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`,
+            `company`, `portfolio`, `blog`, or `other`.
+          type:
+            - 'null'
+            - array
+          items:
+            type:
+              - 'null'
+              - object
+            properties:
+              type:
+                type:
+                  - 'null'
+                  - string
+              value:
+                type:
+                  - 'null'
+                  - string
     Application:
       type: object
       x-airbyte-entity-name: applications
@@ -1943,79 +1931,176 @@ components:
           - "What stage is an application in?"
       description: Greenhouse application object
       properties:
-        id:
-          type: integer
-          description: Unique application identifier
-        candidate_id:
-          type: integer
-          description: ID of the associated candidate
-        prospect:
-          type: boolean
-          description: Whether this is a prospect application
-        applied_at:
-          type: string
-          format: date-time
-          description: When the application was submitted
-        rejected_at:
-          type: [string, "null"]
-          format: date-time
-          description: When the application was rejected
-        last_activity_at:
-          type: string
-          format: date-time
-          description: When the last activity occurred
-        location:
-          type: [object, "null"]
-          description: Application location
-        source:
-          type: object
-          description: Application source
-        credited_to:
-          type: object
-          description: User credited with the application
-        rejection_reason:
-          type: [object, "null"]
-          description: Rejection reason if rejected
-        rejection_details:
-          type: [object, "null"]
-          description: Additional rejection details
-        jobs:
-          type: array
-          items:
-            type: object
-          description: Jobs associated with the application
-        job_post_id:
-          type: [integer, "null"]
-          description: ID of the job post
-        status:
-          type: string
-          description: Application status
-        current_stage:
-          type: [object, "null"]
-          description: Current stage of the application
+        agency_note_id:
+          description: Id of the note created when the candidate was submitted by an agency, or `null` if the application did not come through an agency.
+          type:
+            - 'null'
+            - integer
         answers:
-          type: array
+          description: Free-text answers the candidate provided on the job post application form. Each entry pairs the question text with the candidate's
+            answer.
+          type:
+            - 'null'
+            - array
           items:
-            type: object
-          description: Application question answers
-        prospective_office:
-          type: [object, "null"]
-          description: Prospective office
-        prospective_department:
-          type: [object, "null"]
-          description: Prospective department
-        prospect_detail:
-          type: object
-          description: Prospect details
-        attachments:
-          type: array
-          items:
-            $ref: "#/components/schemas/Attachment"
-          description: Application attachments (resumes, cover letters, etc.)
+            type:
+              - 'null'
+              - object
+            properties:
+              answer:
+                description: Candidate's free-text answer to the question.
+                type:
+                  - 'null'
+                  - string
+              question:
+                description: Application-form question the candidate answered.
+                type:
+                  - 'null'
+                  - string
+        candidate_id:
+          description: Id of the candidate (person) this application belongs to.
+          type:
+            - 'null'
+            - integer
+        coordinator_id:
+          description: Id of the user assigned as coordinator on the application's job, or `null` when unassigned.
+          type:
+            - 'null'
+            - integer
+        created_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
         custom_fields:
-          type: object
-          description: Custom field values
-
+          description: Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.
+          type:
+            - 'null'
+            - object
+          additionalProperties:
+            type: object
+            properties:
+              name:
+                type:
+                  - 'null'
+                  - string
+              type:
+                type:
+                  - 'null'
+                  - string
+              value:
+                type:
+                  - 'null'
+                  - string
+                  - number
+                  - integer
+                  - boolean
+                  - object
+                  - array
+        id:
+          type:
+            - 'null'
+            - integer
+        job_id:
+          description: Id of the job this application is on. `null` for jobless prospect applications.
+          type:
+            - 'null'
+            - integer
+        job_interview_stage_id:
+          description: Id of the job interview stage definition (see `GET /v3/job_interview_stages`) the candidate is currently in for this application.
+            `null` for prospect applications and applications in a terminal state.
+          type:
+            - 'null'
+            - integer
+        job_post_id:
+          description: Id of the job post the candidate applied through, or `null` if the application was created internally rather than from a posted
+            role.
+          type:
+            - 'null'
+            - integer
+        last_activity_at:
+          description: Timestamp of the most recent activity on this application (notes, emails, stage changes, etc.), in ISO 8601.
+          type:
+            - 'null'
+            - string
+          format: date-time
+        location_address:
+          description: Free-form location string captured on the application (typically from the job post's location question).
+          type:
+            - 'null'
+            - string
+        needs_decision:
+          description: '`true` when the application is waiting on a hiring-team decision (scorecard completion, advance/reject, etc.) in its current stage.'
+          type:
+            - 'null'
+            - boolean
+        prospect:
+          description: '`true` for prospect applications (sourced candidates not yet attached to a single job), `false` for candidate applications on
+            a specific job.'
+          type:
+            - 'null'
+            - boolean
+        prospective_job_ids:
+          description: For prospect applications, the ids of jobs the prospect is being considered for. Empty for non-prospect applications and for jobless
+            prospects.
+          type:
+            - 'null'
+            - array
+          items:
+            type:
+              - 'null'
+              - integer
+        recruiter_id:
+          description: Id of the user assigned as recruiter on the application's job, or `null` when unassigned.
+          type:
+            - 'null'
+            - integer
+        referrer_id:
+          description: Id of the referrer who credited this application, or `null` if there was no referral. References a referrer, not a Greenhouse user.
+          type:
+            - 'null'
+            - integer
+        rejected_at:
+          description: Timestamp the application was rejected, in ISO 8601. `null` for applications that have not been rejected.
+          type:
+            - 'null'
+            - string
+          format: date-time
+        rejection_reason_id:
+          description: Id of the rejection reason selected for the application. References a `/v3/rejection_reasons` row scoped to the organization. `null`
+            when the application was rejected without a reason, or has not been rejected.
+          type:
+            - 'null'
+            - integer
+        source_id:
+          description: Id of the source the application is attributed to (e.g. a job board, an event, an employee referral source). `null` if no source
+            is set.
+          type:
+            - 'null'
+            - integer
+        stage_id:
+          description: Id of the interview stage the candidate is currently in for this application. `null` for prospect applications and applications
+            in a terminal state.
+          type:
+            - 'null'
+            - integer
+        stage_name:
+          description: Display name of the candidate's current interview stage on this application.
+          type:
+            - 'null'
+            - string
+        status:
+          description: Lifecycle status of the application. `in_process` for active candidates, `rejected` for rejected applications, `hired` once an
+            offer is closed and the hire endpoint has fired, and `converted` for prospect applications that have been promoted to a candidate application
+            via `convert_to_candidate`.
+          type:
+            - 'null'
+            - string
+        updated_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
     Job:
       type: object
       x-airbyte-entity-name: jobs
@@ -2030,62 +2115,111 @@ components:
           - "What jobs are open in Greenhouse?"
       description: Greenhouse job object
       properties:
-        id:
-          type: integer
-          description: Unique job identifier
-        name:
-          type: string
-          description: Job name
-        requisition_id:
-          type: [string, "null"]
-          description: Job requisition ID
-        notes:
-          type: [string, "null"]
-          description: Job notes
-        confidential:
-          type: boolean
-          description: Whether the job is confidential
-        status:
-          type: string
-          description: Job status
-        created_at:
-          type: string
-          format: date-time
-          description: When the job was created
-        opened_at:
-          type: string
-          format: date-time
-          description: When the job was opened
         closed_at:
-          type: [string, "null"]
+          description: Timestamp the job most recently transitioned to `closed`, in ISO 8601. `null` for jobs that are still `open` or `draft`.
+          type:
+            - 'null'
+            - string
           format: date-time
-          description: When the job was closed
-        updated_at:
-          type: string
+        confidential:
+          description: If `true`, the job is restricted to users explicitly granted access on the Hiring Team. The legacy Confidential Jobs feature has
+            been sunset — this flag cannot be set on new jobs and is preserved for jobs that already had it enabled.
+          type:
+            - 'null'
+            - boolean
+        copied_from_id:
+          description: Id of the job (typically a template) this job was copied from on creation. `null` when the job was not created from another job.
+          type:
+            - 'null'
+            - integer
+        created_at:
+          type:
+            - 'null'
+            - string
           format: date-time
-          description: When the job was last updated
-        departments:
-          type: array
-          items:
-            type: [object, "null"]
-          description: Departments associated with the job
-        offices:
-          type: array
-          items:
-            type: object
-          description: Offices associated with the job
         custom_fields:
-          type: object
-          description: Custom field values
-        hiring_team:
-          type: object
-          description: Hiring team information
-        openings:
-          type: array
-          items:
+          description: Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.
+          type:
+            - 'null'
+            - object
+          additionalProperties:
             type: object
-          description: Job openings
-
+            properties:
+              name:
+                type:
+                  - 'null'
+                  - string
+              type:
+                type:
+                  - 'null'
+                  - string
+              value:
+                type:
+                  - 'null'
+                  - string
+                  - number
+                  - integer
+                  - boolean
+                  - object
+                  - array
+        department_id:
+          description: Id of the department this job is assigned to. `null` when no department is set.
+          type:
+            - 'null'
+            - integer
+        id:
+          type:
+            - 'null'
+            - integer
+        is_template:
+          description: If `true`, this job is a template used as the source for new jobs rather than a real requisition. Templates do not accept applications;
+            reference them via `template_job_id` on `POST /v3/jobs`.
+          type:
+            - 'null'
+            - boolean
+        name:
+          description: Internal job title shown to the hiring team in Greenhouse (e.g. `Senior Backend Engineer`). Distinct from the external-facing title
+            on each `job_post`.
+          type:
+            - 'null'
+            - string
+        notes:
+          description: Internal HTML notes about the job, surfaced to the hiring team in the Greenhouse UI. Not exposed on public job posts.
+          type:
+            - 'null'
+            - string
+        office_ids:
+          description: Ids of the offices this job is assigned to. A job can span multiple offices; empty array or `null` when no offices are set.
+          type:
+            - 'null'
+            - array
+          items:
+            type:
+              - 'null'
+              - integer
+        opened_at:
+          description: Timestamp the job first transitioned to `open`, in ISO 8601. `null` while the job is still in `draft`.
+          type:
+            - 'null'
+            - string
+          format: date-time
+        requisition_id:
+          description: Partner-supplied external identifier for the requisition (e.g. an HRIS or ATS code). Free-form string, not unique across the organization,
+            and `null` when no external id has been set.
+          type:
+            - 'null'
+            - string
+        status:
+          description: Lifecycle status of the job. `draft` while it is being scaffolded, `open` once it has at least one open opening, and `closed` after
+            every opening is closed. A job moves to `closed` automatically when its last open opening is closed via `PATCH /v3/openings/{id}`.
+          type:
+            - 'null'
+            - string
+        updated_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
     Offer:
       type: object
       x-airbyte-entity-name: offers
@@ -2100,50 +2234,100 @@ components:
           - "Show pending offers"
       description: Greenhouse offer object
       properties:
-        id:
-          type: integer
-          description: Unique offer identifier
-        version:
-          type: integer
-          description: Offer version number
         application_id:
-          type: integer
-          description: Associated application ID
-        job_id:
-          type: integer
-          description: Associated job ID
+          description: Id of the application this offer is extended on. Every offer belongs to exactly one application; the offer is voided if the application
+            is rejected or deleted.
+          type:
+            - 'null'
+            - integer
         candidate_id:
-          type: integer
-          description: Associated candidate ID
-        opening:
-          type: [object, "null"]
-          description: Associated job opening
+          description: Id of the candidate (person) receiving this offer. Resolved through the offer's application.
+          type:
+            - 'null'
+            - integer
         created_at:
-          type: string
+          type:
+            - 'null'
+            - string
           format: date-time
-          description: When the offer was created
-        updated_at:
-          type: string
-          format: date-time
-          description: When the offer was last updated
-        sent_at:
-          type: [string, "null"]
-          format: date-time
-          description: When the offer was sent
-        resolved_at:
-          type: [string, "null"]
-          format: date-time
-          description: When the offer was resolved
-        starts_at:
-          type: [string, "null"]
-          description: Employment start date
-        status:
-          type: string
-          description: Offer status
         custom_fields:
-          type: object
-          description: Custom field values
-
+          description: Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.
+          type:
+            - 'null'
+            - object
+          additionalProperties:
+            type: object
+            properties:
+              name:
+                type:
+                  - 'null'
+                  - string
+              type:
+                type:
+                  - 'null'
+                  - string
+              value:
+                type:
+                  - 'null'
+                  - string
+                  - number
+                  - integer
+                  - boolean
+                  - object
+                  - array
+        id:
+          type:
+            - 'null'
+            - integer
+        job_id:
+          description: Id of the job this offer's application is on.
+          type:
+            - 'null'
+            - integer
+        opening_id:
+          description: Id of the specific opening this offer is being extended for. `null` when the offer has not yet been linked to an opening.
+          type:
+            - 'null'
+            - integer
+        resolved_at:
+          description: Timestamp the offer was resolved (`Accepted` or `Rejected`), in ISO 8601. Date updates submitted through `PATCH /v3/offers/{id}`
+            are normalized to noon UTC on the supplied date. `null` while the offer is still `Created` or has been superseded as `Deprecated` without
+            a resolution.
+          type:
+            - 'null'
+            - string
+          format: date-time
+        sent_on:
+          description: Date the offer was sent to the candidate, in ISO 8601 (YYYY-MM-DD). `null` until the offer has been sent.
+          type:
+            - 'null'
+            - string
+          format: date
+        starts_on:
+          description: Candidate's proposed start date, in ISO 8601 (YYYY-MM-DD). `null` when no start date has been set on the offer.
+          type:
+            - 'null'
+            - string
+          format: date
+        status:
+          description: Lifecycle status of the offer. `Created` for offers still being drafted or pending approval, `Accepted` once the candidate accepts,
+            `Rejected` if declined or withdrawn, and `Deprecated` for superseded prior versions (a new offer version replaces an earlier one with this
+            status).
+          type:
+            - 'null'
+            - string
+        updated_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
+        version:
+          description: Revision number of this offer within its application. Greenhouse creates a new offer row (incrementing `version`) whenever a tracked
+            field on an existing offer changes — typically `starts_on`, `opening_id`, or a custom field configured to trigger a new version. Pair with
+            `current_only=true` to filter the list endpoint down to the latest version per application.
+          type:
+            - 'null'
+            - integer
     User:
       type: object
       x-airbyte-entity-name: users
@@ -2158,60 +2342,153 @@ components:
           - "Who are the recruiters in Greenhouse?"
       description: Greenhouse user object
       properties:
-        id:
-          type: integer
-          description: Unique user identifier
-        name:
-          type: string
-          description: User's full name
-        first_name:
-          type: string
-          description: User's first name
-        last_name:
-          type: string
-          description: User's last name
-        primary_email_address:
-          type: string
-          format: email
-          description: User's primary email address
-        updated_at:
-          type: string
-          format: date-time
-          description: When the user was last updated
+        agency_id:
+          description: Id of the staffing agency this user belongs to, when the user is an external agency recruiter rather than an employee of your organization.
+            `null` for in-house users.
+          type:
+            - 'null'
+            - integer
         created_at:
-          type: string
+          type:
+            - 'null'
+            - string
           format: date-time
-          description: When the user was created
-        disabled:
-          type: boolean
-          description: Whether the user is disabled
-        site_admin:
-          type: boolean
-          description: Whether the user is a site admin
+        custom_fields:
+          description: Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.
+          type:
+            - 'null'
+            - object
+          additionalProperties:
+            type: object
+            properties:
+              name:
+                type:
+                  - 'null'
+                  - string
+              type:
+                type:
+                  - 'null'
+                  - string
+              value:
+                type:
+                  - 'null'
+                  - string
+                  - number
+                  - integer
+                  - boolean
+                  - object
+                  - array
+        deactivated:
+          description: Whether the user has been deactivated. Deactivated users cannot sign in or be assigned to new jobs, but their historical activity
+            (notes, scorecards, emails) is preserved. Toggle via `POST /v3/users/{id}/deactivate` and `POST /v3/users/{id}/activate`.
+          type:
+            - 'null'
+            - boolean
+        department_ids:
+          description: Ids of the departments this user is assigned to. Used to scope future job permissions and to filter the user list by department.
+            Empty when the user is not pinned to any department.
+          type:
+            - 'null'
+            - array
+          items:
+            type:
+              - 'null'
+              - integer
         emails:
-          type: array
+          description: All email addresses on the user's account, including the primary address and any additional verified addresses.
+          type:
+            - 'null'
+            - array
           items:
-            type: string
-          description: All user email addresses
+            type:
+              - 'null'
+              - string
         employee_id:
-          type: [string, "null"]
-          description: Employee ID
+          description: Partner-supplied external employee identifier, typically the user's HRIS or payroll id. Free-form string; not unique across organizations
+            and `null` when no employee id has been set.
+          type:
+            - 'null'
+            - string
+        first_name:
+          type:
+            - 'null'
+            - string
+        id:
+          type:
+            - 'null'
+            - integer
+        interviewer_tags:
+          description: Interviewer tags applied to this user — the labeled skill or panel groupings (e.g. `Senior Engineer`, `Bar Raiser`) used to suggest
+            qualified interviewers when building an interview plan. Each entry pairs the tag's `id` with its `name`.
+          type:
+            - 'null'
+            - array
+          items:
+            type:
+              - 'null'
+              - object
+            properties:
+              id:
+                type:
+                  - 'null'
+                  - integer
+              name:
+                type:
+                  - 'null'
+                  - string
+        job_title:
+          description: Free-form job title set on the user's Greenhouse profile (e.g. `Senior Recruiter`). Not synchronized with any HRIS title.
+          type:
+            - 'null'
+            - string
+        last_name:
+          type:
+            - 'null'
+            - string
         linked_candidate_ids:
-          type: array
+          description: Ids of candidate records linked to this user. Populated when an employee is represented by both a user record (for Greenhouse access)
+            and a candidate record (for past or internal applications).
+          type:
+            - 'null'
+            - array
           items:
-            type: integer
-          description: IDs of linked candidates
-        offices:
-          type: array
+            type:
+              - 'null'
+              - integer
+        name:
+          description: Concatenation of `first_name` and `last_name` rendered as a single display string. Provided for convenience; partners that need
+            either component should read `first_name`/`last_name` directly.
+          type:
+            - 'null'
+            - string
+        office_ids:
+          description: Ids of the offices this user is assigned to. Used to scope future job permissions and to filter the user list by office. Empty
+            when the user is not pinned to any office.
+          type:
+            - 'null'
+            - array
           items:
-            type: object
-          description: Associated offices
-        departments:
-          type: array
-          items:
-            type: object
-          description: Associated departments
-
+            type:
+              - 'null'
+              - integer
+        primary_email:
+          description: Primary email address on the user's account. Sign-in identifier and the address Greenhouse uses for outbound mail; additional verified
+            addresses are not surfaced here. Service accounts (integration/ISU users) have no email and are excluded from this endpoint by default; when
+            included via `show_service_accounts=true`, their `primary_email` is an empty string.
+          type:
+            - 'null'
+            - string
+        site_admin:
+          description: Whether the user holds the Site Admin role. Site admins have unrestricted access to every non-confidential job and to organization-level
+            settings. Demote a site admin to a Basic user with `POST /v3/users/{id}/revoke_permissions`.
+          type:
+            - 'null'
+            - boolean
+        updated_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
     Department:
       type: object
       x-airbyte-entity-name: departments
@@ -2226,32 +2503,37 @@ components:
           - "What departments are in Greenhouse?"
       description: Greenhouse department object
       properties:
-        id:
-          type: integer
-          description: Unique department identifier
-        name:
-          type: string
-          description: Department name
-        parent_id:
-          type: [integer, "null"]
-          description: Parent department ID
-        parent_department_external_id:
-          type: [string, "null"]
-          description: Parent department external ID
-        child_ids:
-          type: array
-          items:
-            type: integer
-          description: Child department IDs
-        child_department_external_ids:
-          type: array
-          items:
-            type: string
-          description: Child department external IDs
+        created_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
         external_id:
-          type: [string, "null"]
-          description: External ID
-
+          description: Partner-supplied identifier for the department, typically the matching id from an HRIS or other external system. Free-form string
+            and `null` when no external id has been set.
+          type:
+            - 'null'
+            - string
+        id:
+          type:
+            - 'null'
+            - integer
+        name:
+          description: Display name of the department (e.g. `Engineering`, `Marketing`).
+          type:
+            - 'null'
+            - string
+        parent_id:
+          description: Id of the parent department in the organization's department tree. `null` for top-level departments. References another `/v3/departments`
+            row.
+          type:
+            - 'null'
+            - integer
+        updated_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
     Office:
       type: object
       x-airbyte-entity-name: offices
@@ -2266,38 +2548,49 @@ components:
           - "What office locations are configured?"
       description: Greenhouse office object
       properties:
-        id:
-          type: integer
-          description: Unique office identifier
-        name:
-          type: string
-          description: Office name
-        location:
-          type: [object, "null"]
-          description: Office location details
-        primary_contact_user_id:
-          type: [integer, "null"]
-          description: Primary contact user ID
-        parent_id:
-          type: [integer, "null"]
-          description: Parent office ID
-        parent_office_external_id:
-          type: [string, "null"]
-          description: Parent office external ID
-        child_ids:
-          type: array
-          items:
-            type: integer
-          description: Child office IDs
-        child_office_external_ids:
-          type: array
-          items:
-            type: string
-          description: Child office external IDs
+        created_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
         external_id:
-          type: [string, "null"]
-          description: External ID
-
+          description: Stable identifier supplied by the customer or HRIS for cross-system reconciliation. `null` when no external id has been set. Available
+            when the `org_structure_external_id` product flag is enabled.
+          type:
+            - 'null'
+            - string
+        id:
+          type:
+            - 'null'
+            - integer
+        location:
+          description: Free-form physical location string for the office (e.g. `New York, NY, USA`). `null` for offices that have no location set, including
+            most remote offices.
+          type:
+            - 'null'
+            - string
+        name:
+          description: Display name of the office (e.g. `San Francisco`, `Remote (US)`). Unique among active offices in the same organization.
+          type:
+            - 'null'
+            - string
+        parent_id:
+          description: Id of the parent office when offices are organized hierarchically. `null` for top-level offices. References another `/v3/offices`
+            row in the same organization.
+          type:
+            - 'null'
+            - integer
+        primary_in_house_contact_user_id:
+          description: Id of the Greenhouse user designated as the office's primary internal contact, typically the local recruiting lead. References
+            a `/v3/users` row. `null` when no contact has been assigned.
+          type:
+            - 'null'
+            - integer
+        updated_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
     JobPost:
       type: object
       x-airbyte-entity-name: job_posts
@@ -2312,57 +2605,172 @@ components:
           - "What jobs are posted on the careers page?"
       description: Greenhouse job post object
       properties:
-        id:
-          type: integer
-          description: Unique job post identifier
-        title:
-          type: string
-          description: Job post title
-        location:
-          type: [object, "null"]
-          description: Job post location
-        internal:
-          type: boolean
-          description: Whether this is an internal job post
-        external:
-          type: boolean
-          description: Whether this is an external job post
         active:
-          type: boolean
-          description: Whether the job post is active
-        live:
-          type: boolean
-          description: Whether the job post is live
-        first_published_at:
-          type: [string, "null"]
-          format: date-time
-          description: When the job post was first published
-        job_id:
-          type: integer
-          description: Associated job ID
+          description: If `true`, the post has not been deleted. Deleted posts are excluded by default; pass `active=false` on the list endpoint to retrieve
+            them.
+          type:
+            - 'null'
+            - boolean
         content:
-          type: [string, "null"]
-          description: Job post content/description
-        internal_content:
-          type: [string, "null"]
-          description: Internal job post content
-        updated_at:
-          type: string
-          format: date-time
-          description: When the job post was last updated
+          description: HTML body of the post shown to candidates on the job board. For internal posts this returns the `internal_content` instead. Sanitized
+            server-side — only a limited element/attribute allowlist (including `iframe`, `video`, `source`) survives. `null` while the post is still
+            being scaffolded.
+          type:
+            - 'null'
+            - string
         created_at:
-          type: string
+          type:
+            - 'null'
+            - string
           format: date-time
-          description: When the job post was created
         demographic_question_set_id:
-          type: [integer, "null"]
-          description: Demographic question set ID
+          description: Id of the demographic question set surfaced to candidates on this post for diversity, equity, and inclusion (DE&I) reporting. `null`
+            when the post does not collect demographic data.
+          type:
+            - 'null'
+            - integer
+        featured:
+          description: If `true`, the post is currently featured on the organization's internal job board and surfaces in the weekly internal-jobs email.
+            Only internal posts can be featured, and at most three can be featured at a time.
+          type:
+            - 'null'
+            - boolean
+        first_published_at:
+          description: Timestamp the post first transitioned to `live`, in ISO 8601. `null` for posts that have never been published.
+          type:
+            - 'null'
+            - string
+          format: date-time
+        id:
+          type:
+            - 'null'
+            - integer
+        internal:
+          description: If `true`, the post lives on an internal job board and is visible only to existing employees signed in to the internal board. If
+            `false`, the post is external and lives on a public-facing `job_board`. Set by the board the post is associated with at create time.
+          type:
+            - 'null'
+            - boolean
+        internal_content:
+          description: HTML body shown on the internal job board when the post is also configured as internal. `null` for external-only posts. Same sanitization
+            rules as `content`.
+          type:
+            - 'null'
+            - string
+        job_board_id:
+          description: Id of the `job_board` this post is published to. Resolves to either an external (careers site, syndicated board) or internal job
+            board depending on `internal`. Each post belongs to exactly one board at a time.
+          type:
+            - 'null'
+            - integer
+        job_id:
+          description: Id of the parent job (requisition) this post belongs to. A single job can have multiple posts; the job is the source of truth for
+            the hiring team, openings, and interview plan.
+          type:
+            - 'null'
+            - integer
+        language:
+          description: ISO 639-1 locale of the post, used to render the candidate-facing application form in the matching language (e.g. `en`, `fr`, `ja`).
+            `null` when no locale has been chosen.
+          type:
+            - 'null'
+            - string
+        live:
+          description: If `true`, the post is published (`job_application_status` is `live`) and its job board is also live. A post on an unpublished
+            board is **not** `live` — its `public_url` returns a 404 until the board is enabled.
+          type:
+            - 'null'
+            - boolean
+        public_url:
+          description: Canonical public URL of the post on its job board, including the `gh_jid` tracking parameter. `null` when the post has no associated
+            job board or the board has no public URL configured.
+          type:
+            - 'null'
+            - string
+          format: uri
         questions:
-          type: array
+          description: Application form questions presented to candidates on this post, including default questions (resume, cover letter, basic info)
+            and any custom questions configured by the hiring team. Ordered as they appear on the form.
+          type:
+            - 'null'
+            - array
           items:
-            type: object
-          description: Application questions
-
+            type:
+              - 'null'
+              - object
+            properties:
+              answer_type:
+                description: Input type the candidate uses to answer. `short_text` and `long_text` are free-text inputs, `single_select` and `multi_select`
+                  use the `options` array, `boolean` is a yes/no, `attachment` accepts a file upload, and `hidden` is set programmatically without rendering
+                  a field.
+                type:
+                  - 'null'
+                  - string
+              description:
+                description: Help text shown below the question label to give candidates additional context. `null` when no help text is set.
+                type:
+                  - 'null'
+                  - string
+              id:
+                description: Id of the question. `null` for default questions that are rendered from configuration rather than persisted per post (e.g.
+                  the built-in `first_name` field).
+                type:
+                  - 'null'
+                  - integer
+              label:
+                description: Human-readable label rendered above the input on the application form.
+                type:
+                  - 'null'
+                  - string
+              name:
+                description: Stable form-field name used when submitting an application (e.g. `question_42` for a custom question, `first_name` for a
+                  default field). Use this when mapping responses back to a question.
+                type:
+                  - 'null'
+                  - string
+              options:
+                description: Selectable answer options for `single_select` and `multi_select` questions. Empty for other answer types.
+                type:
+                  - 'null'
+                  - array
+                items:
+                  type:
+                    - 'null'
+                    - object
+                  properties:
+                    id:
+                      description: Id of the option, stable across edits to the option label.
+                      type:
+                        - 'null'
+                        - integer
+                    label:
+                      description: Human-readable text shown to the candidate for this option.
+                      type:
+                        - 'null'
+                        - string
+              private:
+                description: If `true`, answers to this question are visible only to users with explicit access (e.g. private notes, API-only questions).
+                  Defaults to `false`.
+                type:
+                  - 'null'
+                  - boolean
+              required:
+                description: If `true`, the candidate must answer this question to submit the application. `null` for default questions whose required-ness
+                  is driven by board-level configuration.
+                type:
+                  - 'null'
+                  - boolean
+        title:
+          description: Public-facing title shown to candidates on the job board (e.g. `Senior Backend Engineer, Remote`). Distinct from the internal `job.name`
+            — a single job can have several posts with different titles, one per board, language, or geography.
+          type:
+            - 'null'
+            - string
+        updated_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
     Source:
       type: object
       x-airbyte-entity-name: sources
@@ -2377,77 +2785,182 @@ components:
           - "What sourcing channels are tracked in Greenhouse?"
       description: Greenhouse source object
       properties:
+        created_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
         id:
-          type: integer
-          description: Unique source identifier
+          type:
+            - 'null'
+            - integer
         name:
-          type: string
-          description: Source name
+          description: Display name of the source as recruiters see it in Greenhouse (e.g. `LinkedIn (Prospecting)`, `Indeed`, `Referral`, `Internal Applicant`,
+            or a custom agency name). For organization-specific sources this is the label the org configured; for global Greenhouse sources it is the
+            standard public name.
+          type:
+            - 'null'
+            - string
         type:
-          type: [object, "null"]
-          description: Source type information
-
-    ScheduledInterview:
+          description: The sourcing strategy this source rolls up to — the broader category used for reporting. Sources are grouped under sourcing strategies
+            such as `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`, `Company marketing`, `In person event`, `MyGreenhouse`,
+            and `Other`. Use the strategy when aggregating candidate volume by channel; use the source itself when reporting on a specific channel within
+            that category.
+          type:
+            - 'null'
+            - object
+          properties:
+            id:
+              description: Id of the sourcing strategy. References the same strategy across all sources in the organization that roll up to it.
+              type:
+                - 'null'
+                - integer
+            name:
+              description: Display name of the sourcing strategy used in Greenhouse reporting (e.g. `Agencies`, `Referral`, `Third-party boards`, `Prospecting`,
+                `Social media`).
+              type:
+                - 'null'
+                - string
+        updated_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
+    Interview:
       type: object
-      x-airbyte-entity-name: scheduled_interviews
+      x-airbyte-entity-name: interviews
       x-airbyte-ai-hints:
-        summary: "Scheduled interviews with time, interviewer, and stage details"
+        summary: "Interviews with time, interviewer, and stage details"
         when_to_use: "Questions about upcoming interviews or interview schedules"
-        trigger_phrases: ["interview schedule", "upcoming interview", "scheduled interview"]
+        trigger_phrases: ["interview schedule", "upcoming interview", "interview"]
         freshness: live
         search_strategy: "Filter by date or candidate"
         example_questions:
           - "What interviews are scheduled?"
-      description: Greenhouse scheduled interview object
+      description: Greenhouse interview object
+      properties:
+        all_day_end_on:
+          description: End date of an all-day interview, in `YYYY-MM-DD`. Set instead of `starts_at`/`ends_at` when the underlying calendar event is an
+            all-day event. `null` for time-bounded interviews.
+          type:
+            - 'null'
+            - string
+          format: date
+        all_day_start_on:
+          description: Start date of an all-day interview, in `YYYY-MM-DD`. Set instead of `starts_at`/`ends_at` when the underlying calendar event is
+            an all-day event. `null` for time-bounded interviews.
+          type:
+            - 'null'
+            - string
+          format: date
+        application_id:
+          description: Id of the application this interview is scheduled against. Use it to look up the candidate.
+          type:
+            - 'null'
+            - integer
+        availability_received_at:
+          description: Timestamp Greenhouse first recorded availability for this interview's stage on this application (used to compute time-to-schedule),
+            in ISO 8601. `null` if availability has not been collected for the stage.
+          type:
+            - 'null'
+            - string
+          format: date-time
+        created_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
+        ends_at:
+          description: Interview end time, in ISO 8601. `null` when `starts_at` is also `null`, and for all-day events — see `all_day_end_on`.
+          type:
+            - 'null'
+            - string
+          format: date-time
+        external_event_id:
+          description: Id of the calendar event on the organizer's calendar (Google Calendar event id, Outlook event id, etc.). Use this to correlate
+            an interview with the event on the external calendar. `null` for interviews not yet pushed to an external calendar.
+          type:
+            - 'null'
+            - string
+        id:
+          type:
+            - 'null'
+            - integer
+        job_id:
+          description: Id of the job this interview is on.
+          type:
+            - 'null'
+            - integer
+        job_interview_id:
+          description: Id of the job interview slot on the job's interview plan that this interview fulfills. Distinct from this interview's own `id`.
+          type:
+            - 'null'
+            - integer
+        location:
+          description: Free-form location string copied from the calendar event (a room name, an address, or a meeting URL when the customer puts it in
+            the location field). Use `video_conferencing_url` for the link generated by Greenhouse's video integrations.
+          type:
+            - 'null'
+            - string
+        organizer_id:
+          description: Id of the Greenhouse user who scheduled the interview (the organizer on the underlying calendar event). `null` for interviews not
+            yet scheduled through a calendar integration.
+          type:
+            - 'null'
+            - integer
+        scheduled_at:
+          description: Timestamp the interview was first placed on a calendar through a Greenhouse calendaring integration (Google, Outlook, or Greenhouse
+            Schedule), in ISO 8601. `null` for interviews that have never been scheduled via the calendar pipeline.
+          type:
+            - 'null'
+            - string
+          format: date-time
+        starts_at:
+          description: Interview start time, in ISO 8601. `null` for interviews that have not yet been scheduled (for example, assigned take-home tests
+            or interviews awaiting candidate availability) and for all-day events — see `all_day_start_on`.
+          type:
+            - 'null'
+            - string
+          format: date-time
+        status:
+          description: Lifecycle status of the interview. `to_be_scheduled` is the pre-schedule placeholder; `scheduled` is on the calendar; `awaiting_feedback`
+            is past with scorecards outstanding; `complete` is past with all scorecards in; `collect_feedback` and `skipped` are alternative terminal
+            states; `to_be_sent`, `sent`, and `received` are used for take-home tests sent through Greenhouse.
+          type:
+            - 'null'
+            - string
+        updated_at:
+          type:
+            - 'null'
+            - string
+          format: date-time
+        video_conferencing_url:
+          description: Join URL for the interview's video conference, auto-populated by Greenhouse's Zoom, Google Meet, or Microsoft Teams integrations
+            when one is attached during scheduling. `null` when no video conferencing was added.
+          type:
+            - 'null'
+            - string
+    Attachment:
+      type: object
+      description: File associated with a Greenhouse application
       properties:
         id:
           type: integer
-          description: Unique scheduled interview identifier
+          description: Unique attachment identifier
         application_id:
           type: integer
-          description: Associated application ID
-        external_event_id:
-          type: [string, "null"]
-          description: External calendar event ID
+          description: Application this attachment belongs to
+        candidate_id:
+          type: [integer, "null"]
+          description: Candidate resolved through the application, when available
         created_at:
           type: string
           format: date-time
-          description: When the interview was created
+          description: When the attachment was created
         updated_at:
           type: string
           format: date-time
-          description: When the interview was last updated
-        start:
-          type: [object, "null"]
-          description: Interview start time details
-        end:
-          type: [object, "null"]
-          description: Interview end time details
-        location:
-          type: [string, "null"]
-          description: Interview location
-        video_conferencing_url:
-          type: [string, "null"]
-          description: Video conferencing URL
-        status:
-          type: string
-          description: Interview status
-        interview:
-          type: [object, "null"]
-          description: Interview details
-        organizer:
-          type: [object, "null"]
-          description: Interview organizer
-        interviewers:
-          type: array
-          items:
-            type: object
-          description: List of interviewers
-
-    Attachment:
-      type: object
-      description: File attachment (resume, cover letter, etc.)
-      properties:
+          description: When the attachment was last updated
         filename:
           type: string
           description: Name of the attached file
@@ -2455,13 +2968,19 @@ components:
           type: string
           format: uri
           description: |
-            Temporary signed AWS S3 URL to download the file.
-            This URL expires within 7 days - download immediately after retrieval.
+            Time-limited URL to download the file. The URL expires after seven days,
+            so refetch the attachment before downloading when the cached URL is stale.
         type:
           type: string
-          enum: [resume, cover_letter, admin_only, take_home_test, offer_packet, offer_letter, signed_offer_letter, other]
+          enum:
+            - resume
+            - cover_letter
+            - take_home_test
+            - offer_packet
+            - offer_letter
+            - signed_offer_letter
+            - other
+            - form_attachment
+            - midfunnel_agreement
+            - automated_agreement
           description: Type of attachment
-        created_at:
-          type: string
-          format: date-time
-          description: When the attachment was uploaded

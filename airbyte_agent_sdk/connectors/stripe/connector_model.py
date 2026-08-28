@@ -90,7 +90,12 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                         'starting_after': {'type': 'string', 'required': False},
                         'ending_before': {'type': 'string', 'required': False},
                         'email': {'type': 'string', 'required': False},
-                        'created': {'type': 'object', 'required': False},
+                        'created': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
                     },
                     deep_object_params=['created'],
                     response_schema={
@@ -5298,7 +5303,12 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                             'required': False,
                             'enum': ['charge_automatically', 'send_invoice'],
                         },
-                        'created': {'type': 'object', 'required': False},
+                        'created': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
                         'customer': {'type': 'string', 'required': False},
                         'customer_account': {'type': 'string', 'required': False},
                         'ending_before': {'type': 'string', 'required': False},
@@ -13005,7 +13015,12 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                         'starting_after',
                     ],
                     query_params_schema={
-                        'created': {'type': 'object', 'required': False},
+                        'created': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
                         'customer': {'type': 'string', 'required': False},
                         'ending_before': {'type': 'string', 'required': False},
                         'limit': {
@@ -14658,15 +14673,35 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                         'status',
                     ],
                     query_params_schema={
-                        'automatic_tax': {'type': 'object', 'required': False},
+                        'automatic_tax': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
                         'collection_method': {
                             'type': 'string',
                             'required': False,
                             'enum': ['charge_automatically', 'send_invoice'],
                         },
-                        'created': {'type': 'object', 'required': False},
-                        'current_period_end': {'type': 'object', 'required': False},
-                        'current_period_start': {'type': 'object', 'required': False},
+                        'created': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
+                        'current_period_end': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
+                        'current_period_start': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
                         'customer': {'type': 'string', 'required': False},
                         'customer_account': {'type': 'string', 'required': False},
                         'ending_before': {'type': 'string', 'required': False},
@@ -18620,7 +18655,12 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                     ],
                     query_params_schema={
                         'charge': {'type': 'string', 'required': False},
-                        'created': {'type': 'object', 'required': False},
+                        'created': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
                         'ending_before': {'type': 'string', 'required': False},
                         'limit': {
                             'type': 'integer',
@@ -20503,12 +20543,19 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                     ],
                     query_params_schema={
                         'active': {'type': 'boolean', 'required': False},
-                        'created': {'type': 'object', 'required': False},
+                        'created': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
                         'ending_before': {'type': 'string', 'required': False},
                         'ids': {
                             'type': 'array',
                             'required': False,
                             'items': {'type': 'string'},
+                            'style': 'form',
+                            'explode': True,
                         },
                         'limit': {
                             'type': 'integer',
@@ -21965,7 +22012,12 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                         'type',
                     ],
                     query_params_schema={
-                        'created': {'type': 'object', 'required': False},
+                        'created': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
                         'currency': {'type': 'string', 'required': False},
                         'ending_before': {'type': 'string', 'required': False},
                         'limit': {
@@ -22255,7 +22307,12 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                         'starting_after',
                     ],
                     query_params_schema={
-                        'created': {'type': 'object', 'required': False},
+                        'created': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
                         'customer': {'type': 'string', 'required': False},
                         'customer_account': {'type': 'string', 'required': False},
                         'ending_before': {'type': 'string', 'required': False},
@@ -23829,7 +23886,12 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                     ],
                     query_params_schema={
                         'charge': {'type': 'string', 'required': False},
-                        'created': {'type': 'object', 'required': False},
+                        'created': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
                         'ending_before': {'type': 'string', 'required': False},
                         'limit': {
                             'type': 'integer',
@@ -24111,8 +24173,18 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                         'status',
                     ],
                     query_params_schema={
-                        'arrival_date': {'type': 'object', 'required': False},
-                        'created': {'type': 'object', 'required': False},
+                        'arrival_date': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
+                        'created': {
+                            'type': 'object',
+                            'required': False,
+                            'style': 'deepObject',
+                            'explode': True,
+                        },
                         'destination': {'type': 'string', 'required': False},
                         'ending_before': {'type': 'string', 'required': False},
                         'limit': {

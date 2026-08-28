@@ -655,7 +655,9 @@ class LocalExecutor:
             return user_secrets
 
         user_config_values = {
-            key: (value.get_secret_value() if hasattr(value, "get_secret_value") else str(value)) for key, value in user_secrets.items()
+            key: (value.get_secret_value() if hasattr(value, "get_secret_value") else str(value))
+            for key, value in user_secrets.items()
+            if value is not None
         }
 
         mapped_values = apply_auth_mapping(auth_mapping, user_config_values, required_fields=required_fields)
@@ -1541,19 +1543,24 @@ class LocalExecutor:
         *,
         apply_schema_defaults: bool = False,
     ) -> dict[str, Any]:
-        """Extract query parameters from params, applying config injection.
+        """Extract and validate query parameters, applying configured resolution sources.
 
         Args:
             allowed_params: List of allowed query parameter names
             params: All parameters
-            query_params_schema: Schema for query params including config_inject
+            query_params_schema: Schema for query params including required, default, and config_inject
             apply_schema_defaults: When True, fill in a param's OpenAPI ``default`` when the
-                caller omitted it (mirrors header-default behavior). Off by default to preserve
-                existing query behavior; the download handler enables it so semantically-required
-                constants like Google Drive's ``alt=media`` are always sent.
+                caller omitted it (mirrors header-default behavior). Required parameters always
+                apply their defaults so every declared resolution source works at runtime. Optional
+                defaults remain opt-in; the download handler enables them for constants like Google
+                Drive's ``alt=media``.
 
         Returns:
             Dictionary of query parameters
+
+        Raises:
+            MissingParameterError: If a required query parameter cannot be resolved
+            InvalidParameterError: If a required query parameter resolves to an empty value
         """
         result = {key: value for key, value in params.items() if key in allowed_params}
         if query_params_schema:
@@ -1574,8 +1581,49 @@ class LocalExecutor:
                                     result[param_name] = mapped
                             else:
                                 result[param_name] = source_value
-                    elif apply_schema_defaults and schema.get("default") is not None:
+                    if param_name not in result and (apply_schema_defaults or schema.get("required")) and schema.get("default") is not None:
                         result[param_name] = schema["default"]
+
+            for param_name in allowed_params:
+                schema = query_params_schema.get(param_name, {})
+                if not schema.get("required"):
+                    continue
+                if param_name not in result:
+                    raise MissingParameterError(f"Missing required query parameter '{param_name}'. Provided parameters: {list(params.keys())}")
+
+                value = result[param_name]
+                if value is None or (isinstance(value, str) and not value.strip()) or (isinstance(value, (list, tuple, dict)) and not value):
+                    raise InvalidParameterError(f"Query parameter '{param_name}' cannot be empty")
+        return self._serialize_query_params(result, query_params_schema or {})
+
+    @staticmethod
+    def _serialize_query_params(
+        query_params: dict[str, Any],
+        query_params_schema: dict[str, dict[str, Any]],
+    ) -> dict[str, Any]:
+        result = dict(query_params)
+        for param_name, value in result.items():
+            if not isinstance(value, (list, tuple)):
+                continue
+
+            schema = query_params_schema.get(param_name, {})
+            style = schema.get("style") or "form"
+            explode = schema.get("explode")
+            if explode is None:
+                explode = style == "form"
+
+            if style == "form":
+                if explode:
+                    continue
+                separator = ","
+            elif style == "spaceDelimited":
+                separator = " "
+            elif style == "pipeDelimited":
+                separator = "|"
+            else:
+                continue
+
+            result[param_name] = separator.join(str(item) for item in value)
         return result
 
     def _extract_body(self, allowed_fields: list[str], params: dict[str, Any]) -> dict[str, Any]:
@@ -1680,7 +1728,7 @@ class LocalExecutor:
 
     @staticmethod
     def _extract_download_url(
-        response: dict[str, Any],
+        response: Any,
         file_field: str,
         entity: str,
     ) -> str:
@@ -1697,6 +1745,7 @@ class LocalExecutor:
         - Simple field name (e.g., `content_url`)
         - Dot-separated nested path (e.g., `data.download_link`, `article.content_url`)
         - Fixed-index bracket navigation (e.g., `calls[0].media.audioUrl`)
+        - Fixed-index root-list navigation (e.g., `[0].url`)
 
         Templated bracket segments (e.g., `attachments[{attachment_index}].url`) ARE
         supported in the end-to-end `x-airbyte-file-url` extension value, but they
@@ -1721,6 +1770,22 @@ class LocalExecutor:
         current = response
 
         for i, part in enumerate(parts):
+            root_array_match = re.match(r"^\[(\d+)\]$", part)
+
+            if root_array_match:
+                index = int(root_array_match.group(1))
+                if not isinstance(current, list):
+                    raise ExecutorError(
+                        f"Cannot extract download URL for {entity}: Expected list at '{'.'.join(parts[:i]) or '<root>'}', "
+                        f"got {type(current).__name__}"
+                    )
+                if index >= len(current):
+                    raise ExecutorError(
+                        f"Cannot extract download URL for {entity}: Index {index} out of bounds for root list (length: {len(current)})"
+                    )
+                current = current[index]
+                continue
+
             # Check if part has array indexing (e.g., "calls[0]")
             array_match = re.match(r"^(\w+)\[(\d+)\]$", part)
 

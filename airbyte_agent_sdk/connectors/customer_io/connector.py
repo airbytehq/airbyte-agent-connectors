@@ -129,7 +129,7 @@ class CustomerIoConnector:
 
     connector_name = "customer-io"
     connector_version = "1.0.0"
-    sdk_version = "0.1.334"
+    sdk_version = "0.1.335"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

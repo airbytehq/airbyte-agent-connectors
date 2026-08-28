@@ -3,42 +3,74 @@
   "class_name": "GreenhouseConnector",
   "package_name": "airbyte_agent_sdk.connectors.greenhouse",
   "install_package": "airbyte-agent-sdk",
-  "yaml_version": "0.1.8",
-  "api_reference_url": "https://developers.greenhouse.io/harvest.html",
-  "auth_example": "GreenhouseAuthConfig(api_key=\"...\")",
+  "yaml_version": "0.2.0",
+  "api_reference_url": "https://harvestdocs.greenhouse.io/",
+  "auth_example": "GreenhouseAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\", access_token=\"...\")",
   "auth_import": ", GreenhouseAuthConfig",
   "auth_config": {
     "type_name": "GreenhouseAuthConfig",
     "base_name": "Greenhouse",
     "options": [
       {
-        "title": "Harvest API Key Authentication",
+        "title": "Greenhouse OAuth 2.0",
         "description": "",
         "fields": [
           {
-            "name": "api_key",
+            "name": "client_id",
             "type": "str",
             "required": true,
-            "title": "Harvest API Key",
-            "description": "Your Greenhouse Harvest API Key from the Dev Center"
+            "title": "Client ID",
+            "description": "Client ID from the Greenhouse OAuth application"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "Client secret from the Greenhouse OAuth application"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "Refresh token generated through the Greenhouse OAuth consent flow"
+          },
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": false,
+            "title": "Access Token",
+            "description": "Access token generated through the Greenhouse OAuth consent flow (optional if refresh_token is provided)"
           }
         ],
-        "type_suffix": "HarvestApiKeyAuthentication"
+        "type_suffix": "GreenhouseOauth20"
       }
     ],
     "is_multi_auth": false
   },
   "replication_config": null,
-  "custom_description": "Greenhouse is an applicant tracking system (ATS) that helps companies manage their\nhiring process. This connector provides access to candidates, applications, jobs,\noffers, users, departments, offices, job posts, sources, and scheduled interviews\nfor recruiting analytics and talent acquisition insights.\n",
-  "supported_questions": "- List all open jobs\n- Show me upcoming interviews this week\n- Show me recent job offers\n- List recent applications\n- Show me candidates from {company} who applied last month\n- What are the top 5 sources for our job applications this quarter?\n- Analyze the interview schedules for our engineering candidates this week\n- Compare the number of applications across different offices\n- Identify candidates who have multiple applications in our system\n- Summarize the candidate pipeline for our latest job posting\n- Find the most active departments in recruiting this month",
+  "custom_description": "Greenhouse is an applicant tracking system (ATS) that helps companies manage their\nhiring process via the Harvest v3 API with OAuth 2.0 authentication. This connector\nprovides access to candidates, applications, jobs, offers, users, departments,\noffices, job posts, sources, and interviews for recruiting analytics and talent\nacquisition insights.\n",
+  "supported_questions": "- List all open jobs\n- Show me recent interviews\n- Show me recent job offers\n- List recent applications\n- Show me candidates from {company} who applied last month\n- What are the top 5 sources for our job applications this quarter?\n- Analyze the interview schedules for our engineering candidates this week\n- Compare the number of applications across different offices\n- Identify candidates who have multiple applications in our system\n- Summarize the candidate pipeline for our latest job posting\n- Find the most active departments in recruiting this month",
   "unsupported_questions": "- Create a new job posting for the marketing team\n- Schedule an interview for {candidate}\n- Update the status of {candidate}'s application\n- Delete a candidate profile\n- Send an offer letter to {candidate}\n- Edit the details of a job description",
   "first_operation": {
-    "method_name": "list_candidates",
+    "method_name": "list_application",
     "http_method": "get",
-    "path": "/candidates",
-    "entity": "candidates",
+    "path": "/applications",
+    "entity": "applications",
     "action": "list",
     "parameters": [
+      {
+        "name": "cursor",
+        "python_name": "cursor",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+        "is_deep_object": false
+      },
       {
         "name": "per_page",
         "python_name": "per_page",
@@ -47,35 +79,48 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 500,
-          "default": 100
+          "default": 500
         },
-        "required": null,
-        "description": "Number of items to return per page (max 500)",
+        "required": false,
+        "description": "Number of records to return on the first page.",
         "is_deep_object": false
       },
       {
-        "name": "page",
-        "python_name": "page",
-        "type": "int",
+        "name": "ids",
+        "python_name": "ids",
+        "type": "list[int]",
         "schema": {
-          "type": "integer",
-          "minimum": 1,
-          "default": 1
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 50
         },
-        "required": null,
-        "description": "Page number for pagination",
+        "required": false,
+        "description": "Return only records with these IDs (maximum 50).",
+        "is_deep_object": false
+      },
+      {
+        "name": "updated_at",
+        "python_name": "updated_at",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.",
         "is_deep_object": false
       }
     ],
-    "params_type_name": "CandidatesListParams",
-    "response_type": "CandidatesListResult",
-    "description": "Returns a paginated list of all candidates in the organization",
+    "params_type_name": "ApplicationsListParams",
+    "response_type": "ApplicationsListResult",
+    "description": "Returns a cursor-paginated list of applications.",
     "record_extractor": "$",
     "meta_extractor": {
       "next": "@link.next"
     },
     "needs_envelope": true,
-    "record_type": "list[Candidate]",
+    "record_type": "list[Application]",
     "meta_fields": [
       {
         "name": "next",
@@ -90,102 +135,26 @@
     "is_download": false
   },
   "entities_grouped": {
-    "candidates": [
-      {
-        "method_name": "list_candidates",
-        "http_method": "get",
-        "path": "/candidates",
-        "entity": "candidates",
-        "action": "list",
-        "parameters": [
-          {
-            "name": "per_page",
-            "python_name": "per_page",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 500,
-              "default": 100
-            },
-            "required": null,
-            "description": "Number of items to return per page (max 500)",
-            "is_deep_object": false
-          },
-          {
-            "name": "page",
-            "python_name": "page",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
-            },
-            "required": null,
-            "description": "Page number for pagination",
-            "is_deep_object": false
-          }
-        ],
-        "params_type_name": "CandidatesListParams",
-        "response_type": "CandidatesListResult",
-        "description": "Returns a paginated list of all candidates in the organization",
-        "record_extractor": "$",
-        "meta_extractor": {
-          "next": "@link.next"
-        },
-        "needs_envelope": true,
-        "record_type": "list[Candidate]",
-        "meta_fields": [
-          {
-            "name": "next",
-            "python_name": "next",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            }
-          }
-        ],
-        "is_download": false
-      },
-      {
-        "method_name": "get_candidate",
-        "http_method": "get",
-        "path": "/candidates/{id}",
-        "entity": "candidates",
-        "action": "get",
-        "parameters": [
-          {
-            "name": "id",
-            "python_name": "id",
-            "type": "str",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "Candidate ID"
-          }
-        ],
-        "params_type_name": "CandidatesGetParams",
-        "response_type": "Candidate",
-        "description": "Get a single candidate by ID",
-        "record_extractor": "$",
-        "meta_extractor": null,
-        "needs_envelope": null,
-        "record_type": "Candidate",
-        "meta_fields": null,
-        "is_download": false
-      }
-    ],
     "applications": [
       {
-        "method_name": "list_applications",
+        "method_name": "list_application",
         "http_method": "get",
         "path": "/applications",
         "entity": "applications",
         "action": "list",
         "parameters": [
           {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+            "is_deep_object": false
+          },
+          {
             "name": "per_page",
             "python_name": "per_page",
             "type": "int",
@@ -193,92 +162,42 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 500,
-              "default": 100
+              "default": 500
             },
-            "required": null,
-            "description": "Number of items to return per page (max 500)",
+            "required": false,
+            "description": "Number of records to return on the first page.",
             "is_deep_object": false
           },
           {
-            "name": "page",
-            "python_name": "page",
-            "type": "int",
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
             "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
             },
-            "required": null,
-            "description": "Page number for pagination",
+            "required": false,
+            "description": "Return only records with these IDs (maximum 50).",
             "is_deep_object": false
           },
           {
-            "name": "created_before",
-            "python_name": "created_before",
+            "name": "updated_at",
+            "python_name": "updated_at",
             "type": "str",
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             },
-            "required": null,
-            "description": "Filter by applications created before this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "created_after",
-            "python_name": "created_after",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by applications created after this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "last_activity_after",
-            "python_name": "last_activity_after",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by applications with activity after this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "job_id",
-            "python_name": "job_id",
-            "type": "int",
-            "schema": {
-              "type": "integer"
-            },
-            "required": null,
-            "description": "Filter by job ID",
-            "is_deep_object": false
-          },
-          {
-            "name": "status",
-            "python_name": "status",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "active",
-                "rejected",
-                "hired"
-              ]
-            },
-            "required": null,
-            "description": "Filter by application status",
+            "required": false,
+            "description": "Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.",
             "is_deep_object": false
           }
         ],
         "params_type_name": "ApplicationsListParams",
         "response_type": "ApplicationsListResult",
-        "description": "Returns a paginated list of all applications",
+        "description": "Returns a cursor-paginated list of applications.",
         "record_extractor": "$",
         "meta_extractor": {
           "next": "@link.next"
@@ -297,44 +216,27 @@
           }
         ],
         "is_download": false
-      },
-      {
-        "method_name": "get_application",
-        "http_method": "get",
-        "path": "/applications/{id}",
-        "entity": "applications",
-        "action": "get",
-        "parameters": [
-          {
-            "name": "id",
-            "python_name": "id",
-            "type": "str",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "Application ID"
-          }
-        ],
-        "params_type_name": "ApplicationsGetParams",
-        "response_type": "Application",
-        "description": "Get a single application by ID",
-        "record_extractor": "$",
-        "meta_extractor": null,
-        "needs_envelope": null,
-        "record_type": "Application",
-        "meta_fields": null,
-        "is_download": false
       }
     ],
-    "jobs": [
+    "candidates": [
       {
-        "method_name": "list_jobs",
+        "method_name": "list_candidate",
         "http_method": "get",
-        "path": "/jobs",
-        "entity": "jobs",
+        "path": "/candidates",
+        "entity": "candidates",
         "action": "list",
         "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+            "is_deep_object": false
+          },
           {
             "name": "per_page",
             "python_name": "per_page",
@@ -343,35 +245,48 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 500,
-              "default": 100
+              "default": 500
             },
-            "required": null,
-            "description": "Number of items to return per page (max 500)",
+            "required": false,
+            "description": "Number of records to return on the first page.",
             "is_deep_object": false
           },
           {
-            "name": "page",
-            "python_name": "page",
-            "type": "int",
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
             "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
             },
-            "required": null,
-            "description": "Page number for pagination",
+            "required": false,
+            "description": "Return only records with these IDs (maximum 50).",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at",
+            "python_name": "updated_at",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.",
             "is_deep_object": false
           }
         ],
-        "params_type_name": "JobsListParams",
-        "response_type": "JobsListResult",
-        "description": "Returns a paginated list of all jobs in the organization",
+        "params_type_name": "CandidatesListParams",
+        "response_type": "CandidatesListResult",
+        "description": "Returns a cursor-paginated list of candidates.",
         "record_extractor": "$",
         "meta_extractor": {
           "next": "@link.next"
         },
         "needs_envelope": true,
-        "record_type": "list[Job]",
+        "record_type": "list[Candidate]",
         "meta_fields": [
           {
             "name": "next",
@@ -383,304 +298,29 @@
             }
           }
         ],
-        "is_download": false
-      },
-      {
-        "method_name": "get_job",
-        "http_method": "get",
-        "path": "/jobs/{id}",
-        "entity": "jobs",
-        "action": "get",
-        "parameters": [
-          {
-            "name": "id",
-            "python_name": "id",
-            "type": "str",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "Job ID"
-          }
-        ],
-        "params_type_name": "JobsGetParams",
-        "response_type": "Job",
-        "description": "Get a single job by ID",
-        "record_extractor": "$",
-        "meta_extractor": null,
-        "needs_envelope": null,
-        "record_type": "Job",
-        "meta_fields": null,
-        "is_download": false
-      }
-    ],
-    "offers": [
-      {
-        "method_name": "list_offers",
-        "http_method": "get",
-        "path": "/offers",
-        "entity": "offers",
-        "action": "list",
-        "parameters": [
-          {
-            "name": "per_page",
-            "python_name": "per_page",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 500,
-              "default": 100
-            },
-            "required": null,
-            "description": "Number of items to return per page (max 500)",
-            "is_deep_object": false
-          },
-          {
-            "name": "page",
-            "python_name": "page",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
-            },
-            "required": null,
-            "description": "Page number for pagination",
-            "is_deep_object": false
-          },
-          {
-            "name": "created_before",
-            "python_name": "created_before",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by offers created before this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "created_after",
-            "python_name": "created_after",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by offers created after this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "resolved_after",
-            "python_name": "resolved_after",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by offers resolved after this timestamp",
-            "is_deep_object": false
-          }
-        ],
-        "params_type_name": "OffersListParams",
-        "response_type": "OffersListResult",
-        "description": "Returns a paginated list of all offers",
-        "record_extractor": "$",
-        "meta_extractor": {
-          "next": "@link.next"
-        },
-        "needs_envelope": true,
-        "record_type": "list[Offer]",
-        "meta_fields": [
-          {
-            "name": "next",
-            "python_name": "next",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            }
-          }
-        ],
-        "is_download": false
-      },
-      {
-        "method_name": "get_offer",
-        "http_method": "get",
-        "path": "/offers/{id}",
-        "entity": "offers",
-        "action": "get",
-        "parameters": [
-          {
-            "name": "id",
-            "python_name": "id",
-            "type": "str",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "Offer ID"
-          }
-        ],
-        "params_type_name": "OffersGetParams",
-        "response_type": "Offer",
-        "description": "Get a single offer by ID",
-        "record_extractor": "$",
-        "meta_extractor": null,
-        "needs_envelope": null,
-        "record_type": "Offer",
-        "meta_fields": null,
-        "is_download": false
-      }
-    ],
-    "users": [
-      {
-        "method_name": "list_users",
-        "http_method": "get",
-        "path": "/users",
-        "entity": "users",
-        "action": "list",
-        "parameters": [
-          {
-            "name": "per_page",
-            "python_name": "per_page",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 500,
-              "default": 100
-            },
-            "required": null,
-            "description": "Number of items to return per page (max 500)",
-            "is_deep_object": false
-          },
-          {
-            "name": "page",
-            "python_name": "page",
-            "type": "int",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
-            },
-            "required": null,
-            "description": "Page number for pagination",
-            "is_deep_object": false
-          },
-          {
-            "name": "created_before",
-            "python_name": "created_before",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by users created before this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "created_after",
-            "python_name": "created_after",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by users created after this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "updated_before",
-            "python_name": "updated_before",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by users updated before this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "updated_after",
-            "python_name": "updated_after",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by users updated after this timestamp",
-            "is_deep_object": false
-          }
-        ],
-        "params_type_name": "UsersListParams",
-        "response_type": "UsersListResult",
-        "description": "Returns a paginated list of all users",
-        "record_extractor": "$",
-        "meta_extractor": {
-          "next": "@link.next"
-        },
-        "needs_envelope": true,
-        "record_type": "list[User]",
-        "meta_fields": [
-          {
-            "name": "next",
-            "python_name": "next",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            }
-          }
-        ],
-        "is_download": false
-      },
-      {
-        "method_name": "get_user",
-        "http_method": "get",
-        "path": "/users/{id}",
-        "entity": "users",
-        "action": "get",
-        "parameters": [
-          {
-            "name": "id",
-            "python_name": "id",
-            "type": "str",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "User ID"
-          }
-        ],
-        "params_type_name": "UsersGetParams",
-        "response_type": "User",
-        "description": "Get a single user by ID",
-        "record_extractor": "$",
-        "meta_extractor": null,
-        "needs_envelope": null,
-        "record_type": "User",
-        "meta_fields": null,
         "is_download": false
       }
     ],
     "departments": [
       {
-        "method_name": "list_departments",
+        "method_name": "list_department",
         "http_method": "get",
         "path": "/departments",
         "entity": "departments",
         "action": "list",
         "parameters": [
           {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+            "is_deep_object": false
+          },
+          {
             "name": "per_page",
             "python_name": "per_page",
             "type": "int",
@@ -688,29 +328,31 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 500,
-              "default": 100
+              "default": 500
             },
-            "required": null,
-            "description": "Number of items to return per page (max 500)",
+            "required": false,
+            "description": "Number of records to return on the first page.",
             "is_deep_object": false
           },
           {
-            "name": "page",
-            "python_name": "page",
-            "type": "int",
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
             "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
             },
-            "required": null,
-            "description": "Page number for pagination",
+            "required": false,
+            "description": "Return only records with these IDs (maximum 50).",
             "is_deep_object": false
           }
         ],
         "params_type_name": "DepartmentsListParams",
         "response_type": "DepartmentsListResult",
-        "description": "Returns a paginated list of all departments",
+        "description": "Returns a cursor-paginated list of departments.",
         "record_extractor": "$",
         "meta_extractor": {
           "next": "@link.next"
@@ -729,44 +371,27 @@
           }
         ],
         "is_download": false
-      },
-      {
-        "method_name": "get_department",
-        "http_method": "get",
-        "path": "/departments/{id}",
-        "entity": "departments",
-        "action": "get",
-        "parameters": [
-          {
-            "name": "id",
-            "python_name": "id",
-            "type": "str",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "Department ID"
-          }
-        ],
-        "params_type_name": "DepartmentsGetParams",
-        "response_type": "Department",
-        "description": "Get a single department by ID",
-        "record_extractor": "$",
-        "meta_extractor": null,
-        "needs_envelope": null,
-        "record_type": "Department",
-        "meta_fields": null,
-        "is_download": false
       }
     ],
-    "offices": [
+    "interviews": [
       {
-        "method_name": "list_offices",
+        "method_name": "list_interview",
         "http_method": "get",
-        "path": "/offices",
-        "entity": "offices",
+        "path": "/interviews",
+        "entity": "interviews",
         "action": "list",
         "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+            "is_deep_object": false
+          },
           {
             "name": "per_page",
             "python_name": "per_page",
@@ -775,35 +400,48 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 500,
-              "default": 100
+              "default": 500
             },
-            "required": null,
-            "description": "Number of items to return per page (max 500)",
+            "required": false,
+            "description": "Number of records to return on the first page.",
             "is_deep_object": false
           },
           {
-            "name": "page",
-            "python_name": "page",
-            "type": "int",
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
             "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
             },
-            "required": null,
-            "description": "Page number for pagination",
+            "required": false,
+            "description": "Return only records with these IDs (maximum 50).",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at",
+            "python_name": "updated_at",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.",
             "is_deep_object": false
           }
         ],
-        "params_type_name": "OfficesListParams",
-        "response_type": "OfficesListResult",
-        "description": "Returns a paginated list of all offices",
+        "params_type_name": "InterviewsListParams",
+        "response_type": "InterviewsListResult",
+        "description": "Returns a cursor-paginated list of interviews.",
         "record_extractor": "$",
         "meta_extractor": {
           "next": "@link.next"
         },
         "needs_envelope": true,
-        "record_type": "list[Office]",
+        "record_type": "list[Interview]",
         "meta_fields": [
           {
             "name": "next",
@@ -816,44 +454,27 @@
           }
         ],
         "is_download": false
-      },
-      {
-        "method_name": "get_office",
-        "http_method": "get",
-        "path": "/offices/{id}",
-        "entity": "offices",
-        "action": "get",
-        "parameters": [
-          {
-            "name": "id",
-            "python_name": "id",
-            "type": "str",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "Office ID"
-          }
-        ],
-        "params_type_name": "OfficesGetParams",
-        "response_type": "Office",
-        "description": "Get a single office by ID",
-        "record_extractor": "$",
-        "meta_extractor": null,
-        "needs_envelope": null,
-        "record_type": "Office",
-        "meta_fields": null,
-        "is_download": false
       }
     ],
     "job_posts": [
       {
-        "method_name": "list_job_posts",
+        "method_name": "list_job_post",
         "http_method": "get",
         "path": "/job_posts",
         "entity": "job_posts",
         "action": "list",
         "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+            "is_deep_object": false
+          },
           {
             "name": "per_page",
             "python_name": "per_page",
@@ -862,34 +483,36 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 500,
-              "default": 100
+              "default": 500
             },
-            "required": null,
-            "description": "Number of items to return per page (max 500)",
+            "required": false,
+            "description": "Number of records to return on the first page.",
             "is_deep_object": false
           },
           {
-            "name": "page",
-            "python_name": "page",
-            "type": "int",
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
             "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
             },
-            "required": null,
-            "description": "Page number for pagination",
+            "required": false,
+            "description": "Return only records with these IDs (maximum 50).",
             "is_deep_object": false
           },
           {
-            "name": "live",
-            "python_name": "live",
-            "type": "bool",
+            "name": "updated_at",
+            "python_name": "updated_at",
+            "type": "str",
             "schema": {
-              "type": "boolean"
+              "type": "string"
             },
-            "required": null,
-            "description": "Filter by live status",
+            "required": false,
+            "description": "Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.",
             "is_deep_object": false
           },
           {
@@ -899,14 +522,14 @@
             "schema": {
               "type": "boolean"
             },
-            "required": null,
-            "description": "Filter by active status",
+            "required": false,
+            "description": "Filter by active status.",
             "is_deep_object": false
           }
         ],
         "params_type_name": "JobPostsListParams",
         "response_type": "JobPostsListResult",
-        "description": "Returns a paginated list of all job posts",
+        "description": "Returns a cursor-paginated list of job posts.",
         "record_extractor": "$",
         "meta_extractor": {
           "next": "@link.next"
@@ -925,44 +548,27 @@
           }
         ],
         "is_download": false
-      },
-      {
-        "method_name": "get_job_post",
-        "http_method": "get",
-        "path": "/job_posts/{id}",
-        "entity": "job_posts",
-        "action": "get",
-        "parameters": [
-          {
-            "name": "id",
-            "python_name": "id",
-            "type": "str",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "Job Post ID"
-          }
-        ],
-        "params_type_name": "JobPostsGetParams",
-        "response_type": "JobPost",
-        "description": "Get a single job post by ID",
-        "record_extractor": "$",
-        "meta_extractor": null,
-        "needs_envelope": null,
-        "record_type": "JobPost",
-        "meta_fields": null,
-        "is_download": false
       }
     ],
-    "sources": [
+    "jobs": [
       {
-        "method_name": "list_sources",
+        "method_name": "list_job",
         "http_method": "get",
-        "path": "/sources",
-        "entity": "sources",
+        "path": "/jobs",
+        "entity": "jobs",
         "action": "list",
         "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+            "is_deep_object": false
+          },
           {
             "name": "per_page",
             "python_name": "per_page",
@@ -971,29 +577,269 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 500,
-              "default": 100
+              "default": 500
             },
-            "required": null,
-            "description": "Number of items to return per page (max 500)",
+            "required": false,
+            "description": "Number of records to return on the first page.",
             "is_deep_object": false
           },
           {
-            "name": "page",
-            "python_name": "page",
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
+            },
+            "required": false,
+            "description": "Return only records with these IDs (maximum 50).",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at",
+            "python_name": "updated_at",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "JobsListParams",
+        "response_type": "JobsListResult",
+        "description": "Returns a cursor-paginated list of jobs.",
+        "record_extractor": "$",
+        "meta_extractor": {
+          "next": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Job]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "offers": [
+      {
+        "method_name": "list_offer",
+        "http_method": "get",
+        "path": "/offers",
+        "entity": "offers",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
             "type": "int",
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "default": 1
+              "maximum": 500,
+              "default": 500
             },
-            "required": null,
-            "description": "Page number for pagination",
+            "required": false,
+            "description": "Number of records to return on the first page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
+            },
+            "required": false,
+            "description": "Return only records with these IDs (maximum 50).",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at",
+            "python_name": "updated_at",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OffersListParams",
+        "response_type": "OffersListResult",
+        "description": "Returns a cursor-paginated list of offers.",
+        "record_extractor": "$",
+        "meta_extractor": {
+          "next": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Offer]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "offices": [
+      {
+        "method_name": "list_office",
+        "http_method": "get",
+        "path": "/offices",
+        "entity": "offices",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 500
+            },
+            "required": false,
+            "description": "Number of records to return on the first page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
+            },
+            "required": false,
+            "description": "Return only records with these IDs (maximum 50).",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OfficesListParams",
+        "response_type": "OfficesListResult",
+        "description": "Returns a cursor-paginated list of offices.",
+        "record_extractor": "$",
+        "meta_extractor": {
+          "next": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Office]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "sources": [
+      {
+        "method_name": "list_source",
+        "http_method": "get",
+        "path": "/sources",
+        "entity": "sources",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 500
+            },
+            "required": false,
+            "description": "Number of records to return on the first page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
+            },
+            "required": false,
+            "description": "Return only records with these IDs (maximum 50).",
             "is_deep_object": false
           }
         ],
         "params_type_name": "SourcesListParams",
         "response_type": "SourcesListResult",
-        "description": "Returns a paginated list of all sources",
+        "description": "Returns a cursor-paginated list of sources.",
         "record_extractor": "$",
         "meta_extractor": {
           "next": "@link.next"
@@ -1014,14 +860,25 @@
         "is_download": false
       }
     ],
-    "scheduled_interviews": [
+    "users": [
       {
-        "method_name": "list_scheduled_interviews",
+        "method_name": "list_user",
         "http_method": "get",
-        "path": "/scheduled_interviews",
-        "entity": "scheduled_interviews",
+        "path": "/users",
+        "entity": "users",
         "action": "list",
         "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+            "is_deep_object": false
+          },
           {
             "name": "per_page",
             "python_name": "per_page",
@@ -1030,107 +887,196 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 500,
-              "default": 100
+              "default": 500
             },
-            "required": null,
-            "description": "Number of items to return per page (max 500)",
+            "required": false,
+            "description": "Number of records to return on the first page.",
             "is_deep_object": false
           },
           {
-            "name": "page",
-            "python_name": "page",
-            "type": "int",
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
             "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
             },
-            "required": null,
-            "description": "Page number for pagination",
+            "required": false,
+            "description": "Return only records with these IDs (maximum 50).",
             "is_deep_object": false
           },
           {
-            "name": "created_before",
-            "python_name": "created_before",
+            "name": "updated_at",
+            "python_name": "updated_at",
             "type": "str",
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             },
-            "required": null,
-            "description": "Filter by interviews created before this timestamp",
+            "required": false,
+            "description": "Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.",
             "is_deep_object": false
           },
           {
-            "name": "created_after",
-            "python_name": "created_after",
-            "type": "str",
+            "name": "show_service_accounts",
+            "python_name": "show_service_accounts",
+            "type": "bool",
             "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "boolean",
+              "default": true
             },
-            "required": null,
-            "description": "Filter by interviews created after this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "updated_before",
-            "python_name": "updated_before",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by interviews updated before this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "updated_after",
-            "python_name": "updated_after",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by interviews updated after this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "starts_after",
-            "python_name": "starts_after",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by interviews starting after this timestamp",
-            "is_deep_object": false
-          },
-          {
-            "name": "ends_before",
-            "python_name": "ends_before",
-            "type": "str",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": null,
-            "description": "Filter by interviews ending before this timestamp",
+            "required": false,
+            "description": "Include Greenhouse service accounts.",
             "is_deep_object": false
           }
         ],
-        "params_type_name": "ScheduledInterviewsListParams",
-        "response_type": "ScheduledInterviewsListResult",
-        "description": "Returns a paginated list of all scheduled interviews",
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Returns a cursor-paginated list of users.",
         "record_extractor": "$",
         "meta_extractor": {
           "next": "@link.next"
         },
         "needs_envelope": true,
-        "record_type": "list[ScheduledInterview]",
+        "record_type": "list[User]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "attachments": [
+      {
+        "method_name": "list_attachment",
+        "http_method": "get",
+        "path": "/attachments",
+        "entity": "attachments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor from the previous response Link header. Do not combine with any other parameter.",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 500
+            },
+            "required": false,
+            "description": "Number of records to return on the first page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
+            },
+            "required": false,
+            "description": "Return only records with these IDs (maximum 50).",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at",
+            "python_name": "updated_at",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter by updated timestamp using the Harvest v3 pipe expression, such as gte|2026-01-01T00:00:00Z.",
+            "is_deep_object": false
+          },
+          {
+            "name": "application_ids",
+            "python_name": "application_ids",
+            "type": "list[int]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
+            },
+            "required": false,
+            "description": "Return attachments associated with these application IDs (maximum 50).",
+            "is_deep_object": false
+          },
+          {
+            "name": "candidate_ids",
+            "python_name": "candidate_ids",
+            "type": "list[int]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50
+            },
+            "required": false,
+            "description": "Return attachments belonging to these candidate IDs (maximum 50).",
+            "is_deep_object": false
+          },
+          {
+            "name": "type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "resume",
+                "cover_letter",
+                "take_home_test",
+                "offer_packet",
+                "offer_letter",
+                "signed_offer_letter",
+                "other",
+                "form_attachment",
+                "midfunnel_agreement",
+                "automated_agreement"
+              ]
+            },
+            "required": false,
+            "description": "Filter by attachment type.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AttachmentsListParams",
+        "response_type": "AttachmentsListResult",
+        "description": "Returns a cursor-paginated list of attachments.",
+        "record_extractor": "$",
+        "meta_extractor": {
+          "next": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Attachment]",
         "meta_fields": [
           {
             "name": "next",
@@ -1145,63 +1091,27 @@
         "is_download": false
       },
       {
-        "method_name": "get_scheduled_interview",
+        "method_name": "download_attachment",
         "http_method": "get",
-        "path": "/scheduled_interviews/{id}",
-        "entity": "scheduled_interviews",
-        "action": "get",
-        "parameters": [
-          {
-            "name": "id",
-            "python_name": "id",
-            "type": "str",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "Scheduled Interview ID"
-          }
-        ],
-        "params_type_name": "ScheduledInterviewsGetParams",
-        "response_type": "ScheduledInterview",
-        "description": "Get a single scheduled interview by ID",
-        "record_extractor": "$",
-        "meta_extractor": null,
-        "needs_envelope": null,
-        "record_type": "ScheduledInterview",
-        "meta_fields": null,
-        "is_download": false
-      }
-    ],
-    "application_attachment": [
-      {
-        "method_name": "download_application_attachment",
-        "http_method": "get",
-        "path": "/applications/{id}/attachment:download/{attachment_index}",
-        "entity": "application_attachment",
+        "path": "/attachments:download",
+        "entity": "attachments",
         "action": "download",
         "parameters": [
           {
-            "name": "id",
-            "python_name": "id",
-            "type": "str",
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[int]",
             "schema": {
-              "type": "integer"
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 1,
+              "maxItems": 1
             },
             "required": true,
-            "description": "Application ID"
-          },
-          {
-            "name": "attachment_index",
-            "python_name": "attachment_index",
-            "type": "str",
-            "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "default": 0
-            },
-            "required": true,
-            "description": "Index of the attachment to download (0-based)"
+            "description": "The single attachment ID to download.",
+            "is_deep_object": false
           },
           {
             "name": "range_header",
@@ -1214,65 +1124,13 @@
             "description": "Optional Range header for partial downloads (e.g., 'bytes=0-99')"
           }
         ],
-        "params_type_name": "ApplicationAttachmentDownloadParams",
+        "params_type_name": "AttachmentsDownloadParams",
         "response_type": "AsyncIterator[bytes]",
-        "description": "Downloads an attachment (resume, cover letter, etc.) for an application by index.\nThe attachment URL is a temporary signed AWS S3 URL that expires within 7 days.\nFiles should be downloaded immediately after retrieval.\n",
+        "description": "Looks up an attachment by ID and follows its current time-limited download URL.",
         "record_extractor": "$",
         "meta_extractor": null,
         "needs_envelope": null,
-        "record_type": "Application",
-        "meta_fields": null,
-        "is_download": true
-      }
-    ],
-    "candidate_attachment": [
-      {
-        "method_name": "download_candidate_attachment",
-        "http_method": "get",
-        "path": "/candidates/{id}/attachment:download/{attachment_index}",
-        "entity": "candidate_attachment",
-        "action": "download",
-        "parameters": [
-          {
-            "name": "id",
-            "python_name": "id",
-            "type": "str",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "Candidate ID"
-          },
-          {
-            "name": "attachment_index",
-            "python_name": "attachment_index",
-            "type": "str",
-            "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "default": 0
-            },
-            "required": true,
-            "description": "Index of the attachment to download (0-based)"
-          },
-          {
-            "name": "range_header",
-            "python_name": "range_header",
-            "type": "str",
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "description": "Optional Range header for partial downloads (e.g., 'bytes=0-99')"
-          }
-        ],
-        "params_type_name": "CandidateAttachmentDownloadParams",
-        "response_type": "AsyncIterator[bytes]",
-        "description": "Downloads an attachment (resume, cover letter, etc.) for a candidate by index.\nThe attachment URL is a temporary signed AWS S3 URL that expires within 7 days.\nFiles should be downloaded immediately after retrieval.\n",
-        "record_extractor": "$",
-        "meta_extractor": null,
-        "needs_envelope": null,
-        "record_type": "Candidate",
+        "record_type": "list[Attachment]",
         "meta_fields": null,
         "is_download": true
       }
@@ -1294,33 +1152,23 @@
       "condition_type_name": "ApplicationsCondition",
       "fields": [
         {
+          "name": "agency_note_id",
+          "python_name": "agency_note_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the note created when the candidate was submitted by an agency, or `null` if the application did not come through an agency.",
+          "semantic": false
+        },
+        {
           "name": "answers",
           "python_name": "answers",
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Answers provided in the application.",
-          "semantic": false
-        },
-        {
-          "name": "applied_at",
-          "python_name": "applied_at",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Timestamp when the candidate applied.",
-          "semantic": false
-        },
-        {
-          "name": "attachments",
-          "python_name": "attachments",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "Attachments uploaded with the application.",
+          "description": "Free-text answers the candidate provided on the job post application form. Each entry pairs the question text with the candidate's answer.",
           "semantic": false
         },
         {
@@ -1330,27 +1178,37 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the candidate.",
+          "description": "Id of the candidate (person) this application belongs to.",
           "semantic": false
         },
         {
-          "name": "credited_to",
-          "python_name": "credited_to",
+          "name": "coordinator_id",
+          "python_name": "coordinator_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the user assigned as coordinator on the application's job, or `null` when unassigned.",
+          "semantic": false
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Created at from the Greenhouse v3 applications record.",
+          "semantic": false
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Information about the employee who credited the application.",
-          "semantic": false
-        },
-        {
-          "name": "current_stage",
-          "python_name": "current_stage",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Current stage of the application process.",
+          "description": "Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.",
           "semantic": false
         },
         {
@@ -1360,27 +1218,37 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the application.",
+          "description": "Id from the Greenhouse v3 applications record.",
+          "semantic": false
+        },
+        {
+          "name": "job_id",
+          "python_name": "job_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the job this application is on. `null` for jobless prospect applications.",
+          "semantic": false
+        },
+        {
+          "name": "job_interview_stage_id",
+          "python_name": "job_interview_stage_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the job interview stage definition (see `GET /v3/job_interview_stages`) the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state.",
           "semantic": false
         },
         {
           "name": "job_post_id",
           "python_name": "job_post_id",
           "type": "int | None",
-          "json_type": "integer | null",
+          "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "",
-          "semantic": false
-        },
-        {
-          "name": "jobs",
-          "python_name": "jobs",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "Jobs applied for by the candidate.",
+          "description": "Id of the job post the candidate applied through, or `null` if the application was created internally rather than from a posted role.",
           "semantic": false
         },
         {
@@ -1390,17 +1258,27 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp of the last activity on the application.",
+          "description": "Timestamp of the most recent activity on this application (notes, emails, stage changes, etc.), in ISO 8601.",
           "semantic": false
         },
         {
-          "name": "location",
-          "python_name": "location",
+          "name": "location_address",
+          "python_name": "location_address",
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Location related to the application.",
+          "description": "Free-form location string captured on the application (typically from the job post's location question).",
+          "semantic": false
+        },
+        {
+          "name": "needs_decision",
+          "python_name": "needs_decision",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "json_example_value": true,
+          "description": "`true` when the application is waiting on a hiring-team decision (scorecard completion, advance/reject, etc.) in its current stage.",
           "semantic": false
         },
         {
@@ -1410,37 +1288,37 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Status of the application prospect.",
+          "description": "`true` for prospect applications (sourced candidates not yet attached to a single job), `false` for candidate applications on a specific job.",
           "semantic": false
         },
         {
-          "name": "prospect_detail",
-          "python_name": "prospect_detail",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Details related to the application prospect.",
+          "name": "prospective_job_ids",
+          "python_name": "prospective_job_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "json_example_value": [],
+          "description": "For prospect applications, the ids of jobs the prospect is being considered for. Empty for non-prospect applications and for jobless prospects.",
           "semantic": false
         },
         {
-          "name": "prospective_department",
-          "python_name": "prospective_department",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Prospective department for the candidate.",
+          "name": "recruiter_id",
+          "python_name": "recruiter_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the user assigned as recruiter on the application's job, or `null` when unassigned.",
           "semantic": false
         },
         {
-          "name": "prospective_office",
-          "python_name": "prospective_office",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Prospective office for the candidate.",
+          "name": "referrer_id",
+          "python_name": "referrer_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the referrer who credited this application, or `null` if there was no referral. References a referrer, not a Greenhouse user.",
           "semantic": false
         },
         {
@@ -1450,37 +1328,47 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp when the application was rejected.",
+          "description": "Timestamp the application was rejected, in ISO 8601. `null` for applications that have not been rejected.",
           "semantic": false
         },
         {
-          "name": "rejection_details",
-          "python_name": "rejection_details",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Details related to the application rejection.",
+          "name": "rejection_reason_id",
+          "python_name": "rejection_reason_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the rejection reason selected for the application. References a `/v3/rejection_reasons` row scoped to the organization. `null` when the application was rejected without a reason, or has not been rejected.",
           "semantic": false
         },
         {
-          "name": "rejection_reason",
-          "python_name": "rejection_reason",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Reason for the application rejection.",
+          "name": "source_id",
+          "python_name": "source_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the source the application is attributed to (e.g. a job board, an event, an employee referral source). `null` if no source is set.",
           "semantic": false
         },
         {
-          "name": "source",
-          "python_name": "source",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Source of the application.",
+          "name": "stage_id",
+          "python_name": "stage_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the interview stage the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state.",
+          "semantic": false
+        },
+        {
+          "name": "stage_name",
+          "python_name": "stage_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Display name of the candidate's current interview stage on this application.",
           "semantic": false
         },
         {
@@ -1490,7 +1378,17 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the application.",
+          "description": "Lifecycle status of the application. `in_process` for active candidates, `rejected` for rejected applications, `hired` once an offer is closed and the hire endpoint has fired, and `converted` for prospect applications that have been promoted to a candidate application via `convert_to_candidate`.",
+          "semantic": false
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Updated at from the Greenhouse v3 applications record.",
           "semantic": false
         }
       ],
@@ -1520,37 +1418,7 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Candidate's addresses",
-          "semantic": false
-        },
-        {
-          "name": "application_ids",
-          "python_name": "application_ids",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "List of application IDs",
-          "semantic": false
-        },
-        {
-          "name": "applications",
-          "python_name": "applications",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "An array of all applications made by candidates.",
-          "semantic": false
-        },
-        {
-          "name": "attachments",
-          "python_name": "attachments",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "Attachments related to the candidate",
+          "description": "Postal addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `home`, `work`, or `other`.",
           "semantic": false
         },
         {
@@ -1560,7 +1428,7 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if candidate can be emailed",
+          "description": "Whether this candidate has consented to receive email communication from your organization.",
           "semantic": false
         },
         {
@@ -1570,17 +1438,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Company where the candidate is associated",
-          "semantic": false
-        },
-        {
-          "name": "coordinator",
-          "python_name": "coordinator",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Coordinator assigned to the candidate",
+          "description": "Candidate's current company, as entered on their profile.",
           "semantic": false
         },
         {
@@ -1590,7 +1448,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time of creation",
+          "description": "Created at from the Greenhouse v3 candidates record.",
           "semantic": false
         },
         {
@@ -1600,17 +1458,7 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Custom fields associated with the candidate",
-          "semantic": false
-        },
-        {
-          "name": "educations",
-          "python_name": "educations",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "List of candidate's educations",
+          "description": "Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.",
           "semantic": false
         },
         {
@@ -1620,17 +1468,7 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Candidate's email addresses",
-          "semantic": false
-        },
-        {
-          "name": "employments",
-          "python_name": "employments",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "List of candidate's employments",
+          "description": "Email addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `work`, or `other`.",
           "semantic": false
         },
         {
@@ -1640,7 +1478,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Candidate's first name",
+          "description": "First name from the Greenhouse v3 candidates record.",
           "semantic": false
         },
         {
@@ -1650,37 +1488,17 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Candidate's ID",
+          "description": "Id from the Greenhouse v3 candidates record.",
           "semantic": false
         },
         {
-          "name": "is_private",
-          "python_name": "is_private",
-          "type": "bool | None",
-          "json_type": "null | boolean",
-          "example_value_json": "True",
-          "json_example_value": true,
-          "description": "Indicates if the candidate's data is private",
-          "semantic": false
-        },
-        {
-          "name": "keyed_custom_fields",
-          "python_name": "keyed_custom_fields",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Keyed custom fields associated with the candidate",
-          "semantic": false
-        },
-        {
-          "name": "last_activity",
-          "python_name": "last_activity",
+          "name": "last_activity_at",
+          "python_name": "last_activity_at",
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Details of the last activity related to the candidate",
+          "description": "Timestamp of the most recent activity on any of the candidate's applications (notes, emails, stage changes, etc.), in ISO 8601.",
           "semantic": false
         },
         {
@@ -1690,7 +1508,17 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Candidate's last name",
+          "description": "Last name from the Greenhouse v3 candidates record.",
+          "semantic": false
+        },
+        {
+          "name": "linked_user_ids",
+          "python_name": "linked_user_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "json_example_value": [],
+          "description": "Ids of Greenhouse users linked to this candidate (employees represented by both a user record and a candidate record).",
           "semantic": false
         },
         {
@@ -1700,27 +1528,27 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Candidate's phone numbers",
+          "description": "Phone numbers on the candidate's profile. Each entry pairs the `value` with a `type` such as `mobile`, `home`, `work`, `skype`, or `other`.",
           "semantic": false
         },
         {
-          "name": "photo_url",
-          "python_name": "photo_url",
+          "name": "preferred_name",
+          "python_name": "preferred_name",
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "URL of the candidate's profile photo",
+          "description": "Preferred or chosen name the candidate goes by, when different from their legal first name.",
           "semantic": false
         },
         {
-          "name": "recruiter",
-          "python_name": "recruiter",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Recruiter assigned to the candidate",
+          "name": "private",
+          "python_name": "private",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "json_example_value": true,
+          "description": "If true, the candidate is restricted to users with `View Private Candidates` access. Defaults to `false`.",
           "semantic": false
         },
         {
@@ -1730,7 +1558,7 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Candidate's social media addresses",
+          "description": "Social media handles or URLs on the candidate's profile. Social entries are untyped \u2014 only the `value` is returned.",
           "semantic": false
         },
         {
@@ -1740,7 +1568,17 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Tags associated with the candidate",
+          "description": "Candidate tag names applied to this candidate within your organization.",
+          "semantic": false
+        },
+        {
+          "name": "time_zone",
+          "python_name": "time_zone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Candidate's time zone as a Rails-style identifier (for example `Eastern Time (US & Canada)`).",
           "semantic": false
         },
         {
@@ -1750,7 +1588,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Candidate's title (e.g., Mr., Mrs., Dr.)",
+          "description": "Candidate's current job title, as entered on their profile.",
           "semantic": false
         },
         {
@@ -1760,7 +1598,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time of last update",
+          "description": "Updated at from the Greenhouse v3 candidates record.",
           "semantic": false
         },
         {
@@ -1770,7 +1608,7 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of candidate's website addresses",
+          "description": "Personal websites or portfolio URLs on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `company`, `portfolio`, `blog`, or `other`.",
           "semantic": false
         }
       ],
@@ -1794,23 +1632,13 @@
       "condition_type_name": "DepartmentsCondition",
       "fields": [
         {
-          "name": "child_department_external_ids",
-          "python_name": "child_department_external_ids",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "External IDs of child departments associated with this department.",
-          "semantic": false
-        },
-        {
-          "name": "child_ids",
-          "python_name": "child_ids",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "Unique IDs of child departments associated with this department.",
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Created at from the Greenhouse v3 departments record.",
           "semantic": false
         },
         {
@@ -1820,7 +1648,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "External ID of this department.",
+          "description": "Partner-supplied identifier for the department, typically the matching id from an HRIS or other external system. Free-form string and `null` when no external id has been set.",
           "semantic": false
         },
         {
@@ -1830,7 +1658,7 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique ID of this department.",
+          "description": "Id from the Greenhouse v3 departments record.",
           "semantic": false
         },
         {
@@ -1840,17 +1668,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the department.",
-          "semantic": false
-        },
-        {
-          "name": "parent_department_external_id",
-          "python_name": "parent_department_external_id",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "External ID of the parent department of this department.",
+          "description": "Display name of the department (e.g. `Engineering`, `Marketing`).",
           "semantic": false
         },
         {
@@ -1860,7 +1678,17 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique ID of the parent department of this department.",
+          "description": "Id of the parent department in the organization's department tree. `null` for top-level departments. References another `/v3/departments` row.",
+          "semantic": false
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Updated at from the Greenhouse v3 departments record.",
           "semantic": false
         }
       ],
@@ -1890,7 +1718,7 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the job post is active or not.",
+          "description": "If `true`, the post has not been deleted. Deleted posts are excluded by default; pass `active=false` on the list endpoint to retrieve them.",
           "semantic": false
         },
         {
@@ -1900,7 +1728,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Content or description of the job post.",
+          "description": "HTML body of the post shown to candidates on the job board. For internal posts this returns the `internal_content` instead. Sanitized server-side \u2014 only a limited element/attribute allowlist (including `iframe`, `video`, `source`) survives. `null` while the post is still being scaffolded.",
           "semantic": true
         },
         {
@@ -1910,7 +1738,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the job post was created.",
+          "description": "Created at from the Greenhouse v3 job posts record.",
           "semantic": false
         },
         {
@@ -1920,17 +1748,17 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "ID of the demographic question set associated with the job post.",
+          "description": "Id of the demographic question set surfaced to candidates on this post for diversity, equity, and inclusion (DE&I) reporting. `null` when the post does not collect demographic data.",
           "semantic": false
         },
         {
-          "name": "external",
-          "python_name": "external",
+          "name": "featured",
+          "python_name": "featured",
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the job post is external or not.",
+          "description": "If `true`, the post is currently featured on the organization's internal job board and surfaces in the weekly internal-jobs email. Only internal posts can be featured, and at most three can be featured at a time.",
           "semantic": false
         },
         {
@@ -1940,7 +1768,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the job post was first published.",
+          "description": "Timestamp the post first transitioned to `live`, in ISO 8601. `null` for posts that have never been published.",
           "semantic": false
         },
         {
@@ -1950,7 +1778,7 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier of the job post.",
+          "description": "Id from the Greenhouse v3 job posts record.",
           "semantic": false
         },
         {
@@ -1960,7 +1788,7 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the job post is internal or not.",
+          "description": "If `true`, the post lives on an internal job board and is visible only to existing employees signed in to the internal board. If `false`, the post is external and lives on a public-facing `job_board`. Set by the board the post is associated with at create time.",
           "semantic": false
         },
         {
@@ -1970,8 +1798,18 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`.",
+          "description": "HTML body shown on the internal job board when the post is also configured as internal. `null` for external-only posts. Same sanitization rules as `content`.",
           "semantic": true
+        },
+        {
+          "name": "job_board_id",
+          "python_name": "job_board_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the `job_board` this post is published to. Resolves to either an external (careers site, syndicated board) or internal job board depending on `internal`. Each post belongs to exactly one board at a time.",
+          "semantic": false
         },
         {
           "name": "job_id",
@@ -1980,7 +1818,17 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "ID of the job associated with the job post.",
+          "description": "Id of the parent job (requisition) this post belongs to. A single job can have multiple posts; the job is the source of truth for the hiring team, openings, and interview plan.",
+          "semantic": false
+        },
+        {
+          "name": "language",
+          "python_name": "language",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 639-1 locale of the post, used to render the candidate-facing application form in the matching language (e.g. `en`, `fr`, `ja`). `null` when no locale has been chosen.",
           "semantic": false
         },
         {
@@ -1990,17 +1838,17 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Flag indicating if the job post is live or not.",
+          "description": "If `true`, the post is published (`job_application_status` is `live`) and its job board is also live. A post on an unpublished board is **not** `live` \u2014 its `public_url` returns a 404 until the board is enabled.",
           "semantic": false
         },
         {
-          "name": "location",
-          "python_name": "location",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Details about the job post location.",
+          "name": "public_url",
+          "python_name": "public_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Canonical public URL of the post on its job board, including the `gh_jid` tracking parameter. `null` when the post has no associated job board or the board has no public URL configured.",
           "semantic": false
         },
         {
@@ -2010,7 +1858,7 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of questions related to the job post.",
+          "description": "Application form questions presented to candidates on this post, including default questions (resume, cover letter, basic info) and any custom questions configured by the hiring team. Ordered as they appear on the form.",
           "semantic": false
         },
         {
@@ -2020,7 +1868,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Title or headline of the job post.",
+          "description": "Public-facing title shown to candidates on the job board (e.g. `Senior Backend Engineer, Remote`). Distinct from the internal `job.name` \u2014 a single job can have several posts with different titles, one per board, language, or geography.",
           "semantic": false
         },
         {
@@ -2030,20 +1878,20 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Date and time when the job post was last updated.",
+          "description": "Updated at from the Greenhouse v3 job posts record.",
           "semantic": false
         }
       ],
       "semantic_fields": [
         {
           "name": "content",
-          "description": "Content or description of the job post.",
+          "description": "HTML body of the post shown to candidates on the job board. For internal posts this returns the `internal_content` instead. Sanitized server-side \u2014 only a limited element/attribute allowlist (including `iframe`, `video`, `source`) survives. `null` while the post is still being scaffolded.",
           "context_max_chars": 2048,
           "content_type": "html"
         },
         {
           "name": "internal_content",
-          "description": "The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`.",
+          "description": "HTML body shown on the internal job board when the post is also configured as internal. `null` for external-only posts. Same sanitization rules as `content`.",
           "context_max_chars": 2048,
           "content_type": "html"
         }
@@ -2071,10 +1919,6 @@
         },
         {
           "name": "internal",
-          "type": "string"
-        },
-        {
-          "name": "location",
           "type": "string"
         },
         {
@@ -2110,7 +1954,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the job was closed",
+          "description": "Timestamp the job most recently transitioned to `closed`, in ISO 8601. `null` for jobs that are still `open` or `draft`.",
           "semantic": false
         },
         {
@@ -2120,7 +1964,7 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the job details are confidential",
+          "description": "If `true`, the job is restricted to users explicitly granted access on the Hiring Team. The legacy Confidential Jobs feature has been sunset \u2014 this flag cannot be set on new jobs and is preserved for jobs that already had it enabled.",
           "semantic": false
         },
         {
@@ -2130,7 +1974,7 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The ID of the job from which this job was copied",
+          "description": "Id of the job (typically a template) this job was copied from on creation. `null` when the job was not created from another job.",
           "semantic": false
         },
         {
@@ -2140,7 +1984,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the job was created",
+          "description": "Created at from the Greenhouse v3 jobs record.",
           "semantic": false
         },
         {
@@ -2150,27 +1994,17 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Custom fields related to the job",
+          "description": "Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.",
           "semantic": false
         },
         {
-          "name": "departments",
-          "python_name": "departments",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "Departments associated with the job",
-          "semantic": false
-        },
-        {
-          "name": "hiring_team",
-          "python_name": "hiring_team",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Members of the hiring team for the job",
+          "name": "department_id",
+          "python_name": "department_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the department this job is assigned to. `null` when no department is set.",
           "semantic": false
         },
         {
@@ -2180,7 +2014,7 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique ID of the job",
+          "description": "Id from the Greenhouse v3 jobs record.",
           "semantic": false
         },
         {
@@ -2190,17 +2024,7 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates if the job is a template",
-          "semantic": false
-        },
-        {
-          "name": "keyed_custom_fields",
-          "python_name": "keyed_custom_fields",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Keyed custom fields related to the job",
+          "description": "If `true`, this job is a template used as the source for new jobs rather than a real requisition. Templates do not accept applications; reference them via `template_job_id` on `POST /v3/jobs`.",
           "semantic": false
         },
         {
@@ -2210,7 +2034,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the job",
+          "description": "Internal job title shown to the hiring team in Greenhouse (e.g. `Senior Backend Engineer`). Distinct from the external-facing title on each `job_post`.",
           "semantic": false
         },
         {
@@ -2220,17 +2044,17 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Additional notes or comments about the job",
+          "description": "Internal HTML notes about the job, surfaced to the hiring team in the Greenhouse UI. Not exposed on public job posts.",
           "semantic": true
         },
         {
-          "name": "offices",
-          "python_name": "offices",
+          "name": "office_ids",
+          "python_name": "office_ids",
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Offices associated with the job",
+          "description": "Ids of the offices this job is assigned to. A job can span multiple offices; empty array or `null` when no offices are set.",
           "semantic": false
         },
         {
@@ -2240,17 +2064,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the job was opened",
-          "semantic": false
-        },
-        {
-          "name": "openings",
-          "python_name": "openings",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "Openings associated with the job",
+          "description": "Timestamp the job first transitioned to `open`, in ISO 8601. `null` while the job is still in `draft`.",
           "semantic": false
         },
         {
@@ -2260,7 +2074,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "ID associated with the job requisition",
+          "description": "Partner-supplied external identifier for the requisition (e.g. an HRIS or ATS code). Free-form string, not unique across the organization, and `null` when no external id has been set.",
           "semantic": false
         },
         {
@@ -2270,7 +2084,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Current status of the job",
+          "description": "Lifecycle status of the job. `draft` while it is being scaffolded, `open` once it has at least one open opening, and `closed` after every opening is closed. A job moves to `closed` automatically when its last open opening is closed via `PATCH /v3/openings/{id}`.",
           "semantic": false
         },
         {
@@ -2280,14 +2094,14 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time the job was last updated",
+          "description": "Updated at from the Greenhouse v3 jobs record.",
           "semantic": false
         }
       ],
       "semantic_fields": [
         {
           "name": "notes",
-          "description": "Additional notes or comments about the job",
+          "description": "Internal HTML notes about the job, surfaced to the hiring team in the Greenhouse UI. Not exposed on public job posts.",
           "context_max_chars": 2048,
           "content_type": "html"
         }
@@ -2354,7 +2168,7 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the application associated with the offer",
+          "description": "Id of the application this offer is extended on. Every offer belongs to exactly one application; the offer is voided if the application is rejected or deleted.",
           "semantic": false
         },
         {
@@ -2364,7 +2178,7 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the candidate associated with the offer",
+          "description": "Id of the candidate (person) receiving this offer. Resolved through the offer's application.",
           "semantic": false
         },
         {
@@ -2374,7 +2188,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the offer was created",
+          "description": "Created at from the Greenhouse v3 offers record.",
           "semantic": false
         },
         {
@@ -2384,7 +2198,7 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Additional custom fields related to the offer",
+          "description": "Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.",
           "semantic": false
         },
         {
@@ -2394,7 +2208,7 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the offer",
+          "description": "Id from the Greenhouse v3 offers record.",
           "semantic": false
         },
         {
@@ -2404,27 +2218,17 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the job associated with the offer",
+          "description": "Id of the job this offer's application is on.",
           "semantic": false
         },
         {
-          "name": "keyed_custom_fields",
-          "python_name": "keyed_custom_fields",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Keyed custom fields associated with the offer",
-          "semantic": false
-        },
-        {
-          "name": "opening",
-          "python_name": "opening",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Details about the job opening",
+          "name": "opening_id",
+          "python_name": "opening_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the specific opening this offer is being extended for. `null` when the offer has not yet been linked to an opening.",
           "semantic": false
         },
         {
@@ -2434,27 +2238,27 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the offer was resolved",
+          "description": "Timestamp the offer was resolved (`Accepted` or `Rejected`), in ISO 8601. Date updates submitted through `PATCH /v3/offers/{id}` are normalized to noon UTC on the supplied date. `null` while the offer is still `Created` or has been superseded as `Deprecated` without a resolution.",
           "semantic": false
         },
         {
-          "name": "sent_at",
-          "python_name": "sent_at",
+          "name": "sent_on",
+          "python_name": "sent_on",
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the offer was sent",
+          "description": "Date the offer was sent to the candidate, in ISO 8601 (YYYY-MM-DD). `null` until the offer has been sent.",
           "semantic": false
         },
         {
-          "name": "starts_at",
-          "python_name": "starts_at",
+          "name": "starts_on",
+          "python_name": "starts_on",
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the offer starts",
+          "description": "Candidate's proposed start date, in ISO 8601 (YYYY-MM-DD). `null` when no start date has been set on the offer.",
           "semantic": false
         },
         {
@@ -2464,7 +2268,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Status of the offer",
+          "description": "Lifecycle status of the offer. `Created` for offers still being drafted or pending approval, `Accepted` once the candidate accepts, `Rejected` if declined or withdrawn, and `Deprecated` for superseded prior versions (a new offer version replaces an earlier one with this status).",
           "semantic": false
         },
         {
@@ -2474,7 +2278,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Timestamp indicating when the offer was last updated",
+          "description": "Updated at from the Greenhouse v3 offers record.",
           "semantic": false
         },
         {
@@ -2484,7 +2288,7 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Version of the offer data",
+          "description": "Revision number of this offer within its application. Greenhouse creates a new offer row (incrementing `version`) whenever a tracked field on an existing offer changes \u2014 typically `starts_on`, `opening_id`, or a custom field configured to trigger a new version. Pair with `current_only=true` to filter the list endpoint down to the latest version per application.",
           "semantic": false
         }
       ],
@@ -2508,23 +2312,13 @@
       "condition_type_name": "OfficesCondition",
       "fields": [
         {
-          "name": "child_ids",
-          "python_name": "child_ids",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "IDs of child offices associated with this office",
-          "semantic": false
-        },
-        {
-          "name": "child_office_external_ids",
-          "python_name": "child_office_external_ids",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "External IDs of child offices associated with this office",
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Created at from the Greenhouse v3 offices record.",
           "semantic": false
         },
         {
@@ -2534,7 +2328,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Unique identifier for this office in the external system",
+          "description": "Stable identifier supplied by the customer or HRIS for cross-system reconciliation. `null` when no external id has been set. Available when the `org_structure_external_id` product flag is enabled.",
           "semantic": false
         },
         {
@@ -2544,17 +2338,17 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for this office in the API system",
+          "description": "Id from the Greenhouse v3 offices record.",
           "semantic": false
         },
         {
           "name": "location",
           "python_name": "location",
-          "type": "dict[str, Any] | None",
-          "json_type": "null | object",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "Location details of this office",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Free-form physical location string for the office (e.g. `New York, NY, USA`). `null` for offices that have no location set, including most remote offices.",
           "semantic": false
         },
         {
@@ -2564,7 +2358,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Name of the office",
+          "description": "Display name of the office (e.g. `San Francisco`, `Remote (US)`). Unique among active offices in the same organization.",
           "semantic": false
         },
         {
@@ -2574,27 +2368,27 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "ID of the parent office, if this office is a branch office",
+          "description": "Id of the parent office when offices are organized hierarchically. `null` for top-level offices. References another `/v3/offices` row in the same organization.",
           "semantic": false
         },
         {
-          "name": "parent_office_external_id",
-          "python_name": "parent_office_external_id",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "External ID of the parent office in the external system",
-          "semantic": false
-        },
-        {
-          "name": "primary_contact_user_id",
-          "python_name": "primary_contact_user_id",
+          "name": "primary_in_house_contact_user_id",
+          "python_name": "primary_in_house_contact_user_id",
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "User ID of the primary contact person for this office",
+          "description": "Id of the Greenhouse user designated as the office's primary internal contact, typically the local recruiting lead. References a `/v3/users` row. `null` when no contact has been assigned.",
+          "semantic": false
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Updated at from the Greenhouse v3 offices record.",
           "semantic": false
         }
       ],
@@ -2618,13 +2412,23 @@
       "condition_type_name": "SourcesCondition",
       "fields": [
         {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Created at from the Greenhouse v3 sources record.",
+          "semantic": false
+        },
+        {
           "name": "id",
           "python_name": "id",
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "The unique identifier for the source.",
+          "description": "Id from the Greenhouse v3 sources record.",
           "semantic": false
         },
         {
@@ -2634,7 +2438,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The name of the source.",
+          "description": "Display name of the source as recruiters see it in Greenhouse (e.g. `LinkedIn (Prospecting)`, `Indeed`, `Referral`, `Internal Applicant`, or a custom agency name). For organization-specific sources this is the label the org configured; for global Greenhouse sources it is the standard public name.",
           "semantic": false
         },
         {
@@ -2644,7 +2448,17 @@
           "json_type": "null | object",
           "example_value_json": "{}",
           "json_example_value": {},
-          "description": "Type of the data source",
+          "description": "The sourcing strategy this source rolls up to \u2014 the broader category used for reporting. Sources are grouped under sourcing strategies such as `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`, `Company marketing`, `In person event`, `MyGreenhouse`, and `Other`. Use the strategy when aggregating candidate volume by channel; use the source itself when reporting on a specific channel within that category.",
+          "semantic": false
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Updated at from the Greenhouse v3 sources record.",
           "semantic": false
         }
       ],
@@ -2668,33 +2482,53 @@
       "condition_type_name": "UsersCondition",
       "fields": [
         {
+          "name": "agency_id",
+          "python_name": "agency_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Id of the staffing agency this user belongs to, when the user is an external agency recruiter rather than an employee of your organization. `null` for in-house users.",
+          "semantic": false
+        },
+        {
           "name": "created_at",
           "python_name": "created_at",
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time when the user account was created.",
+          "description": "Created at from the Greenhouse v3 users record.",
           "semantic": false
         },
         {
-          "name": "departments",
-          "python_name": "departments",
-          "type": "list[Any] | None",
-          "json_type": "null | array",
-          "example_value_json": "[]",
-          "json_example_value": [],
-          "description": "List of departments associated with users",
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "json_example_value": {},
+          "description": "Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`.",
           "semantic": false
         },
         {
-          "name": "disabled",
-          "python_name": "disabled",
+          "name": "deactivated",
+          "python_name": "deactivated",
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the user account is disabled.",
+          "description": "Whether the user has been deactivated. Deactivated users cannot sign in or be assigned to new jobs, but their historical activity (notes, scorecards, emails) is preserved. Toggle via `POST /v3/users/{id}/deactivate` and `POST /v3/users/{id}/activate`.",
+          "semantic": false
+        },
+        {
+          "name": "department_ids",
+          "python_name": "department_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "json_example_value": [],
+          "description": "Ids of the departments this user is assigned to. Used to scope future job permissions and to filter the user list by department. Empty when the user is not pinned to any department.",
           "semantic": false
         },
         {
@@ -2704,7 +2538,7 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "Email addresses of the users",
+          "description": "All email addresses on the user's account, including the primary address and any additional verified addresses.",
           "semantic": false
         },
         {
@@ -2714,7 +2548,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Employee identifier for the user.",
+          "description": "Partner-supplied external employee identifier, typically the user's HRIS or payroll id. Free-form string; not unique across organizations and `null` when no employee id has been set.",
           "semantic": false
         },
         {
@@ -2724,7 +2558,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The first name of the user.",
+          "description": "First name from the Greenhouse v3 users record.",
           "semantic": false
         },
         {
@@ -2734,7 +2568,27 @@
           "json_type": "null | integer",
           "example_value_json": "0",
           "json_example_value": 0,
-          "description": "Unique identifier for the user.",
+          "description": "Id from the Greenhouse v3 users record.",
+          "semantic": false
+        },
+        {
+          "name": "interviewer_tags",
+          "python_name": "interviewer_tags",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "json_example_value": [],
+          "description": "Interviewer tags applied to this user \u2014 the labeled skill or panel groupings (e.g. `Senior Engineer`, `Bar Raiser`) used to suggest qualified interviewers when building an interview plan. Each entry pairs the tag's `id` with its `name`.",
+          "semantic": false
+        },
+        {
+          "name": "job_title",
+          "python_name": "job_title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Free-form job title set on the user's Greenhouse profile (e.g. `Senior Recruiter`). Not synchronized with any HRIS title.",
           "semantic": false
         },
         {
@@ -2744,7 +2598,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The last name of the user.",
+          "description": "Last name from the Greenhouse v3 users record.",
           "semantic": false
         },
         {
@@ -2754,7 +2608,7 @@
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "IDs of candidates linked to the user.",
+          "description": "Ids of candidate records linked to this user. Populated when an employee is represented by both a user record (for Greenhouse access) and a candidate record (for past or internal applications).",
           "semantic": false
         },
         {
@@ -2764,27 +2618,27 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The full name of the user.",
+          "description": "Concatenation of `first_name` and `last_name` rendered as a single display string. Provided for convenience; partners that need either component should read `first_name`/`last_name` directly.",
           "semantic": false
         },
         {
-          "name": "offices",
-          "python_name": "offices",
+          "name": "office_ids",
+          "python_name": "office_ids",
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
           "json_example_value": [],
-          "description": "List of office locations where users are based",
+          "description": "Ids of the offices this user is assigned to. Used to scope future job permissions and to filter the user list by office. Empty when the user is not pinned to any office.",
           "semantic": false
         },
         {
-          "name": "primary_email_address",
-          "python_name": "primary_email_address",
+          "name": "primary_email",
+          "python_name": "primary_email",
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The primary email address of the user.",
+          "description": "Primary email address on the user's account. Sign-in identifier and the address Greenhouse uses for outbound mail; additional verified addresses are not surfaced here. Service accounts (integration/ISU users) have no email and are excluded from this endpoint by default; when included via `show_service_accounts=true`, their `primary_email` is an empty string.",
           "semantic": false
         },
         {
@@ -2794,7 +2648,7 @@
           "json_type": "null | boolean",
           "example_value_json": "True",
           "json_example_value": true,
-          "description": "Indicates whether the user is a site administrator.",
+          "description": "Whether the user holds the Site Admin role. Site admins have unrestricted access to every non-confidential job and to organization-level settings. Demote a site admin to a Basic user with `POST /v3/users/{id}/revoke_permissions`.",
           "semantic": false
         },
         {
@@ -2804,7 +2658,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "The date and time when the user account was last updated.",
+          "description": "Updated at from the Greenhouse v3 users record.",
           "semantic": false
         }
       ],

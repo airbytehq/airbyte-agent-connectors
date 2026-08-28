@@ -10,212 +10,369 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Any
+from typing import Optional
 
 # Authentication configuration
 
 class GreenhouseAuthConfig(BaseModel):
-    """Harvest API Key Authentication"""
+    """Greenhouse OAuth 2.0"""
 
     model_config = ConfigDict(extra="forbid")
 
-    api_key: str
-    """Your Greenhouse Harvest API Key from the Dev Center"""
+    client_id: str
+    """Client ID from the Greenhouse OAuth application"""
+    client_secret: str
+    """Client secret from the Greenhouse OAuth application"""
+    refresh_token: str
+    """Refresh token generated through the Greenhouse OAuth consent flow"""
+    access_token: Optional[str] = None
+    """Access token generated through the Greenhouse OAuth consent flow (optional if refresh_token is provided)"""
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
-class Attachment(BaseModel):
-    """File attachment (resume, cover letter, etc.)"""
+class CandidateWebsiteAddressesItem(BaseModel):
+    """Nested schema for Candidate.website_addresses_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    filename: str | None = Field(default=None)
-    url: str | None = Field(default=None)
-    type_: str | None = Field(default=None, alias="type")
-    created_at: str | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    value: str | None | None = Field(default=None)
+
+class CandidateAddressesItem(BaseModel):
+    """Nested schema for Candidate.addresses_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    value: str | None | None = Field(default=None)
+
+class CandidateCustomFields(BaseModel):
+    """Nested schema for Candidate.custom_fields"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    value: Any | None = Field(default=None)
+
+class CandidatePhoneNumbersItem(BaseModel):
+    """Nested schema for Candidate.phone_numbers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    value: str | None | None = Field(default=None)
+
+class CandidateSocialMediaAddressesItem(BaseModel):
+    """Nested schema for Candidate.social_media_addresses_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    value: str | None | None = Field(default=None)
+
+class CandidateEmailAddressesItem(BaseModel):
+    """Nested schema for Candidate.email_addresses_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    value: str | None | None = Field(default=None)
 
 class Candidate(BaseModel):
     """Greenhouse candidate object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: int | None = Field(default=None)
-    first_name: str | None = Field(default=None)
-    last_name: str | None = Field(default=None)
-    company: str | None = Field(default=None)
-    title: str | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    updated_at: str | None = Field(default=None)
-    last_activity: str | None = Field(default=None)
-    is_private: bool | None = Field(default=None)
-    photo_url: str | None = Field(default=None)
-    attachments: list[Attachment] | None = Field(default=None)
-    application_ids: list[int] | None = Field(default=None)
-    phone_numbers: list[dict[str, Any]] | None = Field(default=None)
-    addresses: list[dict[str, Any]] | None = Field(default=None)
-    email_addresses: list[dict[str, Any]] | None = Field(default=None)
-    website_addresses: list[dict[str, Any]] | None = Field(default=None)
-    social_media_addresses: list[dict[str, Any]] | None = Field(default=None)
-    recruiter: dict[str, Any] | None = Field(default=None)
-    coordinator: dict[str, Any] | None = Field(default=None)
+    addresses: list[CandidateAddressesItem | None] | None = Field(default=None)
     can_email: bool | None = Field(default=None)
-    tags: list[str] | None = Field(default=None)
-    custom_fields: dict[str, Any] | None = Field(default=None)
+    company: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    custom_fields: dict[str, CandidateCustomFields] | None = Field(default=None)
+    email_addresses: list[CandidateEmailAddressesItem | None] | None = Field(default=None)
+    first_name: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    last_activity_at: str | None = Field(default=None)
+    last_name: str | None = Field(default=None)
+    linked_user_ids: list[int | None] | None = Field(default=None)
+    phone_numbers: list[CandidatePhoneNumbersItem | None] | None = Field(default=None)
+    preferred_name: str | None = Field(default=None)
+    private: bool | None = Field(default=None)
+    social_media_addresses: list[CandidateSocialMediaAddressesItem | None] | None = Field(default=None)
+    tags: list[str | None] | None = Field(default=None)
+    time_zone: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    website_addresses: list[CandidateWebsiteAddressesItem | None] | None = Field(default=None)
+
+class ApplicationCustomFields(BaseModel):
+    """Nested schema for Application.custom_fields"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    value: Any | None = Field(default=None)
+
+class ApplicationAnswersItem(BaseModel):
+    """Nested schema for Application.answers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    answer: str | None | None = Field(default=None, description="Candidate's free-text answer to the question.")
+    """Candidate's free-text answer to the question."""
+    question: str | None | None = Field(default=None, description="Application-form question the candidate answered.")
+    """Application-form question the candidate answered."""
 
 class Application(BaseModel):
     """Greenhouse application object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: int | None = Field(default=None)
+    agency_note_id: int | None = Field(default=None)
+    answers: list[ApplicationAnswersItem | None] | None = Field(default=None)
     candidate_id: int | None = Field(default=None)
-    prospect: bool | None = Field(default=None)
-    applied_at: str | None = Field(default=None)
-    rejected_at: str | None = Field(default=None)
-    last_activity_at: str | None = Field(default=None)
-    location: dict[str, Any] | None = Field(default=None)
-    source: dict[str, Any] | None = Field(default=None)
-    credited_to: dict[str, Any] | None = Field(default=None)
-    rejection_reason: dict[str, Any] | None = Field(default=None)
-    rejection_details: dict[str, Any] | None = Field(default=None)
-    jobs: list[dict[str, Any]] | None = Field(default=None)
+    coordinator_id: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    custom_fields: dict[str, ApplicationCustomFields] | None = Field(default=None)
+    id: int | None = Field(default=None)
+    job_id: int | None = Field(default=None)
+    job_interview_stage_id: int | None = Field(default=None)
     job_post_id: int | None = Field(default=None)
+    last_activity_at: str | None = Field(default=None)
+    location_address: str | None = Field(default=None)
+    needs_decision: bool | None = Field(default=None)
+    prospect: bool | None = Field(default=None)
+    prospective_job_ids: list[int | None] | None = Field(default=None)
+    recruiter_id: int | None = Field(default=None)
+    referrer_id: int | None = Field(default=None)
+    rejected_at: str | None = Field(default=None)
+    rejection_reason_id: int | None = Field(default=None)
+    source_id: int | None = Field(default=None)
+    stage_id: int | None = Field(default=None)
+    stage_name: str | None = Field(default=None)
     status: str | None = Field(default=None)
-    current_stage: dict[str, Any] | None = Field(default=None)
-    answers: list[dict[str, Any]] | None = Field(default=None)
-    prospective_office: dict[str, Any] | None = Field(default=None)
-    prospective_department: dict[str, Any] | None = Field(default=None)
-    prospect_detail: dict[str, Any] | None = Field(default=None)
-    attachments: list[Attachment] | None = Field(default=None)
-    custom_fields: dict[str, Any] | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+
+class JobCustomFields(BaseModel):
+    """Nested schema for Job.custom_fields"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    value: Any | None = Field(default=None)
 
 class Job(BaseModel):
     """Greenhouse job object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: int | None = Field(default=None)
-    name: str | None = Field(default=None)
-    requisition_id: str | None = Field(default=None)
-    notes: str | None = Field(default=None)
-    confidential: bool | None = Field(default=None)
-    status: str | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    opened_at: str | None = Field(default=None)
     closed_at: str | None = Field(default=None)
+    confidential: bool | None = Field(default=None)
+    copied_from_id: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    custom_fields: dict[str, JobCustomFields] | None = Field(default=None)
+    department_id: int | None = Field(default=None)
+    id: int | None = Field(default=None)
+    is_template: bool | None = Field(default=None)
+    name: str | None = Field(default=None)
+    notes: str | None = Field(default=None)
+    office_ids: list[int | None] | None = Field(default=None)
+    opened_at: str | None = Field(default=None)
+    requisition_id: str | None = Field(default=None)
+    status: str | None = Field(default=None)
     updated_at: str | None = Field(default=None)
-    departments: list[dict[str, Any] | None] | None = Field(default=None)
-    offices: list[dict[str, Any]] | None = Field(default=None)
-    custom_fields: dict[str, Any] | None = Field(default=None)
-    hiring_team: dict[str, Any] | None = Field(default=None)
-    openings: list[dict[str, Any]] | None = Field(default=None)
+
+class OfferCustomFields(BaseModel):
+    """Nested schema for Offer.custom_fields"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    value: Any | None = Field(default=None)
 
 class Offer(BaseModel):
     """Greenhouse offer object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: int | None = Field(default=None)
-    version: int | None = Field(default=None)
     application_id: int | None = Field(default=None)
-    job_id: int | None = Field(default=None)
     candidate_id: int | None = Field(default=None)
-    opening: dict[str, Any] | None = Field(default=None)
     created_at: str | None = Field(default=None)
-    updated_at: str | None = Field(default=None)
-    sent_at: str | None = Field(default=None)
+    custom_fields: dict[str, OfferCustomFields] | None = Field(default=None)
+    id: int | None = Field(default=None)
+    job_id: int | None = Field(default=None)
+    opening_id: int | None = Field(default=None)
     resolved_at: str | None = Field(default=None)
-    starts_at: str | None = Field(default=None)
+    sent_on: str | None = Field(default=None)
+    starts_on: str | None = Field(default=None)
     status: str | None = Field(default=None)
-    custom_fields: dict[str, Any] | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    version: int | None = Field(default=None)
+
+class UserCustomFields(BaseModel):
+    """Nested schema for User.custom_fields"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    value: Any | None = Field(default=None)
+
+class UserInterviewerTagsItem(BaseModel):
+    """Nested schema for User.interviewer_tags_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
 
 class User(BaseModel):
     """Greenhouse user object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: int | None = Field(default=None)
-    name: str | None = Field(default=None)
-    first_name: str | None = Field(default=None)
-    last_name: str | None = Field(default=None)
-    primary_email_address: str | None = Field(default=None)
-    updated_at: str | None = Field(default=None)
+    agency_id: int | None = Field(default=None)
     created_at: str | None = Field(default=None)
-    disabled: bool | None = Field(default=None)
-    site_admin: bool | None = Field(default=None)
-    emails: list[str] | None = Field(default=None)
+    custom_fields: dict[str, UserCustomFields] | None = Field(default=None)
+    deactivated: bool | None = Field(default=None)
+    department_ids: list[int | None] | None = Field(default=None)
+    emails: list[str | None] | None = Field(default=None)
     employee_id: str | None = Field(default=None)
-    linked_candidate_ids: list[int] | None = Field(default=None)
-    offices: list[dict[str, Any]] | None = Field(default=None)
-    departments: list[dict[str, Any]] | None = Field(default=None)
+    first_name: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    interviewer_tags: list[UserInterviewerTagsItem | None] | None = Field(default=None)
+    job_title: str | None = Field(default=None)
+    last_name: str | None = Field(default=None)
+    linked_candidate_ids: list[int | None] | None = Field(default=None)
+    name: str | None = Field(default=None)
+    office_ids: list[int | None] | None = Field(default=None)
+    primary_email: str | None = Field(default=None)
+    site_admin: bool | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Department(BaseModel):
     """Greenhouse department object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
+    created_at: str | None = Field(default=None)
+    external_id: str | None = Field(default=None)
     id: int | None = Field(default=None)
     name: str | None = Field(default=None)
     parent_id: int | None = Field(default=None)
-    parent_department_external_id: str | None = Field(default=None)
-    child_ids: list[int] | None = Field(default=None)
-    child_department_external_ids: list[str] | None = Field(default=None)
-    external_id: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Office(BaseModel):
     """Greenhouse office object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: int | None = Field(default=None)
-    name: str | None = Field(default=None)
-    location: dict[str, Any] | None = Field(default=None)
-    primary_contact_user_id: int | None = Field(default=None)
-    parent_id: int | None = Field(default=None)
-    parent_office_external_id: str | None = Field(default=None)
-    child_ids: list[int] | None = Field(default=None)
-    child_office_external_ids: list[str] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
     external_id: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    location: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    parent_id: int | None = Field(default=None)
+    primary_in_house_contact_user_id: int | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+
+class JobPostQuestionsItemOptionsItem(BaseModel):
+    """Nested schema for JobPostQuestionsItem.options_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None, description="Id of the option, stable across edits to the option label.")
+    """Id of the option, stable across edits to the option label."""
+    label: str | None | None = Field(default=None, description="Human-readable text shown to the candidate for this option.")
+    """Human-readable text shown to the candidate for this option."""
+
+class JobPostQuestionsItem(BaseModel):
+    """Nested schema for JobPost.questions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    answer_type: str | None | None = Field(default=None, description="Input type the candidate uses to answer. `short_text` and `long_text` are free-text inputs, `single_select` and `multi_select` use the `options` array, `boolean` is a yes/no, `attachment` accepts a file upload, and `hidden` is set programmatically without rendering a field.")
+    """Input type the candidate uses to answer. `short_text` and `long_text` are free-text inputs, `single_select` and `multi_select` use the `options` array, `boolean` is a yes/no, `attachment` accepts a file upload, and `hidden` is set programmatically without rendering a field."""
+    description: str | None | None = Field(default=None, description="Help text shown below the question label to give candidates additional context. `null` when no help text is set.")
+    """Help text shown below the question label to give candidates additional context. `null` when no help text is set."""
+    id: int | None | None = Field(default=None, description="Id of the question. `null` for default questions that are rendered from configuration rather than persisted per post (e.g. the built-in `first_name` field).")
+    """Id of the question. `null` for default questions that are rendered from configuration rather than persisted per post (e.g. the built-in `first_name` field)."""
+    label: str | None | None = Field(default=None, description="Human-readable label rendered above the input on the application form.")
+    """Human-readable label rendered above the input on the application form."""
+    name: str | None | None = Field(default=None, description="Stable form-field name used when submitting an application (e.g. `question_42` for a custom question, `first_name` for a default field). Use this when mapping responses back to a question.")
+    """Stable form-field name used when submitting an application (e.g. `question_42` for a custom question, `first_name` for a default field). Use this when mapping responses back to a question."""
+    options: list[JobPostQuestionsItemOptionsItem | None] | None | None = Field(default=None, description="Selectable answer options for `single_select` and `multi_select` questions. Empty for other answer types.")
+    """Selectable answer options for `single_select` and `multi_select` questions. Empty for other answer types."""
+    private: bool | None | None = Field(default=None, description="If `true`, answers to this question are visible only to users with explicit access (e.g. private notes, API-only questions). Defaults to `false`.")
+    """If `true`, answers to this question are visible only to users with explicit access (e.g. private notes, API-only questions). Defaults to `false`."""
+    required: bool | None | None = Field(default=None, description="If `true`, the candidate must answer this question to submit the application. `null` for default questions whose required-ness is driven by board-level configuration.")
+    """If `true`, the candidate must answer this question to submit the application. `null` for default questions whose required-ness is driven by board-level configuration."""
 
 class JobPost(BaseModel):
     """Greenhouse job post object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: int | None = Field(default=None)
-    title: str | None = Field(default=None)
-    location: dict[str, Any] | None = Field(default=None)
-    internal: bool | None = Field(default=None)
-    external: bool | None = Field(default=None)
     active: bool | None = Field(default=None)
-    live: bool | None = Field(default=None)
-    first_published_at: str | None = Field(default=None)
-    job_id: int | None = Field(default=None)
     content: str | None = Field(default=None)
-    internal_content: str | None = Field(default=None)
-    updated_at: str | None = Field(default=None)
     created_at: str | None = Field(default=None)
     demographic_question_set_id: int | None = Field(default=None)
-    questions: list[dict[str, Any]] | None = Field(default=None)
+    featured: bool | None = Field(default=None)
+    first_published_at: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    internal: bool | None = Field(default=None)
+    internal_content: str | None = Field(default=None)
+    job_board_id: int | None = Field(default=None)
+    job_id: int | None = Field(default=None)
+    language: str | None = Field(default=None)
+    live: bool | None = Field(default=None)
+    public_url: str | None = Field(default=None)
+    questions: list[JobPostQuestionsItem | None] | None = Field(default=None)
+    title: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+
+class SourceType(BaseModel):
+    """The sourcing strategy this source rolls up to — the broader category used for reporting. Sources are grouped under sourcing strategies such as `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`, `Company marketing`, `In person event`, `MyGreenhouse`, and `Other`. Use the strategy when aggregating candidate volume by channel; use the source itself when reporting on a specific channel within that category."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None, description="Id of the sourcing strategy. References the same strategy across all sources in the organization that roll up to it.")
+    """Id of the sourcing strategy. References the same strategy across all sources in the organization that roll up to it."""
+    name: str | None | None = Field(default=None, description="Display name of the sourcing strategy used in Greenhouse reporting (e.g. `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`).")
+    """Display name of the sourcing strategy used in Greenhouse reporting (e.g. `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`)."""
 
 class Source(BaseModel):
     """Greenhouse source object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
+    created_at: str | None = Field(default=None)
     id: int | None = Field(default=None)
     name: str | None = Field(default=None)
-    type_: dict[str, Any] | None = Field(default=None, alias="type")
+    type_: SourceType | None = Field(default=None, alias="type")
+    updated_at: str | None = Field(default=None)
 
-class ScheduledInterview(BaseModel):
-    """Greenhouse scheduled interview object"""
+class Interview(BaseModel):
+    """Greenhouse interview object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    all_day_end_on: str | None = Field(default=None)
+    all_day_start_on: str | None = Field(default=None)
+    application_id: int | None = Field(default=None)
+    availability_received_at: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    ends_at: str | None = Field(default=None)
+    external_event_id: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    job_id: int | None = Field(default=None)
+    job_interview_id: int | None = Field(default=None)
+    location: str | None = Field(default=None)
+    organizer_id: int | None = Field(default=None)
+    scheduled_at: str | None = Field(default=None)
+    starts_at: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    video_conferencing_url: str | None = Field(default=None)
+
+class Attachment(BaseModel):
+    """File associated with a Greenhouse application"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: int | None = Field(default=None)
     application_id: int | None = Field(default=None)
-    external_event_id: str | None = Field(default=None)
+    candidate_id: int | None = Field(default=None)
     created_at: str | None = Field(default=None)
     updated_at: str | None = Field(default=None)
-    start: dict[str, Any] | None = Field(default=None)
-    end: dict[str, Any] | None = Field(default=None)
-    location: str | None = Field(default=None)
-    video_conferencing_url: str | None = Field(default=None)
-    status: str | None = Field(default=None)
-    interview: dict[str, Any] | None = Field(default=None)
-    organizer: dict[str, Any] | None = Field(default=None)
-    interviewers: list[dict[str, Any]] | None = Field(default=None)
+    filename: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
+
+class ApplicationsListResultMeta(BaseModel):
+    """Metadata for applications.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: str | None = Field(default=None)
 
 class CandidatesListResultMeta(BaseModel):
     """Metadata for candidates.Action.LIST operation"""
@@ -223,8 +380,20 @@ class CandidatesListResultMeta(BaseModel):
 
     next: str | None = Field(default=None)
 
-class ApplicationsListResultMeta(BaseModel):
-    """Metadata for applications.Action.LIST operation"""
+class DepartmentsListResultMeta(BaseModel):
+    """Metadata for departments.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: str | None = Field(default=None)
+
+class InterviewsListResultMeta(BaseModel):
+    """Metadata for interviews.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: str | None = Field(default=None)
+
+class JobPostsListResultMeta(BaseModel):
+    """Metadata for job_posts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next: str | None = Field(default=None)
@@ -241,26 +410,8 @@ class OffersListResultMeta(BaseModel):
 
     next: str | None = Field(default=None)
 
-class UsersListResultMeta(BaseModel):
-    """Metadata for users.Action.LIST operation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    next: str | None = Field(default=None)
-
-class DepartmentsListResultMeta(BaseModel):
-    """Metadata for departments.Action.LIST operation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    next: str | None = Field(default=None)
-
 class OfficesListResultMeta(BaseModel):
     """Metadata for offices.Action.LIST operation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    next: str | None = Field(default=None)
-
-class JobPostsListResultMeta(BaseModel):
-    """Metadata for job_posts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next: str | None = Field(default=None)
@@ -271,8 +422,14 @@ class SourcesListResultMeta(BaseModel):
 
     next: str | None = Field(default=None)
 
-class ScheduledInterviewsListResultMeta(BaseModel):
-    """Metadata for scheduled_interviews.Action.LIST operation"""
+class UsersListResultMeta(BaseModel):
+    """Metadata for users.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: str | None = Field(default=None)
+
+class AttachmentsListResultMeta(BaseModel):
+    """Metadata for attachments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next: str | None = Field(default=None)
@@ -332,46 +489,54 @@ class ApplicationsSearchData(BaseModel):
     """Search result data for applications entity."""
     model_config = ConfigDict(extra="allow")
 
+    agency_note_id: int | None = None
+    """Id of the note created when the candidate was submitted by an agency, or `null` if the application did not come through an agency."""
     answers: list[Any] | None = None
-    """Answers provided in the application."""
-    applied_at: str | None = None
-    """Timestamp when the candidate applied."""
-    attachments: list[Any] | None = None
-    """Attachments uploaded with the application."""
+    """Free-text answers the candidate provided on the job post application form. Each entry pairs the question text with the candidate's answer."""
     candidate_id: int | None = None
-    """Unique identifier for the candidate."""
-    credited_to: dict[str, Any] | None = None
-    """Information about the employee who credited the application."""
-    current_stage: dict[str, Any] | None = None
-    """Current stage of the application process."""
+    """Id of the candidate (person) this application belongs to."""
+    coordinator_id: int | None = None
+    """Id of the user assigned as coordinator on the application's job, or `null` when unassigned."""
+    created_at: str | None = None
+    """Created at from the Greenhouse v3 applications record."""
+    custom_fields: dict[str, Any] | None = None
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: int | None = None
-    """Unique identifier for the application."""
+    """Id from the Greenhouse v3 applications record."""
+    job_id: int | None = None
+    """Id of the job this application is on. `null` for jobless prospect applications."""
+    job_interview_stage_id: int | None = None
+    """Id of the job interview stage definition (see `GET /v3/job_interview_stages`) the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
     job_post_id: int | None = None
-    """"""
-    jobs: list[Any] | None = None
-    """Jobs applied for by the candidate."""
+    """Id of the job post the candidate applied through, or `null` if the application was created internally rather than from a posted role."""
     last_activity_at: str | None = None
-    """Timestamp of the last activity on the application."""
-    location: str | None = None
-    """Location related to the application."""
+    """Timestamp of the most recent activity on this application (notes, emails, stage changes, etc.), in ISO 8601."""
+    location_address: str | None = None
+    """Free-form location string captured on the application (typically from the job post's location question)."""
+    needs_decision: bool | None = None
+    """`true` when the application is waiting on a hiring-team decision (scorecard completion, advance/reject, etc.) in its current stage."""
     prospect: bool | None = None
-    """Status of the application prospect."""
-    prospect_detail: dict[str, Any] | None = None
-    """Details related to the application prospect."""
-    prospective_department: str | None = None
-    """Prospective department for the candidate."""
-    prospective_office: str | None = None
-    """Prospective office for the candidate."""
+    """`true` for prospect applications (sourced candidates not yet attached to a single job), `false` for candidate applications on a specific job."""
+    prospective_job_ids: list[Any] | None = None
+    """For prospect applications, the ids of jobs the prospect is being considered for. Empty for non-prospect applications and for jobless prospects."""
+    recruiter_id: int | None = None
+    """Id of the user assigned as recruiter on the application's job, or `null` when unassigned."""
+    referrer_id: int | None = None
+    """Id of the referrer who credited this application, or `null` if there was no referral. References a referrer, not a Greenhouse user."""
     rejected_at: str | None = None
-    """Timestamp when the application was rejected."""
-    rejection_details: dict[str, Any] | None = None
-    """Details related to the application rejection."""
-    rejection_reason: dict[str, Any] | None = None
-    """Reason for the application rejection."""
-    source: dict[str, Any] | None = None
-    """Source of the application."""
+    """Timestamp the application was rejected, in ISO 8601. `null` for applications that have not been rejected."""
+    rejection_reason_id: int | None = None
+    """Id of the rejection reason selected for the application. References a `/v3/rejection_reasons` row scoped to the organization. `null` when the application was rejected without a reason, or has not been rejected."""
+    source_id: int | None = None
+    """Id of the source the application is attributed to (e.g. a job board, an event, an employee referral source). `null` if no source is set."""
+    stage_id: int | None = None
+    """Id of the interview stage the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
+    stage_name: str | None = None
+    """Display name of the candidate's current interview stage on this application."""
     status: str | None = None
-    """Status of the application."""
+    """Lifecycle status of the application. `in_process` for active candidates, `rejected` for rejected applications, `hired` once an offer is closed and the hire endpoint has fired, and `converted` for prospect applications that have been promoted to a candidate application via `convert_to_candidate`."""
+    updated_at: str | None = None
+    """Updated at from the Greenhouse v3 applications record."""
 
 
 class CandidatesSearchData(BaseModel):
@@ -379,77 +544,63 @@ class CandidatesSearchData(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     addresses: list[Any] | None = None
-    """Candidate's addresses"""
-    application_ids: list[Any] | None = None
-    """List of application IDs"""
-    applications: list[Any] | None = None
-    """An array of all applications made by candidates."""
-    attachments: list[Any] | None = None
-    """Attachments related to the candidate"""
+    """Postal addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `home`, `work`, or `other`."""
     can_email: bool | None = None
-    """Indicates if candidate can be emailed"""
+    """Whether this candidate has consented to receive email communication from your organization."""
     company: str | None = None
-    """Company where the candidate is associated"""
-    coordinator: str | None = None
-    """Coordinator assigned to the candidate"""
+    """Candidate's current company, as entered on their profile."""
     created_at: str | None = None
-    """Date and time of creation"""
+    """Created at from the Greenhouse v3 candidates record."""
     custom_fields: dict[str, Any] | None = None
-    """Custom fields associated with the candidate"""
-    educations: list[Any] | None = None
-    """List of candidate's educations"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     email_addresses: list[Any] | None = None
-    """Candidate's email addresses"""
-    employments: list[Any] | None = None
-    """List of candidate's employments"""
+    """Email addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `work`, or `other`."""
     first_name: str | None = None
-    """Candidate's first name"""
+    """First name from the Greenhouse v3 candidates record."""
     id: int | None = None
-    """Candidate's ID"""
-    is_private: bool | None = None
-    """Indicates if the candidate's data is private"""
-    keyed_custom_fields: dict[str, Any] | None = None
-    """Keyed custom fields associated with the candidate"""
-    last_activity: str | None = None
-    """Details of the last activity related to the candidate"""
+    """Id from the Greenhouse v3 candidates record."""
+    last_activity_at: str | None = None
+    """Timestamp of the most recent activity on any of the candidate's applications (notes, emails, stage changes, etc.), in ISO 8601."""
     last_name: str | None = None
-    """Candidate's last name"""
+    """Last name from the Greenhouse v3 candidates record."""
+    linked_user_ids: list[Any] | None = None
+    """Ids of Greenhouse users linked to this candidate (employees represented by both a user record and a candidate record)."""
     phone_numbers: list[Any] | None = None
-    """Candidate's phone numbers"""
-    photo_url: str | None = None
-    """URL of the candidate's profile photo"""
-    recruiter: str | None = None
-    """Recruiter assigned to the candidate"""
+    """Phone numbers on the candidate's profile. Each entry pairs the `value` with a `type` such as `mobile`, `home`, `work`, `skype`, or `other`."""
+    preferred_name: str | None = None
+    """Preferred or chosen name the candidate goes by, when different from their legal first name."""
+    private: bool | None = None
+    """If true, the candidate is restricted to users with `View Private Candidates` access. Defaults to `false`."""
     social_media_addresses: list[Any] | None = None
-    """Candidate's social media addresses"""
+    """Social media handles or URLs on the candidate's profile. Social entries are untyped — only the `value` is returned."""
     tags: list[Any] | None = None
-    """Tags associated with the candidate"""
+    """Candidate tag names applied to this candidate within your organization."""
+    time_zone: str | None = None
+    """Candidate's time zone as a Rails-style identifier (for example `Eastern Time (US & Canada)`)."""
     title: str | None = None
-    """Candidate's title (e.g., Mr., Mrs., Dr.)"""
+    """Candidate's current job title, as entered on their profile."""
     updated_at: str | None = None
-    """Date and time of last update"""
+    """Updated at from the Greenhouse v3 candidates record."""
     website_addresses: list[Any] | None = None
-    """List of candidate's website addresses"""
+    """Personal websites or portfolio URLs on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `company`, `portfolio`, `blog`, or `other`."""
 
 
 class DepartmentsSearchData(BaseModel):
     """Search result data for departments entity."""
     model_config = ConfigDict(extra="allow")
 
-    child_department_external_ids: list[Any] | None = None
-    """External IDs of child departments associated with this department."""
-    child_ids: list[Any] | None = None
-    """Unique IDs of child departments associated with this department."""
+    created_at: str | None = None
+    """Created at from the Greenhouse v3 departments record."""
     external_id: str | None = None
-    """External ID of this department."""
+    """Partner-supplied identifier for the department, typically the matching id from an HRIS or other external system. Free-form string and `null` when no external id has been set."""
     id: int | None = None
-    """Unique ID of this department."""
+    """Id from the Greenhouse v3 departments record."""
     name: str | None = None
-    """Name of the department."""
-    parent_department_external_id: str | None = None
-    """External ID of the parent department of this department."""
+    """Display name of the department (e.g. `Engineering`, `Marketing`)."""
     parent_id: int | None = None
-    """Unique ID of the parent department of this department."""
+    """Id of the parent department in the organization's department tree. `null` for top-level departments. References another `/v3/departments` row."""
+    updated_at: str | None = None
+    """Updated at from the Greenhouse v3 departments record."""
 
 
 class JobPostsSearchData(BaseModel):
@@ -457,35 +608,39 @@ class JobPostsSearchData(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     active: bool | None = None
-    """Flag indicating if the job post is active or not."""
+    """If `true`, the post has not been deleted. Deleted posts are excluded by default; pass `active=false` on the list endpoint to retrieve them."""
     content: str | None = None
-    """Content or description of the job post."""
+    """HTML body of the post shown to candidates on the job board. For internal posts this returns the `internal_content` instead. Sanitized server-side — only a limited element/attribute allowlist (including `iframe`, `video`, `source`) survives. `null` while the post is still being scaffolded."""
     created_at: str | None = None
-    """Date and time when the job post was created."""
+    """Created at from the Greenhouse v3 job posts record."""
     demographic_question_set_id: int | None = None
-    """ID of the demographic question set associated with the job post."""
-    external: bool | None = None
-    """Flag indicating if the job post is external or not."""
+    """Id of the demographic question set surfaced to candidates on this post for diversity, equity, and inclusion (DE&I) reporting. `null` when the post does not collect demographic data."""
+    featured: bool | None = None
+    """If `true`, the post is currently featured on the organization's internal job board and surfaces in the weekly internal-jobs email. Only internal posts can be featured, and at most three can be featured at a time."""
     first_published_at: str | None = None
-    """Date and time when the job post was first published."""
+    """Timestamp the post first transitioned to `live`, in ISO 8601. `null` for posts that have never been published."""
     id: int | None = None
-    """Unique identifier of the job post."""
+    """Id from the Greenhouse v3 job posts record."""
     internal: bool | None = None
-    """Flag indicating if the job post is internal or not."""
+    """If `true`, the post lives on an internal job board and is visible only to existing employees signed in to the internal board. If `false`, the post is external and lives on a public-facing `job_board`. Set by the board the post is associated with at create time."""
     internal_content: str | None = None
-    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
+    """HTML body shown on the internal job board when the post is also configured as internal. `null` for external-only posts. Same sanitization rules as `content`."""
+    job_board_id: int | None = None
+    """Id of the `job_board` this post is published to. Resolves to either an external (careers site, syndicated board) or internal job board depending on `internal`. Each post belongs to exactly one board at a time."""
     job_id: int | None = None
-    """ID of the job associated with the job post."""
+    """Id of the parent job (requisition) this post belongs to. A single job can have multiple posts; the job is the source of truth for the hiring team, openings, and interview plan."""
+    language: str | None = None
+    """ISO 639-1 locale of the post, used to render the candidate-facing application form in the matching language (e.g. `en`, `fr`, `ja`). `null` when no locale has been chosen."""
     live: bool | None = None
-    """Flag indicating if the job post is live or not."""
-    location: dict[str, Any] | None = None
-    """Details about the job post location."""
+    """If `true`, the post is published (`job_application_status` is `live`) and its job board is also live. A post on an unpublished board is **not** `live` — its `public_url` returns a 404 until the board is enabled."""
+    public_url: str | None = None
+    """Canonical public URL of the post on its job board, including the `gh_jid` tracking parameter. `null` when the post has no associated job board or the board has no public URL configured."""
     questions: list[Any] | None = None
-    """List of questions related to the job post."""
+    """Application form questions presented to candidates on this post, including default questions (resume, cover letter, basic info) and any custom questions configured by the hiring team. Ordered as they appear on the form."""
     title: str | None = None
-    """Title or headline of the job post."""
+    """Public-facing title shown to candidates on the job board (e.g. `Senior Backend Engineer, Remote`). Distinct from the internal `job.name` — a single job can have several posts with different titles, one per board, language, or geography."""
     updated_at: str | None = None
-    """Date and time when the job post was last updated."""
+    """Updated at from the Greenhouse v3 job posts record."""
 
 
 class JobsSearchData(BaseModel):
@@ -493,41 +648,35 @@ class JobsSearchData(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     closed_at: str | None = None
-    """The date and time the job was closed"""
+    """Timestamp the job most recently transitioned to `closed`, in ISO 8601. `null` for jobs that are still `open` or `draft`."""
     confidential: bool | None = None
-    """Indicates if the job details are confidential"""
+    """If `true`, the job is restricted to users explicitly granted access on the Hiring Team. The legacy Confidential Jobs feature has been sunset — this flag cannot be set on new jobs and is preserved for jobs that already had it enabled."""
     copied_from_id: int | None = None
-    """The ID of the job from which this job was copied"""
+    """Id of the job (typically a template) this job was copied from on creation. `null` when the job was not created from another job."""
     created_at: str | None = None
-    """The date and time the job was created"""
+    """Created at from the Greenhouse v3 jobs record."""
     custom_fields: dict[str, Any] | None = None
-    """Custom fields related to the job"""
-    departments: list[Any] | None = None
-    """Departments associated with the job"""
-    hiring_team: dict[str, Any] | None = None
-    """Members of the hiring team for the job"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    department_id: int | None = None
+    """Id of the department this job is assigned to. `null` when no department is set."""
     id: int | None = None
-    """Unique ID of the job"""
+    """Id from the Greenhouse v3 jobs record."""
     is_template: bool | None = None
-    """Indicates if the job is a template"""
-    keyed_custom_fields: dict[str, Any] | None = None
-    """Keyed custom fields related to the job"""
+    """If `true`, this job is a template used as the source for new jobs rather than a real requisition. Templates do not accept applications; reference them via `template_job_id` on `POST /v3/jobs`."""
     name: str | None = None
-    """Name of the job"""
+    """Internal job title shown to the hiring team in Greenhouse (e.g. `Senior Backend Engineer`). Distinct from the external-facing title on each `job_post`."""
     notes: str | None = None
-    """Additional notes or comments about the job"""
-    offices: list[Any] | None = None
-    """Offices associated with the job"""
+    """Internal HTML notes about the job, surfaced to the hiring team in the Greenhouse UI. Not exposed on public job posts."""
+    office_ids: list[Any] | None = None
+    """Ids of the offices this job is assigned to. A job can span multiple offices; empty array or `null` when no offices are set."""
     opened_at: str | None = None
-    """The date and time the job was opened"""
-    openings: list[Any] | None = None
-    """Openings associated with the job"""
+    """Timestamp the job first transitioned to `open`, in ISO 8601. `null` while the job is still in `draft`."""
     requisition_id: str | None = None
-    """ID associated with the job requisition"""
+    """Partner-supplied external identifier for the requisition (e.g. an HRIS or ATS code). Free-form string, not unique across the organization, and `null` when no external id has been set."""
     status: str | None = None
-    """Current status of the job"""
+    """Lifecycle status of the job. `draft` while it is being scaffolded, `open` once it has at least one open opening, and `closed` after every opening is closed. A job moves to `closed` automatically when its last open opening is closed via `PATCH /v3/openings/{id}`."""
     updated_at: str | None = None
-    """The date and time the job was last updated"""
+    """Updated at from the Greenhouse v3 jobs record."""
 
 
 class OffersSearchData(BaseModel):
@@ -535,103 +684,111 @@ class OffersSearchData(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     application_id: int | None = None
-    """Unique identifier for the application associated with the offer"""
+    """Id of the application this offer is extended on. Every offer belongs to exactly one application; the offer is voided if the application is rejected or deleted."""
     candidate_id: int | None = None
-    """Unique identifier for the candidate associated with the offer"""
+    """Id of the candidate (person) receiving this offer. Resolved through the offer's application."""
     created_at: str | None = None
-    """Timestamp indicating when the offer was created"""
+    """Created at from the Greenhouse v3 offers record."""
     custom_fields: dict[str, Any] | None = None
-    """Additional custom fields related to the offer"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: int | None = None
-    """Unique identifier for the offer"""
+    """Id from the Greenhouse v3 offers record."""
     job_id: int | None = None
-    """Unique identifier for the job associated with the offer"""
-    keyed_custom_fields: dict[str, Any] | None = None
-    """Keyed custom fields associated with the offer"""
-    opening: dict[str, Any] | None = None
-    """Details about the job opening"""
+    """Id of the job this offer's application is on."""
+    opening_id: int | None = None
+    """Id of the specific opening this offer is being extended for. `null` when the offer has not yet been linked to an opening."""
     resolved_at: str | None = None
-    """Timestamp indicating when the offer was resolved"""
-    sent_at: str | None = None
-    """Timestamp indicating when the offer was sent"""
-    starts_at: str | None = None
-    """Timestamp indicating when the offer starts"""
+    """Timestamp the offer was resolved (`Accepted` or `Rejected`), in ISO 8601. Date updates submitted through `PATCH /v3/offers/{id}` are normalized to noon UTC on the supplied date. `null` while the offer is still `Created` or has been superseded as `Deprecated` without a resolution."""
+    sent_on: str | None = None
+    """Date the offer was sent to the candidate, in ISO 8601 (YYYY-MM-DD). `null` until the offer has been sent."""
+    starts_on: str | None = None
+    """Candidate's proposed start date, in ISO 8601 (YYYY-MM-DD). `null` when no start date has been set on the offer."""
     status: str | None = None
-    """Status of the offer"""
+    """Lifecycle status of the offer. `Created` for offers still being drafted or pending approval, `Accepted` once the candidate accepts, `Rejected` if declined or withdrawn, and `Deprecated` for superseded prior versions (a new offer version replaces an earlier one with this status)."""
     updated_at: str | None = None
-    """Timestamp indicating when the offer was last updated"""
+    """Updated at from the Greenhouse v3 offers record."""
     version: int | None = None
-    """Version of the offer data"""
+    """Revision number of this offer within its application. Greenhouse creates a new offer row (incrementing `version`) whenever a tracked field on an existing offer changes — typically `starts_on`, `opening_id`, or a custom field configured to trigger a new version. Pair with `current_only=true` to filter the list endpoint down to the latest version per application."""
 
 
 class OfficesSearchData(BaseModel):
     """Search result data for offices entity."""
     model_config = ConfigDict(extra="allow")
 
-    child_ids: list[Any] | None = None
-    """IDs of child offices associated with this office"""
-    child_office_external_ids: list[Any] | None = None
-    """External IDs of child offices associated with this office"""
+    created_at: str | None = None
+    """Created at from the Greenhouse v3 offices record."""
     external_id: str | None = None
-    """Unique identifier for this office in the external system"""
+    """Stable identifier supplied by the customer or HRIS for cross-system reconciliation. `null` when no external id has been set. Available when the `org_structure_external_id` product flag is enabled."""
     id: int | None = None
-    """Unique identifier for this office in the API system"""
-    location: dict[str, Any] | None = None
-    """Location details of this office"""
+    """Id from the Greenhouse v3 offices record."""
+    location: str | None = None
+    """Free-form physical location string for the office (e.g. `New York, NY, USA`). `null` for offices that have no location set, including most remote offices."""
     name: str | None = None
-    """Name of the office"""
+    """Display name of the office (e.g. `San Francisco`, `Remote (US)`). Unique among active offices in the same organization."""
     parent_id: int | None = None
-    """ID of the parent office, if this office is a branch office"""
-    parent_office_external_id: str | None = None
-    """External ID of the parent office in the external system"""
-    primary_contact_user_id: int | None = None
-    """User ID of the primary contact person for this office"""
+    """Id of the parent office when offices are organized hierarchically. `null` for top-level offices. References another `/v3/offices` row in the same organization."""
+    primary_in_house_contact_user_id: int | None = None
+    """Id of the Greenhouse user designated as the office's primary internal contact, typically the local recruiting lead. References a `/v3/users` row. `null` when no contact has been assigned."""
+    updated_at: str | None = None
+    """Updated at from the Greenhouse v3 offices record."""
 
 
 class SourcesSearchData(BaseModel):
     """Search result data for sources entity."""
     model_config = ConfigDict(extra="allow")
 
+    created_at: str | None = None
+    """Created at from the Greenhouse v3 sources record."""
     id: int | None = None
-    """The unique identifier for the source."""
+    """Id from the Greenhouse v3 sources record."""
     name: str | None = None
-    """The name of the source."""
+    """Display name of the source as recruiters see it in Greenhouse (e.g. `LinkedIn (Prospecting)`, `Indeed`, `Referral`, `Internal Applicant`, or a custom agency name). For organization-specific sources this is the label the org configured; for global Greenhouse sources it is the standard public name."""
     type_: dict[str, Any] | None = None
-    """Type of the data source"""
+    """The sourcing strategy this source rolls up to — the broader category used for reporting. Sources are grouped under sourcing strategies such as `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`, `Company marketing`, `In person event`, `MyGreenhouse`, and `Other`. Use the strategy when aggregating candidate volume by channel; use the source itself when reporting on a specific channel within that category."""
+    updated_at: str | None = None
+    """Updated at from the Greenhouse v3 sources record."""
 
 
 class UsersSearchData(BaseModel):
     """Search result data for users entity."""
     model_config = ConfigDict(extra="allow")
 
+    agency_id: int | None = None
+    """Id of the staffing agency this user belongs to, when the user is an external agency recruiter rather than an employee of your organization. `null` for in-house users."""
     created_at: str | None = None
-    """The date and time when the user account was created."""
-    departments: list[Any] | None = None
-    """List of departments associated with users"""
-    disabled: bool | None = None
-    """Indicates whether the user account is disabled."""
+    """Created at from the Greenhouse v3 users record."""
+    custom_fields: dict[str, Any] | None = None
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    deactivated: bool | None = None
+    """Whether the user has been deactivated. Deactivated users cannot sign in or be assigned to new jobs, but their historical activity (notes, scorecards, emails) is preserved. Toggle via `POST /v3/users/{id}/deactivate` and `POST /v3/users/{id}/activate`."""
+    department_ids: list[Any] | None = None
+    """Ids of the departments this user is assigned to. Used to scope future job permissions and to filter the user list by department. Empty when the user is not pinned to any department."""
     emails: list[Any] | None = None
-    """Email addresses of the users"""
+    """All email addresses on the user's account, including the primary address and any additional verified addresses."""
     employee_id: str | None = None
-    """Employee identifier for the user."""
+    """Partner-supplied external employee identifier, typically the user's HRIS or payroll id. Free-form string; not unique across organizations and `null` when no employee id has been set."""
     first_name: str | None = None
-    """The first name of the user."""
+    """First name from the Greenhouse v3 users record."""
     id: int | None = None
-    """Unique identifier for the user."""
+    """Id from the Greenhouse v3 users record."""
+    interviewer_tags: list[Any] | None = None
+    """Interviewer tags applied to this user — the labeled skill or panel groupings (e.g. `Senior Engineer`, `Bar Raiser`) used to suggest qualified interviewers when building an interview plan. Each entry pairs the tag's `id` with its `name`."""
+    job_title: str | None = None
+    """Free-form job title set on the user's Greenhouse profile (e.g. `Senior Recruiter`). Not synchronized with any HRIS title."""
     last_name: str | None = None
-    """The last name of the user."""
+    """Last name from the Greenhouse v3 users record."""
     linked_candidate_ids: list[Any] | None = None
-    """IDs of candidates linked to the user."""
+    """Ids of candidate records linked to this user. Populated when an employee is represented by both a user record (for Greenhouse access) and a candidate record (for past or internal applications)."""
     name: str | None = None
-    """The full name of the user."""
-    offices: list[Any] | None = None
-    """List of office locations where users are based"""
-    primary_email_address: str | None = None
-    """The primary email address of the user."""
+    """Concatenation of `first_name` and `last_name` rendered as a single display string. Provided for convenience; partners that need either component should read `first_name`/`last_name` directly."""
+    office_ids: list[Any] | None = None
+    """Ids of the offices this user is assigned to. Used to scope future job permissions and to filter the user list by office. Empty when the user is not pinned to any office."""
+    primary_email: str | None = None
+    """Primary email address on the user's account. Sign-in identifier and the address Greenhouse uses for outbound mail; additional verified addresses are not surfaced here. Service accounts (integration/ISU users) have no email and are excluded from this endpoint by default; when included via `show_service_accounts=true`, their `primary_email` is an empty string."""
     site_admin: bool | None = None
-    """Indicates whether the user is a site administrator."""
+    """Whether the user holds the Site Admin role. Site admins have unrestricted access to every non-confidential job and to organization-level settings. Demote a site admin to a Basic user with `POST /v3/users/{id}/revoke_permissions`."""
     updated_at: str | None = None
-    """The date and time when the user account was last updated."""
+    """Updated at from the Greenhouse v3 users record."""
 
 
 # ===== GENERIC SEARCH RESULT TYPES =====
@@ -694,11 +851,20 @@ UsersSearchResult = AirbyteSearchResult[UsersSearchData]
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
+ApplicationsListResult = GreenhouseExecuteResultWithMeta[list[Application], ApplicationsListResultMeta]
+"""Result type for applications.list operation with data and metadata."""
+
 CandidatesListResult = GreenhouseExecuteResultWithMeta[list[Candidate], CandidatesListResultMeta]
 """Result type for candidates.list operation with data and metadata."""
 
-ApplicationsListResult = GreenhouseExecuteResultWithMeta[list[Application], ApplicationsListResultMeta]
-"""Result type for applications.list operation with data and metadata."""
+DepartmentsListResult = GreenhouseExecuteResultWithMeta[list[Department], DepartmentsListResultMeta]
+"""Result type for departments.list operation with data and metadata."""
+
+InterviewsListResult = GreenhouseExecuteResultWithMeta[list[Interview], InterviewsListResultMeta]
+"""Result type for interviews.list operation with data and metadata."""
+
+JobPostsListResult = GreenhouseExecuteResultWithMeta[list[JobPost], JobPostsListResultMeta]
+"""Result type for job_posts.list operation with data and metadata."""
 
 JobsListResult = GreenhouseExecuteResultWithMeta[list[Job], JobsListResultMeta]
 """Result type for jobs.list operation with data and metadata."""
@@ -706,21 +872,15 @@ JobsListResult = GreenhouseExecuteResultWithMeta[list[Job], JobsListResultMeta]
 OffersListResult = GreenhouseExecuteResultWithMeta[list[Offer], OffersListResultMeta]
 """Result type for offers.list operation with data and metadata."""
 
-UsersListResult = GreenhouseExecuteResultWithMeta[list[User], UsersListResultMeta]
-"""Result type for users.list operation with data and metadata."""
-
-DepartmentsListResult = GreenhouseExecuteResultWithMeta[list[Department], DepartmentsListResultMeta]
-"""Result type for departments.list operation with data and metadata."""
-
 OfficesListResult = GreenhouseExecuteResultWithMeta[list[Office], OfficesListResultMeta]
 """Result type for offices.list operation with data and metadata."""
-
-JobPostsListResult = GreenhouseExecuteResultWithMeta[list[JobPost], JobPostsListResultMeta]
-"""Result type for job_posts.list operation with data and metadata."""
 
 SourcesListResult = GreenhouseExecuteResultWithMeta[list[Source], SourcesListResultMeta]
 """Result type for sources.list operation with data and metadata."""
 
-ScheduledInterviewsListResult = GreenhouseExecuteResultWithMeta[list[ScheduledInterview], ScheduledInterviewsListResultMeta]
-"""Result type for scheduled_interviews.list operation with data and metadata."""
+UsersListResult = GreenhouseExecuteResultWithMeta[list[User], UsersListResultMeta]
+"""Result type for users.list operation with data and metadata."""
+
+AttachmentsListResult = GreenhouseExecuteResultWithMeta[list[Attachment], AttachmentsListResultMeta]
+"""Result type for attachments.list operation with data and metadata."""
 

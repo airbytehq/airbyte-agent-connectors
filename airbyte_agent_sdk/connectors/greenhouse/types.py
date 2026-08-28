@@ -20,122 +20,88 @@ from typing import Any, Literal
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
-class CandidatesListParams(TypedDict):
-    """Parameters for candidates.list operation"""
-    per_page: NotRequired[int]
-    page: NotRequired[int]
-
-class CandidatesGetParams(TypedDict):
-    """Parameters for candidates.get operation"""
-    id: str
-
 class ApplicationsListParams(TypedDict):
     """Parameters for applications.list operation"""
+    cursor: NotRequired[str]
     per_page: NotRequired[int]
-    page: NotRequired[int]
-    created_before: NotRequired[str]
-    created_after: NotRequired[str]
-    last_activity_after: NotRequired[str]
-    job_id: NotRequired[int]
-    status: NotRequired[str]
+    ids: NotRequired[list[int]]
+    updated_at: NotRequired[str]
 
-class ApplicationsGetParams(TypedDict):
-    """Parameters for applications.get operation"""
-    id: str
-
-class JobsListParams(TypedDict):
-    """Parameters for jobs.list operation"""
+class CandidatesListParams(TypedDict):
+    """Parameters for candidates.list operation"""
+    cursor: NotRequired[str]
     per_page: NotRequired[int]
-    page: NotRequired[int]
-
-class JobsGetParams(TypedDict):
-    """Parameters for jobs.get operation"""
-    id: str
-
-class OffersListParams(TypedDict):
-    """Parameters for offers.list operation"""
-    per_page: NotRequired[int]
-    page: NotRequired[int]
-    created_before: NotRequired[str]
-    created_after: NotRequired[str]
-    resolved_after: NotRequired[str]
-
-class OffersGetParams(TypedDict):
-    """Parameters for offers.get operation"""
-    id: str
-
-class UsersListParams(TypedDict):
-    """Parameters for users.list operation"""
-    per_page: NotRequired[int]
-    page: NotRequired[int]
-    created_before: NotRequired[str]
-    created_after: NotRequired[str]
-    updated_before: NotRequired[str]
-    updated_after: NotRequired[str]
-
-class UsersGetParams(TypedDict):
-    """Parameters for users.get operation"""
-    id: str
+    ids: NotRequired[list[int]]
+    updated_at: NotRequired[str]
 
 class DepartmentsListParams(TypedDict):
     """Parameters for departments.list operation"""
+    cursor: NotRequired[str]
     per_page: NotRequired[int]
-    page: NotRequired[int]
+    ids: NotRequired[list[int]]
 
-class DepartmentsGetParams(TypedDict):
-    """Parameters for departments.get operation"""
-    id: str
-
-class OfficesListParams(TypedDict):
-    """Parameters for offices.list operation"""
+class InterviewsListParams(TypedDict):
+    """Parameters for interviews.list operation"""
+    cursor: NotRequired[str]
     per_page: NotRequired[int]
-    page: NotRequired[int]
-
-class OfficesGetParams(TypedDict):
-    """Parameters for offices.get operation"""
-    id: str
+    ids: NotRequired[list[int]]
+    updated_at: NotRequired[str]
 
 class JobPostsListParams(TypedDict):
     """Parameters for job_posts.list operation"""
+    cursor: NotRequired[str]
     per_page: NotRequired[int]
-    page: NotRequired[int]
-    live: NotRequired[bool]
+    ids: NotRequired[list[int]]
+    updated_at: NotRequired[str]
     active: NotRequired[bool]
 
-class JobPostsGetParams(TypedDict):
-    """Parameters for job_posts.get operation"""
-    id: str
+class JobsListParams(TypedDict):
+    """Parameters for jobs.list operation"""
+    cursor: NotRequired[str]
+    per_page: NotRequired[int]
+    ids: NotRequired[list[int]]
+    updated_at: NotRequired[str]
+
+class OffersListParams(TypedDict):
+    """Parameters for offers.list operation"""
+    cursor: NotRequired[str]
+    per_page: NotRequired[int]
+    ids: NotRequired[list[int]]
+    updated_at: NotRequired[str]
+
+class OfficesListParams(TypedDict):
+    """Parameters for offices.list operation"""
+    cursor: NotRequired[str]
+    per_page: NotRequired[int]
+    ids: NotRequired[list[int]]
 
 class SourcesListParams(TypedDict):
     """Parameters for sources.list operation"""
+    cursor: NotRequired[str]
     per_page: NotRequired[int]
-    page: NotRequired[int]
+    ids: NotRequired[list[int]]
 
-class ScheduledInterviewsListParams(TypedDict):
-    """Parameters for scheduled_interviews.list operation"""
+class UsersListParams(TypedDict):
+    """Parameters for users.list operation"""
+    cursor: NotRequired[str]
     per_page: NotRequired[int]
-    page: NotRequired[int]
-    created_before: NotRequired[str]
-    created_after: NotRequired[str]
-    updated_before: NotRequired[str]
-    updated_after: NotRequired[str]
-    starts_after: NotRequired[str]
-    ends_before: NotRequired[str]
+    ids: NotRequired[list[int]]
+    updated_at: NotRequired[str]
+    show_service_accounts: NotRequired[bool]
 
-class ScheduledInterviewsGetParams(TypedDict):
-    """Parameters for scheduled_interviews.get operation"""
-    id: str
+class AttachmentsListParams(TypedDict):
+    """Parameters for attachments.list operation"""
+    cursor: NotRequired[str]
+    per_page: NotRequired[int]
+    ids: NotRequired[list[int]]
+    updated_at: NotRequired[str]
+    application_ids: NotRequired[list[int]]
+    candidate_ids: NotRequired[list[int]]
+    type: NotRequired[str]
 
-class ApplicationAttachmentDownloadParams(TypedDict):
-    """Parameters for application_attachment.download operation"""
-    id: str
-    attachment_index: str
-    range_header: NotRequired[str]
-
-class CandidateAttachmentDownloadParams(TypedDict):
-    """Parameters for candidate_attachment.download operation"""
-    id: str
-    attachment_index: str
+class AttachmentsDownloadParams(TypedDict):
+    """Parameters for attachments.download operation"""
+    ids: list[int]
     range_header: NotRequired[str]
 
 # ===== SEARCH TYPES =====
@@ -147,222 +113,262 @@ AirbyteSortOrder = Literal["asc", "desc"]
 
 class ApplicationsSearchFilter(TypedDict, total=False):
     """Available fields for filtering applications search queries."""
+    agency_note_id: int | None
+    """Id of the note created when the candidate was submitted by an agency, or `null` if the application did not come through an agency."""
     answers: list[Any] | None
-    """Answers provided in the application."""
-    applied_at: str | None
-    """Timestamp when the candidate applied."""
-    attachments: list[Any] | None
-    """Attachments uploaded with the application."""
+    """Free-text answers the candidate provided on the job post application form. Each entry pairs the question text with the candidate's answer."""
     candidate_id: int | None
-    """Unique identifier for the candidate."""
-    credited_to: dict[str, Any] | None
-    """Information about the employee who credited the application."""
-    current_stage: dict[str, Any] | None
-    """Current stage of the application process."""
+    """Id of the candidate (person) this application belongs to."""
+    coordinator_id: int | None
+    """Id of the user assigned as coordinator on the application's job, or `null` when unassigned."""
+    created_at: str | None
+    """Created at from the Greenhouse v3 applications record."""
+    custom_fields: dict[str, Any] | None
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: int | None
-    """Unique identifier for the application."""
+    """Id from the Greenhouse v3 applications record."""
+    job_id: int | None
+    """Id of the job this application is on. `null` for jobless prospect applications."""
+    job_interview_stage_id: int | None
+    """Id of the job interview stage definition (see `GET /v3/job_interview_stages`) the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
     job_post_id: int | None
-    """"""
-    jobs: list[Any] | None
-    """Jobs applied for by the candidate."""
+    """Id of the job post the candidate applied through, or `null` if the application was created internally rather than from a posted role."""
     last_activity_at: str | None
-    """Timestamp of the last activity on the application."""
-    location: str | None
-    """Location related to the application."""
+    """Timestamp of the most recent activity on this application (notes, emails, stage changes, etc.), in ISO 8601."""
+    location_address: str | None
+    """Free-form location string captured on the application (typically from the job post's location question)."""
+    needs_decision: bool | None
+    """`true` when the application is waiting on a hiring-team decision (scorecard completion, advance/reject, etc.) in its current stage."""
     prospect: bool | None
-    """Status of the application prospect."""
-    prospect_detail: dict[str, Any] | None
-    """Details related to the application prospect."""
-    prospective_department: str | None
-    """Prospective department for the candidate."""
-    prospective_office: str | None
-    """Prospective office for the candidate."""
+    """`true` for prospect applications (sourced candidates not yet attached to a single job), `false` for candidate applications on a specific job."""
+    prospective_job_ids: list[Any] | None
+    """For prospect applications, the ids of jobs the prospect is being considered for. Empty for non-prospect applications and for jobless prospects."""
+    recruiter_id: int | None
+    """Id of the user assigned as recruiter on the application's job, or `null` when unassigned."""
+    referrer_id: int | None
+    """Id of the referrer who credited this application, or `null` if there was no referral. References a referrer, not a Greenhouse user."""
     rejected_at: str | None
-    """Timestamp when the application was rejected."""
-    rejection_details: dict[str, Any] | None
-    """Details related to the application rejection."""
-    rejection_reason: dict[str, Any] | None
-    """Reason for the application rejection."""
-    source: dict[str, Any] | None
-    """Source of the application."""
+    """Timestamp the application was rejected, in ISO 8601. `null` for applications that have not been rejected."""
+    rejection_reason_id: int | None
+    """Id of the rejection reason selected for the application. References a `/v3/rejection_reasons` row scoped to the organization. `null` when the application was rejected without a reason, or has not been rejected."""
+    source_id: int | None
+    """Id of the source the application is attributed to (e.g. a job board, an event, an employee referral source). `null` if no source is set."""
+    stage_id: int | None
+    """Id of the interview stage the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
+    stage_name: str | None
+    """Display name of the candidate's current interview stage on this application."""
     status: str | None
-    """Status of the application."""
+    """Lifecycle status of the application. `in_process` for active candidates, `rejected` for rejected applications, `hired` once an offer is closed and the hire endpoint has fired, and `converted` for prospect applications that have been promoted to a candidate application via `convert_to_candidate`."""
+    updated_at: str | None
+    """Updated at from the Greenhouse v3 applications record."""
 
 
 class ApplicationsInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
+    agency_note_id: list[int]
+    """Id of the note created when the candidate was submitted by an agency, or `null` if the application did not come through an agency."""
     answers: list[list[Any]]
-    """Answers provided in the application."""
-    applied_at: list[str]
-    """Timestamp when the candidate applied."""
-    attachments: list[list[Any]]
-    """Attachments uploaded with the application."""
+    """Free-text answers the candidate provided on the job post application form. Each entry pairs the question text with the candidate's answer."""
     candidate_id: list[int]
-    """Unique identifier for the candidate."""
-    credited_to: list[dict[str, Any]]
-    """Information about the employee who credited the application."""
-    current_stage: list[dict[str, Any]]
-    """Current stage of the application process."""
+    """Id of the candidate (person) this application belongs to."""
+    coordinator_id: list[int]
+    """Id of the user assigned as coordinator on the application's job, or `null` when unassigned."""
+    created_at: list[str]
+    """Created at from the Greenhouse v3 applications record."""
+    custom_fields: list[dict[str, Any]]
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: list[int]
-    """Unique identifier for the application."""
+    """Id from the Greenhouse v3 applications record."""
+    job_id: list[int]
+    """Id of the job this application is on. `null` for jobless prospect applications."""
+    job_interview_stage_id: list[int]
+    """Id of the job interview stage definition (see `GET /v3/job_interview_stages`) the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
     job_post_id: list[int]
-    """"""
-    jobs: list[list[Any]]
-    """Jobs applied for by the candidate."""
+    """Id of the job post the candidate applied through, or `null` if the application was created internally rather than from a posted role."""
     last_activity_at: list[str]
-    """Timestamp of the last activity on the application."""
-    location: list[str]
-    """Location related to the application."""
+    """Timestamp of the most recent activity on this application (notes, emails, stage changes, etc.), in ISO 8601."""
+    location_address: list[str]
+    """Free-form location string captured on the application (typically from the job post's location question)."""
+    needs_decision: list[bool]
+    """`true` when the application is waiting on a hiring-team decision (scorecard completion, advance/reject, etc.) in its current stage."""
     prospect: list[bool]
-    """Status of the application prospect."""
-    prospect_detail: list[dict[str, Any]]
-    """Details related to the application prospect."""
-    prospective_department: list[str]
-    """Prospective department for the candidate."""
-    prospective_office: list[str]
-    """Prospective office for the candidate."""
+    """`true` for prospect applications (sourced candidates not yet attached to a single job), `false` for candidate applications on a specific job."""
+    prospective_job_ids: list[list[Any]]
+    """For prospect applications, the ids of jobs the prospect is being considered for. Empty for non-prospect applications and for jobless prospects."""
+    recruiter_id: list[int]
+    """Id of the user assigned as recruiter on the application's job, or `null` when unassigned."""
+    referrer_id: list[int]
+    """Id of the referrer who credited this application, or `null` if there was no referral. References a referrer, not a Greenhouse user."""
     rejected_at: list[str]
-    """Timestamp when the application was rejected."""
-    rejection_details: list[dict[str, Any]]
-    """Details related to the application rejection."""
-    rejection_reason: list[dict[str, Any]]
-    """Reason for the application rejection."""
-    source: list[dict[str, Any]]
-    """Source of the application."""
+    """Timestamp the application was rejected, in ISO 8601. `null` for applications that have not been rejected."""
+    rejection_reason_id: list[int]
+    """Id of the rejection reason selected for the application. References a `/v3/rejection_reasons` row scoped to the organization. `null` when the application was rejected without a reason, or has not been rejected."""
+    source_id: list[int]
+    """Id of the source the application is attributed to (e.g. a job board, an event, an employee referral source). `null` if no source is set."""
+    stage_id: list[int]
+    """Id of the interview stage the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
+    stage_name: list[str]
+    """Display name of the candidate's current interview stage on this application."""
     status: list[str]
-    """Status of the application."""
+    """Lifecycle status of the application. `in_process` for active candidates, `rejected` for rejected applications, `hired` once an offer is closed and the hire endpoint has fired, and `converted` for prospect applications that have been promoted to a candidate application via `convert_to_candidate`."""
+    updated_at: list[str]
+    """Updated at from the Greenhouse v3 applications record."""
 
 
 class ApplicationsAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    agency_note_id: Any
+    """Id of the note created when the candidate was submitted by an agency, or `null` if the application did not come through an agency."""
     answers: Any
-    """Answers provided in the application."""
-    applied_at: Any
-    """Timestamp when the candidate applied."""
-    attachments: Any
-    """Attachments uploaded with the application."""
+    """Free-text answers the candidate provided on the job post application form. Each entry pairs the question text with the candidate's answer."""
     candidate_id: Any
-    """Unique identifier for the candidate."""
-    credited_to: Any
-    """Information about the employee who credited the application."""
-    current_stage: Any
-    """Current stage of the application process."""
+    """Id of the candidate (person) this application belongs to."""
+    coordinator_id: Any
+    """Id of the user assigned as coordinator on the application's job, or `null` when unassigned."""
+    created_at: Any
+    """Created at from the Greenhouse v3 applications record."""
+    custom_fields: Any
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: Any
-    """Unique identifier for the application."""
+    """Id from the Greenhouse v3 applications record."""
+    job_id: Any
+    """Id of the job this application is on. `null` for jobless prospect applications."""
+    job_interview_stage_id: Any
+    """Id of the job interview stage definition (see `GET /v3/job_interview_stages`) the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
     job_post_id: Any
-    """"""
-    jobs: Any
-    """Jobs applied for by the candidate."""
+    """Id of the job post the candidate applied through, or `null` if the application was created internally rather than from a posted role."""
     last_activity_at: Any
-    """Timestamp of the last activity on the application."""
-    location: Any
-    """Location related to the application."""
+    """Timestamp of the most recent activity on this application (notes, emails, stage changes, etc.), in ISO 8601."""
+    location_address: Any
+    """Free-form location string captured on the application (typically from the job post's location question)."""
+    needs_decision: Any
+    """`true` when the application is waiting on a hiring-team decision (scorecard completion, advance/reject, etc.) in its current stage."""
     prospect: Any
-    """Status of the application prospect."""
-    prospect_detail: Any
-    """Details related to the application prospect."""
-    prospective_department: Any
-    """Prospective department for the candidate."""
-    prospective_office: Any
-    """Prospective office for the candidate."""
+    """`true` for prospect applications (sourced candidates not yet attached to a single job), `false` for candidate applications on a specific job."""
+    prospective_job_ids: Any
+    """For prospect applications, the ids of jobs the prospect is being considered for. Empty for non-prospect applications and for jobless prospects."""
+    recruiter_id: Any
+    """Id of the user assigned as recruiter on the application's job, or `null` when unassigned."""
+    referrer_id: Any
+    """Id of the referrer who credited this application, or `null` if there was no referral. References a referrer, not a Greenhouse user."""
     rejected_at: Any
-    """Timestamp when the application was rejected."""
-    rejection_details: Any
-    """Details related to the application rejection."""
-    rejection_reason: Any
-    """Reason for the application rejection."""
-    source: Any
-    """Source of the application."""
+    """Timestamp the application was rejected, in ISO 8601. `null` for applications that have not been rejected."""
+    rejection_reason_id: Any
+    """Id of the rejection reason selected for the application. References a `/v3/rejection_reasons` row scoped to the organization. `null` when the application was rejected without a reason, or has not been rejected."""
+    source_id: Any
+    """Id of the source the application is attributed to (e.g. a job board, an event, an employee referral source). `null` if no source is set."""
+    stage_id: Any
+    """Id of the interview stage the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
+    stage_name: Any
+    """Display name of the candidate's current interview stage on this application."""
     status: Any
-    """Status of the application."""
+    """Lifecycle status of the application. `in_process` for active candidates, `rejected` for rejected applications, `hired` once an offer is closed and the hire endpoint has fired, and `converted` for prospect applications that have been promoted to a candidate application via `convert_to_candidate`."""
+    updated_at: Any
+    """Updated at from the Greenhouse v3 applications record."""
 
 
 class ApplicationsStringFilter(TypedDict, total=False):
     """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
+    agency_note_id: str
+    """Id of the note created when the candidate was submitted by an agency, or `null` if the application did not come through an agency."""
     answers: str
-    """Answers provided in the application."""
-    applied_at: str
-    """Timestamp when the candidate applied."""
-    attachments: str
-    """Attachments uploaded with the application."""
+    """Free-text answers the candidate provided on the job post application form. Each entry pairs the question text with the candidate's answer."""
     candidate_id: str
-    """Unique identifier for the candidate."""
-    credited_to: str
-    """Information about the employee who credited the application."""
-    current_stage: str
-    """Current stage of the application process."""
+    """Id of the candidate (person) this application belongs to."""
+    coordinator_id: str
+    """Id of the user assigned as coordinator on the application's job, or `null` when unassigned."""
+    created_at: str
+    """Created at from the Greenhouse v3 applications record."""
+    custom_fields: str
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: str
-    """Unique identifier for the application."""
+    """Id from the Greenhouse v3 applications record."""
+    job_id: str
+    """Id of the job this application is on. `null` for jobless prospect applications."""
+    job_interview_stage_id: str
+    """Id of the job interview stage definition (see `GET /v3/job_interview_stages`) the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
     job_post_id: str
-    """"""
-    jobs: str
-    """Jobs applied for by the candidate."""
+    """Id of the job post the candidate applied through, or `null` if the application was created internally rather than from a posted role."""
     last_activity_at: str
-    """Timestamp of the last activity on the application."""
-    location: str
-    """Location related to the application."""
+    """Timestamp of the most recent activity on this application (notes, emails, stage changes, etc.), in ISO 8601."""
+    location_address: str
+    """Free-form location string captured on the application (typically from the job post's location question)."""
+    needs_decision: str
+    """`true` when the application is waiting on a hiring-team decision (scorecard completion, advance/reject, etc.) in its current stage."""
     prospect: str
-    """Status of the application prospect."""
-    prospect_detail: str
-    """Details related to the application prospect."""
-    prospective_department: str
-    """Prospective department for the candidate."""
-    prospective_office: str
-    """Prospective office for the candidate."""
+    """`true` for prospect applications (sourced candidates not yet attached to a single job), `false` for candidate applications on a specific job."""
+    prospective_job_ids: str
+    """For prospect applications, the ids of jobs the prospect is being considered for. Empty for non-prospect applications and for jobless prospects."""
+    recruiter_id: str
+    """Id of the user assigned as recruiter on the application's job, or `null` when unassigned."""
+    referrer_id: str
+    """Id of the referrer who credited this application, or `null` if there was no referral. References a referrer, not a Greenhouse user."""
     rejected_at: str
-    """Timestamp when the application was rejected."""
-    rejection_details: str
-    """Details related to the application rejection."""
-    rejection_reason: str
-    """Reason for the application rejection."""
-    source: str
-    """Source of the application."""
+    """Timestamp the application was rejected, in ISO 8601. `null` for applications that have not been rejected."""
+    rejection_reason_id: str
+    """Id of the rejection reason selected for the application. References a `/v3/rejection_reasons` row scoped to the organization. `null` when the application was rejected without a reason, or has not been rejected."""
+    source_id: str
+    """Id of the source the application is attributed to (e.g. a job board, an event, an employee referral source). `null` if no source is set."""
+    stage_id: str
+    """Id of the interview stage the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
+    stage_name: str
+    """Display name of the candidate's current interview stage on this application."""
     status: str
-    """Status of the application."""
+    """Lifecycle status of the application. `in_process` for active candidates, `rejected` for rejected applications, `hired` once an offer is closed and the hire endpoint has fired, and `converted` for prospect applications that have been promoted to a candidate application via `convert_to_candidate`."""
+    updated_at: str
+    """Updated at from the Greenhouse v3 applications record."""
 
 
 class ApplicationsSortFilter(TypedDict, total=False):
     """Available fields for sorting applications search results."""
+    agency_note_id: AirbyteSortOrder
+    """Id of the note created when the candidate was submitted by an agency, or `null` if the application did not come through an agency."""
     answers: AirbyteSortOrder
-    """Answers provided in the application."""
-    applied_at: AirbyteSortOrder
-    """Timestamp when the candidate applied."""
-    attachments: AirbyteSortOrder
-    """Attachments uploaded with the application."""
+    """Free-text answers the candidate provided on the job post application form. Each entry pairs the question text with the candidate's answer."""
     candidate_id: AirbyteSortOrder
-    """Unique identifier for the candidate."""
-    credited_to: AirbyteSortOrder
-    """Information about the employee who credited the application."""
-    current_stage: AirbyteSortOrder
-    """Current stage of the application process."""
+    """Id of the candidate (person) this application belongs to."""
+    coordinator_id: AirbyteSortOrder
+    """Id of the user assigned as coordinator on the application's job, or `null` when unassigned."""
+    created_at: AirbyteSortOrder
+    """Created at from the Greenhouse v3 applications record."""
+    custom_fields: AirbyteSortOrder
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: AirbyteSortOrder
-    """Unique identifier for the application."""
+    """Id from the Greenhouse v3 applications record."""
+    job_id: AirbyteSortOrder
+    """Id of the job this application is on. `null` for jobless prospect applications."""
+    job_interview_stage_id: AirbyteSortOrder
+    """Id of the job interview stage definition (see `GET /v3/job_interview_stages`) the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
     job_post_id: AirbyteSortOrder
-    """"""
-    jobs: AirbyteSortOrder
-    """Jobs applied for by the candidate."""
+    """Id of the job post the candidate applied through, or `null` if the application was created internally rather than from a posted role."""
     last_activity_at: AirbyteSortOrder
-    """Timestamp of the last activity on the application."""
-    location: AirbyteSortOrder
-    """Location related to the application."""
+    """Timestamp of the most recent activity on this application (notes, emails, stage changes, etc.), in ISO 8601."""
+    location_address: AirbyteSortOrder
+    """Free-form location string captured on the application (typically from the job post's location question)."""
+    needs_decision: AirbyteSortOrder
+    """`true` when the application is waiting on a hiring-team decision (scorecard completion, advance/reject, etc.) in its current stage."""
     prospect: AirbyteSortOrder
-    """Status of the application prospect."""
-    prospect_detail: AirbyteSortOrder
-    """Details related to the application prospect."""
-    prospective_department: AirbyteSortOrder
-    """Prospective department for the candidate."""
-    prospective_office: AirbyteSortOrder
-    """Prospective office for the candidate."""
+    """`true` for prospect applications (sourced candidates not yet attached to a single job), `false` for candidate applications on a specific job."""
+    prospective_job_ids: AirbyteSortOrder
+    """For prospect applications, the ids of jobs the prospect is being considered for. Empty for non-prospect applications and for jobless prospects."""
+    recruiter_id: AirbyteSortOrder
+    """Id of the user assigned as recruiter on the application's job, or `null` when unassigned."""
+    referrer_id: AirbyteSortOrder
+    """Id of the referrer who credited this application, or `null` if there was no referral. References a referrer, not a Greenhouse user."""
     rejected_at: AirbyteSortOrder
-    """Timestamp when the application was rejected."""
-    rejection_details: AirbyteSortOrder
-    """Details related to the application rejection."""
-    rejection_reason: AirbyteSortOrder
-    """Reason for the application rejection."""
-    source: AirbyteSortOrder
-    """Source of the application."""
+    """Timestamp the application was rejected, in ISO 8601. `null` for applications that have not been rejected."""
+    rejection_reason_id: AirbyteSortOrder
+    """Id of the rejection reason selected for the application. References a `/v3/rejection_reasons` row scoped to the organization. `null` when the application was rejected without a reason, or has not been rejected."""
+    source_id: AirbyteSortOrder
+    """Id of the source the application is attributed to (e.g. a job board, an event, an employee referral source). `null` if no source is set."""
+    stage_id: AirbyteSortOrder
+    """Id of the interview stage the candidate is currently in for this application. `null` for prospect applications and applications in a terminal state."""
+    stage_name: AirbyteSortOrder
+    """Display name of the candidate's current interview stage on this application."""
     status: AirbyteSortOrder
-    """Status of the application."""
+    """Lifecycle status of the application. `in_process` for active candidates, `rejected` for rejected applications, `hired` once an offer is closed and the hire endpoint has fired, and `converted` for prospect applications that have been promoted to a candidate application via `convert_to_candidate`."""
+    updated_at: AirbyteSortOrder
+    """Updated at from the Greenhouse v3 applications record."""
 
 
 # Entity-specific condition types for applications
@@ -475,281 +481,221 @@ class ApplicationsSearchQuery(TypedDict, total=False):
 class CandidatesSearchFilter(TypedDict, total=False):
     """Available fields for filtering candidates search queries."""
     addresses: list[Any] | None
-    """Candidate's addresses"""
-    application_ids: list[Any] | None
-    """List of application IDs"""
-    applications: list[Any] | None
-    """An array of all applications made by candidates."""
-    attachments: list[Any] | None
-    """Attachments related to the candidate"""
+    """Postal addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `home`, `work`, or `other`."""
     can_email: bool | None
-    """Indicates if candidate can be emailed"""
+    """Whether this candidate has consented to receive email communication from your organization."""
     company: str | None
-    """Company where the candidate is associated"""
-    coordinator: str | None
-    """Coordinator assigned to the candidate"""
+    """Candidate's current company, as entered on their profile."""
     created_at: str | None
-    """Date and time of creation"""
+    """Created at from the Greenhouse v3 candidates record."""
     custom_fields: dict[str, Any] | None
-    """Custom fields associated with the candidate"""
-    educations: list[Any] | None
-    """List of candidate's educations"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     email_addresses: list[Any] | None
-    """Candidate's email addresses"""
-    employments: list[Any] | None
-    """List of candidate's employments"""
+    """Email addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `work`, or `other`."""
     first_name: str | None
-    """Candidate's first name"""
+    """First name from the Greenhouse v3 candidates record."""
     id: int | None
-    """Candidate's ID"""
-    is_private: bool | None
-    """Indicates if the candidate's data is private"""
-    keyed_custom_fields: dict[str, Any] | None
-    """Keyed custom fields associated with the candidate"""
-    last_activity: str | None
-    """Details of the last activity related to the candidate"""
+    """Id from the Greenhouse v3 candidates record."""
+    last_activity_at: str | None
+    """Timestamp of the most recent activity on any of the candidate's applications (notes, emails, stage changes, etc.), in ISO 8601."""
     last_name: str | None
-    """Candidate's last name"""
+    """Last name from the Greenhouse v3 candidates record."""
+    linked_user_ids: list[Any] | None
+    """Ids of Greenhouse users linked to this candidate (employees represented by both a user record and a candidate record)."""
     phone_numbers: list[Any] | None
-    """Candidate's phone numbers"""
-    photo_url: str | None
-    """URL of the candidate's profile photo"""
-    recruiter: str | None
-    """Recruiter assigned to the candidate"""
+    """Phone numbers on the candidate's profile. Each entry pairs the `value` with a `type` such as `mobile`, `home`, `work`, `skype`, or `other`."""
+    preferred_name: str | None
+    """Preferred or chosen name the candidate goes by, when different from their legal first name."""
+    private: bool | None
+    """If true, the candidate is restricted to users with `View Private Candidates` access. Defaults to `false`."""
     social_media_addresses: list[Any] | None
-    """Candidate's social media addresses"""
+    """Social media handles or URLs on the candidate's profile. Social entries are untyped — only the `value` is returned."""
     tags: list[Any] | None
-    """Tags associated with the candidate"""
+    """Candidate tag names applied to this candidate within your organization."""
+    time_zone: str | None
+    """Candidate's time zone as a Rails-style identifier (for example `Eastern Time (US & Canada)`)."""
     title: str | None
-    """Candidate's title (e.g., Mr., Mrs., Dr.)"""
+    """Candidate's current job title, as entered on their profile."""
     updated_at: str | None
-    """Date and time of last update"""
+    """Updated at from the Greenhouse v3 candidates record."""
     website_addresses: list[Any] | None
-    """List of candidate's website addresses"""
+    """Personal websites or portfolio URLs on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `company`, `portfolio`, `blog`, or `other`."""
 
 
 class CandidatesInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
     addresses: list[list[Any]]
-    """Candidate's addresses"""
-    application_ids: list[list[Any]]
-    """List of application IDs"""
-    applications: list[list[Any]]
-    """An array of all applications made by candidates."""
-    attachments: list[list[Any]]
-    """Attachments related to the candidate"""
+    """Postal addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `home`, `work`, or `other`."""
     can_email: list[bool]
-    """Indicates if candidate can be emailed"""
+    """Whether this candidate has consented to receive email communication from your organization."""
     company: list[str]
-    """Company where the candidate is associated"""
-    coordinator: list[str]
-    """Coordinator assigned to the candidate"""
+    """Candidate's current company, as entered on their profile."""
     created_at: list[str]
-    """Date and time of creation"""
+    """Created at from the Greenhouse v3 candidates record."""
     custom_fields: list[dict[str, Any]]
-    """Custom fields associated with the candidate"""
-    educations: list[list[Any]]
-    """List of candidate's educations"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     email_addresses: list[list[Any]]
-    """Candidate's email addresses"""
-    employments: list[list[Any]]
-    """List of candidate's employments"""
+    """Email addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `work`, or `other`."""
     first_name: list[str]
-    """Candidate's first name"""
+    """First name from the Greenhouse v3 candidates record."""
     id: list[int]
-    """Candidate's ID"""
-    is_private: list[bool]
-    """Indicates if the candidate's data is private"""
-    keyed_custom_fields: list[dict[str, Any]]
-    """Keyed custom fields associated with the candidate"""
-    last_activity: list[str]
-    """Details of the last activity related to the candidate"""
+    """Id from the Greenhouse v3 candidates record."""
+    last_activity_at: list[str]
+    """Timestamp of the most recent activity on any of the candidate's applications (notes, emails, stage changes, etc.), in ISO 8601."""
     last_name: list[str]
-    """Candidate's last name"""
+    """Last name from the Greenhouse v3 candidates record."""
+    linked_user_ids: list[list[Any]]
+    """Ids of Greenhouse users linked to this candidate (employees represented by both a user record and a candidate record)."""
     phone_numbers: list[list[Any]]
-    """Candidate's phone numbers"""
-    photo_url: list[str]
-    """URL of the candidate's profile photo"""
-    recruiter: list[str]
-    """Recruiter assigned to the candidate"""
+    """Phone numbers on the candidate's profile. Each entry pairs the `value` with a `type` such as `mobile`, `home`, `work`, `skype`, or `other`."""
+    preferred_name: list[str]
+    """Preferred or chosen name the candidate goes by, when different from their legal first name."""
+    private: list[bool]
+    """If true, the candidate is restricted to users with `View Private Candidates` access. Defaults to `false`."""
     social_media_addresses: list[list[Any]]
-    """Candidate's social media addresses"""
+    """Social media handles or URLs on the candidate's profile. Social entries are untyped — only the `value` is returned."""
     tags: list[list[Any]]
-    """Tags associated with the candidate"""
+    """Candidate tag names applied to this candidate within your organization."""
+    time_zone: list[str]
+    """Candidate's time zone as a Rails-style identifier (for example `Eastern Time (US & Canada)`)."""
     title: list[str]
-    """Candidate's title (e.g., Mr., Mrs., Dr.)"""
+    """Candidate's current job title, as entered on their profile."""
     updated_at: list[str]
-    """Date and time of last update"""
+    """Updated at from the Greenhouse v3 candidates record."""
     website_addresses: list[list[Any]]
-    """List of candidate's website addresses"""
+    """Personal websites or portfolio URLs on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `company`, `portfolio`, `blog`, or `other`."""
 
 
 class CandidatesAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
     addresses: Any
-    """Candidate's addresses"""
-    application_ids: Any
-    """List of application IDs"""
-    applications: Any
-    """An array of all applications made by candidates."""
-    attachments: Any
-    """Attachments related to the candidate"""
+    """Postal addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `home`, `work`, or `other`."""
     can_email: Any
-    """Indicates if candidate can be emailed"""
+    """Whether this candidate has consented to receive email communication from your organization."""
     company: Any
-    """Company where the candidate is associated"""
-    coordinator: Any
-    """Coordinator assigned to the candidate"""
+    """Candidate's current company, as entered on their profile."""
     created_at: Any
-    """Date and time of creation"""
+    """Created at from the Greenhouse v3 candidates record."""
     custom_fields: Any
-    """Custom fields associated with the candidate"""
-    educations: Any
-    """List of candidate's educations"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     email_addresses: Any
-    """Candidate's email addresses"""
-    employments: Any
-    """List of candidate's employments"""
+    """Email addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `work`, or `other`."""
     first_name: Any
-    """Candidate's first name"""
+    """First name from the Greenhouse v3 candidates record."""
     id: Any
-    """Candidate's ID"""
-    is_private: Any
-    """Indicates if the candidate's data is private"""
-    keyed_custom_fields: Any
-    """Keyed custom fields associated with the candidate"""
-    last_activity: Any
-    """Details of the last activity related to the candidate"""
+    """Id from the Greenhouse v3 candidates record."""
+    last_activity_at: Any
+    """Timestamp of the most recent activity on any of the candidate's applications (notes, emails, stage changes, etc.), in ISO 8601."""
     last_name: Any
-    """Candidate's last name"""
+    """Last name from the Greenhouse v3 candidates record."""
+    linked_user_ids: Any
+    """Ids of Greenhouse users linked to this candidate (employees represented by both a user record and a candidate record)."""
     phone_numbers: Any
-    """Candidate's phone numbers"""
-    photo_url: Any
-    """URL of the candidate's profile photo"""
-    recruiter: Any
-    """Recruiter assigned to the candidate"""
+    """Phone numbers on the candidate's profile. Each entry pairs the `value` with a `type` such as `mobile`, `home`, `work`, `skype`, or `other`."""
+    preferred_name: Any
+    """Preferred or chosen name the candidate goes by, when different from their legal first name."""
+    private: Any
+    """If true, the candidate is restricted to users with `View Private Candidates` access. Defaults to `false`."""
     social_media_addresses: Any
-    """Candidate's social media addresses"""
+    """Social media handles or URLs on the candidate's profile. Social entries are untyped — only the `value` is returned."""
     tags: Any
-    """Tags associated with the candidate"""
+    """Candidate tag names applied to this candidate within your organization."""
+    time_zone: Any
+    """Candidate's time zone as a Rails-style identifier (for example `Eastern Time (US & Canada)`)."""
     title: Any
-    """Candidate's title (e.g., Mr., Mrs., Dr.)"""
+    """Candidate's current job title, as entered on their profile."""
     updated_at: Any
-    """Date and time of last update"""
+    """Updated at from the Greenhouse v3 candidates record."""
     website_addresses: Any
-    """List of candidate's website addresses"""
+    """Personal websites or portfolio URLs on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `company`, `portfolio`, `blog`, or `other`."""
 
 
 class CandidatesStringFilter(TypedDict, total=False):
     """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     addresses: str
-    """Candidate's addresses"""
-    application_ids: str
-    """List of application IDs"""
-    applications: str
-    """An array of all applications made by candidates."""
-    attachments: str
-    """Attachments related to the candidate"""
+    """Postal addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `home`, `work`, or `other`."""
     can_email: str
-    """Indicates if candidate can be emailed"""
+    """Whether this candidate has consented to receive email communication from your organization."""
     company: str
-    """Company where the candidate is associated"""
-    coordinator: str
-    """Coordinator assigned to the candidate"""
+    """Candidate's current company, as entered on their profile."""
     created_at: str
-    """Date and time of creation"""
+    """Created at from the Greenhouse v3 candidates record."""
     custom_fields: str
-    """Custom fields associated with the candidate"""
-    educations: str
-    """List of candidate's educations"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     email_addresses: str
-    """Candidate's email addresses"""
-    employments: str
-    """List of candidate's employments"""
+    """Email addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `work`, or `other`."""
     first_name: str
-    """Candidate's first name"""
+    """First name from the Greenhouse v3 candidates record."""
     id: str
-    """Candidate's ID"""
-    is_private: str
-    """Indicates if the candidate's data is private"""
-    keyed_custom_fields: str
-    """Keyed custom fields associated with the candidate"""
-    last_activity: str
-    """Details of the last activity related to the candidate"""
+    """Id from the Greenhouse v3 candidates record."""
+    last_activity_at: str
+    """Timestamp of the most recent activity on any of the candidate's applications (notes, emails, stage changes, etc.), in ISO 8601."""
     last_name: str
-    """Candidate's last name"""
+    """Last name from the Greenhouse v3 candidates record."""
+    linked_user_ids: str
+    """Ids of Greenhouse users linked to this candidate (employees represented by both a user record and a candidate record)."""
     phone_numbers: str
-    """Candidate's phone numbers"""
-    photo_url: str
-    """URL of the candidate's profile photo"""
-    recruiter: str
-    """Recruiter assigned to the candidate"""
+    """Phone numbers on the candidate's profile. Each entry pairs the `value` with a `type` such as `mobile`, `home`, `work`, `skype`, or `other`."""
+    preferred_name: str
+    """Preferred or chosen name the candidate goes by, when different from their legal first name."""
+    private: str
+    """If true, the candidate is restricted to users with `View Private Candidates` access. Defaults to `false`."""
     social_media_addresses: str
-    """Candidate's social media addresses"""
+    """Social media handles or URLs on the candidate's profile. Social entries are untyped — only the `value` is returned."""
     tags: str
-    """Tags associated with the candidate"""
+    """Candidate tag names applied to this candidate within your organization."""
+    time_zone: str
+    """Candidate's time zone as a Rails-style identifier (for example `Eastern Time (US & Canada)`)."""
     title: str
-    """Candidate's title (e.g., Mr., Mrs., Dr.)"""
+    """Candidate's current job title, as entered on their profile."""
     updated_at: str
-    """Date and time of last update"""
+    """Updated at from the Greenhouse v3 candidates record."""
     website_addresses: str
-    """List of candidate's website addresses"""
+    """Personal websites or portfolio URLs on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `company`, `portfolio`, `blog`, or `other`."""
 
 
 class CandidatesSortFilter(TypedDict, total=False):
     """Available fields for sorting candidates search results."""
     addresses: AirbyteSortOrder
-    """Candidate's addresses"""
-    application_ids: AirbyteSortOrder
-    """List of application IDs"""
-    applications: AirbyteSortOrder
-    """An array of all applications made by candidates."""
-    attachments: AirbyteSortOrder
-    """Attachments related to the candidate"""
+    """Postal addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `home`, `work`, or `other`."""
     can_email: AirbyteSortOrder
-    """Indicates if candidate can be emailed"""
+    """Whether this candidate has consented to receive email communication from your organization."""
     company: AirbyteSortOrder
-    """Company where the candidate is associated"""
-    coordinator: AirbyteSortOrder
-    """Coordinator assigned to the candidate"""
+    """Candidate's current company, as entered on their profile."""
     created_at: AirbyteSortOrder
-    """Date and time of creation"""
+    """Created at from the Greenhouse v3 candidates record."""
     custom_fields: AirbyteSortOrder
-    """Custom fields associated with the candidate"""
-    educations: AirbyteSortOrder
-    """List of candidate's educations"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     email_addresses: AirbyteSortOrder
-    """Candidate's email addresses"""
-    employments: AirbyteSortOrder
-    """List of candidate's employments"""
+    """Email addresses on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `work`, or `other`."""
     first_name: AirbyteSortOrder
-    """Candidate's first name"""
+    """First name from the Greenhouse v3 candidates record."""
     id: AirbyteSortOrder
-    """Candidate's ID"""
-    is_private: AirbyteSortOrder
-    """Indicates if the candidate's data is private"""
-    keyed_custom_fields: AirbyteSortOrder
-    """Keyed custom fields associated with the candidate"""
-    last_activity: AirbyteSortOrder
-    """Details of the last activity related to the candidate"""
+    """Id from the Greenhouse v3 candidates record."""
+    last_activity_at: AirbyteSortOrder
+    """Timestamp of the most recent activity on any of the candidate's applications (notes, emails, stage changes, etc.), in ISO 8601."""
     last_name: AirbyteSortOrder
-    """Candidate's last name"""
+    """Last name from the Greenhouse v3 candidates record."""
+    linked_user_ids: AirbyteSortOrder
+    """Ids of Greenhouse users linked to this candidate (employees represented by both a user record and a candidate record)."""
     phone_numbers: AirbyteSortOrder
-    """Candidate's phone numbers"""
-    photo_url: AirbyteSortOrder
-    """URL of the candidate's profile photo"""
-    recruiter: AirbyteSortOrder
-    """Recruiter assigned to the candidate"""
+    """Phone numbers on the candidate's profile. Each entry pairs the `value` with a `type` such as `mobile`, `home`, `work`, `skype`, or `other`."""
+    preferred_name: AirbyteSortOrder
+    """Preferred or chosen name the candidate goes by, when different from their legal first name."""
+    private: AirbyteSortOrder
+    """If true, the candidate is restricted to users with `View Private Candidates` access. Defaults to `false`."""
     social_media_addresses: AirbyteSortOrder
-    """Candidate's social media addresses"""
+    """Social media handles or URLs on the candidate's profile. Social entries are untyped — only the `value` is returned."""
     tags: AirbyteSortOrder
-    """Tags associated with the candidate"""
+    """Candidate tag names applied to this candidate within your organization."""
+    time_zone: AirbyteSortOrder
+    """Candidate's time zone as a Rails-style identifier (for example `Eastern Time (US & Canada)`)."""
     title: AirbyteSortOrder
-    """Candidate's title (e.g., Mr., Mrs., Dr.)"""
+    """Candidate's current job title, as entered on their profile."""
     updated_at: AirbyteSortOrder
-    """Date and time of last update"""
+    """Updated at from the Greenhouse v3 candidates record."""
     website_addresses: AirbyteSortOrder
-    """List of candidate's website addresses"""
+    """Personal websites or portfolio URLs on the candidate's profile. Each entry pairs the `value` with a `type` such as `personal`, `company`, `portfolio`, `blog`, or `other`."""
 
 
 # Entity-specific condition types for candidates
@@ -861,92 +807,82 @@ class CandidatesSearchQuery(TypedDict, total=False):
 
 class DepartmentsSearchFilter(TypedDict, total=False):
     """Available fields for filtering departments search queries."""
-    child_department_external_ids: list[Any] | None
-    """External IDs of child departments associated with this department."""
-    child_ids: list[Any] | None
-    """Unique IDs of child departments associated with this department."""
+    created_at: str | None
+    """Created at from the Greenhouse v3 departments record."""
     external_id: str | None
-    """External ID of this department."""
+    """Partner-supplied identifier for the department, typically the matching id from an HRIS or other external system. Free-form string and `null` when no external id has been set."""
     id: int | None
-    """Unique ID of this department."""
+    """Id from the Greenhouse v3 departments record."""
     name: str | None
-    """Name of the department."""
-    parent_department_external_id: str | None
-    """External ID of the parent department of this department."""
+    """Display name of the department (e.g. `Engineering`, `Marketing`)."""
     parent_id: int | None
-    """Unique ID of the parent department of this department."""
+    """Id of the parent department in the organization's department tree. `null` for top-level departments. References another `/v3/departments` row."""
+    updated_at: str | None
+    """Updated at from the Greenhouse v3 departments record."""
 
 
 class DepartmentsInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
-    child_department_external_ids: list[list[Any]]
-    """External IDs of child departments associated with this department."""
-    child_ids: list[list[Any]]
-    """Unique IDs of child departments associated with this department."""
+    created_at: list[str]
+    """Created at from the Greenhouse v3 departments record."""
     external_id: list[str]
-    """External ID of this department."""
+    """Partner-supplied identifier for the department, typically the matching id from an HRIS or other external system. Free-form string and `null` when no external id has been set."""
     id: list[int]
-    """Unique ID of this department."""
+    """Id from the Greenhouse v3 departments record."""
     name: list[str]
-    """Name of the department."""
-    parent_department_external_id: list[str]
-    """External ID of the parent department of this department."""
+    """Display name of the department (e.g. `Engineering`, `Marketing`)."""
     parent_id: list[int]
-    """Unique ID of the parent department of this department."""
+    """Id of the parent department in the organization's department tree. `null` for top-level departments. References another `/v3/departments` row."""
+    updated_at: list[str]
+    """Updated at from the Greenhouse v3 departments record."""
 
 
 class DepartmentsAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
-    child_department_external_ids: Any
-    """External IDs of child departments associated with this department."""
-    child_ids: Any
-    """Unique IDs of child departments associated with this department."""
+    created_at: Any
+    """Created at from the Greenhouse v3 departments record."""
     external_id: Any
-    """External ID of this department."""
+    """Partner-supplied identifier for the department, typically the matching id from an HRIS or other external system. Free-form string and `null` when no external id has been set."""
     id: Any
-    """Unique ID of this department."""
+    """Id from the Greenhouse v3 departments record."""
     name: Any
-    """Name of the department."""
-    parent_department_external_id: Any
-    """External ID of the parent department of this department."""
+    """Display name of the department (e.g. `Engineering`, `Marketing`)."""
     parent_id: Any
-    """Unique ID of the parent department of this department."""
+    """Id of the parent department in the organization's department tree. `null` for top-level departments. References another `/v3/departments` row."""
+    updated_at: Any
+    """Updated at from the Greenhouse v3 departments record."""
 
 
 class DepartmentsStringFilter(TypedDict, total=False):
     """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
-    child_department_external_ids: str
-    """External IDs of child departments associated with this department."""
-    child_ids: str
-    """Unique IDs of child departments associated with this department."""
+    created_at: str
+    """Created at from the Greenhouse v3 departments record."""
     external_id: str
-    """External ID of this department."""
+    """Partner-supplied identifier for the department, typically the matching id from an HRIS or other external system. Free-form string and `null` when no external id has been set."""
     id: str
-    """Unique ID of this department."""
+    """Id from the Greenhouse v3 departments record."""
     name: str
-    """Name of the department."""
-    parent_department_external_id: str
-    """External ID of the parent department of this department."""
+    """Display name of the department (e.g. `Engineering`, `Marketing`)."""
     parent_id: str
-    """Unique ID of the parent department of this department."""
+    """Id of the parent department in the organization's department tree. `null` for top-level departments. References another `/v3/departments` row."""
+    updated_at: str
+    """Updated at from the Greenhouse v3 departments record."""
 
 
 class DepartmentsSortFilter(TypedDict, total=False):
     """Available fields for sorting departments search results."""
-    child_department_external_ids: AirbyteSortOrder
-    """External IDs of child departments associated with this department."""
-    child_ids: AirbyteSortOrder
-    """Unique IDs of child departments associated with this department."""
+    created_at: AirbyteSortOrder
+    """Created at from the Greenhouse v3 departments record."""
     external_id: AirbyteSortOrder
-    """External ID of this department."""
+    """Partner-supplied identifier for the department, typically the matching id from an HRIS or other external system. Free-form string and `null` when no external id has been set."""
     id: AirbyteSortOrder
-    """Unique ID of this department."""
+    """Id from the Greenhouse v3 departments record."""
     name: AirbyteSortOrder
-    """Name of the department."""
-    parent_department_external_id: AirbyteSortOrder
-    """External ID of the parent department of this department."""
+    """Display name of the department (e.g. `Engineering`, `Marketing`)."""
     parent_id: AirbyteSortOrder
-    """Unique ID of the parent department of this department."""
+    """Id of the parent department in the organization's department tree. `null` for top-level departments. References another `/v3/departments` row."""
+    updated_at: AirbyteSortOrder
+    """Updated at from the Greenhouse v3 departments record."""
 
 
 # Entity-specific condition types for departments
@@ -1059,171 +995,191 @@ class DepartmentsSearchQuery(TypedDict, total=False):
 class JobPostsSearchFilter(TypedDict, total=False):
     """Available fields for filtering job_posts search queries."""
     active: bool | None
-    """Flag indicating if the job post is active or not."""
+    """If `true`, the post has not been deleted. Deleted posts are excluded by default; pass `active=false` on the list endpoint to retrieve them."""
     content: str | None
-    """Content or description of the job post."""
+    """HTML body of the post shown to candidates on the job board. For internal posts this returns the `internal_content` instead. Sanitized server-side — only a limited element/attribute allowlist (including `iframe`, `video`, `source`) survives. `null` while the post is still being scaffolded."""
     created_at: str | None
-    """Date and time when the job post was created."""
+    """Created at from the Greenhouse v3 job posts record."""
     demographic_question_set_id: int | None
-    """ID of the demographic question set associated with the job post."""
-    external: bool | None
-    """Flag indicating if the job post is external or not."""
+    """Id of the demographic question set surfaced to candidates on this post for diversity, equity, and inclusion (DE&I) reporting. `null` when the post does not collect demographic data."""
+    featured: bool | None
+    """If `true`, the post is currently featured on the organization's internal job board and surfaces in the weekly internal-jobs email. Only internal posts can be featured, and at most three can be featured at a time."""
     first_published_at: str | None
-    """Date and time when the job post was first published."""
+    """Timestamp the post first transitioned to `live`, in ISO 8601. `null` for posts that have never been published."""
     id: int | None
-    """Unique identifier of the job post."""
+    """Id from the Greenhouse v3 job posts record."""
     internal: bool | None
-    """Flag indicating if the job post is internal or not."""
+    """If `true`, the post lives on an internal job board and is visible only to existing employees signed in to the internal board. If `false`, the post is external and lives on a public-facing `job_board`. Set by the board the post is associated with at create time."""
     internal_content: str | None
-    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
+    """HTML body shown on the internal job board when the post is also configured as internal. `null` for external-only posts. Same sanitization rules as `content`."""
+    job_board_id: int | None
+    """Id of the `job_board` this post is published to. Resolves to either an external (careers site, syndicated board) or internal job board depending on `internal`. Each post belongs to exactly one board at a time."""
     job_id: int | None
-    """ID of the job associated with the job post."""
+    """Id of the parent job (requisition) this post belongs to. A single job can have multiple posts; the job is the source of truth for the hiring team, openings, and interview plan."""
+    language: str | None
+    """ISO 639-1 locale of the post, used to render the candidate-facing application form in the matching language (e.g. `en`, `fr`, `ja`). `null` when no locale has been chosen."""
     live: bool | None
-    """Flag indicating if the job post is live or not."""
-    location: dict[str, Any] | None
-    """Details about the job post location."""
+    """If `true`, the post is published (`job_application_status` is `live`) and its job board is also live. A post on an unpublished board is **not** `live` — its `public_url` returns a 404 until the board is enabled."""
+    public_url: str | None
+    """Canonical public URL of the post on its job board, including the `gh_jid` tracking parameter. `null` when the post has no associated job board or the board has no public URL configured."""
     questions: list[Any] | None
-    """List of questions related to the job post."""
+    """Application form questions presented to candidates on this post, including default questions (resume, cover letter, basic info) and any custom questions configured by the hiring team. Ordered as they appear on the form."""
     title: str | None
-    """Title or headline of the job post."""
+    """Public-facing title shown to candidates on the job board (e.g. `Senior Backend Engineer, Remote`). Distinct from the internal `job.name` — a single job can have several posts with different titles, one per board, language, or geography."""
     updated_at: str | None
-    """Date and time when the job post was last updated."""
+    """Updated at from the Greenhouse v3 job posts record."""
 
 
 class JobPostsInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
     active: list[bool]
-    """Flag indicating if the job post is active or not."""
+    """If `true`, the post has not been deleted. Deleted posts are excluded by default; pass `active=false` on the list endpoint to retrieve them."""
     content: list[str]
-    """Content or description of the job post."""
+    """HTML body of the post shown to candidates on the job board. For internal posts this returns the `internal_content` instead. Sanitized server-side — only a limited element/attribute allowlist (including `iframe`, `video`, `source`) survives. `null` while the post is still being scaffolded."""
     created_at: list[str]
-    """Date and time when the job post was created."""
+    """Created at from the Greenhouse v3 job posts record."""
     demographic_question_set_id: list[int]
-    """ID of the demographic question set associated with the job post."""
-    external: list[bool]
-    """Flag indicating if the job post is external or not."""
+    """Id of the demographic question set surfaced to candidates on this post for diversity, equity, and inclusion (DE&I) reporting. `null` when the post does not collect demographic data."""
+    featured: list[bool]
+    """If `true`, the post is currently featured on the organization's internal job board and surfaces in the weekly internal-jobs email. Only internal posts can be featured, and at most three can be featured at a time."""
     first_published_at: list[str]
-    """Date and time when the job post was first published."""
+    """Timestamp the post first transitioned to `live`, in ISO 8601. `null` for posts that have never been published."""
     id: list[int]
-    """Unique identifier of the job post."""
+    """Id from the Greenhouse v3 job posts record."""
     internal: list[bool]
-    """Flag indicating if the job post is internal or not."""
+    """If `true`, the post lives on an internal job board and is visible only to existing employees signed in to the internal board. If `false`, the post is external and lives on a public-facing `job_board`. Set by the board the post is associated with at create time."""
     internal_content: list[str]
-    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
+    """HTML body shown on the internal job board when the post is also configured as internal. `null` for external-only posts. Same sanitization rules as `content`."""
+    job_board_id: list[int]
+    """Id of the `job_board` this post is published to. Resolves to either an external (careers site, syndicated board) or internal job board depending on `internal`. Each post belongs to exactly one board at a time."""
     job_id: list[int]
-    """ID of the job associated with the job post."""
+    """Id of the parent job (requisition) this post belongs to. A single job can have multiple posts; the job is the source of truth for the hiring team, openings, and interview plan."""
+    language: list[str]
+    """ISO 639-1 locale of the post, used to render the candidate-facing application form in the matching language (e.g. `en`, `fr`, `ja`). `null` when no locale has been chosen."""
     live: list[bool]
-    """Flag indicating if the job post is live or not."""
-    location: list[dict[str, Any]]
-    """Details about the job post location."""
+    """If `true`, the post is published (`job_application_status` is `live`) and its job board is also live. A post on an unpublished board is **not** `live` — its `public_url` returns a 404 until the board is enabled."""
+    public_url: list[str]
+    """Canonical public URL of the post on its job board, including the `gh_jid` tracking parameter. `null` when the post has no associated job board or the board has no public URL configured."""
     questions: list[list[Any]]
-    """List of questions related to the job post."""
+    """Application form questions presented to candidates on this post, including default questions (resume, cover letter, basic info) and any custom questions configured by the hiring team. Ordered as they appear on the form."""
     title: list[str]
-    """Title or headline of the job post."""
+    """Public-facing title shown to candidates on the job board (e.g. `Senior Backend Engineer, Remote`). Distinct from the internal `job.name` — a single job can have several posts with different titles, one per board, language, or geography."""
     updated_at: list[str]
-    """Date and time when the job post was last updated."""
+    """Updated at from the Greenhouse v3 job posts record."""
 
 
 class JobPostsAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
     active: Any
-    """Flag indicating if the job post is active or not."""
+    """If `true`, the post has not been deleted. Deleted posts are excluded by default; pass `active=false` on the list endpoint to retrieve them."""
     content: Any
-    """Content or description of the job post."""
+    """HTML body of the post shown to candidates on the job board. For internal posts this returns the `internal_content` instead. Sanitized server-side — only a limited element/attribute allowlist (including `iframe`, `video`, `source`) survives. `null` while the post is still being scaffolded."""
     created_at: Any
-    """Date and time when the job post was created."""
+    """Created at from the Greenhouse v3 job posts record."""
     demographic_question_set_id: Any
-    """ID of the demographic question set associated with the job post."""
-    external: Any
-    """Flag indicating if the job post is external or not."""
+    """Id of the demographic question set surfaced to candidates on this post for diversity, equity, and inclusion (DE&I) reporting. `null` when the post does not collect demographic data."""
+    featured: Any
+    """If `true`, the post is currently featured on the organization's internal job board and surfaces in the weekly internal-jobs email. Only internal posts can be featured, and at most three can be featured at a time."""
     first_published_at: Any
-    """Date and time when the job post was first published."""
+    """Timestamp the post first transitioned to `live`, in ISO 8601. `null` for posts that have never been published."""
     id: Any
-    """Unique identifier of the job post."""
+    """Id from the Greenhouse v3 job posts record."""
     internal: Any
-    """Flag indicating if the job post is internal or not."""
+    """If `true`, the post lives on an internal job board and is visible only to existing employees signed in to the internal board. If `false`, the post is external and lives on a public-facing `job_board`. Set by the board the post is associated with at create time."""
     internal_content: Any
-    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
+    """HTML body shown on the internal job board when the post is also configured as internal. `null` for external-only posts. Same sanitization rules as `content`."""
+    job_board_id: Any
+    """Id of the `job_board` this post is published to. Resolves to either an external (careers site, syndicated board) or internal job board depending on `internal`. Each post belongs to exactly one board at a time."""
     job_id: Any
-    """ID of the job associated with the job post."""
+    """Id of the parent job (requisition) this post belongs to. A single job can have multiple posts; the job is the source of truth for the hiring team, openings, and interview plan."""
+    language: Any
+    """ISO 639-1 locale of the post, used to render the candidate-facing application form in the matching language (e.g. `en`, `fr`, `ja`). `null` when no locale has been chosen."""
     live: Any
-    """Flag indicating if the job post is live or not."""
-    location: Any
-    """Details about the job post location."""
+    """If `true`, the post is published (`job_application_status` is `live`) and its job board is also live. A post on an unpublished board is **not** `live` — its `public_url` returns a 404 until the board is enabled."""
+    public_url: Any
+    """Canonical public URL of the post on its job board, including the `gh_jid` tracking parameter. `null` when the post has no associated job board or the board has no public URL configured."""
     questions: Any
-    """List of questions related to the job post."""
+    """Application form questions presented to candidates on this post, including default questions (resume, cover letter, basic info) and any custom questions configured by the hiring team. Ordered as they appear on the form."""
     title: Any
-    """Title or headline of the job post."""
+    """Public-facing title shown to candidates on the job board (e.g. `Senior Backend Engineer, Remote`). Distinct from the internal `job.name` — a single job can have several posts with different titles, one per board, language, or geography."""
     updated_at: Any
-    """Date and time when the job post was last updated."""
+    """Updated at from the Greenhouse v3 job posts record."""
 
 
 class JobPostsStringFilter(TypedDict, total=False):
     """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     active: str
-    """Flag indicating if the job post is active or not."""
+    """If `true`, the post has not been deleted. Deleted posts are excluded by default; pass `active=false` on the list endpoint to retrieve them."""
     content: str
-    """Content or description of the job post."""
+    """HTML body of the post shown to candidates on the job board. For internal posts this returns the `internal_content` instead. Sanitized server-side — only a limited element/attribute allowlist (including `iframe`, `video`, `source`) survives. `null` while the post is still being scaffolded."""
     created_at: str
-    """Date and time when the job post was created."""
+    """Created at from the Greenhouse v3 job posts record."""
     demographic_question_set_id: str
-    """ID of the demographic question set associated with the job post."""
-    external: str
-    """Flag indicating if the job post is external or not."""
+    """Id of the demographic question set surfaced to candidates on this post for diversity, equity, and inclusion (DE&I) reporting. `null` when the post does not collect demographic data."""
+    featured: str
+    """If `true`, the post is currently featured on the organization's internal job board and surfaces in the weekly internal-jobs email. Only internal posts can be featured, and at most three can be featured at a time."""
     first_published_at: str
-    """Date and time when the job post was first published."""
+    """Timestamp the post first transitioned to `live`, in ISO 8601. `null` for posts that have never been published."""
     id: str
-    """Unique identifier of the job post."""
+    """Id from the Greenhouse v3 job posts record."""
     internal: str
-    """Flag indicating if the job post is internal or not."""
+    """If `true`, the post lives on an internal job board and is visible only to existing employees signed in to the internal board. If `false`, the post is external and lives on a public-facing `job_board`. Set by the board the post is associated with at create time."""
     internal_content: str
-    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
+    """HTML body shown on the internal job board when the post is also configured as internal. `null` for external-only posts. Same sanitization rules as `content`."""
+    job_board_id: str
+    """Id of the `job_board` this post is published to. Resolves to either an external (careers site, syndicated board) or internal job board depending on `internal`. Each post belongs to exactly one board at a time."""
     job_id: str
-    """ID of the job associated with the job post."""
+    """Id of the parent job (requisition) this post belongs to. A single job can have multiple posts; the job is the source of truth for the hiring team, openings, and interview plan."""
+    language: str
+    """ISO 639-1 locale of the post, used to render the candidate-facing application form in the matching language (e.g. `en`, `fr`, `ja`). `null` when no locale has been chosen."""
     live: str
-    """Flag indicating if the job post is live or not."""
-    location: str
-    """Details about the job post location."""
+    """If `true`, the post is published (`job_application_status` is `live`) and its job board is also live. A post on an unpublished board is **not** `live` — its `public_url` returns a 404 until the board is enabled."""
+    public_url: str
+    """Canonical public URL of the post on its job board, including the `gh_jid` tracking parameter. `null` when the post has no associated job board or the board has no public URL configured."""
     questions: str
-    """List of questions related to the job post."""
+    """Application form questions presented to candidates on this post, including default questions (resume, cover letter, basic info) and any custom questions configured by the hiring team. Ordered as they appear on the form."""
     title: str
-    """Title or headline of the job post."""
+    """Public-facing title shown to candidates on the job board (e.g. `Senior Backend Engineer, Remote`). Distinct from the internal `job.name` — a single job can have several posts with different titles, one per board, language, or geography."""
     updated_at: str
-    """Date and time when the job post was last updated."""
+    """Updated at from the Greenhouse v3 job posts record."""
 
 
 class JobPostsSortFilter(TypedDict, total=False):
     """Available fields for sorting job_posts search results."""
     active: AirbyteSortOrder
-    """Flag indicating if the job post is active or not."""
+    """If `true`, the post has not been deleted. Deleted posts are excluded by default; pass `active=false` on the list endpoint to retrieve them."""
     content: AirbyteSortOrder
-    """Content or description of the job post."""
+    """HTML body of the post shown to candidates on the job board. For internal posts this returns the `internal_content` instead. Sanitized server-side — only a limited element/attribute allowlist (including `iframe`, `video`, `source`) survives. `null` while the post is still being scaffolded."""
     created_at: AirbyteSortOrder
-    """Date and time when the job post was created."""
+    """Created at from the Greenhouse v3 job posts record."""
     demographic_question_set_id: AirbyteSortOrder
-    """ID of the demographic question set associated with the job post."""
-    external: AirbyteSortOrder
-    """Flag indicating if the job post is external or not."""
+    """Id of the demographic question set surfaced to candidates on this post for diversity, equity, and inclusion (DE&I) reporting. `null` when the post does not collect demographic data."""
+    featured: AirbyteSortOrder
+    """If `true`, the post is currently featured on the organization's internal job board and surfaces in the weekly internal-jobs email. Only internal posts can be featured, and at most three can be featured at a time."""
     first_published_at: AirbyteSortOrder
-    """Date and time when the job post was first published."""
+    """Timestamp the post first transitioned to `live`, in ISO 8601. `null` for posts that have never been published."""
     id: AirbyteSortOrder
-    """Unique identifier of the job post."""
+    """Id from the Greenhouse v3 job posts record."""
     internal: AirbyteSortOrder
-    """Flag indicating if the job post is internal or not."""
+    """If `true`, the post lives on an internal job board and is visible only to existing employees signed in to the internal board. If `false`, the post is external and lives on a public-facing `job_board`. Set by the board the post is associated with at create time."""
     internal_content: AirbyteSortOrder
-    """The job post as written for the internal job board, present only when it differs from the external one. Semantically searchable; HTML, same as `content`."""
+    """HTML body shown on the internal job board when the post is also configured as internal. `null` for external-only posts. Same sanitization rules as `content`."""
+    job_board_id: AirbyteSortOrder
+    """Id of the `job_board` this post is published to. Resolves to either an external (careers site, syndicated board) or internal job board depending on `internal`. Each post belongs to exactly one board at a time."""
     job_id: AirbyteSortOrder
-    """ID of the job associated with the job post."""
+    """Id of the parent job (requisition) this post belongs to. A single job can have multiple posts; the job is the source of truth for the hiring team, openings, and interview plan."""
+    language: AirbyteSortOrder
+    """ISO 639-1 locale of the post, used to render the candidate-facing application form in the matching language (e.g. `en`, `fr`, `ja`). `null` when no locale has been chosen."""
     live: AirbyteSortOrder
-    """Flag indicating if the job post is live or not."""
-    location: AirbyteSortOrder
-    """Details about the job post location."""
+    """If `true`, the post is published (`job_application_status` is `live`) and its job board is also live. A post on an unpublished board is **not** `live` — its `public_url` returns a 404 until the board is enabled."""
+    public_url: AirbyteSortOrder
+    """Canonical public URL of the post on its job board, including the `gh_jid` tracking parameter. `null` when the post has no associated job board or the board has no public URL configured."""
     questions: AirbyteSortOrder
-    """List of questions related to the job post."""
+    """Application form questions presented to candidates on this post, including default questions (resume, cover letter, basic info) and any custom questions configured by the hiring team. Ordered as they appear on the form."""
     title: AirbyteSortOrder
-    """Title or headline of the job post."""
+    """Public-facing title shown to candidates on the job board (e.g. `Senior Backend Engineer, Remote`). Distinct from the internal `job.name` — a single job can have several posts with different titles, one per board, language, or geography."""
     updated_at: AirbyteSortOrder
-    """Date and time when the job post was last updated."""
+    """Updated at from the Greenhouse v3 job posts record."""
 
 
 # Entity-specific condition types for job_posts
@@ -1336,201 +1292,171 @@ class JobPostsSearchQuery(TypedDict, total=False):
 class JobsSearchFilter(TypedDict, total=False):
     """Available fields for filtering jobs search queries."""
     closed_at: str | None
-    """The date and time the job was closed"""
+    """Timestamp the job most recently transitioned to `closed`, in ISO 8601. `null` for jobs that are still `open` or `draft`."""
     confidential: bool | None
-    """Indicates if the job details are confidential"""
+    """If `true`, the job is restricted to users explicitly granted access on the Hiring Team. The legacy Confidential Jobs feature has been sunset — this flag cannot be set on new jobs and is preserved for jobs that already had it enabled."""
     copied_from_id: int | None
-    """The ID of the job from which this job was copied"""
+    """Id of the job (typically a template) this job was copied from on creation. `null` when the job was not created from another job."""
     created_at: str | None
-    """The date and time the job was created"""
+    """Created at from the Greenhouse v3 jobs record."""
     custom_fields: dict[str, Any] | None
-    """Custom fields related to the job"""
-    departments: list[Any] | None
-    """Departments associated with the job"""
-    hiring_team: dict[str, Any] | None
-    """Members of the hiring team for the job"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    department_id: int | None
+    """Id of the department this job is assigned to. `null` when no department is set."""
     id: int | None
-    """Unique ID of the job"""
+    """Id from the Greenhouse v3 jobs record."""
     is_template: bool | None
-    """Indicates if the job is a template"""
-    keyed_custom_fields: dict[str, Any] | None
-    """Keyed custom fields related to the job"""
+    """If `true`, this job is a template used as the source for new jobs rather than a real requisition. Templates do not accept applications; reference them via `template_job_id` on `POST /v3/jobs`."""
     name: str | None
-    """Name of the job"""
+    """Internal job title shown to the hiring team in Greenhouse (e.g. `Senior Backend Engineer`). Distinct from the external-facing title on each `job_post`."""
     notes: str | None
-    """Additional notes or comments about the job"""
-    offices: list[Any] | None
-    """Offices associated with the job"""
+    """Internal HTML notes about the job, surfaced to the hiring team in the Greenhouse UI. Not exposed on public job posts."""
+    office_ids: list[Any] | None
+    """Ids of the offices this job is assigned to. A job can span multiple offices; empty array or `null` when no offices are set."""
     opened_at: str | None
-    """The date and time the job was opened"""
-    openings: list[Any] | None
-    """Openings associated with the job"""
+    """Timestamp the job first transitioned to `open`, in ISO 8601. `null` while the job is still in `draft`."""
     requisition_id: str | None
-    """ID associated with the job requisition"""
+    """Partner-supplied external identifier for the requisition (e.g. an HRIS or ATS code). Free-form string, not unique across the organization, and `null` when no external id has been set."""
     status: str | None
-    """Current status of the job"""
+    """Lifecycle status of the job. `draft` while it is being scaffolded, `open` once it has at least one open opening, and `closed` after every opening is closed. A job moves to `closed` automatically when its last open opening is closed via `PATCH /v3/openings/{id}`."""
     updated_at: str | None
-    """The date and time the job was last updated"""
+    """Updated at from the Greenhouse v3 jobs record."""
 
 
 class JobsInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
     closed_at: list[str]
-    """The date and time the job was closed"""
+    """Timestamp the job most recently transitioned to `closed`, in ISO 8601. `null` for jobs that are still `open` or `draft`."""
     confidential: list[bool]
-    """Indicates if the job details are confidential"""
+    """If `true`, the job is restricted to users explicitly granted access on the Hiring Team. The legacy Confidential Jobs feature has been sunset — this flag cannot be set on new jobs and is preserved for jobs that already had it enabled."""
     copied_from_id: list[int]
-    """The ID of the job from which this job was copied"""
+    """Id of the job (typically a template) this job was copied from on creation. `null` when the job was not created from another job."""
     created_at: list[str]
-    """The date and time the job was created"""
+    """Created at from the Greenhouse v3 jobs record."""
     custom_fields: list[dict[str, Any]]
-    """Custom fields related to the job"""
-    departments: list[list[Any]]
-    """Departments associated with the job"""
-    hiring_team: list[dict[str, Any]]
-    """Members of the hiring team for the job"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    department_id: list[int]
+    """Id of the department this job is assigned to. `null` when no department is set."""
     id: list[int]
-    """Unique ID of the job"""
+    """Id from the Greenhouse v3 jobs record."""
     is_template: list[bool]
-    """Indicates if the job is a template"""
-    keyed_custom_fields: list[dict[str, Any]]
-    """Keyed custom fields related to the job"""
+    """If `true`, this job is a template used as the source for new jobs rather than a real requisition. Templates do not accept applications; reference them via `template_job_id` on `POST /v3/jobs`."""
     name: list[str]
-    """Name of the job"""
+    """Internal job title shown to the hiring team in Greenhouse (e.g. `Senior Backend Engineer`). Distinct from the external-facing title on each `job_post`."""
     notes: list[str]
-    """Additional notes or comments about the job"""
-    offices: list[list[Any]]
-    """Offices associated with the job"""
+    """Internal HTML notes about the job, surfaced to the hiring team in the Greenhouse UI. Not exposed on public job posts."""
+    office_ids: list[list[Any]]
+    """Ids of the offices this job is assigned to. A job can span multiple offices; empty array or `null` when no offices are set."""
     opened_at: list[str]
-    """The date and time the job was opened"""
-    openings: list[list[Any]]
-    """Openings associated with the job"""
+    """Timestamp the job first transitioned to `open`, in ISO 8601. `null` while the job is still in `draft`."""
     requisition_id: list[str]
-    """ID associated with the job requisition"""
+    """Partner-supplied external identifier for the requisition (e.g. an HRIS or ATS code). Free-form string, not unique across the organization, and `null` when no external id has been set."""
     status: list[str]
-    """Current status of the job"""
+    """Lifecycle status of the job. `draft` while it is being scaffolded, `open` once it has at least one open opening, and `closed` after every opening is closed. A job moves to `closed` automatically when its last open opening is closed via `PATCH /v3/openings/{id}`."""
     updated_at: list[str]
-    """The date and time the job was last updated"""
+    """Updated at from the Greenhouse v3 jobs record."""
 
 
 class JobsAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
     closed_at: Any
-    """The date and time the job was closed"""
+    """Timestamp the job most recently transitioned to `closed`, in ISO 8601. `null` for jobs that are still `open` or `draft`."""
     confidential: Any
-    """Indicates if the job details are confidential"""
+    """If `true`, the job is restricted to users explicitly granted access on the Hiring Team. The legacy Confidential Jobs feature has been sunset — this flag cannot be set on new jobs and is preserved for jobs that already had it enabled."""
     copied_from_id: Any
-    """The ID of the job from which this job was copied"""
+    """Id of the job (typically a template) this job was copied from on creation. `null` when the job was not created from another job."""
     created_at: Any
-    """The date and time the job was created"""
+    """Created at from the Greenhouse v3 jobs record."""
     custom_fields: Any
-    """Custom fields related to the job"""
-    departments: Any
-    """Departments associated with the job"""
-    hiring_team: Any
-    """Members of the hiring team for the job"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    department_id: Any
+    """Id of the department this job is assigned to. `null` when no department is set."""
     id: Any
-    """Unique ID of the job"""
+    """Id from the Greenhouse v3 jobs record."""
     is_template: Any
-    """Indicates if the job is a template"""
-    keyed_custom_fields: Any
-    """Keyed custom fields related to the job"""
+    """If `true`, this job is a template used as the source for new jobs rather than a real requisition. Templates do not accept applications; reference them via `template_job_id` on `POST /v3/jobs`."""
     name: Any
-    """Name of the job"""
+    """Internal job title shown to the hiring team in Greenhouse (e.g. `Senior Backend Engineer`). Distinct from the external-facing title on each `job_post`."""
     notes: Any
-    """Additional notes or comments about the job"""
-    offices: Any
-    """Offices associated with the job"""
+    """Internal HTML notes about the job, surfaced to the hiring team in the Greenhouse UI. Not exposed on public job posts."""
+    office_ids: Any
+    """Ids of the offices this job is assigned to. A job can span multiple offices; empty array or `null` when no offices are set."""
     opened_at: Any
-    """The date and time the job was opened"""
-    openings: Any
-    """Openings associated with the job"""
+    """Timestamp the job first transitioned to `open`, in ISO 8601. `null` while the job is still in `draft`."""
     requisition_id: Any
-    """ID associated with the job requisition"""
+    """Partner-supplied external identifier for the requisition (e.g. an HRIS or ATS code). Free-form string, not unique across the organization, and `null` when no external id has been set."""
     status: Any
-    """Current status of the job"""
+    """Lifecycle status of the job. `draft` while it is being scaffolded, `open` once it has at least one open opening, and `closed` after every opening is closed. A job moves to `closed` automatically when its last open opening is closed via `PATCH /v3/openings/{id}`."""
     updated_at: Any
-    """The date and time the job was last updated"""
+    """Updated at from the Greenhouse v3 jobs record."""
 
 
 class JobsStringFilter(TypedDict, total=False):
     """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     closed_at: str
-    """The date and time the job was closed"""
+    """Timestamp the job most recently transitioned to `closed`, in ISO 8601. `null` for jobs that are still `open` or `draft`."""
     confidential: str
-    """Indicates if the job details are confidential"""
+    """If `true`, the job is restricted to users explicitly granted access on the Hiring Team. The legacy Confidential Jobs feature has been sunset — this flag cannot be set on new jobs and is preserved for jobs that already had it enabled."""
     copied_from_id: str
-    """The ID of the job from which this job was copied"""
+    """Id of the job (typically a template) this job was copied from on creation. `null` when the job was not created from another job."""
     created_at: str
-    """The date and time the job was created"""
+    """Created at from the Greenhouse v3 jobs record."""
     custom_fields: str
-    """Custom fields related to the job"""
-    departments: str
-    """Departments associated with the job"""
-    hiring_team: str
-    """Members of the hiring team for the job"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    department_id: str
+    """Id of the department this job is assigned to. `null` when no department is set."""
     id: str
-    """Unique ID of the job"""
+    """Id from the Greenhouse v3 jobs record."""
     is_template: str
-    """Indicates if the job is a template"""
-    keyed_custom_fields: str
-    """Keyed custom fields related to the job"""
+    """If `true`, this job is a template used as the source for new jobs rather than a real requisition. Templates do not accept applications; reference them via `template_job_id` on `POST /v3/jobs`."""
     name: str
-    """Name of the job"""
+    """Internal job title shown to the hiring team in Greenhouse (e.g. `Senior Backend Engineer`). Distinct from the external-facing title on each `job_post`."""
     notes: str
-    """Additional notes or comments about the job"""
-    offices: str
-    """Offices associated with the job"""
+    """Internal HTML notes about the job, surfaced to the hiring team in the Greenhouse UI. Not exposed on public job posts."""
+    office_ids: str
+    """Ids of the offices this job is assigned to. A job can span multiple offices; empty array or `null` when no offices are set."""
     opened_at: str
-    """The date and time the job was opened"""
-    openings: str
-    """Openings associated with the job"""
+    """Timestamp the job first transitioned to `open`, in ISO 8601. `null` while the job is still in `draft`."""
     requisition_id: str
-    """ID associated with the job requisition"""
+    """Partner-supplied external identifier for the requisition (e.g. an HRIS or ATS code). Free-form string, not unique across the organization, and `null` when no external id has been set."""
     status: str
-    """Current status of the job"""
+    """Lifecycle status of the job. `draft` while it is being scaffolded, `open` once it has at least one open opening, and `closed` after every opening is closed. A job moves to `closed` automatically when its last open opening is closed via `PATCH /v3/openings/{id}`."""
     updated_at: str
-    """The date and time the job was last updated"""
+    """Updated at from the Greenhouse v3 jobs record."""
 
 
 class JobsSortFilter(TypedDict, total=False):
     """Available fields for sorting jobs search results."""
     closed_at: AirbyteSortOrder
-    """The date and time the job was closed"""
+    """Timestamp the job most recently transitioned to `closed`, in ISO 8601. `null` for jobs that are still `open` or `draft`."""
     confidential: AirbyteSortOrder
-    """Indicates if the job details are confidential"""
+    """If `true`, the job is restricted to users explicitly granted access on the Hiring Team. The legacy Confidential Jobs feature has been sunset — this flag cannot be set on new jobs and is preserved for jobs that already had it enabled."""
     copied_from_id: AirbyteSortOrder
-    """The ID of the job from which this job was copied"""
+    """Id of the job (typically a template) this job was copied from on creation. `null` when the job was not created from another job."""
     created_at: AirbyteSortOrder
-    """The date and time the job was created"""
+    """Created at from the Greenhouse v3 jobs record."""
     custom_fields: AirbyteSortOrder
-    """Custom fields related to the job"""
-    departments: AirbyteSortOrder
-    """Departments associated with the job"""
-    hiring_team: AirbyteSortOrder
-    """Members of the hiring team for the job"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    department_id: AirbyteSortOrder
+    """Id of the department this job is assigned to. `null` when no department is set."""
     id: AirbyteSortOrder
-    """Unique ID of the job"""
+    """Id from the Greenhouse v3 jobs record."""
     is_template: AirbyteSortOrder
-    """Indicates if the job is a template"""
-    keyed_custom_fields: AirbyteSortOrder
-    """Keyed custom fields related to the job"""
+    """If `true`, this job is a template used as the source for new jobs rather than a real requisition. Templates do not accept applications; reference them via `template_job_id` on `POST /v3/jobs`."""
     name: AirbyteSortOrder
-    """Name of the job"""
+    """Internal job title shown to the hiring team in Greenhouse (e.g. `Senior Backend Engineer`). Distinct from the external-facing title on each `job_post`."""
     notes: AirbyteSortOrder
-    """Additional notes or comments about the job"""
-    offices: AirbyteSortOrder
-    """Offices associated with the job"""
+    """Internal HTML notes about the job, surfaced to the hiring team in the Greenhouse UI. Not exposed on public job posts."""
+    office_ids: AirbyteSortOrder
+    """Ids of the offices this job is assigned to. A job can span multiple offices; empty array or `null` when no offices are set."""
     opened_at: AirbyteSortOrder
-    """The date and time the job was opened"""
-    openings: AirbyteSortOrder
-    """Openings associated with the job"""
+    """Timestamp the job first transitioned to `open`, in ISO 8601. `null` while the job is still in `draft`."""
     requisition_id: AirbyteSortOrder
-    """ID associated with the job requisition"""
+    """Partner-supplied external identifier for the requisition (e.g. an HRIS or ATS code). Free-form string, not unique across the organization, and `null` when no external id has been set."""
     status: AirbyteSortOrder
-    """Current status of the job"""
+    """Lifecycle status of the job. `draft` while it is being scaffolded, `open` once it has at least one open opening, and `closed` after every opening is closed. A job moves to `closed` automatically when its last open opening is closed via `PATCH /v3/openings/{id}`."""
     updated_at: AirbyteSortOrder
-    """The date and time the job was last updated"""
+    """Updated at from the Greenhouse v3 jobs record."""
 
 
 # Entity-specific condition types for jobs
@@ -1643,161 +1569,151 @@ class JobsSearchQuery(TypedDict, total=False):
 class OffersSearchFilter(TypedDict, total=False):
     """Available fields for filtering offers search queries."""
     application_id: int | None
-    """Unique identifier for the application associated with the offer"""
+    """Id of the application this offer is extended on. Every offer belongs to exactly one application; the offer is voided if the application is rejected or deleted."""
     candidate_id: int | None
-    """Unique identifier for the candidate associated with the offer"""
+    """Id of the candidate (person) receiving this offer. Resolved through the offer's application."""
     created_at: str | None
-    """Timestamp indicating when the offer was created"""
+    """Created at from the Greenhouse v3 offers record."""
     custom_fields: dict[str, Any] | None
-    """Additional custom fields related to the offer"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: int | None
-    """Unique identifier for the offer"""
+    """Id from the Greenhouse v3 offers record."""
     job_id: int | None
-    """Unique identifier for the job associated with the offer"""
-    keyed_custom_fields: dict[str, Any] | None
-    """Keyed custom fields associated with the offer"""
-    opening: dict[str, Any] | None
-    """Details about the job opening"""
+    """Id of the job this offer's application is on."""
+    opening_id: int | None
+    """Id of the specific opening this offer is being extended for. `null` when the offer has not yet been linked to an opening."""
     resolved_at: str | None
-    """Timestamp indicating when the offer was resolved"""
-    sent_at: str | None
-    """Timestamp indicating when the offer was sent"""
-    starts_at: str | None
-    """Timestamp indicating when the offer starts"""
+    """Timestamp the offer was resolved (`Accepted` or `Rejected`), in ISO 8601. Date updates submitted through `PATCH /v3/offers/{id}` are normalized to noon UTC on the supplied date. `null` while the offer is still `Created` or has been superseded as `Deprecated` without a resolution."""
+    sent_on: str | None
+    """Date the offer was sent to the candidate, in ISO 8601 (YYYY-MM-DD). `null` until the offer has been sent."""
+    starts_on: str | None
+    """Candidate's proposed start date, in ISO 8601 (YYYY-MM-DD). `null` when no start date has been set on the offer."""
     status: str | None
-    """Status of the offer"""
+    """Lifecycle status of the offer. `Created` for offers still being drafted or pending approval, `Accepted` once the candidate accepts, `Rejected` if declined or withdrawn, and `Deprecated` for superseded prior versions (a new offer version replaces an earlier one with this status)."""
     updated_at: str | None
-    """Timestamp indicating when the offer was last updated"""
+    """Updated at from the Greenhouse v3 offers record."""
     version: int | None
-    """Version of the offer data"""
+    """Revision number of this offer within its application. Greenhouse creates a new offer row (incrementing `version`) whenever a tracked field on an existing offer changes — typically `starts_on`, `opening_id`, or a custom field configured to trigger a new version. Pair with `current_only=true` to filter the list endpoint down to the latest version per application."""
 
 
 class OffersInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
     application_id: list[int]
-    """Unique identifier for the application associated with the offer"""
+    """Id of the application this offer is extended on. Every offer belongs to exactly one application; the offer is voided if the application is rejected or deleted."""
     candidate_id: list[int]
-    """Unique identifier for the candidate associated with the offer"""
+    """Id of the candidate (person) receiving this offer. Resolved through the offer's application."""
     created_at: list[str]
-    """Timestamp indicating when the offer was created"""
+    """Created at from the Greenhouse v3 offers record."""
     custom_fields: list[dict[str, Any]]
-    """Additional custom fields related to the offer"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: list[int]
-    """Unique identifier for the offer"""
+    """Id from the Greenhouse v3 offers record."""
     job_id: list[int]
-    """Unique identifier for the job associated with the offer"""
-    keyed_custom_fields: list[dict[str, Any]]
-    """Keyed custom fields associated with the offer"""
-    opening: list[dict[str, Any]]
-    """Details about the job opening"""
+    """Id of the job this offer's application is on."""
+    opening_id: list[int]
+    """Id of the specific opening this offer is being extended for. `null` when the offer has not yet been linked to an opening."""
     resolved_at: list[str]
-    """Timestamp indicating when the offer was resolved"""
-    sent_at: list[str]
-    """Timestamp indicating when the offer was sent"""
-    starts_at: list[str]
-    """Timestamp indicating when the offer starts"""
+    """Timestamp the offer was resolved (`Accepted` or `Rejected`), in ISO 8601. Date updates submitted through `PATCH /v3/offers/{id}` are normalized to noon UTC on the supplied date. `null` while the offer is still `Created` or has been superseded as `Deprecated` without a resolution."""
+    sent_on: list[str]
+    """Date the offer was sent to the candidate, in ISO 8601 (YYYY-MM-DD). `null` until the offer has been sent."""
+    starts_on: list[str]
+    """Candidate's proposed start date, in ISO 8601 (YYYY-MM-DD). `null` when no start date has been set on the offer."""
     status: list[str]
-    """Status of the offer"""
+    """Lifecycle status of the offer. `Created` for offers still being drafted or pending approval, `Accepted` once the candidate accepts, `Rejected` if declined or withdrawn, and `Deprecated` for superseded prior versions (a new offer version replaces an earlier one with this status)."""
     updated_at: list[str]
-    """Timestamp indicating when the offer was last updated"""
+    """Updated at from the Greenhouse v3 offers record."""
     version: list[int]
-    """Version of the offer data"""
+    """Revision number of this offer within its application. Greenhouse creates a new offer row (incrementing `version`) whenever a tracked field on an existing offer changes — typically `starts_on`, `opening_id`, or a custom field configured to trigger a new version. Pair with `current_only=true` to filter the list endpoint down to the latest version per application."""
 
 
 class OffersAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
     application_id: Any
-    """Unique identifier for the application associated with the offer"""
+    """Id of the application this offer is extended on. Every offer belongs to exactly one application; the offer is voided if the application is rejected or deleted."""
     candidate_id: Any
-    """Unique identifier for the candidate associated with the offer"""
+    """Id of the candidate (person) receiving this offer. Resolved through the offer's application."""
     created_at: Any
-    """Timestamp indicating when the offer was created"""
+    """Created at from the Greenhouse v3 offers record."""
     custom_fields: Any
-    """Additional custom fields related to the offer"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: Any
-    """Unique identifier for the offer"""
+    """Id from the Greenhouse v3 offers record."""
     job_id: Any
-    """Unique identifier for the job associated with the offer"""
-    keyed_custom_fields: Any
-    """Keyed custom fields associated with the offer"""
-    opening: Any
-    """Details about the job opening"""
+    """Id of the job this offer's application is on."""
+    opening_id: Any
+    """Id of the specific opening this offer is being extended for. `null` when the offer has not yet been linked to an opening."""
     resolved_at: Any
-    """Timestamp indicating when the offer was resolved"""
-    sent_at: Any
-    """Timestamp indicating when the offer was sent"""
-    starts_at: Any
-    """Timestamp indicating when the offer starts"""
+    """Timestamp the offer was resolved (`Accepted` or `Rejected`), in ISO 8601. Date updates submitted through `PATCH /v3/offers/{id}` are normalized to noon UTC on the supplied date. `null` while the offer is still `Created` or has been superseded as `Deprecated` without a resolution."""
+    sent_on: Any
+    """Date the offer was sent to the candidate, in ISO 8601 (YYYY-MM-DD). `null` until the offer has been sent."""
+    starts_on: Any
+    """Candidate's proposed start date, in ISO 8601 (YYYY-MM-DD). `null` when no start date has been set on the offer."""
     status: Any
-    """Status of the offer"""
+    """Lifecycle status of the offer. `Created` for offers still being drafted or pending approval, `Accepted` once the candidate accepts, `Rejected` if declined or withdrawn, and `Deprecated` for superseded prior versions (a new offer version replaces an earlier one with this status)."""
     updated_at: Any
-    """Timestamp indicating when the offer was last updated"""
+    """Updated at from the Greenhouse v3 offers record."""
     version: Any
-    """Version of the offer data"""
+    """Revision number of this offer within its application. Greenhouse creates a new offer row (incrementing `version`) whenever a tracked field on an existing offer changes — typically `starts_on`, `opening_id`, or a custom field configured to trigger a new version. Pair with `current_only=true` to filter the list endpoint down to the latest version per application."""
 
 
 class OffersStringFilter(TypedDict, total=False):
     """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
     application_id: str
-    """Unique identifier for the application associated with the offer"""
+    """Id of the application this offer is extended on. Every offer belongs to exactly one application; the offer is voided if the application is rejected or deleted."""
     candidate_id: str
-    """Unique identifier for the candidate associated with the offer"""
+    """Id of the candidate (person) receiving this offer. Resolved through the offer's application."""
     created_at: str
-    """Timestamp indicating when the offer was created"""
+    """Created at from the Greenhouse v3 offers record."""
     custom_fields: str
-    """Additional custom fields related to the offer"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: str
-    """Unique identifier for the offer"""
+    """Id from the Greenhouse v3 offers record."""
     job_id: str
-    """Unique identifier for the job associated with the offer"""
-    keyed_custom_fields: str
-    """Keyed custom fields associated with the offer"""
-    opening: str
-    """Details about the job opening"""
+    """Id of the job this offer's application is on."""
+    opening_id: str
+    """Id of the specific opening this offer is being extended for. `null` when the offer has not yet been linked to an opening."""
     resolved_at: str
-    """Timestamp indicating when the offer was resolved"""
-    sent_at: str
-    """Timestamp indicating when the offer was sent"""
-    starts_at: str
-    """Timestamp indicating when the offer starts"""
+    """Timestamp the offer was resolved (`Accepted` or `Rejected`), in ISO 8601. Date updates submitted through `PATCH /v3/offers/{id}` are normalized to noon UTC on the supplied date. `null` while the offer is still `Created` or has been superseded as `Deprecated` without a resolution."""
+    sent_on: str
+    """Date the offer was sent to the candidate, in ISO 8601 (YYYY-MM-DD). `null` until the offer has been sent."""
+    starts_on: str
+    """Candidate's proposed start date, in ISO 8601 (YYYY-MM-DD). `null` when no start date has been set on the offer."""
     status: str
-    """Status of the offer"""
+    """Lifecycle status of the offer. `Created` for offers still being drafted or pending approval, `Accepted` once the candidate accepts, `Rejected` if declined or withdrawn, and `Deprecated` for superseded prior versions (a new offer version replaces an earlier one with this status)."""
     updated_at: str
-    """Timestamp indicating when the offer was last updated"""
+    """Updated at from the Greenhouse v3 offers record."""
     version: str
-    """Version of the offer data"""
+    """Revision number of this offer within its application. Greenhouse creates a new offer row (incrementing `version`) whenever a tracked field on an existing offer changes — typically `starts_on`, `opening_id`, or a custom field configured to trigger a new version. Pair with `current_only=true` to filter the list endpoint down to the latest version per application."""
 
 
 class OffersSortFilter(TypedDict, total=False):
     """Available fields for sorting offers search results."""
     application_id: AirbyteSortOrder
-    """Unique identifier for the application associated with the offer"""
+    """Id of the application this offer is extended on. Every offer belongs to exactly one application; the offer is voided if the application is rejected or deleted."""
     candidate_id: AirbyteSortOrder
-    """Unique identifier for the candidate associated with the offer"""
+    """Id of the candidate (person) receiving this offer. Resolved through the offer's application."""
     created_at: AirbyteSortOrder
-    """Timestamp indicating when the offer was created"""
+    """Created at from the Greenhouse v3 offers record."""
     custom_fields: AirbyteSortOrder
-    """Additional custom fields related to the offer"""
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
     id: AirbyteSortOrder
-    """Unique identifier for the offer"""
+    """Id from the Greenhouse v3 offers record."""
     job_id: AirbyteSortOrder
-    """Unique identifier for the job associated with the offer"""
-    keyed_custom_fields: AirbyteSortOrder
-    """Keyed custom fields associated with the offer"""
-    opening: AirbyteSortOrder
-    """Details about the job opening"""
+    """Id of the job this offer's application is on."""
+    opening_id: AirbyteSortOrder
+    """Id of the specific opening this offer is being extended for. `null` when the offer has not yet been linked to an opening."""
     resolved_at: AirbyteSortOrder
-    """Timestamp indicating when the offer was resolved"""
-    sent_at: AirbyteSortOrder
-    """Timestamp indicating when the offer was sent"""
-    starts_at: AirbyteSortOrder
-    """Timestamp indicating when the offer starts"""
+    """Timestamp the offer was resolved (`Accepted` or `Rejected`), in ISO 8601. Date updates submitted through `PATCH /v3/offers/{id}` are normalized to noon UTC on the supplied date. `null` while the offer is still `Created` or has been superseded as `Deprecated` without a resolution."""
+    sent_on: AirbyteSortOrder
+    """Date the offer was sent to the candidate, in ISO 8601 (YYYY-MM-DD). `null` until the offer has been sent."""
+    starts_on: AirbyteSortOrder
+    """Candidate's proposed start date, in ISO 8601 (YYYY-MM-DD). `null` when no start date has been set on the offer."""
     status: AirbyteSortOrder
-    """Status of the offer"""
+    """Lifecycle status of the offer. `Created` for offers still being drafted or pending approval, `Accepted` once the candidate accepts, `Rejected` if declined or withdrawn, and `Deprecated` for superseded prior versions (a new offer version replaces an earlier one with this status)."""
     updated_at: AirbyteSortOrder
-    """Timestamp indicating when the offer was last updated"""
+    """Updated at from the Greenhouse v3 offers record."""
     version: AirbyteSortOrder
-    """Version of the offer data"""
+    """Revision number of this offer within its application. Greenhouse creates a new offer row (incrementing `version`) whenever a tracked field on an existing offer changes — typically `starts_on`, `opening_id`, or a custom field configured to trigger a new version. Pair with `current_only=true` to filter the list endpoint down to the latest version per application."""
 
 
 # Entity-specific condition types for offers
@@ -1909,112 +1825,102 @@ class OffersSearchQuery(TypedDict, total=False):
 
 class OfficesSearchFilter(TypedDict, total=False):
     """Available fields for filtering offices search queries."""
-    child_ids: list[Any] | None
-    """IDs of child offices associated with this office"""
-    child_office_external_ids: list[Any] | None
-    """External IDs of child offices associated with this office"""
+    created_at: str | None
+    """Created at from the Greenhouse v3 offices record."""
     external_id: str | None
-    """Unique identifier for this office in the external system"""
+    """Stable identifier supplied by the customer or HRIS for cross-system reconciliation. `null` when no external id has been set. Available when the `org_structure_external_id` product flag is enabled."""
     id: int | None
-    """Unique identifier for this office in the API system"""
-    location: dict[str, Any] | None
-    """Location details of this office"""
+    """Id from the Greenhouse v3 offices record."""
+    location: str | None
+    """Free-form physical location string for the office (e.g. `New York, NY, USA`). `null` for offices that have no location set, including most remote offices."""
     name: str | None
-    """Name of the office"""
+    """Display name of the office (e.g. `San Francisco`, `Remote (US)`). Unique among active offices in the same organization."""
     parent_id: int | None
-    """ID of the parent office, if this office is a branch office"""
-    parent_office_external_id: str | None
-    """External ID of the parent office in the external system"""
-    primary_contact_user_id: int | None
-    """User ID of the primary contact person for this office"""
+    """Id of the parent office when offices are organized hierarchically. `null` for top-level offices. References another `/v3/offices` row in the same organization."""
+    primary_in_house_contact_user_id: int | None
+    """Id of the Greenhouse user designated as the office's primary internal contact, typically the local recruiting lead. References a `/v3/users` row. `null` when no contact has been assigned."""
+    updated_at: str | None
+    """Updated at from the Greenhouse v3 offices record."""
 
 
 class OfficesInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
-    child_ids: list[list[Any]]
-    """IDs of child offices associated with this office"""
-    child_office_external_ids: list[list[Any]]
-    """External IDs of child offices associated with this office"""
+    created_at: list[str]
+    """Created at from the Greenhouse v3 offices record."""
     external_id: list[str]
-    """Unique identifier for this office in the external system"""
+    """Stable identifier supplied by the customer or HRIS for cross-system reconciliation. `null` when no external id has been set. Available when the `org_structure_external_id` product flag is enabled."""
     id: list[int]
-    """Unique identifier for this office in the API system"""
-    location: list[dict[str, Any]]
-    """Location details of this office"""
+    """Id from the Greenhouse v3 offices record."""
+    location: list[str]
+    """Free-form physical location string for the office (e.g. `New York, NY, USA`). `null` for offices that have no location set, including most remote offices."""
     name: list[str]
-    """Name of the office"""
+    """Display name of the office (e.g. `San Francisco`, `Remote (US)`). Unique among active offices in the same organization."""
     parent_id: list[int]
-    """ID of the parent office, if this office is a branch office"""
-    parent_office_external_id: list[str]
-    """External ID of the parent office in the external system"""
-    primary_contact_user_id: list[int]
-    """User ID of the primary contact person for this office"""
+    """Id of the parent office when offices are organized hierarchically. `null` for top-level offices. References another `/v3/offices` row in the same organization."""
+    primary_in_house_contact_user_id: list[int]
+    """Id of the Greenhouse user designated as the office's primary internal contact, typically the local recruiting lead. References a `/v3/users` row. `null` when no contact has been assigned."""
+    updated_at: list[str]
+    """Updated at from the Greenhouse v3 offices record."""
 
 
 class OfficesAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
-    child_ids: Any
-    """IDs of child offices associated with this office"""
-    child_office_external_ids: Any
-    """External IDs of child offices associated with this office"""
+    created_at: Any
+    """Created at from the Greenhouse v3 offices record."""
     external_id: Any
-    """Unique identifier for this office in the external system"""
+    """Stable identifier supplied by the customer or HRIS for cross-system reconciliation. `null` when no external id has been set. Available when the `org_structure_external_id` product flag is enabled."""
     id: Any
-    """Unique identifier for this office in the API system"""
+    """Id from the Greenhouse v3 offices record."""
     location: Any
-    """Location details of this office"""
+    """Free-form physical location string for the office (e.g. `New York, NY, USA`). `null` for offices that have no location set, including most remote offices."""
     name: Any
-    """Name of the office"""
+    """Display name of the office (e.g. `San Francisco`, `Remote (US)`). Unique among active offices in the same organization."""
     parent_id: Any
-    """ID of the parent office, if this office is a branch office"""
-    parent_office_external_id: Any
-    """External ID of the parent office in the external system"""
-    primary_contact_user_id: Any
-    """User ID of the primary contact person for this office"""
+    """Id of the parent office when offices are organized hierarchically. `null` for top-level offices. References another `/v3/offices` row in the same organization."""
+    primary_in_house_contact_user_id: Any
+    """Id of the Greenhouse user designated as the office's primary internal contact, typically the local recruiting lead. References a `/v3/users` row. `null` when no contact has been assigned."""
+    updated_at: Any
+    """Updated at from the Greenhouse v3 offices record."""
 
 
 class OfficesStringFilter(TypedDict, total=False):
     """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
-    child_ids: str
-    """IDs of child offices associated with this office"""
-    child_office_external_ids: str
-    """External IDs of child offices associated with this office"""
+    created_at: str
+    """Created at from the Greenhouse v3 offices record."""
     external_id: str
-    """Unique identifier for this office in the external system"""
+    """Stable identifier supplied by the customer or HRIS for cross-system reconciliation. `null` when no external id has been set. Available when the `org_structure_external_id` product flag is enabled."""
     id: str
-    """Unique identifier for this office in the API system"""
+    """Id from the Greenhouse v3 offices record."""
     location: str
-    """Location details of this office"""
+    """Free-form physical location string for the office (e.g. `New York, NY, USA`). `null` for offices that have no location set, including most remote offices."""
     name: str
-    """Name of the office"""
+    """Display name of the office (e.g. `San Francisco`, `Remote (US)`). Unique among active offices in the same organization."""
     parent_id: str
-    """ID of the parent office, if this office is a branch office"""
-    parent_office_external_id: str
-    """External ID of the parent office in the external system"""
-    primary_contact_user_id: str
-    """User ID of the primary contact person for this office"""
+    """Id of the parent office when offices are organized hierarchically. `null` for top-level offices. References another `/v3/offices` row in the same organization."""
+    primary_in_house_contact_user_id: str
+    """Id of the Greenhouse user designated as the office's primary internal contact, typically the local recruiting lead. References a `/v3/users` row. `null` when no contact has been assigned."""
+    updated_at: str
+    """Updated at from the Greenhouse v3 offices record."""
 
 
 class OfficesSortFilter(TypedDict, total=False):
     """Available fields for sorting offices search results."""
-    child_ids: AirbyteSortOrder
-    """IDs of child offices associated with this office"""
-    child_office_external_ids: AirbyteSortOrder
-    """External IDs of child offices associated with this office"""
+    created_at: AirbyteSortOrder
+    """Created at from the Greenhouse v3 offices record."""
     external_id: AirbyteSortOrder
-    """Unique identifier for this office in the external system"""
+    """Stable identifier supplied by the customer or HRIS for cross-system reconciliation. `null` when no external id has been set. Available when the `org_structure_external_id` product flag is enabled."""
     id: AirbyteSortOrder
-    """Unique identifier for this office in the API system"""
+    """Id from the Greenhouse v3 offices record."""
     location: AirbyteSortOrder
-    """Location details of this office"""
+    """Free-form physical location string for the office (e.g. `New York, NY, USA`). `null` for offices that have no location set, including most remote offices."""
     name: AirbyteSortOrder
-    """Name of the office"""
+    """Display name of the office (e.g. `San Francisco`, `Remote (US)`). Unique among active offices in the same organization."""
     parent_id: AirbyteSortOrder
-    """ID of the parent office, if this office is a branch office"""
-    parent_office_external_id: AirbyteSortOrder
-    """External ID of the parent office in the external system"""
-    primary_contact_user_id: AirbyteSortOrder
-    """User ID of the primary contact person for this office"""
+    """Id of the parent office when offices are organized hierarchically. `null` for top-level offices. References another `/v3/offices` row in the same organization."""
+    primary_in_house_contact_user_id: AirbyteSortOrder
+    """Id of the Greenhouse user designated as the office's primary internal contact, typically the local recruiting lead. References a `/v3/users` row. `null` when no contact has been assigned."""
+    updated_at: AirbyteSortOrder
+    """Updated at from the Greenhouse v3 offices record."""
 
 
 # Entity-specific condition types for offices
@@ -2126,52 +2032,72 @@ class OfficesSearchQuery(TypedDict, total=False):
 
 class SourcesSearchFilter(TypedDict, total=False):
     """Available fields for filtering sources search queries."""
+    created_at: str | None
+    """Created at from the Greenhouse v3 sources record."""
     id: int | None
-    """The unique identifier for the source."""
+    """Id from the Greenhouse v3 sources record."""
     name: str | None
-    """The name of the source."""
+    """Display name of the source as recruiters see it in Greenhouse (e.g. `LinkedIn (Prospecting)`, `Indeed`, `Referral`, `Internal Applicant`, or a custom agency name). For organization-specific sources this is the label the org configured; for global Greenhouse sources it is the standard public name."""
     type_: dict[str, Any] | None
-    """Type of the data source"""
+    """The sourcing strategy this source rolls up to — the broader category used for reporting. Sources are grouped under sourcing strategies such as `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`, `Company marketing`, `In person event`, `MyGreenhouse`, and `Other`. Use the strategy when aggregating candidate volume by channel; use the source itself when reporting on a specific channel within that category."""
+    updated_at: str | None
+    """Updated at from the Greenhouse v3 sources record."""
 
 
 class SourcesInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
+    created_at: list[str]
+    """Created at from the Greenhouse v3 sources record."""
     id: list[int]
-    """The unique identifier for the source."""
+    """Id from the Greenhouse v3 sources record."""
     name: list[str]
-    """The name of the source."""
+    """Display name of the source as recruiters see it in Greenhouse (e.g. `LinkedIn (Prospecting)`, `Indeed`, `Referral`, `Internal Applicant`, or a custom agency name). For organization-specific sources this is the label the org configured; for global Greenhouse sources it is the standard public name."""
     type_: list[dict[str, Any]]
-    """Type of the data source"""
+    """The sourcing strategy this source rolls up to — the broader category used for reporting. Sources are grouped under sourcing strategies such as `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`, `Company marketing`, `In person event`, `MyGreenhouse`, and `Other`. Use the strategy when aggregating candidate volume by channel; use the source itself when reporting on a specific channel within that category."""
+    updated_at: list[str]
+    """Updated at from the Greenhouse v3 sources record."""
 
 
 class SourcesAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    created_at: Any
+    """Created at from the Greenhouse v3 sources record."""
     id: Any
-    """The unique identifier for the source."""
+    """Id from the Greenhouse v3 sources record."""
     name: Any
-    """The name of the source."""
+    """Display name of the source as recruiters see it in Greenhouse (e.g. `LinkedIn (Prospecting)`, `Indeed`, `Referral`, `Internal Applicant`, or a custom agency name). For organization-specific sources this is the label the org configured; for global Greenhouse sources it is the standard public name."""
     type_: Any
-    """Type of the data source"""
+    """The sourcing strategy this source rolls up to — the broader category used for reporting. Sources are grouped under sourcing strategies such as `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`, `Company marketing`, `In person event`, `MyGreenhouse`, and `Other`. Use the strategy when aggregating candidate volume by channel; use the source itself when reporting on a specific channel within that category."""
+    updated_at: Any
+    """Updated at from the Greenhouse v3 sources record."""
 
 
 class SourcesStringFilter(TypedDict, total=False):
     """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
+    created_at: str
+    """Created at from the Greenhouse v3 sources record."""
     id: str
-    """The unique identifier for the source."""
+    """Id from the Greenhouse v3 sources record."""
     name: str
-    """The name of the source."""
+    """Display name of the source as recruiters see it in Greenhouse (e.g. `LinkedIn (Prospecting)`, `Indeed`, `Referral`, `Internal Applicant`, or a custom agency name). For organization-specific sources this is the label the org configured; for global Greenhouse sources it is the standard public name."""
     type_: str
-    """Type of the data source"""
+    """The sourcing strategy this source rolls up to — the broader category used for reporting. Sources are grouped under sourcing strategies such as `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`, `Company marketing`, `In person event`, `MyGreenhouse`, and `Other`. Use the strategy when aggregating candidate volume by channel; use the source itself when reporting on a specific channel within that category."""
+    updated_at: str
+    """Updated at from the Greenhouse v3 sources record."""
 
 
 class SourcesSortFilter(TypedDict, total=False):
     """Available fields for sorting sources search results."""
+    created_at: AirbyteSortOrder
+    """Created at from the Greenhouse v3 sources record."""
     id: AirbyteSortOrder
-    """The unique identifier for the source."""
+    """Id from the Greenhouse v3 sources record."""
     name: AirbyteSortOrder
-    """The name of the source."""
+    """Display name of the source as recruiters see it in Greenhouse (e.g. `LinkedIn (Prospecting)`, `Indeed`, `Referral`, `Internal Applicant`, or a custom agency name). For organization-specific sources this is the label the org configured; for global Greenhouse sources it is the standard public name."""
     type_: AirbyteSortOrder
-    """Type of the data source"""
+    """The sourcing strategy this source rolls up to — the broader category used for reporting. Sources are grouped under sourcing strategies such as `Agencies`, `Referral`, `Third-party boards`, `Prospecting`, `Social media`, `Company marketing`, `In person event`, `MyGreenhouse`, and `Other`. Use the strategy when aggregating candidate volume by channel; use the source itself when reporting on a specific channel within that category."""
+    updated_at: AirbyteSortOrder
+    """Updated at from the Greenhouse v3 sources record."""
 
 
 # Entity-specific condition types for sources
@@ -2283,162 +2209,202 @@ class SourcesSearchQuery(TypedDict, total=False):
 
 class UsersSearchFilter(TypedDict, total=False):
     """Available fields for filtering users search queries."""
+    agency_id: int | None
+    """Id of the staffing agency this user belongs to, when the user is an external agency recruiter rather than an employee of your organization. `null` for in-house users."""
     created_at: str | None
-    """The date and time when the user account was created."""
-    departments: list[Any] | None
-    """List of departments associated with users"""
-    disabled: bool | None
-    """Indicates whether the user account is disabled."""
+    """Created at from the Greenhouse v3 users record."""
+    custom_fields: dict[str, Any] | None
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    deactivated: bool | None
+    """Whether the user has been deactivated. Deactivated users cannot sign in or be assigned to new jobs, but their historical activity (notes, scorecards, emails) is preserved. Toggle via `POST /v3/users/{id}/deactivate` and `POST /v3/users/{id}/activate`."""
+    department_ids: list[Any] | None
+    """Ids of the departments this user is assigned to. Used to scope future job permissions and to filter the user list by department. Empty when the user is not pinned to any department."""
     emails: list[Any] | None
-    """Email addresses of the users"""
+    """All email addresses on the user's account, including the primary address and any additional verified addresses."""
     employee_id: str | None
-    """Employee identifier for the user."""
+    """Partner-supplied external employee identifier, typically the user's HRIS or payroll id. Free-form string; not unique across organizations and `null` when no employee id has been set."""
     first_name: str | None
-    """The first name of the user."""
+    """First name from the Greenhouse v3 users record."""
     id: int | None
-    """Unique identifier for the user."""
+    """Id from the Greenhouse v3 users record."""
+    interviewer_tags: list[Any] | None
+    """Interviewer tags applied to this user — the labeled skill or panel groupings (e.g. `Senior Engineer`, `Bar Raiser`) used to suggest qualified interviewers when building an interview plan. Each entry pairs the tag's `id` with its `name`."""
+    job_title: str | None
+    """Free-form job title set on the user's Greenhouse profile (e.g. `Senior Recruiter`). Not synchronized with any HRIS title."""
     last_name: str | None
-    """The last name of the user."""
+    """Last name from the Greenhouse v3 users record."""
     linked_candidate_ids: list[Any] | None
-    """IDs of candidates linked to the user."""
+    """Ids of candidate records linked to this user. Populated when an employee is represented by both a user record (for Greenhouse access) and a candidate record (for past or internal applications)."""
     name: str | None
-    """The full name of the user."""
-    offices: list[Any] | None
-    """List of office locations where users are based"""
-    primary_email_address: str | None
-    """The primary email address of the user."""
+    """Concatenation of `first_name` and `last_name` rendered as a single display string. Provided for convenience; partners that need either component should read `first_name`/`last_name` directly."""
+    office_ids: list[Any] | None
+    """Ids of the offices this user is assigned to. Used to scope future job permissions and to filter the user list by office. Empty when the user is not pinned to any office."""
+    primary_email: str | None
+    """Primary email address on the user's account. Sign-in identifier and the address Greenhouse uses for outbound mail; additional verified addresses are not surfaced here. Service accounts (integration/ISU users) have no email and are excluded from this endpoint by default; when included via `show_service_accounts=true`, their `primary_email` is an empty string."""
     site_admin: bool | None
-    """Indicates whether the user is a site administrator."""
+    """Whether the user holds the Site Admin role. Site admins have unrestricted access to every non-confidential job and to organization-level settings. Demote a site admin to a Basic user with `POST /v3/users/{id}/revoke_permissions`."""
     updated_at: str | None
-    """The date and time when the user account was last updated."""
+    """Updated at from the Greenhouse v3 users record."""
 
 
 class UsersInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
+    agency_id: list[int]
+    """Id of the staffing agency this user belongs to, when the user is an external agency recruiter rather than an employee of your organization. `null` for in-house users."""
     created_at: list[str]
-    """The date and time when the user account was created."""
-    departments: list[list[Any]]
-    """List of departments associated with users"""
-    disabled: list[bool]
-    """Indicates whether the user account is disabled."""
+    """Created at from the Greenhouse v3 users record."""
+    custom_fields: list[dict[str, Any]]
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    deactivated: list[bool]
+    """Whether the user has been deactivated. Deactivated users cannot sign in or be assigned to new jobs, but their historical activity (notes, scorecards, emails) is preserved. Toggle via `POST /v3/users/{id}/deactivate` and `POST /v3/users/{id}/activate`."""
+    department_ids: list[list[Any]]
+    """Ids of the departments this user is assigned to. Used to scope future job permissions and to filter the user list by department. Empty when the user is not pinned to any department."""
     emails: list[list[Any]]
-    """Email addresses of the users"""
+    """All email addresses on the user's account, including the primary address and any additional verified addresses."""
     employee_id: list[str]
-    """Employee identifier for the user."""
+    """Partner-supplied external employee identifier, typically the user's HRIS or payroll id. Free-form string; not unique across organizations and `null` when no employee id has been set."""
     first_name: list[str]
-    """The first name of the user."""
+    """First name from the Greenhouse v3 users record."""
     id: list[int]
-    """Unique identifier for the user."""
+    """Id from the Greenhouse v3 users record."""
+    interviewer_tags: list[list[Any]]
+    """Interviewer tags applied to this user — the labeled skill or panel groupings (e.g. `Senior Engineer`, `Bar Raiser`) used to suggest qualified interviewers when building an interview plan. Each entry pairs the tag's `id` with its `name`."""
+    job_title: list[str]
+    """Free-form job title set on the user's Greenhouse profile (e.g. `Senior Recruiter`). Not synchronized with any HRIS title."""
     last_name: list[str]
-    """The last name of the user."""
+    """Last name from the Greenhouse v3 users record."""
     linked_candidate_ids: list[list[Any]]
-    """IDs of candidates linked to the user."""
+    """Ids of candidate records linked to this user. Populated when an employee is represented by both a user record (for Greenhouse access) and a candidate record (for past or internal applications)."""
     name: list[str]
-    """The full name of the user."""
-    offices: list[list[Any]]
-    """List of office locations where users are based"""
-    primary_email_address: list[str]
-    """The primary email address of the user."""
+    """Concatenation of `first_name` and `last_name` rendered as a single display string. Provided for convenience; partners that need either component should read `first_name`/`last_name` directly."""
+    office_ids: list[list[Any]]
+    """Ids of the offices this user is assigned to. Used to scope future job permissions and to filter the user list by office. Empty when the user is not pinned to any office."""
+    primary_email: list[str]
+    """Primary email address on the user's account. Sign-in identifier and the address Greenhouse uses for outbound mail; additional verified addresses are not surfaced here. Service accounts (integration/ISU users) have no email and are excluded from this endpoint by default; when included via `show_service_accounts=true`, their `primary_email` is an empty string."""
     site_admin: list[bool]
-    """Indicates whether the user is a site administrator."""
+    """Whether the user holds the Site Admin role. Site admins have unrestricted access to every non-confidential job and to organization-level settings. Demote a site admin to a Basic user with `POST /v3/users/{id}/revoke_permissions`."""
     updated_at: list[str]
-    """The date and time when the user account was last updated."""
+    """Updated at from the Greenhouse v3 users record."""
 
 
 class UsersAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    agency_id: Any
+    """Id of the staffing agency this user belongs to, when the user is an external agency recruiter rather than an employee of your organization. `null` for in-house users."""
     created_at: Any
-    """The date and time when the user account was created."""
-    departments: Any
-    """List of departments associated with users"""
-    disabled: Any
-    """Indicates whether the user account is disabled."""
+    """Created at from the Greenhouse v3 users record."""
+    custom_fields: Any
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    deactivated: Any
+    """Whether the user has been deactivated. Deactivated users cannot sign in or be assigned to new jobs, but their historical activity (notes, scorecards, emails) is preserved. Toggle via `POST /v3/users/{id}/deactivate` and `POST /v3/users/{id}/activate`."""
+    department_ids: Any
+    """Ids of the departments this user is assigned to. Used to scope future job permissions and to filter the user list by department. Empty when the user is not pinned to any department."""
     emails: Any
-    """Email addresses of the users"""
+    """All email addresses on the user's account, including the primary address and any additional verified addresses."""
     employee_id: Any
-    """Employee identifier for the user."""
+    """Partner-supplied external employee identifier, typically the user's HRIS or payroll id. Free-form string; not unique across organizations and `null` when no employee id has been set."""
     first_name: Any
-    """The first name of the user."""
+    """First name from the Greenhouse v3 users record."""
     id: Any
-    """Unique identifier for the user."""
+    """Id from the Greenhouse v3 users record."""
+    interviewer_tags: Any
+    """Interviewer tags applied to this user — the labeled skill or panel groupings (e.g. `Senior Engineer`, `Bar Raiser`) used to suggest qualified interviewers when building an interview plan. Each entry pairs the tag's `id` with its `name`."""
+    job_title: Any
+    """Free-form job title set on the user's Greenhouse profile (e.g. `Senior Recruiter`). Not synchronized with any HRIS title."""
     last_name: Any
-    """The last name of the user."""
+    """Last name from the Greenhouse v3 users record."""
     linked_candidate_ids: Any
-    """IDs of candidates linked to the user."""
+    """Ids of candidate records linked to this user. Populated when an employee is represented by both a user record (for Greenhouse access) and a candidate record (for past or internal applications)."""
     name: Any
-    """The full name of the user."""
-    offices: Any
-    """List of office locations where users are based"""
-    primary_email_address: Any
-    """The primary email address of the user."""
+    """Concatenation of `first_name` and `last_name` rendered as a single display string. Provided for convenience; partners that need either component should read `first_name`/`last_name` directly."""
+    office_ids: Any
+    """Ids of the offices this user is assigned to. Used to scope future job permissions and to filter the user list by office. Empty when the user is not pinned to any office."""
+    primary_email: Any
+    """Primary email address on the user's account. Sign-in identifier and the address Greenhouse uses for outbound mail; additional verified addresses are not surfaced here. Service accounts (integration/ISU users) have no email and are excluded from this endpoint by default; when included via `show_service_accounts=true`, their `primary_email` is an empty string."""
     site_admin: Any
-    """Indicates whether the user is a site administrator."""
+    """Whether the user holds the Site Admin role. Site admins have unrestricted access to every non-confidential job and to organization-level settings. Demote a site admin to a Basic user with `POST /v3/users/{id}/revoke_permissions`."""
     updated_at: Any
-    """The date and time when the user account was last updated."""
+    """Updated at from the Greenhouse v3 users record."""
 
 
 class UsersStringFilter(TypedDict, total=False):
     """String fields for text search conditions (startswith, endswith, fuzzy, keyword)."""
+    agency_id: str
+    """Id of the staffing agency this user belongs to, when the user is an external agency recruiter rather than an employee of your organization. `null` for in-house users."""
     created_at: str
-    """The date and time when the user account was created."""
-    departments: str
-    """List of departments associated with users"""
-    disabled: str
-    """Indicates whether the user account is disabled."""
+    """Created at from the Greenhouse v3 users record."""
+    custom_fields: str
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    deactivated: str
+    """Whether the user has been deactivated. Deactivated users cannot sign in or be assigned to new jobs, but their historical activity (notes, scorecards, emails) is preserved. Toggle via `POST /v3/users/{id}/deactivate` and `POST /v3/users/{id}/activate`."""
+    department_ids: str
+    """Ids of the departments this user is assigned to. Used to scope future job permissions and to filter the user list by department. Empty when the user is not pinned to any department."""
     emails: str
-    """Email addresses of the users"""
+    """All email addresses on the user's account, including the primary address and any additional verified addresses."""
     employee_id: str
-    """Employee identifier for the user."""
+    """Partner-supplied external employee identifier, typically the user's HRIS or payroll id. Free-form string; not unique across organizations and `null` when no employee id has been set."""
     first_name: str
-    """The first name of the user."""
+    """First name from the Greenhouse v3 users record."""
     id: str
-    """Unique identifier for the user."""
+    """Id from the Greenhouse v3 users record."""
+    interviewer_tags: str
+    """Interviewer tags applied to this user — the labeled skill or panel groupings (e.g. `Senior Engineer`, `Bar Raiser`) used to suggest qualified interviewers when building an interview plan. Each entry pairs the tag's `id` with its `name`."""
+    job_title: str
+    """Free-form job title set on the user's Greenhouse profile (e.g. `Senior Recruiter`). Not synchronized with any HRIS title."""
     last_name: str
-    """The last name of the user."""
+    """Last name from the Greenhouse v3 users record."""
     linked_candidate_ids: str
-    """IDs of candidates linked to the user."""
+    """Ids of candidate records linked to this user. Populated when an employee is represented by both a user record (for Greenhouse access) and a candidate record (for past or internal applications)."""
     name: str
-    """The full name of the user."""
-    offices: str
-    """List of office locations where users are based"""
-    primary_email_address: str
-    """The primary email address of the user."""
+    """Concatenation of `first_name` and `last_name` rendered as a single display string. Provided for convenience; partners that need either component should read `first_name`/`last_name` directly."""
+    office_ids: str
+    """Ids of the offices this user is assigned to. Used to scope future job permissions and to filter the user list by office. Empty when the user is not pinned to any office."""
+    primary_email: str
+    """Primary email address on the user's account. Sign-in identifier and the address Greenhouse uses for outbound mail; additional verified addresses are not surfaced here. Service accounts (integration/ISU users) have no email and are excluded from this endpoint by default; when included via `show_service_accounts=true`, their `primary_email` is an empty string."""
     site_admin: str
-    """Indicates whether the user is a site administrator."""
+    """Whether the user holds the Site Admin role. Site admins have unrestricted access to every non-confidential job and to organization-level settings. Demote a site admin to a Basic user with `POST /v3/users/{id}/revoke_permissions`."""
     updated_at: str
-    """The date and time when the user account was last updated."""
+    """Updated at from the Greenhouse v3 users record."""
 
 
 class UsersSortFilter(TypedDict, total=False):
     """Available fields for sorting users search results."""
+    agency_id: AirbyteSortOrder
+    """Id of the staffing agency this user belongs to, when the user is an external agency recruiter rather than an employee of your organization. `null` for in-house users."""
     created_at: AirbyteSortOrder
-    """The date and time when the user account was created."""
-    departments: AirbyteSortOrder
-    """List of departments associated with users"""
-    disabled: AirbyteSortOrder
-    """Indicates whether the user account is disabled."""
+    """Created at from the Greenhouse v3 users record."""
+    custom_fields: AirbyteSortOrder
+    """Org-defined custom fields keyed by the field's `name_key`. Each value carries the field's display `name`, its `type`, and its `value`."""
+    deactivated: AirbyteSortOrder
+    """Whether the user has been deactivated. Deactivated users cannot sign in or be assigned to new jobs, but their historical activity (notes, scorecards, emails) is preserved. Toggle via `POST /v3/users/{id}/deactivate` and `POST /v3/users/{id}/activate`."""
+    department_ids: AirbyteSortOrder
+    """Ids of the departments this user is assigned to. Used to scope future job permissions and to filter the user list by department. Empty when the user is not pinned to any department."""
     emails: AirbyteSortOrder
-    """Email addresses of the users"""
+    """All email addresses on the user's account, including the primary address and any additional verified addresses."""
     employee_id: AirbyteSortOrder
-    """Employee identifier for the user."""
+    """Partner-supplied external employee identifier, typically the user's HRIS or payroll id. Free-form string; not unique across organizations and `null` when no employee id has been set."""
     first_name: AirbyteSortOrder
-    """The first name of the user."""
+    """First name from the Greenhouse v3 users record."""
     id: AirbyteSortOrder
-    """Unique identifier for the user."""
+    """Id from the Greenhouse v3 users record."""
+    interviewer_tags: AirbyteSortOrder
+    """Interviewer tags applied to this user — the labeled skill or panel groupings (e.g. `Senior Engineer`, `Bar Raiser`) used to suggest qualified interviewers when building an interview plan. Each entry pairs the tag's `id` with its `name`."""
+    job_title: AirbyteSortOrder
+    """Free-form job title set on the user's Greenhouse profile (e.g. `Senior Recruiter`). Not synchronized with any HRIS title."""
     last_name: AirbyteSortOrder
-    """The last name of the user."""
+    """Last name from the Greenhouse v3 users record."""
     linked_candidate_ids: AirbyteSortOrder
-    """IDs of candidates linked to the user."""
+    """Ids of candidate records linked to this user. Populated when an employee is represented by both a user record (for Greenhouse access) and a candidate record (for past or internal applications)."""
     name: AirbyteSortOrder
-    """The full name of the user."""
-    offices: AirbyteSortOrder
-    """List of office locations where users are based"""
-    primary_email_address: AirbyteSortOrder
-    """The primary email address of the user."""
+    """Concatenation of `first_name` and `last_name` rendered as a single display string. Provided for convenience; partners that need either component should read `first_name`/`last_name` directly."""
+    office_ids: AirbyteSortOrder
+    """Ids of the offices this user is assigned to. Used to scope future job permissions and to filter the user list by office. Empty when the user is not pinned to any office."""
+    primary_email: AirbyteSortOrder
+    """Primary email address on the user's account. Sign-in identifier and the address Greenhouse uses for outbound mail; additional verified addresses are not surfaced here. Service accounts (integration/ISU users) have no email and are excluded from this endpoint by default; when included via `show_service_accounts=true`, their `primary_email` is an empty string."""
     site_admin: AirbyteSortOrder
-    """Indicates whether the user is a site administrator."""
+    """Whether the user holds the Site Admin role. Site admins have unrestricted access to every non-confidential job and to organization-level settings. Demote a site admin to a Basic user with `POST /v3/users/{id}/revoke_permissions`."""
     updated_at: AirbyteSortOrder
-    """The date and time when the user account was last updated."""
+    """Updated at from the Greenhouse v3 users record."""
 
 
 # Entity-specific condition types for users

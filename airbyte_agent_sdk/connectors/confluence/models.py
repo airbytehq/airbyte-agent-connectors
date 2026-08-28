@@ -68,30 +68,6 @@ class SpacesList(BaseModel):
     results: list[Space] | None = Field(default=None)
     links: SpacesListLinks | None = Field(default=None, alias="_links")
 
-class PageBody(BaseModel):
-    """Page body content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
-
-class PageLinks(BaseModel):
-    """Links related to the page"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    webui: str | None = Field(default=None, description="Web UI link")
-    """Web UI link"""
-    editui: str | None = Field(default=None, description="Edit UI link")
-    """Edit UI link"""
-    edituiv2: str | None = Field(default=None, description="Edit UI v2 link")
-    """Edit UI v2 link"""
-    tinyui: str | None = Field(default=None, description="Tiny UI link")
-    """Tiny UI link"""
-    base: str | None = Field(default=None, description="Base URL")
-    """Base URL"""
-
 class PageVersion(BaseModel):
     """Version information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -108,6 +84,30 @@ class PageVersion(BaseModel):
     """ID of the version author"""
     ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
     """NCS step version"""
+
+class PageLinks(BaseModel):
+    """Links related to the page"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    webui: str | None = Field(default=None, description="Web UI link")
+    """Web UI link"""
+    editui: str | None = Field(default=None, description="Edit UI link")
+    """Edit UI link"""
+    edituiv2: str | None = Field(default=None, description="Edit UI v2 link")
+    """Edit UI v2 link"""
+    tinyui: str | None = Field(default=None, description="Tiny UI link")
+    """Tiny UI link"""
+    base: str | None = Field(default=None, description="Base URL")
+    """Base URL"""
+
+class PageBody(BaseModel):
+    """Page body content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
 
 class Page(BaseModel):
     """Confluence page object"""
@@ -144,6 +144,21 @@ class PagesList(BaseModel):
     results: list[Page] | None = Field(default=None)
     links: PagesListLinks | None = Field(default=None, alias="_links")
 
+class BlogPostLinks(BaseModel):
+    """Links related to the blog post"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    webui: str | None = Field(default=None, description="Web UI link")
+    """Web UI link"""
+    editui: str | None = Field(default=None, description="Edit UI link")
+    """Edit UI link"""
+    edituiv2: str | None = Field(default=None, description="Edit UI v2 link")
+    """Edit UI v2 link"""
+    tinyui: str | None = Field(default=None, description="Tiny UI link")
+    """Tiny UI link"""
+    base: str | None = Field(default=None, description="Base URL")
+    """Base URL"""
+
 class BlogPostBody(BaseModel):
     """Blog post body content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -169,21 +184,6 @@ class BlogPostVersion(BaseModel):
     """ID of the version author"""
     ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
     """NCS step version"""
-
-class BlogPostLinks(BaseModel):
-    """Links related to the blog post"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    webui: str | None = Field(default=None, description="Web UI link")
-    """Web UI link"""
-    editui: str | None = Field(default=None, description="Edit UI link")
-    """Edit UI link"""
-    edituiv2: str | None = Field(default=None, description="Edit UI v2 link")
-    """Edit UI v2 link"""
-    tinyui: str | None = Field(default=None, description="Tiny UI link")
-    """Tiny UI link"""
-    base: str | None = Field(default=None, description="Base URL")
-    """Base URL"""
 
 class BlogPost(BaseModel):
     """Confluence blog post object"""

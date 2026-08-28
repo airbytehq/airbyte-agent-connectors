@@ -1162,14 +1162,6 @@ class CustomerDeleteResponse(BaseModel):
 
     data: CustomerDeleteResponseData | None = Field(default=None)
 
-class ProductCreateParamsMediaItem(BaseModel):
-    """Nested schema for ProductCreateParams.media_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    original_source: str | None = Field(default=None, alias="originalSource", description="URL of the media")
-    """URL of the media"""
-    media_content_type: str | None = Field(default=None, alias="mediaContentType")
-
 class ProductCreateParamsProduct(BaseModel):
     """ProductCreateInput object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1186,6 +1178,14 @@ class ProductCreateParamsProduct(BaseModel):
     """Tags for the product"""
     status: str | None = Field(default=None, description="Product status (ACTIVE, ARCHIVED, DRAFT)")
     """Product status (ACTIVE, ARCHIVED, DRAFT)"""
+
+class ProductCreateParamsMediaItem(BaseModel):
+    """Nested schema for ProductCreateParams.media_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    original_source: str | None = Field(default=None, alias="originalSource", description="URL of the media")
+    """URL of the media"""
+    media_content_type: str | None = Field(default=None, alias="mediaContentType")
 
 class ProductCreateParams(BaseModel):
     """Parameters for creating a product.
@@ -1382,6 +1382,18 @@ class ProductVariantsDeleteResponse(BaseModel):
 
     data: ProductVariantsDeleteResponseData | None = Field(default=None)
 
+class OrderCreateParamsOrderShippingaddress(BaseModel):
+    """Nested schema for OrderCreateParamsOrder.shippingAddress"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address1: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province_code: str | None = Field(default=None, alias="provinceCode")
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
+    first_name: str | None = Field(default=None, alias="firstName")
+    last_name: str | None = Field(default=None, alias="lastName")
+
 class OrderCreateParamsOrderLineitemsItemPricesetShopmoney(BaseModel):
     """Nested schema for OrderCreateParamsOrderLineitemsItemPriceset.shopMoney"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1406,18 +1418,6 @@ class OrderCreateParamsOrderLineitemsItem(BaseModel):
     title: str | None = Field(default=None, description="Custom title (for custom line items without a variant)")
     """Custom title (for custom line items without a variant)"""
     price_set: OrderCreateParamsOrderLineitemsItemPriceset | None = Field(default=None, alias="priceSet")
-
-class OrderCreateParamsOrderShippingaddress(BaseModel):
-    """Nested schema for OrderCreateParamsOrder.shippingAddress"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address1: str | None = Field(default=None)
-    city: str | None = Field(default=None)
-    province_code: str | None = Field(default=None, alias="provinceCode")
-    zip: str | None = Field(default=None)
-    country_code: str | None = Field(default=None, alias="countryCode")
-    first_name: str | None = Field(default=None, alias="firstName")
-    last_name: str | None = Field(default=None, alias="lastName")
 
 class OrderCreateParamsOrder(BaseModel):
     """OrderCreateOrderInput object"""
@@ -1896,6 +1896,13 @@ class InventoryAdjustQuantitiesResponse(BaseModel):
 
     data: InventoryAdjustQuantitiesResponseData | None = Field(default=None)
 
+class DiscountCodeCreateParamsBasiccodediscountCustomerselection(BaseModel):
+    """Which customers can use this discount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    all: bool | None = Field(default=None, description="Set to true for all customers")
+    """Set to true for all customers"""
+
 class DiscountCodeCreateParamsBasiccodediscountCustomergetsItems(BaseModel):
     """Which items the discount applies to"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1926,13 +1933,6 @@ class DiscountCodeCreateParamsBasiccodediscountCustomergets(BaseModel):
     """The discount value"""
     items: DiscountCodeCreateParamsBasiccodediscountCustomergetsItems | None = Field(default=None, description="Which items the discount applies to")
     """Which items the discount applies to"""
-
-class DiscountCodeCreateParamsBasiccodediscountCustomerselection(BaseModel):
-    """Which customers can use this discount"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    all: bool | None = Field(default=None, description="Set to true for all customers")
-    """Set to true for all customers"""
 
 class DiscountCodeCreateParamsBasiccodediscount(BaseModel):
     """Nested schema for DiscountCodeCreateParams.basicCodeDiscount"""

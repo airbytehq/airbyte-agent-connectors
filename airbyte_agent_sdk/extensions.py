@@ -477,7 +477,7 @@ download URL. See `AIRBYTE_FILE_URL_DOC` for the full contract."""
 AIRBYTE_FILE_URL_DESCRIPTION = (
     "Field in metadata response containing the download URL. "
     "The field path uses the executor's dot-separated field-path syntax "
-    "with optional bracket indexing (e.g., calls[0].media.audioUrl) and "
+    "with optional bracket indexing (e.g., calls[0].media.audioUrl or [0].url) and "
     "templated bracket segments (e.g., attachments[{attachment_index}].url). "
     'This is NOT a JSONPath expression — do not prefix with "$.". '
     "For JSONPath-based extractors, see x-airbyte-record-extractor and "
@@ -504,7 +504,7 @@ Description:
     then extract and download from the URL field specified here. The URL must be absolute.
 
     The field path uses the executor's dot-separated field-path syntax with optional
-    bracket indexing (e.g., calls[0].media.audioUrl) and templated bracket segments
+    bracket indexing (e.g., calls[0].media.audioUrl or [0].url) and templated bracket segments
     (e.g., attachments[{attachment_index}].url). This is NOT a JSONPath expression —
     do not prefix with "$.". For JSONPath-based extractors, see
     x-airbyte-record-extractor and x-airbyte-meta-extractor.
