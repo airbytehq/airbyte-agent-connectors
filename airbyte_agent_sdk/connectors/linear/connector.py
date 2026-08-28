@@ -105,7 +105,7 @@ class LinearConnector:
 
     connector_name = "linear"
     connector_version = "0.1.19"
-    sdk_version = "0.1.333"
+    sdk_version = "0.1.334"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -1507,17 +1507,13 @@ class TeamsQuery:
         - group_issue_history: 
         - icon: 
         - id: 
-        - invite_hash: 
         - issue_count: 
         - issue_estimation_allow_zero: 
         - issue_estimation_extended: 
         - issue_estimation_type: 
         - key: 
-        - marked_as_duplicate_workflow_state: 
-        - marked_as_duplicate_workflow_state_id: 
         - name: 
         - parent_team_id: 
-        - private: 
         - require_priority_to_leave_triage: 
         - scim_managed: 
         - set_issue_sort_order_on_state_change: 
@@ -1526,6 +1522,7 @@ class TeamsQuery:
         - triage_issue_state_id: 
         - upcoming_cycle_count: 
         - updated_at: 
+        - visibility: 
 
         Args:
             query: Filter and sort conditions. Supports operators such as eq, neq, gt, gte, lt, lte,
@@ -1765,7 +1762,6 @@ class UsersQuery:
         - guest: 
         - id: 
         - initials: 
-        - invite_hash: 
         - is_me: 
         - last_seen: 
         - name: 

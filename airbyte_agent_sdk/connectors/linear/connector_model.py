@@ -3401,11 +3401,6 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         description='',
                     ),
                     CacheFieldConfig(
-                        name='inviteHash',
-                        type=['string', 'null'],
-                        description='',
-                    ),
-                    CacheFieldConfig(
                         name='issueCount',
                         type=['number', 'null'],
                         description='',
@@ -3431,16 +3426,6 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         description='',
                     ),
                     CacheFieldConfig(
-                        name='markedAsDuplicateWorkflowState',
-                        type=['object', 'null'],
-                        description='',
-                    ),
-                    CacheFieldConfig(
-                        name='markedAsDuplicateWorkflowStateId',
-                        type=['string', 'null'],
-                        description='',
-                    ),
-                    CacheFieldConfig(
                         name='name',
                         type=['string', 'null'],
                         description='',
@@ -3448,11 +3433,6 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='parentTeamId',
                         type=['string', 'null'],
-                        description='',
-                    ),
-                    CacheFieldConfig(
-                        name='private',
-                        type=['boolean', 'null'],
                         description='',
                     ),
                     CacheFieldConfig(
@@ -3492,6 +3472,11 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='updatedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='visibility',
                         type=['string', 'null'],
                         description='',
                     ),
@@ -3554,11 +3539,6 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='initials',
-                        type=['string', 'null'],
-                        description='',
-                    ),
-                    CacheFieldConfig(
-                        name='inviteHash',
                         type=['string', 'null'],
                         description='',
                     ),
@@ -3817,17 +3797,13 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
             'groupIssueHistory',
             'icon',
             'id',
-            'inviteHash',
             'issueCount',
             'issueEstimationAllowZero',
             'issueEstimationExtended',
             'issueEstimationType',
             'key',
-            'markedAsDuplicateWorkflowState',
-            'markedAsDuplicateWorkflowStateId',
             'name',
             'parentTeamId',
-            'private',
             'requirePriorityToLeaveTriage',
             'scimManaged',
             'setIssueSortOrderOnStateChange',
@@ -3836,6 +3812,7 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
             'triageIssueStateId',
             'upcomingCycleCount',
             'updatedAt',
+            'visibility',
         ],
         'users': [
             'active',
@@ -3849,7 +3826,6 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
             'guest',
             'id',
             'initials',
-            'inviteHash',
             'isMe',
             'lastSeen',
             'name',

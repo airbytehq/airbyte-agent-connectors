@@ -73,6 +73,7 @@ def resolve_manifest_refs(obj: Any, root: dict[str, Any]) -> Any:
     Handles both:
     - Dict refs: ``{"$ref": "#/definitions/foo"}``
     - String refs: ``"#/definitions/foo"``
+    - Dict refs with sibling keys, which override the referenced object
 
     Args:
         obj: The object to resolve (can be any YAML-parsed type)
@@ -80,20 +81,45 @@ def resolve_manifest_refs(obj: Any, root: dict[str, Any]) -> Any:
 
     Returns:
         The fully-resolved object
+
+    Raises:
+        ValueError: If a ref is malformed, references are cyclic, or a ref with
+            siblings resolves to a non-object value
     """
+    return _resolve_manifest_refs(obj, root, frozenset())
+
+
+def _resolve_manifest_refs(obj: Any, root: dict[str, Any], active_refs: frozenset[str]) -> Any:
     if isinstance(obj, dict):
-        if "$ref" in obj and len(obj) == 1:
+        if "$ref" in obj:
             ref_path = obj["$ref"]
-            if ref_path.startswith("#/"):
-                resolved = resolve_ref(ref_path, root)
-                return resolve_manifest_refs(resolved, root)
-            return obj
-        return {k: resolve_manifest_refs(v, root) for k, v in obj.items()}
+            if not isinstance(ref_path, str):
+                raise ValueError("Manifest $ref must be a string")
+            if not ref_path.startswith("#/"):
+                return {key: value if key == "$ref" else _resolve_manifest_refs(value, root, active_refs) for key, value in obj.items()}
+            if ref_path in active_refs:
+                raise ValueError(f"Cyclic manifest reference: {ref_path}")
+
+            resolved = resolve_ref(ref_path, root)
+            resolved = _resolve_manifest_refs(resolved, root, active_refs | {ref_path})
+            if len(obj) == 1:
+                return resolved
+            if not isinstance(resolved, dict):
+                raise ValueError(f"Manifest reference with sibling keys must resolve to an object: {ref_path}")
+
+            merged = dict(resolved)
+            for key, value in obj.items():
+                if key != "$ref":
+                    merged[key] = _resolve_manifest_refs(value, root, active_refs)
+            return merged
+        return {key: _resolve_manifest_refs(value, root, active_refs) for key, value in obj.items()}
     elif isinstance(obj, list):
-        return [resolve_manifest_refs(item, root) for item in obj]
+        return [_resolve_manifest_refs(item, root, active_refs) for item in obj]
     elif isinstance(obj, str) and obj.startswith("#/definitions/"):
+        if obj in active_refs:
+            raise ValueError(f"Cyclic manifest reference: {obj}")
         resolved = resolve_ref(obj, root)
-        return resolve_manifest_refs(resolved, root)
+        return _resolve_manifest_refs(resolved, root, active_refs | {obj})
     return obj
 
 

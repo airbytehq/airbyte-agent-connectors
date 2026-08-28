@@ -908,8 +908,6 @@ class TeamsSearchData(BaseModel):
     """"""
     id: str | None = None
     """"""
-    invite_hash: str | None = None
-    """"""
     issue_count: float | None = None
     """"""
     issue_estimation_allow_zero: bool | None = None
@@ -920,15 +918,9 @@ class TeamsSearchData(BaseModel):
     """"""
     key: str | None = None
     """"""
-    marked_as_duplicate_workflow_state: dict[str, Any] | None = None
-    """"""
-    marked_as_duplicate_workflow_state_id: str | None = None
-    """"""
     name: str | None = None
     """"""
     parent_team_id: str | None = None
-    """"""
-    private: bool | None = None
     """"""
     require_priority_to_leave_triage: bool | None = None
     """"""
@@ -945,6 +937,8 @@ class TeamsSearchData(BaseModel):
     upcoming_cycle_count: float | None = None
     """"""
     updated_at: str | None = None
+    """"""
+    visibility: str | None = None
     """"""
 
 
@@ -973,8 +967,6 @@ class UsersSearchData(BaseModel):
     id: str | None = None
     """"""
     initials: str | None = None
-    """"""
-    invite_hash: str | None = None
     """"""
     is_me: bool | None = None
     """"""

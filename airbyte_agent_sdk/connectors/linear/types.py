@@ -1632,8 +1632,6 @@ class TeamsSearchFilter(TypedDict, total=False):
     """"""
     id: str | None
     """"""
-    invite_hash: str | None
-    """"""
     issue_count: float | None
     """"""
     issue_estimation_allow_zero: bool | None
@@ -1644,15 +1642,9 @@ class TeamsSearchFilter(TypedDict, total=False):
     """"""
     key: str | None
     """"""
-    marked_as_duplicate_workflow_state: dict[str, Any] | None
-    """"""
-    marked_as_duplicate_workflow_state_id: str | None
-    """"""
     name: str | None
     """"""
     parent_team_id: str | None
-    """"""
-    private: bool | None
     """"""
     require_priority_to_leave_triage: bool | None
     """"""
@@ -1669,6 +1661,8 @@ class TeamsSearchFilter(TypedDict, total=False):
     upcoming_cycle_count: float | None
     """"""
     updated_at: str | None
+    """"""
+    visibility: str | None
     """"""
 
 
@@ -1716,8 +1710,6 @@ class TeamsInFilter(TypedDict, total=False):
     """"""
     id: list[str]
     """"""
-    invite_hash: list[str]
-    """"""
     issue_count: list[float]
     """"""
     issue_estimation_allow_zero: list[bool]
@@ -1728,15 +1720,9 @@ class TeamsInFilter(TypedDict, total=False):
     """"""
     key: list[str]
     """"""
-    marked_as_duplicate_workflow_state: list[dict[str, Any]]
-    """"""
-    marked_as_duplicate_workflow_state_id: list[str]
-    """"""
     name: list[str]
     """"""
     parent_team_id: list[str]
-    """"""
-    private: list[bool]
     """"""
     require_priority_to_leave_triage: list[bool]
     """"""
@@ -1753,6 +1739,8 @@ class TeamsInFilter(TypedDict, total=False):
     upcoming_cycle_count: list[float]
     """"""
     updated_at: list[str]
+    """"""
+    visibility: list[str]
     """"""
 
 
@@ -1800,8 +1788,6 @@ class TeamsAnyValueFilter(TypedDict, total=False):
     """"""
     id: Any
     """"""
-    invite_hash: Any
-    """"""
     issue_count: Any
     """"""
     issue_estimation_allow_zero: Any
@@ -1812,15 +1798,9 @@ class TeamsAnyValueFilter(TypedDict, total=False):
     """"""
     key: Any
     """"""
-    marked_as_duplicate_workflow_state: Any
-    """"""
-    marked_as_duplicate_workflow_state_id: Any
-    """"""
     name: Any
     """"""
     parent_team_id: Any
-    """"""
-    private: Any
     """"""
     require_priority_to_leave_triage: Any
     """"""
@@ -1837,6 +1817,8 @@ class TeamsAnyValueFilter(TypedDict, total=False):
     upcoming_cycle_count: Any
     """"""
     updated_at: Any
+    """"""
+    visibility: Any
     """"""
 
 
@@ -1884,8 +1866,6 @@ class TeamsStringFilter(TypedDict, total=False):
     """"""
     id: str
     """"""
-    invite_hash: str
-    """"""
     issue_count: str
     """"""
     issue_estimation_allow_zero: str
@@ -1896,15 +1876,9 @@ class TeamsStringFilter(TypedDict, total=False):
     """"""
     key: str
     """"""
-    marked_as_duplicate_workflow_state: str
-    """"""
-    marked_as_duplicate_workflow_state_id: str
-    """"""
     name: str
     """"""
     parent_team_id: str
-    """"""
-    private: str
     """"""
     require_priority_to_leave_triage: str
     """"""
@@ -1921,6 +1895,8 @@ class TeamsStringFilter(TypedDict, total=False):
     upcoming_cycle_count: str
     """"""
     updated_at: str
+    """"""
+    visibility: str
     """"""
 
 
@@ -1968,8 +1944,6 @@ class TeamsSortFilter(TypedDict, total=False):
     """"""
     id: AirbyteSortOrder
     """"""
-    invite_hash: AirbyteSortOrder
-    """"""
     issue_count: AirbyteSortOrder
     """"""
     issue_estimation_allow_zero: AirbyteSortOrder
@@ -1980,15 +1954,9 @@ class TeamsSortFilter(TypedDict, total=False):
     """"""
     key: AirbyteSortOrder
     """"""
-    marked_as_duplicate_workflow_state: AirbyteSortOrder
-    """"""
-    marked_as_duplicate_workflow_state_id: AirbyteSortOrder
-    """"""
     name: AirbyteSortOrder
     """"""
     parent_team_id: AirbyteSortOrder
-    """"""
-    private: AirbyteSortOrder
     """"""
     require_priority_to_leave_triage: AirbyteSortOrder
     """"""
@@ -2005,6 +1973,8 @@ class TeamsSortFilter(TypedDict, total=False):
     upcoming_cycle_count: AirbyteSortOrder
     """"""
     updated_at: AirbyteSortOrder
+    """"""
+    visibility: AirbyteSortOrder
     """"""
 
 
@@ -2139,8 +2109,6 @@ class UsersSearchFilter(TypedDict, total=False):
     """"""
     initials: str | None
     """"""
-    invite_hash: str | None
-    """"""
     is_me: bool | None
     """"""
     last_seen: str | None
@@ -2182,8 +2150,6 @@ class UsersInFilter(TypedDict, total=False):
     id: list[str]
     """"""
     initials: list[str]
-    """"""
-    invite_hash: list[str]
     """"""
     is_me: list[bool]
     """"""
@@ -2227,8 +2193,6 @@ class UsersAnyValueFilter(TypedDict, total=False):
     """"""
     initials: Any
     """"""
-    invite_hash: Any
-    """"""
     is_me: Any
     """"""
     last_seen: Any
@@ -2271,8 +2235,6 @@ class UsersStringFilter(TypedDict, total=False):
     """"""
     initials: str
     """"""
-    invite_hash: str
-    """"""
     is_me: str
     """"""
     last_seen: str
@@ -2314,8 +2276,6 @@ class UsersSortFilter(TypedDict, total=False):
     id: AirbyteSortOrder
     """"""
     initials: AirbyteSortOrder
-    """"""
-    invite_hash: AirbyteSortOrder
     """"""
     is_me: AirbyteSortOrder
     """"""

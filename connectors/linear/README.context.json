@@ -2610,16 +2610,6 @@
           "semantic": false
         },
         {
-          "name": "inviteHash",
-          "python_name": "invite_hash",
-          "type": "str | None",
-          "json_type": "string | null",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "",
-          "semantic": false
-        },
-        {
           "name": "issueCount",
           "python_name": "issue_count",
           "type": "float | None",
@@ -2670,26 +2660,6 @@
           "semantic": false
         },
         {
-          "name": "markedAsDuplicateWorkflowState",
-          "python_name": "marked_as_duplicate_workflow_state",
-          "type": "dict[str, Any] | None",
-          "json_type": "object | null",
-          "example_value_json": "{}",
-          "json_example_value": {},
-          "description": "",
-          "semantic": false
-        },
-        {
-          "name": "markedAsDuplicateWorkflowStateId",
-          "python_name": "marked_as_duplicate_workflow_state_id",
-          "type": "str | None",
-          "json_type": "string | null",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "",
-          "semantic": false
-        },
-        {
           "name": "name",
           "python_name": "name",
           "type": "str | None",
@@ -2706,16 +2676,6 @@
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "",
-          "semantic": false
-        },
-        {
-          "name": "private",
-          "python_name": "private",
-          "type": "bool | None",
-          "json_type": "boolean | null",
-          "example_value_json": "True",
-          "json_example_value": true,
           "description": "",
           "semantic": false
         },
@@ -2792,6 +2752,16 @@
         {
           "name": "updatedAt",
           "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "",
+          "semantic": false
+        },
+        {
+          "name": "visibility",
+          "python_name": "visibility",
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
@@ -2922,16 +2892,6 @@
         {
           "name": "initials",
           "python_name": "initials",
-          "type": "str | None",
-          "json_type": "string | null",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "",
-          "semantic": false
-        },
-        {
-          "name": "inviteHash",
-          "python_name": "invite_hash",
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
