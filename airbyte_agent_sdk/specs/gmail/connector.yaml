@@ -18,6 +18,9 @@ info:
   x-airbyte-replication-compatibility: ">=0.1.13, <1.0.0"
   x-airbyte-platform-availability:
     state: enabled
+  x-airbyte-qualification:
+    status: candidate
+    criteria_version: v1
   x-airbyte-skip-auth-methods:
     - service_account
   x-airbyte-context-store:

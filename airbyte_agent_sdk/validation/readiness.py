@@ -9,6 +9,7 @@ These tools help ensure that connectors are ready to ship by:
 """
 
 from collections import defaultdict
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -26,6 +27,16 @@ from airbyte_agent_sdk.types import Action, ConnectorModel, EndpointDefinition
 from airbyte_agent_sdk.utils import infer_auth_scheme_name
 from airbyte_agent_sdk.validation.cache import validate_cache_against_manifest
 from airbyte_agent_sdk.validation.replication import validate_replication_compatibility
+
+READINESS_PROGRESS_STEPS = (
+    "C7: auth scheme coverage",
+    "C1: operation cassette coverage",
+    "C2: cassette schema validation",
+    "C3: undeclared response fields",
+    "C5: replication compatibility",
+    "C4: context store and cache",
+    "C6: warning budget",
+)
 
 
 def build_cassette_map(cassettes_dir: Path) -> Dict[Tuple[str, str], List[Path]]:
@@ -1126,7 +1137,10 @@ def _check_list_pagination_coverage(config: ConnectorModel) -> Tuple[List[str], 
     return errors, warnings
 
 
-def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
+def validate_connector_readiness(
+    connector_dir: str | Path,
+    progress_callback: Callable[[str], None] | None = None,
+) -> Dict[str, Any]:
     """
     Validate that a connector is ready to ship.
 
@@ -1189,6 +1203,8 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     cassette_map = build_cassette_map(cassettes_dir)
 
     # Validate auth scheme coverage for multi-auth connectors
+    if progress_callback is not None:
+        progress_callback("C7: auth scheme coverage")
     auth_valid, auth_errors, auth_warnings, auth_covered_schemes, auth_unmatched_cassettes = validate_auth_scheme_coverage(config, cassettes_dir)
 
     validation_results = []
@@ -1201,9 +1217,13 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     total_warnings = 0
     total_errors = 0
 
+    if progress_callback is not None:
+        progress_callback("C1: operation cassette coverage")
     for entity in config.entities:
         for action in entity.actions:
             total_operations += 1
+            if progress_callback is not None:
+                progress_callback(f"C1/C2: {entity.name}.{action.value}")
 
             key = (entity.name, action.value)
             cassette_paths = cassette_map.get(key, [])
@@ -1257,6 +1277,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
             response_schema = endpoint.response_schema
             schema_defined = response_schema is not None
 
+            extractor_warnings: List[str] = []
             # Validate x-airbyte-record-extractor (once per endpoint, not per cassette)
             if endpoint.record_extractor and not is_download:
                 is_valid, extractor_errors, extractor_warnings = validate_record_extractor_has_ref(
@@ -1427,10 +1448,14 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
                     "cassette_paths": [str(p.name) for p in cassette_paths],
                     "schema_defined": schema_defined,
                     "is_download": is_download,
+                    "warnings": extractor_warnings,
                     "schema_validation": schema_validation,
                 }
             )
 
+    if progress_callback is not None:
+        progress_callback("C2: cassette schema validation")
+        progress_callback("C3: undeclared response fields")
     # Validate x-airbyte-runtime-mode (structural + semantic)
     capability_errors, capability_warnings, is_direct_only, has_explicit_mode = _check_runtime_mode(raw_spec)
     total_errors += len(capability_errors)
@@ -1439,6 +1464,8 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     # Validate replication compatibility with Airbyte
     # Direct-only connectors intentionally have no Airbyte replication counterpart,
     # so skip replication validation entirely for them.
+    if progress_callback is not None:
+        progress_callback("C5: replication compatibility")
     if is_direct_only:
         replication_result: Dict[str, Any] = {"errors": [], "warnings": [], "registry_found": True}
         replication_errors: list[str] = []
@@ -1527,6 +1554,8 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     total_errors += len(cache_name_errors)
 
     # Validate x-airbyte-context-store entities against manifest (skip if opted out or direct-only)
+    if progress_callback is not None:
+        progress_callback("C4: context store and cache")
     if not skip_context_store and not is_direct_only:
         cache_result = validate_cache_against_manifest(
             connector_yaml_path=config_file,
@@ -1652,6 +1681,8 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     options = config.auth.options or []
     tested_schemes = [opt.scheme_name for opt in options if not opt.untested]
     untested_schemes_list = [opt.scheme_name for opt in options if opt.untested]
+    if progress_callback is not None:
+        progress_callback("C6: warning budget")
     missing_tested = [s for s in tested_schemes if s not in auth_covered_schemes]
 
     return {

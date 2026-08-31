@@ -109,9 +109,9 @@ def compute_golden_questions_hash(connector_yaml_path: str | Path) -> str:
     return f"sha256:{digest}"
 
 
-def _load_golden_questions_report(connector_path: Path) -> Dict[str, Any] | None:
+def load_golden_questions_report(connector_path: str | Path) -> Dict[str, Any] | None:
     """Load the persisted golden questions validation report if it exists."""
-    report_file = connector_path / "tests" / GOLDEN_QUESTIONS_REPORT_FILENAME
+    report_file = Path(connector_path) / "tests" / GOLDEN_QUESTIONS_REPORT_FILENAME
     if not report_file.exists():
         return None
 
@@ -230,7 +230,7 @@ def get_connector_overview(connector_dir: str | Path) -> Dict[str, Any]:
     exceptions = _extract_exceptions(info, config)
     example_questions = _extract_example_questions(info)
 
-    gq_report = _load_golden_questions_report(connector_path)
+    gq_report = load_golden_questions_report(connector_path)
     golden_questions = _extract_golden_questions_summary(gq_report, connector_yaml_path=config_file)
 
     readiness_result = validate_connector_readiness(connector_dir)

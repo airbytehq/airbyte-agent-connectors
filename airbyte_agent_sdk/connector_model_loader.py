@@ -662,6 +662,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
 
             # Extract untested flag
             untested = getattr(operation, "x_airbyte_untested", None) or False
+            untested_reason = getattr(operation, "x_airbyte_untested_reason", None)
 
             # Extract x-airbyte-no-pagination justification (list-action opt-out)
             no_pagination = getattr(operation, "x_airbyte_no_pagination", None)
@@ -700,6 +701,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 graphql_body=graphql_body,
                 file_field=file_field,
                 untested=untested,
+                untested_reason=untested_reason,
                 no_pagination=no_pagination,
                 preferred_for_check=preferred_for_check,
                 upload_file_param=upload_file_param,

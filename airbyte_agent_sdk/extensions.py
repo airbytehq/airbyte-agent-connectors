@@ -97,6 +97,18 @@ Example:
     ```
 """
 
+AIRBYTE_QUALIFICATION = "x-airbyte-qualification"
+"""
+Extension: x-airbyte-qualification
+Location: OpenAPI Info object
+Type: object
+Required: No
+
+Description:
+    Declares the connector's qualification intent and the criteria version used
+    for qualification evaluation.
+"""
+
 AIRBYTE_ENTITY = "x-airbyte-entity"
 """
 Extension: x-airbyte-entity

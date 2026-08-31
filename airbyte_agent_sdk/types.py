@@ -344,6 +344,10 @@ class EndpointDefinition(BaseModel):
         False,
         description="Mark operation as untested to skip cassette validation (from x-airbyte-untested extension)",
     )
+    untested_reason: str | None = Field(
+        None,
+        description="Justification for an x-airbyte-untested operation marker.",
+    )
 
     # Pagination opt-out (Airbyte extension)
     no_pagination: str | None = Field(

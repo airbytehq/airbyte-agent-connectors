@@ -114,6 +114,11 @@ class Operation(ExtensionAwareModel):
             "Validation will generate a warning instead of an error when cassettes are missing."
         ),
     )
+    x_airbyte_untested_reason: str | None = Field(
+        None,
+        alias="x-airbyte-untested-reason",
+        description="Required justification when x-airbyte-untested is true.",
+    )
     x_airbyte_no_pagination: str | None = Field(
         None,
         alias="x-airbyte-no-pagination",

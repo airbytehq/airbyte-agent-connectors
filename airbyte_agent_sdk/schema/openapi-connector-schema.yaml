@@ -928,7 +928,8 @@ $defs:
       \ extension)\n- x-airbyte-replication-config: Replication configuration for\
       \ MULTI mode connectors (Airbyte extension)\n- x-airbyte-entity-relationships:\
       \ Entity relationship declarations (Airbyte extension)\n- x-airbyte-scoping:\
-      \ Scoping parameter resolution from config (Airbyte extension)"
+      \ Scoping parameter resolution from config (Airbyte extension)\n- x-airbyte-qualification:\
+      \ Qualification intent and criteria metadata (Airbyte extension)"
     properties:
       title:
         title: Title
@@ -1082,6 +1083,12 @@ $defs:
         description: Configuration for detecting application-level errors returned
           with HTTP 200 status. Checks a field in the response body and raises an
           error when the field matches on_value.
+      x-airbyte-qualification:
+        anyOf:
+        - $ref: '#/$defs/QualificationMetadata'
+        - type: 'null'
+        default: null
+        description: Qualification intent, criteria version, and documented bypasses.
     required:
     - title
     - version
@@ -1405,6 +1412,13 @@ $defs:
           real-time streams). Validation will generate a warning instead of an error
           when cassettes are missing.
         title: X-Airbyte-Untested
+      x-airbyte-untested-reason:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        description: Required justification when x-airbyte-untested is true.
+        title: X-Airbyte-Untested-Reason
       x-airbyte-no-pagination:
         anyOf:
         - type: string
@@ -1641,6 +1655,48 @@ $defs:
     - path
     title: PathOverrideConfig
     type: object
+  QualificationBypass:
+    additionalProperties: false
+    description: A documented bypass from one qualification criterion.
+    properties:
+      criterion:
+        title: Criterion
+        type: string
+      reason:
+        title: Reason
+        type: string
+    required:
+    - criterion
+    - reason
+    title: QualificationBypass
+    type: object
+  QualificationMetadata:
+    additionalProperties: false
+    description: Qualification intent and evidence metadata for a connector.
+    properties:
+      status:
+        $ref: '#/$defs/QualificationStatus'
+      criteria_version:
+        title: Criteria Version
+        type: string
+      bypassed_criteria:
+        items:
+          $ref: '#/$defs/QualificationBypass'
+        title: Bypassed Criteria
+        type: array
+    required:
+    - status
+    - criteria_version
+    title: QualificationMetadata
+    type: object
+  QualificationStatus:
+    description: Qualification intent declared by a connector.
+    enum:
+    - unverified
+    - candidate
+    - qualified
+    title: QualificationStatus
+    type: string
   ReplicationConfig:
     additionalProperties: false
     description: "Replication configuration extension (x-airbyte-replication-config).\n\

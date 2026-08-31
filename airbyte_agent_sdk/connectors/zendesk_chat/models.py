@@ -153,13 +153,6 @@ class ChatConversion(BaseModel):
     timestamp: str | None = Field(default=None)
     attribution: Any | None = Field(default=None)
 
-class WebpathItem(BaseModel):
-    """WebpathItem type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    from_: str | None = Field(default=None, alias="from")
-    timestamp: str | None = Field(default=None)
-
 class ChatHistoryItem(BaseModel):
     """ChatHistoryItem type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -178,6 +171,13 @@ class ChatHistoryItem(BaseModel):
     tags: list[str] | None = Field(default=None)
     new_tags: list[str] | None = Field(default=None)
     options: str | None = Field(default=None)
+
+class WebpathItem(BaseModel):
+    """WebpathItem type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_: str | None = Field(default=None, alias="from")
+    timestamp: str | None = Field(default=None)
 
 class ChatEngagement(BaseModel):
     """ChatEngagement type definition"""

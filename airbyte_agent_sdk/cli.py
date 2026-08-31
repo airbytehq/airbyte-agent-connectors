@@ -7,13 +7,16 @@ connector-sdk pipeline scripts. The console script entry point was removed on
 
 import asyncio
 import json
+import sys
 import traceback
+from collections import Counter
 from pathlib import Path
 
 import click
 
 from .codegen.generator import ConnectorGenerator, write_connect_stub
 from .constants import SDK_VERSION
+from .schema.extensions import QualificationStatus
 from .secrets import (
     SecretResolutionError,
 )
@@ -33,6 +36,7 @@ from .validation.overview import (
     get_base_overview,
     get_connector_overview,
 )
+from .validation.qualification import QUALIFICATION_PROGRESS_STEPS, validate_connector_qualification
 from .validation.replication import annotate_replication_version
 
 
@@ -769,6 +773,112 @@ def overview(connector_path: Path, json_output: bool, markdown: bool, base_ref: 
         if not isinstance(e, click.Abort):
             click.echo(f"\nError: {e}", err=True)
         raise click.Abort()
+
+
+@validate.command()
+@click.argument("connector_path", type=click.Path(path_type=Path))
+@click.option("--quiet", "-q", is_flag=True, help="Suppress status messages")
+@click.option("--verbose", "-v", is_flag=True, help="Include criterion details")
+@click.option("--json-output", "json_output", is_flag=True, help="Output JSON format")
+@click.option("--output-path", type=click.Path(path_type=Path), help="Write the JSON result to this path")
+@click.option(
+    "--smoke-results-path",
+    type=click.Path(exists=False, path_type=Path),
+    help="Directory or file containing live smoke results",
+)
+@click.option("--report-only", is_flag=True, help="Always exit successfully after printing the report")
+@click.option("--show-warnings", is_flag=True, help="List the readiness warnings behind the C6 count")
+def qualification(
+    connector_path: Path,
+    quiet: bool,
+    verbose: bool,
+    json_output: bool,
+    output_path: Path | None,
+    smoke_results_path: Path | None,
+    report_only: bool,
+    show_warnings: bool,
+):
+    """Validate the agent connector qualification criteria."""
+    try:
+        if quiet:
+            result = validate_connector_qualification(connector_path, smoke_results_path=smoke_results_path)
+        else:
+            click.echo(f"Validating connector qualification: {connector_path}...", err=True)
+            major_steps = set(QUALIFICATION_PROGRESS_STEPS)
+            seen_steps: set[str] = set()
+            with click.progressbar(
+                length=len(QUALIFICATION_PROGRESS_STEPS),
+                label="Progress",
+                item_show_func=lambda step: step or "",
+                file=sys.stderr,
+            ) as bar:
+
+                def _advance(step: str) -> None:
+                    if step in major_steps and step not in seen_steps:
+                        seen_steps.add(step)
+                        bar.update(1, step)
+                    else:
+                        bar.update(0, step)
+
+                result = validate_connector_qualification(
+                    connector_path,
+                    smoke_results_path=smoke_results_path,
+                    progress_callback=_advance,
+                )
+                bar.current_item = None
+                bar.render_progress()
+        serialized_result = result.model_dump_json(indent=2)
+        if output_path is not None:
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(serialized_result + "\n")
+        if json_output:
+            click.echo(serialized_result)
+        else:
+            click.echo(f"Connector: {result.connector_name}")
+            click.echo(f"Claimed status: {result.claimed_status}")
+            click.echo(f"Qualified: {'PASS' if result.qualified else 'FAIL'}")
+            click.echo(f"Criteria version: {result.criteria_version}")
+            click.echo("\nCriteria:")
+            for criterion in result.criteria:
+                bypass = " (bypassed)" if criterion.bypassed else ""
+                if criterion.passed:
+                    status = "PASS"
+                elif not criterion.evaluated:
+                    status = "UNEVALUATED"
+                elif criterion.kind == "warn":
+                    status = "WARN"
+                else:
+                    status = "FAIL"
+                click.echo(
+                    f"  {criterion.id} [{criterion.kind}] {status}{bypass}: "
+                    f"{criterion.title} — observed={criterion.observed!r}, "
+                    f"threshold={criterion.threshold!r}"
+                )
+                if verbose or not criterion.passed or criterion.bypassed or not criterion.evaluated:
+                    click.echo(f"      {criterion.detail}")
+            if result.bypasses_applied:
+                click.echo(f"\nBypasses applied: {', '.join(result.bypasses_applied)}")
+            if result.invalid_bypasses:
+                click.echo(
+                    f"\nInvalid bypass criterion IDs: {', '.join(result.invalid_bypasses)}",
+                    err=True,
+                )
+            if result.unevaluated_criteria:
+                click.echo(f"\nUnevaluated criteria: {', '.join(result.unevaluated_criteria)}")
+            if show_warnings and result.readiness_warnings:
+                warning_counts = Counter(result.readiness_warnings)
+                click.echo(f"\nReadiness warnings ({len(result.readiness_warnings)} total, {len(warning_counts)} unique):")
+                for warning, count in warning_counts.items():
+                    suffix = f" (x{count})" if count > 1 else ""
+                    click.echo(f"  - {warning}{suffix}")
+        # An opted-in connector fails closed on both gate failures and a YAML
+        # that cannot load; connectors that never opted in are never blocked.
+        opted_in = result.claimed_status in (QualificationStatus.CANDIDATE, QualificationStatus.QUALIFIED)
+        if opted_in and not report_only and (result.load_error is not None or not result.qualified):
+            raise click.exceptions.Exit(1)
+    except (OSError, ValueError) as error:
+        click.echo(f"\nError: {error}", err=True)
+        raise click.exceptions.Exit(1) from None
 
 
 if __name__ == "__main__":

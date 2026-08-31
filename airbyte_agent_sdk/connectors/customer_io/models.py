@@ -130,17 +130,6 @@ class Segment(BaseModel):
     progress: int | None = Field(default=None)
     conditions: dict[str, Any] | None = Field(default=None)
 
-class MessageCustomerIdentifiers(BaseModel):
-    """Customer identification details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None, description="Person's ID")
-    """Person's ID"""
-    cio_id: str | None | None = Field(default=None, description="Customer.io internal ID")
-    """Customer.io internal ID"""
-    email: str | None | None = Field(default=None, description="Person's email address")
-    """Person's email address"""
-
 class MessageMetrics(BaseModel):
     """Delivery metrics timestamps"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -155,6 +144,17 @@ class MessageMetrics(BaseModel):
     bounced: int | None | None = Field(default=None)
     failed: int | None | None = Field(default=None)
     undeliverable: int | None | None = Field(default=None)
+
+class MessageCustomerIdentifiers(BaseModel):
+    """Customer identification details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None, description="Person's ID")
+    """Person's ID"""
+    cio_id: str | None | None = Field(default=None, description="Customer.io internal ID")
+    """Customer.io internal ID"""
+    email: str | None | None = Field(default=None, description="Person's email address")
+    """Person's email address"""
 
 class Message(BaseModel):
     """Message type definition"""

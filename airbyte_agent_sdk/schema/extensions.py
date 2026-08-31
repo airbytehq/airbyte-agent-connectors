@@ -7,9 +7,11 @@ Provides Pydantic models for OpenAPI x-airbyte-* extensions:
 - ReplicationConfig: replication settings for MULTI mode connectors
 - EntityRelationshipConfig: entity relationship declarations
 - ScopingParamConfig: scoping parameter resolution from config
+- QualificationMetadata: qualification intent and criteria metadata
 """
 
 import re
+from enum import StrEnum
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, field_validator, model_validator
@@ -42,6 +44,41 @@ class ExtensionAwareModel(BaseModel):
         if unknown_standard:
             raise ValueError(f"Unknown field(s) in {cls.__name__}: {unknown_standard}. Use an 'x-' prefix for custom extensions.")
         return data
+
+
+class QualificationStatus(StrEnum):
+    """Qualification intent declared by a connector."""
+
+    UNVERIFIED = "unverified"
+    CANDIDATE = "candidate"
+    QUALIFIED = "qualified"
+
+
+class QualificationBypass(BaseModel):
+    """A documented bypass from one qualification criterion."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    criterion: str
+    reason: str
+
+    @field_validator("reason")
+    @classmethod
+    def validate_reason(cls, value: str) -> str:
+        """Require a non-empty bypass reason."""
+        if not value.strip():
+            raise ValueError("Qualification bypass reason must be non-empty")
+        return value
+
+
+class QualificationMetadata(BaseModel):
+    """Qualification intent and evidence metadata for a connector."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    status: QualificationStatus
+    criteria_version: str
+    bypassed_criteria: list[QualificationBypass] = Field(default_factory=list)
 
 
 class RetryConfig(BaseModel):

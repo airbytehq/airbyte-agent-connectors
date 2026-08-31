@@ -17,6 +17,7 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheConfig,
     EntityRelationshipConfig,
     ExtensionAwareModel,
+    QualificationMetadata,
     ReplicationConfig,
     RetryConfig,
     ScopingParamConfig,
@@ -170,6 +171,7 @@ class Info(ExtensionAwareModel):
     - x-airbyte-replication-config: Replication configuration for MULTI mode connectors (Airbyte extension)
     - x-airbyte-entity-relationships: Entity relationship declarations (Airbyte extension)
     - x-airbyte-scoping: Scoping parameter resolution from config (Airbyte extension)
+    - x-airbyte-qualification: Qualification intent and criteria metadata (Airbyte extension)
     """
 
     title: str
@@ -241,6 +243,11 @@ class Info(ExtensionAwareModel):
         alias="x-airbyte-response-error-check",
         description="Configuration for detecting application-level errors returned with HTTP 200 status. "
         "Checks a field in the response body and raises an error when the field matches on_value.",
+    )
+    x_airbyte_qualification: QualificationMetadata | None = Field(
+        default=None,
+        alias="x-airbyte-qualification",
+        description="Qualification intent, criteria version, and documented bypasses.",
     )
 
 

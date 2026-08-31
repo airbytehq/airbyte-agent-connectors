@@ -103,7 +103,7 @@ class KlaviyoConnector:
 
     connector_name = "klaviyo"
     connector_version = "1.0.6"
-    sdk_version = "0.1.335"
+    sdk_version = "0.1.336"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

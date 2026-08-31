@@ -15,6 +15,12 @@ from airbyte_agent_sdk.validation.overview import (
     format_overview_as_markdown,
     get_base_overview,
     get_connector_overview,
+    load_golden_questions_report,
+)
+from airbyte_agent_sdk.validation.qualification import (
+    CriterionOutcome,
+    QualificationResult,
+    validate_connector_qualification,
 )
 from airbyte_agent_sdk.validation.readiness import validate_connector_readiness
 from airbyte_agent_sdk.validation.replication import (
@@ -25,6 +31,9 @@ from airbyte_agent_sdk.validation.replication import (
 
 __all__ = [
     "validate_cache_against_manifest",
+    "QualificationResult",
+    "CriterionOutcome",
+    "validate_connector_qualification",
     "ValidationResult",
     "compute_golden_questions_hash",
     "fetch_airbyte_manifest",
@@ -33,6 +42,7 @@ __all__ = [
     "format_overview_as_markdown",
     "get_base_overview",
     "get_connector_overview",
+    "load_golden_questions_report",
     "validate_connector_readiness",
     "validate_replication_compatibility",
 ]
