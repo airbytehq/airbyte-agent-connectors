@@ -135,7 +135,9 @@ def validate_cache_against_manifest(
        an ``x-airbyte-name`` field, that value is used for the manifest lookup;
        otherwise the ``entity`` name is used.
     2. Every field in the cache entity exists as a property in the manifest
-       stream's schema (skipped when the manifest schema has no properties).
+       stream's schema (skipped when the manifest schema has no properties). An
+       ``x-airbyte-skip-manifest-validation`` opt-out skips both checks for
+       direct-operation-backed entities.
 
     Called from ``validate_connector_readiness()`` after basic validation passes.
 
@@ -214,18 +216,18 @@ def validate_cache_against_manifest(
         if manifest_name is None and entity.get("x-airbyte-skip-searchable-fields"):
             continue
 
+        skip_manifest_validation = entity.get("x-airbyte-skip-manifest-validation")
+        if skip_manifest_validation is not None and not (isinstance(skip_manifest_validation, str) and skip_manifest_validation.strip()):
+            errors.append(f"Cache entity '{entity_name}' has x-airbyte-skip-manifest-validation but the justification is empty")
+            continue
+        if isinstance(skip_manifest_validation, str) and skip_manifest_validation.strip() and entity_name in direct_operation_entities:
+            warnings.append(
+                f"Cache entity '{entity_name}' is backed by a direct connector operation — "
+                f"skipping manifest cache validation: {skip_manifest_validation.strip()}"
+            )
+            continue
+
         if manifest_name not in manifest_streams:
-            skip_manifest_validation = entity.get("x-airbyte-skip-manifest-validation")
-            if skip_manifest_validation is not None and not (isinstance(skip_manifest_validation, str) and skip_manifest_validation.strip()):
-                errors.append(f"Cache entity '{entity_name}' has x-airbyte-skip-manifest-validation but the justification is empty")
-                continue
-            if isinstance(skip_manifest_validation, str) and skip_manifest_validation.strip() and entity_name in direct_operation_entities:
-                warnings.append(
-                    f"Cache entity '{entity_name}' is backed by a direct connector operation but "
-                    "was not found in the replication manifest — skipping manifest cache validation: "
-                    f"{skip_manifest_validation.strip()}"
-                )
-                continue
             if manifest_name != entity_name:
                 errors.append(f"Cache entity '{entity_name}' (x-airbyte-name: '{manifest_name}') does not exist as a stream in the manifest")
             else:

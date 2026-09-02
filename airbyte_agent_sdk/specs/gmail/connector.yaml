@@ -19,7 +19,7 @@ info:
   x-airbyte-platform-availability:
     state: enabled
   x-airbyte-qualification:
-    status: candidate
+    status: unverified
     criteria_version: v1
   x-airbyte-skip-auth-methods:
     - service_account

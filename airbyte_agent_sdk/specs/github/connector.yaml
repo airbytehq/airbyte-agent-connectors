@@ -125,6 +125,7 @@ info:
     entities:
       - entity: branches
         x-airbyte-name: branches
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: name
             type: ["null", "string"]
@@ -132,6 +133,7 @@ info:
       - entity: comments
         suggested: true
         x-airbyte-name: comments
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: id
             x-airbyte-name: node_id
@@ -172,6 +174,7 @@ info:
             description: "Permalink to the comment on GitHub"
       - entity: commits
         x-airbyte-name: commits
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: sha
             type: ["null", "string"]
@@ -196,6 +199,7 @@ info:
       - entity: issues
         suggested: true
         x-airbyte-name: issues
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: id
             x-airbyte-name: node_id
@@ -261,6 +265,7 @@ info:
             description: "Permalink to the issue on GitHub"
       - entity: labels
         x-airbyte-name: issue_labels
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: id
             x-airbyte-name: node_id
@@ -280,6 +285,7 @@ info:
             description: "API URL to the label resource"
       - entity: milestones
         x-airbyte-name: issue_milestones
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: id
             x-airbyte-name: node_id
@@ -315,6 +321,7 @@ info:
             description: "ISO 8601 timestamp when the milestone was last updated"
       - entity: organizations
         x-airbyte-name: organizations
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: id
             x-airbyte-name: node_id
@@ -358,6 +365,7 @@ info:
         x-airbyte-skip-searchable-fields: "Projects V2 items are derived from issues and pull requests already present in the cache; no dedicated upstream source-github replication stream exists for project items."
       - entity: projects
         x-airbyte-name: projects_v2
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: id
             x-airbyte-name: node_id
@@ -393,6 +401,7 @@ info:
       - entity: pull_requests
         suggested: true
         x-airbyte-name: pull_requests
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: id
             x-airbyte-name: node_id
@@ -459,6 +468,7 @@ info:
             description: "Permalink to the pull request on GitHub"
       - entity: releases
         x-airbyte-name: releases
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: id
             x-airbyte-name: node_id
@@ -555,6 +565,7 @@ info:
             description: "Whether the repository has been archived"
       - entity: reviews
         x-airbyte-name: reviews
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: id
             x-airbyte-name: node_id
@@ -588,6 +599,7 @@ info:
             description: "Permalink to the review on GitHub"
       - entity: stargazers
         x-airbyte-name: stargazers
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: starredAt
             x-airbyte-name: starred_at
@@ -595,12 +607,14 @@ info:
             description: "ISO 8601 timestamp when the user starred the repository"
       - entity: tags
         x-airbyte-name: tags
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: name
             type: ["null", "string"]
             description: "Tag name (e.g. `v1.2.3`)"
       - entity: teams
         x-airbyte-name: teams
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: id
             x-airbyte-name: node_id
@@ -629,6 +643,7 @@ info:
       - entity: users
         suggested: true
         x-airbyte-name: users
+        x-airbyte-skip-manifest-validation: "Upstream source-github is mid-migration to a declarative manifest and currently exposes only the repositories stream; skip manifest validation until the migration lands."
         fields:
           - name: id
             x-airbyte-name: node_id

@@ -448,6 +448,7 @@ info:
       - entity: advertisers_reports_daily
         suggested: true
         x-airbyte-name: advertisers_reports_daily
+        x-airbyte-skip-manifest-validation: "Replication manifest report schemas nest metrics under a metrics object while this entity declares the flattened metric fields; skip manifest validation pending reconciliation of the report schema."
         fields:
           - name: advertiser_id
             type: ["null", "integer"]
@@ -545,6 +546,7 @@ info:
       - entity: campaigns_reports_daily
         x-airbyte-name: campaigns_reports_daily
         suggested: true
+        x-airbyte-skip-manifest-validation: "Replication manifest report schemas nest metrics under a metrics object while this entity declares the flattened metric fields; skip manifest validation pending reconciliation of the report schema."
         fields:
           - name: campaign_id
             type: ["null", "integer"]
@@ -639,6 +641,7 @@ info:
       - entity: ad_groups_reports_daily
         x-airbyte-name: ad_groups_reports_daily
         suggested: true
+        x-airbyte-skip-manifest-validation: "Replication manifest report schemas nest metrics under a metrics object while this entity declares the flattened metric fields; skip manifest validation pending reconciliation of the report schema."
         fields:
           - name: adgroup_id
             type: ["null", "integer"]
@@ -787,6 +790,7 @@ info:
       - entity: ads_reports_daily
         x-airbyte-name: ads_reports_daily
         suggested: true
+        x-airbyte-skip-manifest-validation: "Replication manifest report schemas nest metrics under a metrics object while this entity declares the flattened metric fields; skip manifest validation pending reconciliation of the report schema."
         fields:
           - name: ad_id
             type: ["null", "integer"]
@@ -944,6 +948,7 @@ info:
       - entity: ads_reports_hourly
         x-airbyte-name: ads_reports_hourly
         suggested: true
+        x-airbyte-skip-manifest-validation: "Replication manifest report schemas nest metrics under a metrics object while this entity declares the flattened metric fields; skip manifest validation pending reconciliation of the report schema."
         fields:
           - name: ad_id
             type: ["null", "integer"]
@@ -1101,6 +1106,7 @@ info:
       - entity: ads_reports_lifetime
         x-airbyte-name: ads_reports_lifetime
         suggested: true
+        x-airbyte-skip-manifest-validation: "Replication manifest report schemas nest metrics under a metrics object while this entity declares the flattened metric fields; skip manifest validation pending reconciliation of the report schema."
         fields:
           - name: ad_id
             type: ["null", "integer"]
