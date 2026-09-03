@@ -1,0 +1,206 @@
+openapi: 3.1.0
+info:
+  title: OilPriceAPI Connector
+  version: 0.1.0
+  x-airbyte-connector-name: oilpriceapi
+  x-airbyte-connector-id: d19db54a-fac7-44ee-b57c-f2e712b3230b
+  x-airbyte-external-documentation-urls:
+    - title: OilPriceAPI Documentation
+      type: api_reference
+      url: "https://docs.oilpriceapi.com/"
+
+servers:
+  - url: https://api.oilpriceapi.com/v1
+    description: OilPriceAPI Server
+
+security:
+  - tokenAuth: []
+
+components:
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API Key authentication using Token prefix
+
+  schemas:
+    PriceChanges24h:
+      type: object
+      properties:
+        amount:
+          type: [number, "null"]
+          description: Price change amount in last 24 hours
+        percent:
+          type: [number, "null"]
+          description: Price change percentage in last 24 hours
+        previous_price:
+          type: [number, "null"]
+          description: Previous price value
+
+    PriceChanges:
+      type: object
+      properties:
+        24h:
+          oneOf:
+            - $ref: "#/components/schemas/PriceChanges24h"
+            - type: "null"
+
+    PriceMetadata:
+      type: object
+      properties:
+        source:
+          type: [string, "null"]
+          description: Data source name
+        source_description:
+          type: [string, "null"]
+          description: Data source description
+
+    LatestPrice:
+      type: object
+      x-airbyte-entity-name: latest_prices
+      properties:
+        price:
+          type: [number, "null"]
+          description: Current commodity price
+        formatted:
+          type: [string, "null"]
+          description: Formatted price string
+        currency:
+          type: [string, "null"]
+          description: Currency code (e.g. USD)
+        code:
+          type: string
+          description: Commodity code (e.g. WTI_USD, BRENT_USD)
+        created_at:
+          type: [string, "null"]
+          description: Record creation timestamp
+        updated_at:
+          type: [string, "null"]
+          description: Record update timestamp
+        type:
+          type: [string, "null"]
+          description: Price type
+        unit:
+          type: [string, "null"]
+          description: Price unit
+        source:
+          type: [string, "null"]
+          description: Data source
+        changes:
+          oneOf:
+            - $ref: "#/components/schemas/PriceChanges"
+            - type: "null"
+        metadata:
+          oneOf:
+            - $ref: "#/components/schemas/PriceMetadata"
+            - type: "null"
+      required:
+        - code
+
+    LatestPriceResponse:
+      type: object
+      properties:
+        status:
+          type: [string, "null"]
+        data:
+          $ref: "#/components/schemas/LatestPrice"
+
+    HistoricalPrice:
+      type: object
+      x-airbyte-entity-name: historical_prices
+      properties:
+        id:
+          type: [string, "null"]
+          description: Price record ID
+        price:
+          type: [number, "null"]
+          description: Historical commodity price
+        currency:
+          type: [string, "null"]
+          description: Currency code
+        code:
+          type: string
+          description: Commodity code (e.g. WTI_USD, BRENT_USD)
+        created_at:
+          type: string
+          description: Price record timestamp
+        source:
+          type: [string, "null"]
+          description: Data source
+        type:
+          type: [string, "null"]
+          description: Price type
+      required:
+        - code
+        - created_at
+
+    HistoricalPriceResponse:
+      type: object
+      properties:
+        status:
+          type: [string, "null"]
+        data:
+          type: object
+          properties:
+            prices:
+              type: array
+              items:
+                $ref: "#/components/schemas/HistoricalPrice"
+
+paths:
+  /prices/latest:
+    get:
+      summary: Get latest oil prices
+      description: Returns the latest spot price for a commodity (WTI or Brent crude oil)
+      operationId: LatestPrices_Get
+      x-airbyte-entity: latest_prices
+      x-airbyte-action: get
+      tags:
+        - LatestPrices
+      parameters:
+        - name: by_code
+          in: query
+          description: Commodity code to filter by (e.g. WTI_USD, BRENT_USD)
+          required: true
+          schema:
+            type: string
+            enum:
+              - WTI_USD
+              - BRENT_USD
+      responses:
+        "200":
+          description: Latest price for the commodity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LatestPriceResponse"
+      x-airbyte-record-extractor: "$.data"
+
+  /prices:
+    get:
+      summary: List historical oil prices
+      description: Returns historical price data for a commodity (WTI or Brent crude oil)
+      operationId: HistoricalPrices_List
+      x-airbyte-entity: historical_prices
+      x-airbyte-action: list
+      tags:
+        - HistoricalPrices
+      parameters:
+        - name: by_code
+          in: query
+          description: Commodity code to filter by (e.g. WTI_USD, BRENT_USD)
+          required: true
+          schema:
+            type: string
+            enum:
+              - WTI_USD
+              - BRENT_USD
+      responses:
+        "200":
+          description: List of historical prices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HistoricalPriceResponse"
+      x-airbyte-record-extractor: "$.data.prices"
