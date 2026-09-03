@@ -33,20 +33,100 @@ class TypeformReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
+class FormSettingsMetaImage(BaseModel):
+    """Nested schema for FormSettingsMeta.image"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    href: str | None | None = Field(default=None)
+
+class FormSettingsMeta(BaseModel):
+    """Meta information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    allow_indexing: bool | None | None = Field(default=None)
+    title: str | None | None = Field(default=None)
+    description: str | None | None = Field(default=None)
+    image: FormSettingsMetaImage | None | None = Field(default=None)
+
+class FormSettingsCapabilitiesE2eEncryption(BaseModel):
+    """Nested schema for FormSettingsCapabilities.e2e_encryption"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None | None = Field(default=None)
+    modifiable: bool | None | None = Field(default=None)
+
+class FormSettingsCapabilities(BaseModel):
+    """Nested schema for FormSettings.capabilities"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    e2e_encryption: FormSettingsCapabilitiesE2eEncryption | None | None = Field(default=None)
+
+class FormSettingsNotificationsSelf(BaseModel):
+    """Nested schema for FormSettingsNotifications.self"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None | None = Field(default=None)
+    recipients: list[str | None] | None | None = Field(default=None)
+    subject: str | None | None = Field(default=None)
+    message: str | None | None = Field(default=None)
+    reply_to: str | None | None = Field(default=None)
+
+class FormSettingsNotificationsRespondent(BaseModel):
+    """Nested schema for FormSettingsNotifications.respondent"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: bool | None | None = Field(default=None)
+    recipients: list[str | None] | None | None = Field(default=None)
+    subject: str | None | None = Field(default=None)
+    message: str | None | None = Field(default=None)
+    reply_to: str | None | None = Field(default=None)
+
+class FormSettingsNotifications(BaseModel):
+    """Nested schema for FormSettings.notifications"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: FormSettingsNotificationsSelf | None | None = Field(default=None)
+    respondent: FormSettingsNotificationsRespondent | None | None = Field(default=None)
+
+class FormSettingsCuiSettings(BaseModel):
+    """Nested schema for FormSettings.cui_settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    avatar: str | None | None = Field(default=None)
+    is_typing_emulation_disabled: bool | None | None = Field(default=None)
+    typing_emulation_speed: str | None | None = Field(default=None)
+
+class FormSettings(BaseModel):
+    """Settings and configurations for the form"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    language: str | None | None = Field(default=None, description="Language of the form")
+    """Language of the form"""
+    progress_bar: str | None | None = Field(default=None, description="Progress bar settings")
+    """Progress bar settings"""
+    meta: FormSettingsMeta | None | None = Field(default=None, description="Meta information")
+    """Meta information"""
+    hide_navigation: bool | None | None = Field(default=None)
+    is_public: bool | None | None = Field(default=None)
+    is_trial: bool | None | None = Field(default=None)
+    show_progress_bar: bool | None | None = Field(default=None)
+    show_typeform_branding: bool | None | None = Field(default=None)
+    are_uploads_public: bool | None | None = Field(default=None)
+    show_time_to_complete: bool | None | None = Field(default=None)
+    redirect_after_submit_url: str | None | None = Field(default=None)
+    google_analytics: str | None | None = Field(default=None)
+    facebook_pixel: str | None | None = Field(default=None)
+    google_tag_manager: str | None | None = Field(default=None)
+    capabilities: FormSettingsCapabilities | None | None = Field(default=None)
+    notifications: FormSettingsNotifications | None | None = Field(default=None)
+    cui_settings: FormSettingsCuiSettings | None | None = Field(default=None)
+
 class FormWelcomeScreensItemAttachment(BaseModel):
     """Nested schema for FormWelcomeScreensItem.attachment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     type_: str | None | None = Field(default=None, alias="type")
     placement: str | None | None = Field(default=None)
-
-class FormWelcomeScreensItemLayoutAttachment(BaseModel):
-    """Nested schema for FormWelcomeScreensItemLayout.attachment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None | None = Field(default=None, alias="type")
-    href: str | None | None = Field(default=None)
-    scale: float | None | None = Field(default=None)
 
 class FormWelcomeScreensItemLayoutPropertiesFocalPoint(BaseModel):
     """Nested schema for FormWelcomeScreensItemLayoutProperties.focal_point"""
@@ -62,6 +142,14 @@ class FormWelcomeScreensItemLayoutProperties(BaseModel):
     brightness: float | None | None = Field(default=None)
     description: str | None | None = Field(default=None)
     focal_point: FormWelcomeScreensItemLayoutPropertiesFocalPoint | None | None = Field(default=None)
+
+class FormWelcomeScreensItemLayoutAttachment(BaseModel):
+    """Nested schema for FormWelcomeScreensItemLayout.attachment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    href: str | None | None = Field(default=None)
+    scale: float | None | None = Field(default=None)
 
 class FormWelcomeScreensItemLayout(BaseModel):
     """Nested schema for FormWelcomeScreensItem.layout"""
@@ -93,160 +181,19 @@ class FormWelcomeScreensItem(BaseModel):
     attachment: FormWelcomeScreensItemAttachment | None | None = Field(default=None)
     layout: FormWelcomeScreensItemLayout | None | None = Field(default=None)
 
-class FormSettingsCapabilitiesE2eEncryption(BaseModel):
-    """Nested schema for FormSettingsCapabilities.e2e_encryption"""
+class FormTheme(BaseModel):
+    """Theme settings for the form"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    enabled: bool | None | None = Field(default=None)
-    modifiable: bool | None | None = Field(default=None)
+    href: str | None | None = Field(default=None, description="URL of the theme")
+    """URL of the theme"""
 
-class FormSettingsCapabilities(BaseModel):
-    """Nested schema for FormSettings.capabilities"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    e2e_encryption: FormSettingsCapabilitiesE2eEncryption | None | None = Field(default=None)
-
-class FormSettingsCuiSettings(BaseModel):
-    """Nested schema for FormSettings.cui_settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    avatar: str | None | None = Field(default=None)
-    is_typing_emulation_disabled: bool | None | None = Field(default=None)
-    typing_emulation_speed: str | None | None = Field(default=None)
-
-class FormSettingsNotificationsSelf(BaseModel):
-    """Nested schema for FormSettingsNotifications.self"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None | None = Field(default=None)
-    recipients: list[str | None] | None | None = Field(default=None)
-    subject: str | None | None = Field(default=None)
-    message: str | None | None = Field(default=None)
-    reply_to: str | None | None = Field(default=None)
-
-class FormSettingsNotificationsRespondent(BaseModel):
-    """Nested schema for FormSettingsNotifications.respondent"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: bool | None | None = Field(default=None)
-    recipients: list[str | None] | None | None = Field(default=None)
-    subject: str | None | None = Field(default=None)
-    message: str | None | None = Field(default=None)
-    reply_to: str | None | None = Field(default=None)
-
-class FormSettingsNotifications(BaseModel):
-    """Nested schema for FormSettings.notifications"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: FormSettingsNotificationsSelf | None | None = Field(default=None)
-    respondent: FormSettingsNotificationsRespondent | None | None = Field(default=None)
-
-class FormSettingsMetaImage(BaseModel):
-    """Nested schema for FormSettingsMeta.image"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    href: str | None | None = Field(default=None)
-
-class FormSettingsMeta(BaseModel):
-    """Meta information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    allow_indexing: bool | None | None = Field(default=None)
-    title: str | None | None = Field(default=None)
-    description: str | None | None = Field(default=None)
-    image: FormSettingsMetaImage | None | None = Field(default=None)
-
-class FormSettings(BaseModel):
-    """Settings and configurations for the form"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    language: str | None | None = Field(default=None, description="Language of the form")
-    """Language of the form"""
-    progress_bar: str | None | None = Field(default=None, description="Progress bar settings")
-    """Progress bar settings"""
-    meta: FormSettingsMeta | None | None = Field(default=None, description="Meta information")
-    """Meta information"""
-    hide_navigation: bool | None | None = Field(default=None)
-    is_public: bool | None | None = Field(default=None)
-    is_trial: bool | None | None = Field(default=None)
-    show_progress_bar: bool | None | None = Field(default=None)
-    show_typeform_branding: bool | None | None = Field(default=None)
-    are_uploads_public: bool | None | None = Field(default=None)
-    show_time_to_complete: bool | None | None = Field(default=None)
-    redirect_after_submit_url: str | None | None = Field(default=None)
-    google_analytics: str | None | None = Field(default=None)
-    facebook_pixel: str | None | None = Field(default=None)
-    google_tag_manager: str | None | None = Field(default=None)
-    capabilities: FormSettingsCapabilities | None | None = Field(default=None)
-    notifications: FormSettingsNotifications | None | None = Field(default=None)
-    cui_settings: FormSettingsCuiSettings | None | None = Field(default=None)
-
-class FormLogicItemActionsItemConditionVarsItem(BaseModel):
-    """Nested schema for FormLogicItemActionsItemCondition.vars_item"""
+class FormThankyouScreensItemAttachment(BaseModel):
+    """Nested schema for FormThankyouScreensItem.attachment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     type_: str | None | None = Field(default=None, alias="type")
-    value: str | None | None = Field(default=None)
-
-class FormLogicItemActionsItemCondition(BaseModel):
-    """Nested schema for FormLogicItemActionsItem.condition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    op: str | None | None = Field(default=None)
-    vars: list[FormLogicItemActionsItemConditionVarsItem | None] | None | None = Field(default=None)
-
-class FormLogicItemActionsItemDetailsTarget(BaseModel):
-    """Nested schema for FormLogicItemActionsItemDetails.target"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None | None = Field(default=None, alias="type")
-    value: str | None | None = Field(default=None)
-
-class FormLogicItemActionsItemDetailsTo(BaseModel):
-    """Nested schema for FormLogicItemActionsItemDetails.to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None | None = Field(default=None, alias="type")
-    value: str | None | None = Field(default=None)
-
-class FormLogicItemActionsItemDetailsValue(BaseModel):
-    """Nested schema for FormLogicItemActionsItemDetails.value"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None | None = Field(default=None, alias="type")
-    value: str | None | None = Field(default=None)
-
-class FormLogicItemActionsItemDetails(BaseModel):
-    """Nested schema for FormLogicItemActionsItem.details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    to: FormLogicItemActionsItemDetailsTo | None | None = Field(default=None)
-    target: FormLogicItemActionsItemDetailsTarget | None | None = Field(default=None)
-    value: FormLogicItemActionsItemDetailsValue | None | None = Field(default=None)
-
-class FormLogicItemActionsItem(BaseModel):
-    """Nested schema for FormLogicItem.actions_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    action: str | None | None = Field(default=None)
-    details: FormLogicItemActionsItemDetails | None | None = Field(default=None)
-    condition: FormLogicItemActionsItemCondition | None | None = Field(default=None)
-
-class FormLogicItem(BaseModel):
-    """Nested schema for Form.logic_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None | None = Field(default=None, alias="type")
-    ref: str | None | None = Field(default=None)
-    actions: list[FormLogicItemActionsItem | None] | None | None = Field(default=None)
-
-class FormThankyouScreensItemLayoutAttachment(BaseModel):
-    """Nested schema for FormThankyouScreensItemLayout.attachment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None | None = Field(default=None, alias="type")
-    href: str | None | None = Field(default=None)
-    scale: float | None | None = Field(default=None)
+    placement: str | None | None = Field(default=None)
 
 class FormThankyouScreensItemLayoutPropertiesFocalPoint(BaseModel):
     """Nested schema for FormThankyouScreensItemLayoutProperties.focal_point"""
@@ -262,6 +209,14 @@ class FormThankyouScreensItemLayoutProperties(BaseModel):
     brightness: float | None | None = Field(default=None)
     description: str | None | None = Field(default=None)
     focal_point: FormThankyouScreensItemLayoutPropertiesFocalPoint | None | None = Field(default=None)
+
+class FormThankyouScreensItemLayoutAttachment(BaseModel):
+    """Nested schema for FormThankyouScreensItemLayout.attachment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    href: str | None | None = Field(default=None)
+    scale: float | None | None = Field(default=None)
 
 class FormThankyouScreensItemLayout(BaseModel):
     """Nested schema for FormThankyouScreensItem.layout"""
@@ -282,13 +237,6 @@ class FormThankyouScreensItemProperties(BaseModel):
     button_text: str | None | None = Field(default=None)
     redirect_url: str | None | None = Field(default=None)
 
-class FormThankyouScreensItemAttachment(BaseModel):
-    """Nested schema for FormThankyouScreensItem.attachment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None | None = Field(default=None, alias="type")
-    placement: str | None | None = Field(default=None)
-
 class FormThankyouScreensItem(BaseModel):
     """Nested schema for Form.thankyou_screens_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -300,39 +248,35 @@ class FormThankyouScreensItem(BaseModel):
     attachment: FormThankyouScreensItemAttachment | None | None = Field(default=None)
     layout: FormThankyouScreensItemLayout | None | None = Field(default=None)
 
-class FormSelf(BaseModel):
-    """Self-referential link to this form"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    href: str | None | None = Field(default=None, description="URL of this form resource")
-    """URL of this form resource"""
-
-class FormWorkspace(BaseModel):
-    """Workspace details where the form belongs"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    href: str | None | None = Field(default=None, description="URL of the workspace")
-    """URL of the workspace"""
-
 class FormLinks(BaseModel):
     """Links to related resources"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     display: str | None | None = Field(default=None)
 
-class FormTheme(BaseModel):
-    """Theme settings for the form"""
+class FormFieldsItemPropertiesChoicesItem(BaseModel):
+    """Nested schema for FormFieldsItemProperties.choices_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    href: str | None | None = Field(default=None, description="URL of the theme")
-    """URL of the theme"""
+    id: str | None | None = Field(default=None)
+    ref: str | None | None = Field(default=None)
+    label: str | None | None = Field(default=None)
 
-class FormFieldsItemAttachment(BaseModel):
-    """Nested schema for FormFieldsItem.attachment"""
+class FormFieldsItemProperties(BaseModel):
+    """Nested schema for FormFieldsItem.properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: str | None | None = Field(default=None, alias="type")
-    href: str | None | None = Field(default=None)
+    randomize: bool | None | None = Field(default=None)
+    allow_multiple_selection: bool | None | None = Field(default=None)
+    allow_other_choice: bool | None | None = Field(default=None)
+    vertical_alignment: bool | None | None = Field(default=None)
+    choices: list[FormFieldsItemPropertiesChoicesItem | None] | None | None = Field(default=None)
+
+class FormFieldsItemValidations(BaseModel):
+    """Nested schema for FormFieldsItem.validations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    required: bool | None | None = Field(default=None)
 
 class FormFieldsItemLayoutAttachment(BaseModel):
     """Nested schema for FormFieldsItemLayout.attachment"""
@@ -366,29 +310,12 @@ class FormFieldsItemLayout(BaseModel):
     attachment: FormFieldsItemLayoutAttachment | None | None = Field(default=None)
     properties: FormFieldsItemLayoutProperties | None | None = Field(default=None)
 
-class FormFieldsItemValidations(BaseModel):
-    """Nested schema for FormFieldsItem.validations"""
+class FormFieldsItemAttachment(BaseModel):
+    """Nested schema for FormFieldsItem.attachment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    required: bool | None | None = Field(default=None)
-
-class FormFieldsItemPropertiesChoicesItem(BaseModel):
-    """Nested schema for FormFieldsItemProperties.choices_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    ref: str | None | None = Field(default=None)
-    label: str | None | None = Field(default=None)
-
-class FormFieldsItemProperties(BaseModel):
-    """Nested schema for FormFieldsItem.properties"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    randomize: bool | None | None = Field(default=None)
-    allow_multiple_selection: bool | None | None = Field(default=None)
-    allow_other_choice: bool | None | None = Field(default=None)
-    vertical_alignment: bool | None | None = Field(default=None)
-    choices: list[FormFieldsItemPropertiesChoicesItem | None] | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    href: str | None | None = Field(default=None)
 
 class FormFieldsItem(BaseModel):
     """Nested schema for Form.fields_item"""
@@ -402,6 +329,79 @@ class FormFieldsItem(BaseModel):
     validations: FormFieldsItemValidations | None | None = Field(default=None)
     attachment: FormFieldsItemAttachment | None | None = Field(default=None)
     layout: FormFieldsItemLayout | None | None = Field(default=None)
+
+class FormWorkspace(BaseModel):
+    """Workspace details where the form belongs"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    href: str | None | None = Field(default=None, description="URL of the workspace")
+    """URL of the workspace"""
+
+class FormSelf(BaseModel):
+    """Self-referential link to this form"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    href: str | None | None = Field(default=None, description="URL of this form resource")
+    """URL of this form resource"""
+
+class FormLogicItemActionsItemDetailsTarget(BaseModel):
+    """Nested schema for FormLogicItemActionsItemDetails.target"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    value: str | None | None = Field(default=None)
+
+class FormLogicItemActionsItemDetailsValue(BaseModel):
+    """Nested schema for FormLogicItemActionsItemDetails.value"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    value: str | None | None = Field(default=None)
+
+class FormLogicItemActionsItemDetailsTo(BaseModel):
+    """Nested schema for FormLogicItemActionsItemDetails.to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    value: str | None | None = Field(default=None)
+
+class FormLogicItemActionsItemDetails(BaseModel):
+    """Nested schema for FormLogicItemActionsItem.details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    to: FormLogicItemActionsItemDetailsTo | None | None = Field(default=None)
+    target: FormLogicItemActionsItemDetailsTarget | None | None = Field(default=None)
+    value: FormLogicItemActionsItemDetailsValue | None | None = Field(default=None)
+
+class FormLogicItemActionsItemConditionVarsItem(BaseModel):
+    """Nested schema for FormLogicItemActionsItemCondition.vars_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    value: str | None | None = Field(default=None)
+
+class FormLogicItemActionsItemCondition(BaseModel):
+    """Nested schema for FormLogicItemActionsItem.condition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    op: str | None | None = Field(default=None)
+    vars: list[FormLogicItemActionsItemConditionVarsItem | None] | None | None = Field(default=None)
+
+class FormLogicItemActionsItem(BaseModel):
+    """Nested schema for FormLogicItem.actions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    action: str | None | None = Field(default=None)
+    details: FormLogicItemActionsItemDetails | None | None = Field(default=None)
+    condition: FormLogicItemActionsItemCondition | None | None = Field(default=None)
+
+class FormLogicItem(BaseModel):
+    """Nested schema for Form.logic_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    ref: str | None | None = Field(default=None)
+    actions: list[FormLogicItemActionsItem | None] | None | None = Field(default=None)
 
 class Form(BaseModel):
     """A Typeform form with its fields, settings, and logic"""
@@ -440,6 +440,12 @@ class ResponseVariablesItem(BaseModel):
     text: str | None | None = Field(default=None)
     number: float | None | None = Field(default=None)
 
+class ResponseCalculated(BaseModel):
+    """Calculated data related to the response"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    score: int | None | None = Field(default=None)
+
 class ResponseMetadata(BaseModel):
     """Metadata related to the response"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -449,11 +455,12 @@ class ResponseMetadata(BaseModel):
     referer: str | None | None = Field(default=None)
     network_id: str | None | None = Field(default=None)
 
-class ResponseCalculated(BaseModel):
-    """Calculated data related to the response"""
+class ResponseAnswersItemChoices(BaseModel):
+    """Nested schema for ResponseAnswersItem.choices"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    score: int | None | None = Field(default=None)
+    ids: list[str | None] | None | None = Field(default=None)
+    labels: list[str | None] | None | None = Field(default=None)
 
 class ResponseAnswersItemField(BaseModel):
     """Nested schema for ResponseAnswersItem.field"""
@@ -462,13 +469,6 @@ class ResponseAnswersItemField(BaseModel):
     id: str | None | None = Field(default=None)
     ref: str | None | None = Field(default=None)
     type_: str | None | None = Field(default=None, alias="type")
-
-class ResponseAnswersItemChoices(BaseModel):
-    """Nested schema for ResponseAnswersItem.choices"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    ids: list[str | None] | None | None = Field(default=None)
-    labels: list[str | None] | None | None = Field(default=None)
 
 class ResponseAnswersItemPayment(BaseModel):
     """Nested schema for ResponseAnswersItem.payment"""
@@ -598,21 +598,6 @@ class Image(BaseModel):
     has_alpha: bool | None = Field(default=None)
     upload_source: str | None = Field(default=None)
 
-class ThemeBackground(BaseModel):
-    """Background settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    brightness: float | None | None = Field(default=None)
-    href: str | None | None = Field(default=None)
-    layout: str | None | None = Field(default=None)
-
-class ThemeScreens(BaseModel):
-    """Screen display settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    alignment: str | None | None = Field(default=None)
-    font_size: str | None | None = Field(default=None)
-
 class ThemeColors(BaseModel):
     """Color settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -625,6 +610,21 @@ class ThemeColors(BaseModel):
     """Color of buttons"""
     question: str | None | None = Field(default=None, description="Color of question text")
     """Color of question text"""
+
+class ThemeScreens(BaseModel):
+    """Screen display settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    alignment: str | None | None = Field(default=None)
+    font_size: str | None | None = Field(default=None)
+
+class ThemeBackground(BaseModel):
+    """Background settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    brightness: float | None | None = Field(default=None)
+    href: str | None | None = Field(default=None)
+    layout: str | None | None = Field(default=None)
 
 class ThemeFields(BaseModel):
     """Field display settings"""

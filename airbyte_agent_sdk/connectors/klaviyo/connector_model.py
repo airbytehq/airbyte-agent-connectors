@@ -25,6 +25,12 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     CacheFieldProperty,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -2708,6 +2714,54 @@ KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
                                 type=['null', 'string'],
                             ),
                         },
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='json',
+                            samples=[
+                                SemanticSample(
+                                    name='template_name',
+                                    path='/attributes.name',
+                                ),
+                                SemanticSample(
+                                    name='template_body',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='whole',
+                                        unit_label='template',
+                                        text_path='html',
+                                        text_content_type='html',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                                template='{template_name}\n\n{template_body}',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='updated',
+                                    path='/updated',
+                                ),
+                                SemanticMetadataField(
+                                    name='name',
+                                    path='/attributes.name',
+                                ),
+                                SemanticMetadataField(
+                                    name='editor_type',
+                                    path='/attributes.editor_type',
+                                ),
+                                SemanticMetadataField(
+                                    name='created',
+                                    path='/attributes.created',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='id',
@@ -3513,6 +3567,58 @@ KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
             'type',
             'updated',
         ],
+    },
+    semantic_search_fields={
+        'email_templates': {
+            'attributes': SemanticSearchConfig(
+                content_type='json',
+                samples=[
+                    SemanticSample(
+                        name='template_name',
+                        path='/attributes.name',
+                    ),
+                    SemanticSample(
+                        name='template_body',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='whole',
+                            unit_label='template',
+                            text_path='html',
+                            text_content_type='html',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                    template='{template_name}\n\n{template_body}',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='updated',
+                        path='/updated',
+                    ),
+                    SemanticMetadataField(
+                        name='name',
+                        path='/attributes.name',
+                    ),
+                    SemanticMetadataField(
+                        name='editor_type',
+                        path='/attributes.editor_type',
+                    ),
+                    SemanticMetadataField(
+                        name='created',
+                        path='/attributes.created',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[

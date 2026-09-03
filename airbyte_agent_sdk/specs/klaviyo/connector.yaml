@@ -572,6 +572,31 @@ info:
         - 'null'
         - object
         description: ''
+        # Klaviyo records are JSON:API envelopes: every template field, including the rendered
+        # email body, is nested under `attributes`, so the containing object is decoded as JSON
+        # and the `html` leaf is tag-stripped on its own via `text_content_type`.
+        x-airbyte-semantic-search:
+          content_type: json
+          samples:
+            - { name: template_name, path: "/attributes.name" }
+            - name: template_body
+              windowed: true
+              # `whole`: rendered email HTML has no blank-line paragraph breaks for a regex to
+              # split on. Only `html` is windowed -- `text` is null on editor-built templates and
+              # a plaintext rendition of the same body when set; `amp` is the AMP copy of `html`.
+              sampling: { sample_type: whole, unit_label: template, text_path: "html", text_content_type: html }
+          windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+          embedding:
+            model: text-embedding-3-small
+            template: "{template_name}\n\n{template_body}"
+          # Order matters: the first record-root entry is the record key, the second is the
+          # cursor, and both names must be real raw-table columns.
+          metadata:
+            - { name: id, path: "/id", type: string }
+            - { name: updated, path: "/updated", type: string }
+            - { name: name, path: "/attributes.name", type: string }
+            - { name: editor_type, path: "/attributes.editor_type", type: string }
+            - { name: created, path: "/attributes.created", type: string }
         properties:
           company_id:
             type:
