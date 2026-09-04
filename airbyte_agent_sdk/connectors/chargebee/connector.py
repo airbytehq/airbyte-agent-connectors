@@ -138,7 +138,7 @@ class ChargebeeConnector:
 
     connector_name = "chargebee"
     connector_version = "1.0.2"
-    sdk_version = "0.1.338"
+    sdk_version = "0.1.339"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -576,7 +576,7 @@ class ChargebeeConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "get", "context_store_search", "context_store_sql_query"],
         params: Mapping[str, Any],
         *,
         select_fields: list[str] | None = ...,
@@ -587,7 +587,7 @@ class ChargebeeConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "get", "context_store_search", "context_store_sql_query"],
         params: Mapping[str, Any] | None = None,
         *,
         select_fields: list[str] | None = None,
@@ -1187,6 +1187,41 @@ class CustomerQuery:
             ),
         )
 
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against customer records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("customer", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
 class SubscriptionQuery:
     """
     Query class for Subscription entity operations.
@@ -1384,6 +1419,41 @@ class SubscriptionQuery:
             ),
         )
 
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against subscription records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("subscription", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
 class InvoiceQuery:
     """
     Query class for Invoice entity operations.
@@ -1574,6 +1644,41 @@ class InvoiceQuery:
             ),
         )
 
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against invoice records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("invoice", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
 class CreditNoteQuery:
     """
     Query class for CreditNote entity operations.
@@ -1744,6 +1849,41 @@ class CreditNoteQuery:
             ),
         )
 
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against credit_note records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("credit_note", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
 class CouponQuery:
     """
     Query class for Coupon entity operations.
@@ -1889,6 +2029,41 @@ class CouponQuery:
             meta=AirbyteSearchMeta(
                 has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
                 cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against coupon records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("coupon", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
@@ -2069,6 +2244,41 @@ class TransactionQuery:
             ),
         )
 
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against transaction records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("transaction", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
 class EventQuery:
     """
     Query class for Event entity operations.
@@ -2197,6 +2407,41 @@ class EventQuery:
             meta=AirbyteSearchMeta(
                 has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
                 cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against event records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("event", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
@@ -2382,6 +2627,41 @@ class OrderQuery:
             ),
         )
 
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against order records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("order", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
 class ItemQuery:
     """
     Query class for Item entity operations.
@@ -2525,6 +2805,41 @@ class ItemQuery:
             meta=AirbyteSearchMeta(
                 has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
                 cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against item records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("item", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
@@ -2687,6 +3002,41 @@ class ItemPriceQuery:
             ),
         )
 
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against item_price records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("item_price", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
 class PaymentSourceQuery:
     """
     Query class for PaymentSource entity operations.
@@ -2826,6 +3176,41 @@ class PaymentSourceQuery:
             meta=AirbyteSearchMeta(
                 has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
                 cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against payment_source records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("payment_source", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )

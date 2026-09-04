@@ -10,6 +10,8 @@ from airbyte_agent_sdk.constants import INTENT_MAX_LENGTH
 from airbyte_agent_sdk.errors import AirbyteError
 from airbyte_agent_sdk.types import Action
 
+HOSTED_ONLY_CONTEXT_STORE_ACTIONS = frozenset({"context_store_search", "context_store_sql_query"})
+
 
 @dataclass
 class ExecutionConfig:

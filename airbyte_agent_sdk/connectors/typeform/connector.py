@@ -93,7 +93,7 @@ class TypeformConnector:
 
     connector_name = "typeform"
     connector_version = "1.0.4"
-    sdk_version = "0.1.338"
+    sdk_version = "0.1.339"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -308,7 +308,7 @@ class TypeformConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "get", "context_store_search", "context_store_sql_query"],
         params: Mapping[str, Any],
         *,
         select_fields: list[str] | None = ...,
@@ -319,7 +319,7 @@ class TypeformConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "get", "context_store_search", "context_store_sql_query"],
         params: Mapping[str, Any] | None = None,
         *,
         select_fields: list[str] | None = None,
@@ -870,6 +870,41 @@ class FormsQuery:
             ),
         )
 
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against forms records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("forms", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
 class ResponsesQuery:
     """
     Query class for Responses entity operations.
@@ -999,6 +1034,41 @@ class ResponsesQuery:
             ),
         )
 
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against responses records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("responses", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
 class WebhooksQuery:
     """
     Query class for Webhooks entity operations.
@@ -1095,6 +1165,41 @@ class WebhooksQuery:
             meta=AirbyteSearchMeta(
                 has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
                 cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against webhooks records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("webhooks", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
@@ -1202,6 +1307,41 @@ class WorkspacesQuery:
             ),
         )
 
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against workspaces records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("workspaces", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
 class ImagesQuery:
     """
     Query class for Images entity operations.
@@ -1292,6 +1432,41 @@ class ImagesQuery:
             meta=AirbyteSearchMeta(
                 has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
                 cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against images records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("images", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
@@ -1400,6 +1575,41 @@ class ThemesQuery:
             meta=AirbyteSearchMeta(
                 has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
                 cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+    async def context_store_sql_query(
+        self,
+        sql: str,
+        limit: int | None = None,
+    ) -> AirbyteSearchResult[dict[str, Any]]:
+        """
+        Run a SQL query against themes records in the Airbyte Context Store.
+
+        Only available in hosted execution mode.
+
+        Args:
+            sql: SQL query to execute.
+            limit: Maximum results to return.
+
+        Returns:
+            AirbyteSearchResult containing the projected rows and query metadata.
+
+        Raises:
+            NotImplementedError: If called in local execution mode.
+        """
+        params: dict[str, Any] = {"sql": sql}
+        if limit is not None:
+            params["limit"] = limit
+
+        result = await self._connector.execute("themes", "context_store_sql_query", params)
+        meta_data = result.get("meta")
+        return AirbyteSearchResult[dict[str, Any]](
+            data=result.get("data", []),
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=None,
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )

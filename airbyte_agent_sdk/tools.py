@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from typing import Any, Awaitable, Literal, Protocol, cast
 
 from airbyte_agent_sdk.executor import HostedExecutor
+from airbyte_agent_sdk.executor.models import HOSTED_ONLY_CONTEXT_STORE_ACTIONS
 from airbyte_agent_sdk.introspection import (
     DATE_RANGES,
     FILTER_OPERATORS,
@@ -205,9 +206,21 @@ def _action_names(connector: Any) -> list[str]:
     model = _connector_model_for(connector)
     entities = getattr(model, "entities", []) if model is not None else []
     names: set[str] = set()
+    entity_names: set[str] = set()
     for entity in entities:
-        for action in getattr(entity, "actions", []) or []:
+        actions = getattr(entity, "actions", []) or []
+        entity_name = getattr(entity, "name", None)
+        if actions and isinstance(entity_name, str):
+            entity_names.add(entity_name)
+        for action in actions:
             names.add(_action_value(action))
+
+    context_store = getattr(model, "context_store", None)
+    context_store_entities = getattr(context_store, "entities", []) or []
+    if _hosted_executor_for(connector) is not None and any(
+        getattr(context_store_entity, "entity", None) in entity_names for context_store_entity in context_store_entities
+    ):
+        names.update(HOSTED_ONLY_CONTEXT_STORE_ACTIONS)
     return sorted(names)
 
 

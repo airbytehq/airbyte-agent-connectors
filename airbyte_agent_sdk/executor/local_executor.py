@@ -47,6 +47,7 @@ from airbyte_agent_sdk.types import (
 from airbyte_agent_sdk.utils import find_matching_auth_options
 
 from .models import (
+    HOSTED_ONLY_CONTEXT_STORE_ACTIONS,
     ActionNotSupportedError,
     DownloadChunkResult,
     EntityNotFoundError,
@@ -855,10 +856,9 @@ class LocalExecutor:
                 raise TypeError("Cannot pass action or params when using ExecutionConfig")
             config = config_or_entity
         try:
-            # Check for hosted-only actions before converting to Action enum
-            if config.action == "context_store_search":
+            if config.action in HOSTED_ONLY_CONTEXT_STORE_ACTIONS:
                 raise NotImplementedError(
-                    "context_store_search is only available in hosted execution mode."
+                    f"{config.action} is only available in hosted execution mode."
                     " Initialize the connector with an AirbyteAuthConfig to use this feature."
                 )
 

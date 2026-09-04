@@ -1,4 +1,4 @@
-{%- from "_macros.jinja2" import python_operation_call, format_action, anchor, cli_operation_call, cli_context_store_search_call -%}
+{%- from "_macros.jinja2" import python_operation_call, format_action, anchor, cli_operation_call, cli_context_store_search_call, cli_context_store_sql_query_call -%}
 # {{ connector_name|title }} full reference
 
 This is the full reference documentation for the {{ connector_name|title }} agent connector.
@@ -10,7 +10,7 @@ The {{ connector_name|title }} connector supports the following entities and act
 | Entity | Actions |
 |--------|---------|
 {% for entity, operations in entities_grouped.items() %}
-| {{ entity.replace('_', ' ')|title }} | {% for op in operations %}[{{ format_action(op.action) }}](#{{ anchor(entity, op.action) }}){{ ", " if not loop.last else "" }}{% endfor %}{% if entity in search_schemas %}, [{{ format_action("context_store_search") }}](#{{ anchor(entity, 'context_store_search') }}){% endif %}{% if entity in search_schemas and search_schemas[entity].semantic_fields %}, [Semantic Search](#{{ anchor(entity, 'semantic_search') }}){% endif %} |
+| {{ entity.replace('_', ' ')|title }} | {% for op in operations %}[{{ format_action(op.action) }}](#{{ anchor(entity, op.action) }}){{ ", " if not loop.last else "" }}{% endfor %}{% if entity in search_schemas %}, [{{ format_action("context_store_search") }}](#{{ anchor(entity, 'context_store_search') }}), [{{ format_action("context_store_sql_query") }}](#{{ anchor(entity, 'context_store_sql_query') }}){% endif %}{% if entity in search_schemas and search_schemas[entity].semantic_fields %}, [Semantic Search](#{{ anchor(entity, 'semantic_search') }}){% endif %} |
 {% endfor %}
 
 {% for entity, operations in entities_grouped.items() %}
@@ -164,6 +164,61 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 {% for field in search_schema.fields %}
 | `data[].{{ field.name }}` | `{{ field.json_type|replace('null | ', '')|replace(' | null', '')|replace('null', 'any') }}` | {{ field.description | mdx_escape }} |
 {% endfor %}
+
+</details>
+
+### {{ entity.replace('_', ' ')|title }} {{ format_action("context_store_sql_query") }}
+
+Run a SQL query against {{ entity.replace('_', ' ') }} records in the Airbyte Context Store. SQL projections may return any set of columns, so each result row is a dictionary matching the query's selected fields. Only available in hosted mode.
+
+Use the hosted server documentation to find the qualified Context Store table name and SQL guidance.
+
+#### CLI
+
+```bash
+{{ cli_context_store_sql_query_call(connector_name, entity) }}
+```
+
+#### Python SDK
+
+```python
+await {{ connector_instance_name }}.{{ entity }}.context_store_sql_query(
+    sql="SELECT * FROM <qualified_context_store_table> LIMIT 100"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "{{ entity }}",
+    "action": "context_store_sql_query",
+    "params": {
+        "sql": "SELECT * FROM <qualified_context_store_table> LIMIT 100"
+    }
+}'
+```
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `sql` | `string` | Yes | SQL query to execute against this entity's Context Store data |
+| `limit` | `integer` | No | Maximum results to return |
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `data` | `array` | Projected rows, with dictionary keys matching the selected columns |
+| `meta` | `object` | Query metadata |
+| `meta.has_more` | `boolean` | Whether the result was limited and more rows are available |
+| `meta.cursor` | `null` | SQL query results do not use cursor pagination |
+| `meta.took_ms` | `number \| null` | Query execution time in milliseconds |
 
 </details>
 

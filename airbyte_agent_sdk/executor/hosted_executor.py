@@ -16,6 +16,7 @@ from airbyte_agent_sdk.secrets_gcp import hydrate_source_config as hydrate_gcp_s
 
 from .local_executor import LocalExecutor
 from .models import (
+    HOSTED_ONLY_CONTEXT_STORE_ACTIONS,
     ExecutionConfig,
     ExecutionResult,
     find_check_operation,
@@ -23,7 +24,7 @@ from .models import (
 
 MAX_TEXT_FIELD_CHARS = 200
 TRUNCATION_SUFFIX = "... [truncated — use `get` action with the record id to retrieve the full value]"
-COLLECTION_ACTIONS = frozenset({"list", "context_store_search", "context_store_sql_query"})
+COLLECTION_ACTIONS = frozenset({"list", *HOSTED_ONLY_CONTEXT_STORE_ACTIONS})
 _SENTINEL = object()
 _TRUE_ENV_VALUES = frozenset({"1", "true", "t", "yes", "y", "on"})
 
@@ -507,7 +508,7 @@ class HostedExecutor:
 
                 span.set_attribute("connector.connector_id", connector_id)
 
-                if _secrets_configured_from_environment():
+                if execution_config.action not in HOSTED_ONLY_CONTEXT_STORE_ACTIONS and _secrets_configured_from_environment():
                     response = await self._cloud_client.prepare_connector_execute(
                         connector_id=connector_id,
                         entity=execution_config.entity,
@@ -635,10 +636,8 @@ class HostedExecutor:
         action = bundle["action"]
         params = bundle.get("params") or {}
 
-        # context_store_search is a hosted-only operation; fail closed before
-        # touching the customer's secret manager, mirroring LocalExecutor's own guard.
-        if action == "context_store_search":
-            raise NotImplementedError("context_store_search is only available in hosted execution mode and cannot run in the customer data plane.")
+        if action in HOSTED_ONLY_CONTEXT_STORE_ACTIONS:
+            raise NotImplementedError(f"{action} is only available in hosted execution mode and cannot run in the customer data plane.")
 
         provider = resolve_secret_manager_provider()
         if provider == "gcp":

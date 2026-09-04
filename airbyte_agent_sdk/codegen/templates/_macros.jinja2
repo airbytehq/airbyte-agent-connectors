@@ -2,7 +2,7 @@
 
 {# Format action name for display (e.g., "api_search" -> "API Search") #}
 {% macro format_action(action) -%}
-{{ action.replace('_', ' ')|title|replace('Api ', 'API ') }}
+{{ action.replace('_', ' ')|title|replace('Api ', 'API ')|replace('Sql ', 'SQL ') }}
 {%- endmacro %}
 
 {# Generate anchor slug (e.g., "customers", "api_search" -> "customers-api-search") #}
@@ -14,7 +14,7 @@
 | Entity | Actions |
 |--------|---------|
 {% for entity, operations in entities_grouped.items() -%}
-| {{ entity.replace('_', ' ')|title }} | {% for op in operations %}{% if reference_path %}[{{ format_action(op.action) }}]({{ reference_path }}#{{ entity.replace('_', '-')|lower }}-{{ op.action|lower }}){% else %}[{{ format_action(op.action) }}](#{{ entity.replace('_', '-')|lower }}-{{ op.action|lower }}){% endif %}{{ ", " if not loop.last else "" }}{% endfor %}{% if search_schemas and entity in search_schemas %}, {% if reference_path %}[{{ format_action("context_store_search") }}]({{ reference_path }}#{{ entity.replace('_', '-')|lower }}-context-store-search){% else %}[{{ format_action("context_store_search") }}](#{{ entity.replace('_', '-')|lower }}-context-store-search){% endif %}{% if search_schemas[entity].semantic_fields %}, {% if reference_path %}[Semantic Search]({{ reference_path }}#{{ entity.replace('_', '-')|lower }}-semantic-search){% else %}[Semantic Search](#{{ entity.replace('_', '-')|lower }}-semantic-search){% endif %}{% endif %}{% endif %} |
+| {{ entity.replace('_', ' ')|title }} | {% for op in operations %}{% if reference_path %}[{{ format_action(op.action) }}]({{ reference_path }}#{{ entity.replace('_', '-')|lower }}-{{ op.action|lower }}){% else %}[{{ format_action(op.action) }}](#{{ entity.replace('_', '-')|lower }}-{{ op.action|lower }}){% endif %}{{ ", " if not loop.last else "" }}{% endfor %}{% if search_schemas and entity in search_schemas %}, {% if reference_path %}[{{ format_action("context_store_search") }}]({{ reference_path }}#{{ entity.replace('_', '-')|lower }}-context-store-search){% else %}[{{ format_action("context_store_search") }}](#{{ entity.replace('_', '-')|lower }}-context-store-search){% endif %}, {% if reference_path %}[{{ format_action("context_store_sql_query") }}]({{ reference_path }}#{{ entity.replace('_', '-')|lower }}-context-store-sql-query){% else %}[{{ format_action("context_store_sql_query") }}](#{{ entity.replace('_', '-')|lower }}-context-store-sql-query){% endif %}{% if search_schemas[entity].semantic_fields %}, {% if reference_path %}[Semantic Search]({{ reference_path }}#{{ entity.replace('_', '-')|lower }}-semantic-search){% else %}[Semantic Search](#{{ entity.replace('_', '-')|lower }}-semantic-search){% endif %}{% endif %}{% endif %} |
 {% endfor -%}
 {%- endmacro %}
 
@@ -56,6 +56,17 @@ airbyte-agent connectors execute --json '{{ payload | pretty_json }}'
   "entity": entity,
   "action": "context_store_search",
   "params": {"query": {"filter": {"eq": {example_field.name: example_field.json_example_value}}}}
+} -%}
+airbyte-agent connectors execute --json '{{ payload | pretty_json }}'
+{%- endmacro %}
+
+{% macro cli_context_store_sql_query_call(connector_name, entity) -%}
+{%- set payload = {
+  "workspace": "<your_workspace_name>",
+  "name": connector_name,
+  "entity": entity,
+  "action": "context_store_sql_query",
+  "params": {"sql": "SELECT * FROM <qualified_context_store_table> LIMIT 100"}
 } -%}
 airbyte-agent connectors execute --json '{{ payload | pretty_json }}'
 {%- endmacro %}

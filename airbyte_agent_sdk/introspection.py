@@ -60,11 +60,13 @@ PAGINATION = (
     f"Hard stop at {PAGINATION_PAGE_CAP} pages — use filters to narrow, and say results are partial if you hit the cap."
 )
 
+CONTEXT_STORE_READ_GUIDANCE = "Use the Context Store read action the hosted server docs mark as default."
+
 DATE_RANGES = (
-    "DATE RANGES INCLUDING TODAY: Search index can lag hours. "
-    "Issue BOTH a context_store_search AND a list item with date parameters (in the same batch call), "
-    "then merge and deduplicate by id. "
-    "If the date range ends before today, search alone is sufficient. "
+    f"DATE RANGES INCLUDING TODAY: {CONTEXT_STORE_READ_GUIDANCE} "
+    "For date ranges including today, pair that server-documented read action with direct `list` "
+    "using date parameters, then merge and deduplicate by id. "
+    "For fully historical date ranges, use the server-documented Context Store read action alone. "
     "Always resolve relative date phrases like 'today' or 'yesterday' to explicit absolute "
     "timestamps and tell the user which range you used."
 )
@@ -97,11 +99,7 @@ EXECUTE_INSTRUCTIONS = (
     "  - get: Returns entity directly (no envelope)\n"
     "  To paginate: pass cursor=<last_cursor> while has_more is true"
     "\n\n"
-    "ACTIONS: list, get, api_search, context_store_search, create, update, download. "
-    "Use `context_store_search` as the DEFAULT — it supports filtering, sorting, and pagination. "
-    "Only use `list` when: (a) you need today's data (search index may lag hours), or "
-    "(b) context_store_search returned no results and you suspect indexing delay."
-    "\n\n"
+    "ACTIONS: list, get, api_search, context_store_search, create, update, download. " + CONTEXT_STORE_READ_GUIDANCE + "\n\n"
     "HOW TO USE DOWNLOAD:\n"
     "- By default, download returns a stream for API/SDK clients. For agent/MCP JSON responses, omit `range_header` "
     'and pass params={"_airbyte_response_type": "json", "_airbyte_response_format": "text", "_airbyte_max_chars": 20000}.\n'
@@ -1033,8 +1031,7 @@ def generate_tool_description(
 
     # Guidelines — prose header; see note at ENTITIES above.
     lines.append("General guidelines for calling this tool:")
-    lines.append('  - Prefer cached search over direct API calls: action="context_store_search" whenever possible.')
-    lines.append("  - Direct API actions (list/get/download) are slower and should be used only if search cannot answer the query.")
+    lines.append(f"  - {CONTEXT_STORE_READ_GUIDANCE}")
     lines.append("  - Keep results small: use params.fields, params.query.filter, small params.limit, and cursor pagination.")
     lines.append("  - If output is too large, refine the query with tighter filters/fields/limit.")
     lines.append("  - When searching for approximate text, prefer `fuzzy` over literal `contains`.")
