@@ -1,0 +1,58 @@
+name: AI Triage
+
+on:
+  issues:
+    types: [opened]
+  repository_dispatch:
+    types: [ai-triage-command]
+  workflow_dispatch:
+    inputs:
+      issue-number:
+        description: 'Issue number to analyze'
+        required: true
+        type: string
+      comment-id:
+        description: 'Comment ID that triggered the command (optional)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  ai-triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate as GitHub App
+        uses: actions/create-github-app-token@v2
+        id: get-app-token
+        with:
+          owner: "airbytehq"
+          repositories: "airbyte-agent-connectors,oncall"
+          app-id: ${{ secrets.OCTAVIA_BOT_APP_ID }}
+          private-key: ${{ secrets.OCTAVIA_BOT_PRIVATE_KEY }}
+
+      - name: Add ai-triage label
+        env:
+          GH_TOKEN: ${{ steps.get-app-token.outputs.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || github.event.client_payload.slash_command.args.named.issue || inputs.issue-number }}
+        run: |
+          echo "Adding label to issue $ISSUE_NUMBER"
+          gh issue edit "$ISSUE_NUMBER" --add-label "ai-triage"
+
+      - name: Run AI Triage
+        uses: aaronsteers/devin-action@v0.2.0
+        with:
+          comment-id: ${{ github.event.client_payload.slash_command.args.named.comment-id || inputs.comment-id }}
+          issue-number: ${{ github.event.issue.number || github.event.client_payload.slash_command.args.named.issue || inputs.issue-number }}
+          playbook-macro: '!agent_connector_triage'
+          devin-token: ${{ secrets.DEVIN_AI_API_KEY }}
+          github-token: ${{ steps.get-app-token.outputs.token }}
+          start-message: 'AI Triage session starting... Analyzing this issue for potential root causes and solutions. [View playbook](https://github.com/airbytehq/oncall/blob/main/prompts/playbooks/agent_connector_triage.md)'
+          tags: |
+            ai-agent-connectors
