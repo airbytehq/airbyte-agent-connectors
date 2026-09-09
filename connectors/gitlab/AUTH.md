@@ -434,7 +434,8 @@ connector = GitlabConnector(
         client_secret="<The API Secret of the GitLab developer application.>",
         access_token="<Access Token for making authenticated requests.>",
         refresh_token="<The key to refresh the expired access token.>"
-    )
+    ),
+    api_url="<GitLab instance hostname>"
 )
 ```
 
@@ -455,7 +456,8 @@ from airbyte_agent_sdk.connectors.gitlab.models import GitlabPersonalAccessToken
 connector = GitlabConnector(
     auth_config=GitlabPersonalAccessTokenAuthConfig(
         access_token="<Log into your GitLab account and generate a personal access token.>"
-    )
+    ),
+    api_url="<GitLab instance hostname>"
 )
 ```
 

@@ -58,6 +58,13 @@
     ],
     "is_multi_auth": true
   },
+  "server_variables": [
+    {
+      "name": "subdomain",
+      "default": "your-subdomain",
+      "description": "Your Zendesk subdomain"
+    }
+  ],
   "replication_config": null,
   "custom_description": "Zendesk Support is a customer service platform that helps businesses manage support\ntickets, customer interactions, and help center content. This connector provides\naccess to tickets, users, organizations, groups, comments, attachments, automations,\ntriggers, macros, views, satisfaction ratings, SLA policies, and help center articles\nfor customer support analytics and service performance insights.\n",
   "supported_questions": "- Show me the tickets assigned to me last week\n- List all unresolved tickets\n- Show me the details of recent tickets\n- Create a new ticket with subject 'Login issue' and priority high\n- Update ticket 12345 to status solved\n- Add a comment to ticket 12345 saying 'This has been resolved'\n- Set the priority of ticket 12345 to urgent and assign it to agent 98765\n- Create a new end-user named 'Jane Doe' with email jane@example.com\n- Update user 54321 with notes 'VIP customer'\n- What are the top 5 support issues our organization has faced this month?\n- Analyze the satisfaction ratings for our support team in the last 30 days\n- Compare ticket resolution times across different support groups\n- Identify the most common ticket fields used in our support workflow\n- Summarize the performance of our SLA policies this quarter",

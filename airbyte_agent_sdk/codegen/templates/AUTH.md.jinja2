@@ -314,8 +314,9 @@ connector = {{ class_name }}(
     auth_config={{ auth_config.type_name }}(
 {% endif %}
 {% for field in option.fields %}        {{ field.name }}="<{{ field.description or field.name }}>"{{ "," if not loop.last else "" }}
-{% endfor %}    )
-)
+{% endfor %}    ){{ "," if server_variables else "" }}
+{% for var in server_variables %}    {{ var.name }}="<{{ var.description or var.name }}>"{{ "," if not loop.last else "" }}
+{% endfor %})
 ```
 {% endfor %}
 {% else %}
@@ -350,8 +351,9 @@ connector = {{ class_name }}(
     auth_config={{ auth_config.type_name }}(
 {% endif %}
 {% for field in option.fields %}        {{ field.name }}="<{{ field.description or field.name }}>"{{ "," if not loop.last else "" }}
-{% endfor %}    )
-)
+{% endfor %}    ){{ "," if server_variables else "" }}
+{% for var in server_variables %}    {{ var.name }}="<{{ var.description or var.name }}>"{{ "," if not loop.last else "" }}
+{% endfor %})
 ```
 {% endfor %}
 {% else %}

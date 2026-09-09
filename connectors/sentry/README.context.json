@@ -28,6 +28,13 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [
+    {
+      "name": "hostname",
+      "default": "sentry.io",
+      "description": "Host name of Sentry API server. For self-hosted instances, specify your host name here. Otherwise, leave as sentry.io."
+    }
+  ],
   "replication_config": {
     "type_name": "SentryReplicationConfig",
     "title": "Replication Configuration",

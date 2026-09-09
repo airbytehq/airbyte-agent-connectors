@@ -58,6 +58,7 @@
     ],
     "is_multi_auth": true
   },
+  "server_variables": [],
   "replication_config": null,
   "custom_description": "Connector for the Monday.com platform API. Monday.com is a work operating system that enables teams to build workflows for project management, CRM, software development, and more. This connector provides read access to boards, items, users, teams, tags, updates, workspaces, and activity logs via the Monday.com GraphQL API (v2).\n",
   "supported_questions": "- List all users in the Monday.com account\n- Show me all boards\n- Get the details of board 18395979459\n- List all teams\n- Show me all tags\n- List recent updates\n- Which boards were updated in the last week?\n- Find all items assigned to a specific group\n- What are the most active boards by update count?\n- Show me all users who are admins\n- List items with their column values from a specific board",

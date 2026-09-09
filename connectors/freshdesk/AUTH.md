@@ -371,7 +371,8 @@ from airbyte_agent_sdk.connectors.freshdesk.models import FreshdeskAuthConfig
 connector = FreshdeskConnector(
     auth_config=FreshdeskAuthConfig(
         api_key="<Your Freshdesk API key (found in Profile Settings)>"
-    )
+    ),
+    subdomain="<Your Freshdesk subdomain (e.g., "acme" for acme.freshdesk.com)>"
 )
 ```
 

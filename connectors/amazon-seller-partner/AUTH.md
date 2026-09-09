@@ -401,7 +401,12 @@ connector = AmazonSellerPartnerConnector(
         lwa_client_secret="<Your Login with Amazon Client Secret.>",
         refresh_token="<The Refresh Token obtained via the OAuth authorization flow.>",
         access_token="<Access token (optional if refresh_token is provided).>"
-    )
+    ),
+    region="<The seller's marketplace region. This determines both the API endpoint and the marketplace ID used for queries. Select the country code where you sell:
+North America (NA endpoint): US (Amazon.com), CA (Amazon.ca), MX (Amazon.com.mx), BR (Amazon.com.br)
+Europe (EU endpoint): DE (Amazon.de), FR (Amazon.fr), IT (Amazon.it), ES (Amazon.es), UK/GB (Amazon.co.uk), NL (Amazon.nl), SE (Amazon.se), PL (Amazon.pl), BE (Amazon.com.be), TR (Amazon.com.tr), EG (Amazon.eg), SA (Amazon.sa), AE (Amazon.ae), IN (Amazon.in), ZA (Amazon.co.za)
+Far East (FE endpoint): JP (Amazon.co.jp), AU (Amazon.com.au), SG (Amazon.sg)
+The region is automatically mapped to the correct API endpoint (na/eu/fe) and marketplace ID. You only need to specify your country code.>"
 )
 ```
 

@@ -193,7 +193,7 @@ class SalesforceConnector:
 
     connector_name = "salesforce"
     connector_version = "1.2.0"
-    sdk_version = "0.1.339"
+    sdk_version = "0.1.340"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -372,7 +372,7 @@ class SalesforceConnector:
                 Example: lambda tokens: save_to_database(tokens)            instance_url: Your Salesforce instance URL (e.g., https://na1.salesforce.com)
         Examples:
             # Local mode (direct API calls)
-            connector = SalesforceConnector(auth_config=SalesforceAuthConfig(refresh_token="...", client_id="...", client_secret="..."))
+            connector = SalesforceConnector(auth_config=SalesforceAuthConfig(refresh_token="...", client_id="...", client_secret="..."), instance_url="...")
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = SalesforceConnector(
                 auth_config=AirbyteAuthConfig(

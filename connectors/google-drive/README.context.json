@@ -49,6 +49,7 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [],
   "replication_config": {
     "type_name": "GoogleDriveReplicationConfig",
     "title": "Replication Configuration",

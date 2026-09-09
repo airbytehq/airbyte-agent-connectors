@@ -402,7 +402,8 @@ from airbyte_agent_sdk.connectors.chargebee.models import ChargebeeAuthConfig
 connector = ChargebeeConnector(
     auth_config=ChargebeeAuthConfig(
         api_key="<Your Chargebee API key (used as the HTTP Basic username)>"
-    )
+    ),
+    site="<Your Chargebee site name (subdomain)>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -420,7 +421,8 @@ from airbyte_agent_sdk.connectors.chargebee.models import ChargebeeAuthConfig
 connector = ChargebeeConnector(
     auth_config=ChargebeeAuthConfig(
         api_key="<Your Chargebee API key (used as the HTTP Basic username)>"
-    )
+    ),
+    site="<Your Chargebee site name (subdomain)>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -445,7 +447,8 @@ from airbyte_agent_sdk.connectors.chargebee.models import ChargebeeAuthConfig
 connector = ChargebeeConnector(
     auth_config=ChargebeeAuthConfig(
         api_key="<Your Chargebee API key (used as the HTTP Basic username)>"
-    )
+    ),
+    site="<Your Chargebee site name (subdomain)>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -465,7 +468,8 @@ from airbyte_agent_sdk.connectors.chargebee.models import ChargebeeAuthConfig
 connector = ChargebeeConnector(
     auth_config=ChargebeeAuthConfig(
         api_key="<Your Chargebee API key (used as the HTTP Basic username)>"
-    )
+    ),
+    site="<Your Chargebee site name (subdomain)>"
 )
 
 mcp = FastMCP("Chargebee Agent")
@@ -488,7 +492,8 @@ from airbyte_agent_sdk.connectors.chargebee.models import ChargebeeAuthConfig
 connector = ChargebeeConnector(
     auth_config=ChargebeeAuthConfig(
         api_key="<Your Chargebee API key (used as the HTTP Basic username)>"
-    )
+    ),
+    site="<Your Chargebee site name (subdomain)>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -509,7 +514,8 @@ from airbyte_agent_sdk.connectors.chargebee.models import ChargebeeAuthConfig
 connector = ChargebeeConnector(
     auth_config=ChargebeeAuthConfig(
         api_key="<Your Chargebee API key (used as the HTTP Basic username)>"
-    )
+    ),
+    site="<Your Chargebee site name (subdomain)>"
 )
 
 @tool
@@ -531,7 +537,8 @@ from airbyte_agent_sdk.connectors.chargebee.models import ChargebeeAuthConfig
 connector = ChargebeeConnector(
     auth_config=ChargebeeAuthConfig(
         api_key="<Your Chargebee API key (used as the HTTP Basic username)>"
-    )
+    ),
+    site="<Your Chargebee site name (subdomain)>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -556,7 +563,8 @@ from airbyte_agent_sdk.connectors.chargebee.models import ChargebeeAuthConfig
 connector = ChargebeeConnector(
     auth_config=ChargebeeAuthConfig(
         api_key="<Your Chargebee API key (used as the HTTP Basic username)>"
-    )
+    ),
+    site="<Your Chargebee site name (subdomain)>"
 )
 
 mcp = FastMCP("Chargebee Agent")

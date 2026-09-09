@@ -58,6 +58,7 @@
     ],
     "is_multi_auth": true
   },
+  "server_variables": [],
   "replication_config": {
     "type_name": "SlackReplicationConfig",
     "title": "Replication Configuration",

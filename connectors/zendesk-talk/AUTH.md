@@ -436,7 +436,8 @@ connector = ZendeskTalkConnector(
         refresh_token="<OAuth 2.0 refresh token (optional)>",
         client_id="<OAuth client ID>",
         client_secret="<OAuth client secret>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 ```
 
@@ -459,7 +460,8 @@ connector = ZendeskTalkConnector(
     auth_config=ZendeskTalkApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 ```
 

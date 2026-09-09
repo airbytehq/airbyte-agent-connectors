@@ -28,6 +28,7 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [],
   "replication_config": null,
   "custom_description": "ClickUp is a productivity platform that provides project management, task tracking, docs, goals,\nand time tracking for teams. This connector provides access to workspaces, spaces, folders, lists,\ntasks (including workspace-wide search), comments, goals, views, time tracking, members, and docs.\n",
   "supported_questions": "- List all workspaces I have access to\n- Show me the spaces in my workspace\n- List the folders in a space\n- Show me the lists in a folder\n- Get the tasks in a list\n- Get details for a specific task\n- Search for tasks containing 'bug' across my workspace\n- Find all urgent priority tasks in my workspace\n- Show me tasks assigned to a specific user\n- List comments on a task\n- Get threaded replies on a comment\n- Create a comment on a task\n- Update a comment to mark it resolved\n- List all goals in my workspace\n- Get details for a specific goal\n- Show me all workspace-level views\n- Get tasks matching a saved view\n- List time entries for my workspace this week\n- Get details for a specific time entry\n- Show me the members assigned to a task\n- List all docs in my workspace\n- Get details for a specific doc\n- What tasks are overdue in my workspace?\n- Which tasks were updated in the last 24 hours?\n- Show me all high-priority tasks across all projects\n- How much time has been tracked this week?\n- What are the most commented tasks?",

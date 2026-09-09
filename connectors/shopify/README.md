@@ -445,7 +445,8 @@ from airbyte_agent_sdk.connectors.shopify.models import ShopifyAccessTokenAuthen
 connector = ShopifyConnector(
     auth_config=ShopifyAccessTokenAuthenticationAuthConfig(
         api_key="<Your Shopify Admin API access token>"
-    )
+    ),
+    shop="<Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -463,7 +464,8 @@ from airbyte_agent_sdk.connectors.shopify.models import ShopifyAccessTokenAuthen
 connector = ShopifyConnector(
     auth_config=ShopifyAccessTokenAuthenticationAuthConfig(
         api_key="<Your Shopify Admin API access token>"
-    )
+    ),
+    shop="<Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -488,7 +490,8 @@ from airbyte_agent_sdk.connectors.shopify.models import ShopifyAccessTokenAuthen
 connector = ShopifyConnector(
     auth_config=ShopifyAccessTokenAuthenticationAuthConfig(
         api_key="<Your Shopify Admin API access token>"
-    )
+    ),
+    shop="<Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -508,7 +511,8 @@ from airbyte_agent_sdk.connectors.shopify.models import ShopifyAccessTokenAuthen
 connector = ShopifyConnector(
     auth_config=ShopifyAccessTokenAuthenticationAuthConfig(
         api_key="<Your Shopify Admin API access token>"
-    )
+    ),
+    shop="<Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)>"
 )
 
 mcp = FastMCP("Shopify Agent")
@@ -531,7 +535,8 @@ from airbyte_agent_sdk.connectors.shopify.models import ShopifyAccessTokenAuthen
 connector = ShopifyConnector(
     auth_config=ShopifyAccessTokenAuthenticationAuthConfig(
         api_key="<Your Shopify Admin API access token>"
-    )
+    ),
+    shop="<Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -552,7 +557,8 @@ from airbyte_agent_sdk.connectors.shopify.models import ShopifyAccessTokenAuthen
 connector = ShopifyConnector(
     auth_config=ShopifyAccessTokenAuthenticationAuthConfig(
         api_key="<Your Shopify Admin API access token>"
-    )
+    ),
+    shop="<Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)>"
 )
 
 @tool
@@ -574,7 +580,8 @@ from airbyte_agent_sdk.connectors.shopify.models import ShopifyAccessTokenAuthen
 connector = ShopifyConnector(
     auth_config=ShopifyAccessTokenAuthenticationAuthConfig(
         api_key="<Your Shopify Admin API access token>"
-    )
+    ),
+    shop="<Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -599,7 +606,8 @@ from airbyte_agent_sdk.connectors.shopify.models import ShopifyAccessTokenAuthen
 connector = ShopifyConnector(
     auth_config=ShopifyAccessTokenAuthenticationAuthConfig(
         api_key="<Your Shopify Admin API access token>"
-    )
+    ),
+    shop="<Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)>"
 )
 
 mcp = FastMCP("Shopify Agent")

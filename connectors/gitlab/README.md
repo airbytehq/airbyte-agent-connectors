@@ -399,7 +399,8 @@ from airbyte_agent_sdk.connectors.gitlab.models import GitlabPersonalAccessToken
 connector = GitlabConnector(
     auth_config=GitlabPersonalAccessTokenAuthConfig(
         access_token="<Log into your GitLab account and generate a personal access token.>"
-    )
+    ),
+    api_url="<GitLab instance hostname>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -417,7 +418,8 @@ from airbyte_agent_sdk.connectors.gitlab.models import GitlabPersonalAccessToken
 connector = GitlabConnector(
     auth_config=GitlabPersonalAccessTokenAuthConfig(
         access_token="<Log into your GitLab account and generate a personal access token.>"
-    )
+    ),
+    api_url="<GitLab instance hostname>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -442,7 +444,8 @@ from airbyte_agent_sdk.connectors.gitlab.models import GitlabPersonalAccessToken
 connector = GitlabConnector(
     auth_config=GitlabPersonalAccessTokenAuthConfig(
         access_token="<Log into your GitLab account and generate a personal access token.>"
-    )
+    ),
+    api_url="<GitLab instance hostname>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -462,7 +465,8 @@ from airbyte_agent_sdk.connectors.gitlab.models import GitlabPersonalAccessToken
 connector = GitlabConnector(
     auth_config=GitlabPersonalAccessTokenAuthConfig(
         access_token="<Log into your GitLab account and generate a personal access token.>"
-    )
+    ),
+    api_url="<GitLab instance hostname>"
 )
 
 mcp = FastMCP("Gitlab Agent")
@@ -485,7 +489,8 @@ from airbyte_agent_sdk.connectors.gitlab.models import GitlabPersonalAccessToken
 connector = GitlabConnector(
     auth_config=GitlabPersonalAccessTokenAuthConfig(
         access_token="<Log into your GitLab account and generate a personal access token.>"
-    )
+    ),
+    api_url="<GitLab instance hostname>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -506,7 +511,8 @@ from airbyte_agent_sdk.connectors.gitlab.models import GitlabPersonalAccessToken
 connector = GitlabConnector(
     auth_config=GitlabPersonalAccessTokenAuthConfig(
         access_token="<Log into your GitLab account and generate a personal access token.>"
-    )
+    ),
+    api_url="<GitLab instance hostname>"
 )
 
 @tool
@@ -528,7 +534,8 @@ from airbyte_agent_sdk.connectors.gitlab.models import GitlabPersonalAccessToken
 connector = GitlabConnector(
     auth_config=GitlabPersonalAccessTokenAuthConfig(
         access_token="<Log into your GitLab account and generate a personal access token.>"
-    )
+    ),
+    api_url="<GitLab instance hostname>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -553,7 +560,8 @@ from airbyte_agent_sdk.connectors.gitlab.models import GitlabPersonalAccessToken
 connector = GitlabConnector(
     auth_config=GitlabPersonalAccessTokenAuthConfig(
         access_token="<Log into your GitLab account and generate a personal access token.>"
-    )
+    ),
+    api_url="<GitLab instance hostname>"
 )
 
 mcp = FastMCP("Gitlab Agent")

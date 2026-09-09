@@ -177,7 +177,7 @@ class WoocommerceConnector:
 
     connector_name = "woocommerce"
     connector_version = "1.0.5"
-    sdk_version = "0.1.339"
+    sdk_version = "0.1.340"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -268,7 +268,7 @@ class WoocommerceConnector:
                 Example: lambda tokens: save_to_database(tokens)            shop: The WooCommerce store domain (e.g., mystore.com)
         Examples:
             # Local mode (direct API calls)
-            connector = WoocommerceConnector(auth_config=WoocommerceAuthConfig(api_key="...", api_secret="..."))
+            connector = WoocommerceConnector(auth_config=WoocommerceAuthConfig(api_key="...", api_secret="..."), shop="...")
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = WoocommerceConnector(
                 auth_config=AirbyteAuthConfig(

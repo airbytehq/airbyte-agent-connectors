@@ -392,7 +392,8 @@ connector = ConfluenceConnector(
     auth_config=ConfluenceAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Confluence API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Confluence Cloud subdomain (e.g., mycompany for mycompany.atlassian.net)>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -411,7 +412,8 @@ connector = ConfluenceConnector(
     auth_config=ConfluenceAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Confluence API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Confluence Cloud subdomain (e.g., mycompany for mycompany.atlassian.net)>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -437,7 +439,8 @@ connector = ConfluenceConnector(
     auth_config=ConfluenceAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Confluence API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Confluence Cloud subdomain (e.g., mycompany for mycompany.atlassian.net)>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -458,7 +461,8 @@ connector = ConfluenceConnector(
     auth_config=ConfluenceAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Confluence API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Confluence Cloud subdomain (e.g., mycompany for mycompany.atlassian.net)>"
 )
 
 mcp = FastMCP("Confluence Agent")
@@ -482,7 +486,8 @@ connector = ConfluenceConnector(
     auth_config=ConfluenceAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Confluence API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Confluence Cloud subdomain (e.g., mycompany for mycompany.atlassian.net)>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -504,7 +509,8 @@ connector = ConfluenceConnector(
     auth_config=ConfluenceAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Confluence API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Confluence Cloud subdomain (e.g., mycompany for mycompany.atlassian.net)>"
 )
 
 @tool
@@ -527,7 +533,8 @@ connector = ConfluenceConnector(
     auth_config=ConfluenceAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Confluence API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Confluence Cloud subdomain (e.g., mycompany for mycompany.atlassian.net)>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -553,7 +560,8 @@ connector = ConfluenceConnector(
     auth_config=ConfluenceAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Confluence API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Confluence Cloud subdomain (e.g., mycompany for mycompany.atlassian.net)>"
 )
 
 mcp = FastMCP("Confluence Agent")

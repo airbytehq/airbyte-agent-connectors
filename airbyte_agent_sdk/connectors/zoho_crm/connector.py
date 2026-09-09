@@ -165,7 +165,7 @@ class ZohoCrmConnector:
 
     connector_name = "zoho-crm"
     connector_version = "1.0.3"
-    sdk_version = "0.1.339"
+    sdk_version = "0.1.340"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -267,7 +267,7 @@ class ZohoCrmConnector:
 
         Examples:
             # Local mode (direct API calls)
-            connector = ZohoCrmConnector(auth_config=ZohoCrmAuthConfig(client_id="...", client_secret="...", refresh_token="..."))
+            connector = ZohoCrmConnector(auth_config=ZohoCrmAuthConfig(client_id="...", client_secret="...", refresh_token="..."), dc_region="...")
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = ZohoCrmConnector(
                 auth_config=AirbyteAuthConfig(

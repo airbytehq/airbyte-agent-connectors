@@ -561,6 +561,7 @@ class ConnectorGenerator:
             "auth_example": auth_example,
             "auth_import": auth_import,
             "auth_config": auth_config,
+            "server_variables": self._extract_server_variables(),
             "replication_config": replication_config,
             "custom_description": custom_description,
             "supported_questions": supported_questions,

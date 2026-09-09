@@ -375,7 +375,8 @@ connector = ConfluenceConnector(
     auth_config=ConfluenceAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Confluence API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Confluence Cloud subdomain (e.g., mycompany for mycompany.atlassian.net)>"
 )
 ```
 

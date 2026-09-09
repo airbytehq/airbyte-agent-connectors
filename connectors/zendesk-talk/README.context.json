@@ -72,6 +72,13 @@
     ],
     "is_multi_auth": true
   },
+  "server_variables": [
+    {
+      "name": "subdomain",
+      "default": "your-subdomain",
+      "description": "Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)"
+    }
+  ],
   "replication_config": {
     "type_name": "ZendeskTalkReplicationConfig",
     "title": "Replication Configuration",

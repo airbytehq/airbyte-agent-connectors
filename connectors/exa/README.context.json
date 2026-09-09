@@ -28,6 +28,7 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [],
   "replication_config": null,
   "custom_description": "Exa is an AI-powered search engine that finds the exact content you're looking\nfor on the web using embeddings-based search. This connector provides access to\nExa's search, contents retrieval, and find-similar endpoints. All endpoints use\nPOST requests with JSON bodies. Requires an Exa API key from dashboard.exa.ai.\n",
   "supported_questions": "- Search for latest news on Airbyte\n- Find web pages similar to https://airbyte.com\n- Get the full text content of https://airbyte.com\n- Search for AI research papers published this year\n- Find company pages related to data integration startups",

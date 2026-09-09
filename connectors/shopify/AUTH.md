@@ -412,7 +412,8 @@ connector = ShopifyConnector(
         client_id="<Your Shopify OAuth2 application client ID>",
         client_secret="<Your Shopify OAuth2 application client secret>",
         access_token="<Your Shopify OAuth2 access token>"
-    )
+    ),
+    shop="<Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)>"
 )
 ```
 
@@ -433,7 +434,8 @@ from airbyte_agent_sdk.connectors.shopify.models import ShopifyAccessTokenAuthen
 connector = ShopifyConnector(
     auth_config=ShopifyAccessTokenAuthenticationAuthConfig(
         api_key="<Your Shopify Admin API access token>"
-    )
+    ),
+    shop="<Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)>"
 )
 ```
 

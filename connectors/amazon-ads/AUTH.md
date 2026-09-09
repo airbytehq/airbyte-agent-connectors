@@ -388,7 +388,12 @@ connector = AmazonAdsConnector(
         client_id="<The client ID of your Amazon Ads API application>",
         client_secret="<The client secret of your Amazon Ads API application>",
         refresh_token="<The refresh token obtained from the OAuth authorization flow>"
-    )
+    ),
+    region="<The Amazon Ads API endpoint URL based on region:
+- NA (North America): https://advertising-api.amazon.com
+- EU (Europe): https://advertising-api-eu.amazon.com
+- FE (Far East): https://advertising-api-fe.amazon.com
+>"
 )
 ```
 

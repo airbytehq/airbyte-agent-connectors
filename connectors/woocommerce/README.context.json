@@ -35,6 +35,13 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [
+    {
+      "name": "shop",
+      "default": "example.com",
+      "description": "The WooCommerce store domain (e.g., mystore.com)"
+    }
+  ],
   "replication_config": {
     "type_name": "WoocommerceReplicationConfig",
     "title": "Replication Configuration",

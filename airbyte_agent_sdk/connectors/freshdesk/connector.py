@@ -124,7 +124,7 @@ class FreshdeskConnector:
 
     connector_name = "freshdesk"
     connector_version = "1.0.3"
-    sdk_version = "0.1.339"
+    sdk_version = "0.1.340"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -189,7 +189,7 @@ class FreshdeskConnector:
                 Example: lambda tokens: save_to_database(tokens)            subdomain: Your Freshdesk subdomain (e.g., "acme" for acme.freshdesk.com)
         Examples:
             # Local mode (direct API calls)
-            connector = FreshdeskConnector(auth_config=FreshdeskAuthConfig(api_key="..."))
+            connector = FreshdeskConnector(auth_config=FreshdeskAuthConfig(api_key="..."), subdomain="...")
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = FreshdeskConnector(
                 auth_config=AirbyteAuthConfig(

@@ -72,6 +72,7 @@
     ],
     "is_multi_auth": true
   },
+  "server_variables": [],
   "replication_config": null,
   "custom_description": "Gong is a revenue intelligence platform that captures and analyzes customer interactions\nacross calls, emails, and web conferences. This connector provides access to users,\nrecorded calls with transcripts, activity statistics, scorecards, trackers, workspaces,\ncoaching metrics, and library content for sales performance analysis and revenue insights.\n",
   "supported_questions": "- List all users in my Gong account\n- Show me calls from last week\n- Get the transcript for a recent call\n- List all workspaces in Gong\n- Show me the scorecard configurations\n- What trackers are set up in my account?\n- Get coaching metrics for a manager\n- What are the activity stats for our sales team?\n- Find calls mentioning {keyword} this month\n- Show me calls for rep {user_id} in the last 30 days\n- Which calls had the longest duration last week?",

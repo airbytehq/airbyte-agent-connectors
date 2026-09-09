@@ -35,6 +35,7 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [],
   "replication_config": {
     "type_name": "TwilioReplicationConfig",
     "title": "Replication Configuration",

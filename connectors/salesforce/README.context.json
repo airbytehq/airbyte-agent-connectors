@@ -42,6 +42,13 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [
+    {
+      "name": "instance_url",
+      "default": "https://login.salesforce.com",
+      "description": "Your Salesforce instance URL (e.g., https://na1.salesforce.com)"
+    }
+  ],
   "replication_config": null,
   "custom_description": "Salesforce is a cloud-based CRM platform that helps businesses manage customer\nrelationships, sales pipelines, and business operations. This connector provides\naccess to accounts, contacts, leads, opportunities, tasks, events, campaigns, cases,\nnotes, and attachments for sales analytics and customer relationship management.\n",
   "supported_questions": "- List recent contacts in my Salesforce account\n- List open cases in my Salesforce account\n- Show me the notes and attachments for a recent account\n- List all available reports in Salesforce\n- Run my quarterly revenue report and show the results\n- Show me my top 5 opportunities this month\n- List all contacts from {company} in the last quarter\n- Search for leads in the technology sector with revenue over $10M\n- What trends can you identify in my recent sales pipeline?\n- Summarize the open cases for my key accounts\n- Find upcoming events related to my most important opportunities\n- Analyze the performance of my recent marketing campaigns\n- Identify the highest value opportunities I'm currently tracking",

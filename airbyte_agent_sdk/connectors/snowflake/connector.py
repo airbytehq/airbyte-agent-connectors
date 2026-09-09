@@ -74,7 +74,7 @@ class SnowflakeConnector:
 
     connector_name = "snowflake"
     connector_version = "1.0.0"
-    sdk_version = "0.1.339"
+    sdk_version = "0.1.340"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -131,7 +131,7 @@ class SnowflakeConnector:
                 Example: lambda tokens: save_to_database(tokens)            account: Snowflake account identifier in the format orgname-accountname (e.g., myorg-myaccount)
         Examples:
             # Local mode (direct API calls)
-            connector = SnowflakeConnector(auth_config=SnowflakeAuthConfig(programmatic_access_token="..."))
+            connector = SnowflakeConnector(auth_config=SnowflakeAuthConfig(programmatic_access_token="..."), account="...")
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = SnowflakeConnector(
                 auth_config=AirbyteAuthConfig(

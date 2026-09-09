@@ -58,6 +58,13 @@
     ],
     "is_multi_auth": true
   },
+  "server_variables": [
+    {
+      "name": "shop",
+      "default": "my-store",
+      "description": "Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)"
+    }
+  ],
   "replication_config": null,
   "custom_description": "Shopify is an e-commerce platform that enables businesses to create online stores,\nmanage products, process orders, and handle customer relationships. This connector\nprovides access to Shopify Admin REST API for reading store data including customers,\norders, products, inventory, and more.\n",
   "supported_questions": "- List all customers in my Shopify store\n- Show me details for a recent customer\n- What products do I have in my store?\n- List all locations for my store\n- Show me inventory levels for a recent location\n- Show me all draft orders\n- List all custom collections in my store\n- Show me details for a recent order\n- Show me product variants for a recent product\n- Create a new customer in Shopify with email test@example.com\n- Update a customer's first name\n- Create a new product called 'Summer T-Shirt'\n- Update a product title\n- Create a draft order for a customer\n- Complete a draft order\n- Set inventory quantity for a product variant at a location\n- Create a basic discount code for 10% off\n- Set a metafield on a product\n- Create a new page on my store\n- Create a new blog post\n- Show me orders from the last 30 days\n- Show me abandoned checkouts from this week\n- What price rules are currently active?\n- Show me all pages on my store\n- List all blog articles\n- Are there any open disputes?",

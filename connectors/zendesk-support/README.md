@@ -415,7 +415,8 @@ connector = ZendeskSupportConnector(
     auth_config=ZendeskSupportApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -434,7 +435,8 @@ connector = ZendeskSupportConnector(
     auth_config=ZendeskSupportApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -460,7 +462,8 @@ connector = ZendeskSupportConnector(
     auth_config=ZendeskSupportApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -481,7 +484,8 @@ connector = ZendeskSupportConnector(
     auth_config=ZendeskSupportApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain>"
 )
 
 mcp = FastMCP("Zendesk-Support Agent")
@@ -505,7 +509,8 @@ connector = ZendeskSupportConnector(
     auth_config=ZendeskSupportApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -527,7 +532,8 @@ connector = ZendeskSupportConnector(
     auth_config=ZendeskSupportApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain>"
 )
 
 @tool
@@ -550,7 +556,8 @@ connector = ZendeskSupportConnector(
     auth_config=ZendeskSupportApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -576,7 +583,8 @@ connector = ZendeskSupportConnector(
     auth_config=ZendeskSupportApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain>"
 )
 
 mcp = FastMCP("Zendesk-Support Agent")

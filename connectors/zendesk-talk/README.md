@@ -399,7 +399,8 @@ connector = ZendeskTalkConnector(
     auth_config=ZendeskTalkApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -418,7 +419,8 @@ connector = ZendeskTalkConnector(
     auth_config=ZendeskTalkApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -444,7 +446,8 @@ connector = ZendeskTalkConnector(
     auth_config=ZendeskTalkApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -465,7 +468,8 @@ connector = ZendeskTalkConnector(
     auth_config=ZendeskTalkApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 mcp = FastMCP("Zendesk-Talk Agent")
@@ -489,7 +493,8 @@ connector = ZendeskTalkConnector(
     auth_config=ZendeskTalkApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -511,7 +516,8 @@ connector = ZendeskTalkConnector(
     auth_config=ZendeskTalkApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 @tool
@@ -534,7 +540,8 @@ connector = ZendeskTalkConnector(
     auth_config=ZendeskTalkApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -560,7 +567,8 @@ connector = ZendeskTalkConnector(
     auth_config=ZendeskTalkApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 mcp = FastMCP("Zendesk-Talk Agent")

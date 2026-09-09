@@ -28,6 +28,13 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [
+    {
+      "name": "data_center",
+      "default": "us1",
+      "description": "The data center for your Mailchimp account (e.g., us1, us2, us6)"
+    }
+  ],
   "replication_config": null,
   "custom_description": "Mailchimp is an email marketing platform that enables businesses to create, send, and analyze\nemail campaigns, manage subscriber lists, and automate marketing workflows. This connector\nprovides read access to campaigns, lists, reports, email activity, automations, and more\nfor marketing analytics and audience management.\n",
   "supported_questions": "- List all subscribers in my main mailing list\n- List all automation workflows in my account\n- Show me all segments for my primary audience\n- List all interest categories for my primary audience\n- Show me email activity for a recent campaign\n- Show me the performance report for a recent campaign\n- Show me all my email campaigns from the last month\n- What are the open rates for my recent campaigns?\n- Who unsubscribed from list {list_id} this week?\n- What tags are applied to my subscribers?\n- How many subscribers do I have in each list?\n- What are my top performing campaigns by click rate?",

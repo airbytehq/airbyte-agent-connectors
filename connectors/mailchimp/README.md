@@ -402,7 +402,8 @@ from airbyte_agent_sdk.connectors.mailchimp.models import MailchimpAuthConfig
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
         api_key="<Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.>"
-    )
+    ),
+    data_center="<The data center for your Mailchimp account (e.g., us1, us2, us6)>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -420,7 +421,8 @@ from airbyte_agent_sdk.connectors.mailchimp.models import MailchimpAuthConfig
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
         api_key="<Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.>"
-    )
+    ),
+    data_center="<The data center for your Mailchimp account (e.g., us1, us2, us6)>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -445,7 +447,8 @@ from airbyte_agent_sdk.connectors.mailchimp.models import MailchimpAuthConfig
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
         api_key="<Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.>"
-    )
+    ),
+    data_center="<The data center for your Mailchimp account (e.g., us1, us2, us6)>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -465,7 +468,8 @@ from airbyte_agent_sdk.connectors.mailchimp.models import MailchimpAuthConfig
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
         api_key="<Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.>"
-    )
+    ),
+    data_center="<The data center for your Mailchimp account (e.g., us1, us2, us6)>"
 )
 
 mcp = FastMCP("Mailchimp Agent")
@@ -488,7 +492,8 @@ from airbyte_agent_sdk.connectors.mailchimp.models import MailchimpAuthConfig
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
         api_key="<Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.>"
-    )
+    ),
+    data_center="<The data center for your Mailchimp account (e.g., us1, us2, us6)>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -509,7 +514,8 @@ from airbyte_agent_sdk.connectors.mailchimp.models import MailchimpAuthConfig
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
         api_key="<Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.>"
-    )
+    ),
+    data_center="<The data center for your Mailchimp account (e.g., us1, us2, us6)>"
 )
 
 @tool
@@ -531,7 +537,8 @@ from airbyte_agent_sdk.connectors.mailchimp.models import MailchimpAuthConfig
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
         api_key="<Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.>"
-    )
+    ),
+    data_center="<The data center for your Mailchimp account (e.g., us1, us2, us6)>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -556,7 +563,8 @@ from airbyte_agent_sdk.connectors.mailchimp.models import MailchimpAuthConfig
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
         api_key="<Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.>"
-    )
+    ),
+    data_center="<The data center for your Mailchimp account (e.g., us1, us2, us6)>"
 )
 
 mcp = FastMCP("Mailchimp Agent")

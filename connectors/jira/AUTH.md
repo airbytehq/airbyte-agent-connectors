@@ -418,7 +418,8 @@ connector = JiraConnector(
         refresh_token="<Your Jira Cloud OAuth 2.0 refresh token (requires offline_access scope)>",
         client_id="<Your Jira OAuth App Client ID from the Atlassian Developer Console>",
         client_secret="<Your Jira OAuth App Client Secret from the Atlassian Developer Console>"
-    )
+    ),
+    subdomain="<Your Jira Cloud subdomain>"
 )
 ```
 
@@ -441,7 +442,8 @@ connector = JiraConnector(
     auth_config=JiraJiraApiTokenAuthenticationAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Jira Cloud subdomain>"
 )
 ```
 

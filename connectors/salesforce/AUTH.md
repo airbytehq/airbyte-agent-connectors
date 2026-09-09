@@ -388,7 +388,8 @@ connector = SalesforceConnector(
         refresh_token="<OAuth refresh token for automatic token renewal>",
         client_id="<Connected App Consumer Key>",
         client_secret="<Connected App Consumer Secret>"
-    )
+    ),
+    instance_url="<Your Salesforce instance URL (e.g., https://na1.salesforce.com)>"
 )
 ```
 

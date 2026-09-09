@@ -409,7 +409,8 @@ connector = JiraConnector(
     auth_config=JiraJiraApiTokenAuthenticationAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Jira Cloud subdomain>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -428,7 +429,8 @@ connector = JiraConnector(
     auth_config=JiraJiraApiTokenAuthenticationAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Jira Cloud subdomain>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -454,7 +456,8 @@ connector = JiraConnector(
     auth_config=JiraJiraApiTokenAuthenticationAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Jira Cloud subdomain>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -475,7 +478,8 @@ connector = JiraConnector(
     auth_config=JiraJiraApiTokenAuthenticationAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Jira Cloud subdomain>"
 )
 
 mcp = FastMCP("Jira Agent")
@@ -499,7 +503,8 @@ connector = JiraConnector(
     auth_config=JiraJiraApiTokenAuthenticationAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Jira Cloud subdomain>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -521,7 +526,8 @@ connector = JiraConnector(
     auth_config=JiraJiraApiTokenAuthenticationAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Jira Cloud subdomain>"
 )
 
 @tool
@@ -544,7 +550,8 @@ connector = JiraConnector(
     auth_config=JiraJiraApiTokenAuthenticationAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Jira Cloud subdomain>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -570,7 +577,8 @@ connector = JiraConnector(
     auth_config=JiraJiraApiTokenAuthenticationAuthConfig(
         username="<Your Atlassian account email address>",
         password="<Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens>"
-    )
+    ),
+    subdomain="<Your Jira Cloud subdomain>"
 )
 
 mcp = FastMCP("Jira Agent")

@@ -28,6 +28,13 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [
+    {
+      "name": "site",
+      "default": "your-site",
+      "description": "Your Chargebee site name (subdomain)"
+    }
+  ],
   "replication_config": {
     "type_name": "ChargebeeReplicationConfig",
     "title": "Replication Configuration",

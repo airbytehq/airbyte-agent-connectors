@@ -35,6 +35,13 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [
+    {
+      "name": "subdomain",
+      "default": "{subdomain}",
+      "description": "Your Confluence Cloud subdomain (e.g., mycompany for mycompany.atlassian.net)"
+    }
+  ],
   "replication_config": null,
   "custom_description": "Connector for the Confluence Cloud REST API. Provides read access to Confluence spaces, pages, blog posts, groups, and audit logs. Uses the Confluence Cloud REST API v2 for spaces, pages, and blog posts, and the v1 API for groups and audit records. Authenticates via HTTP Basic using an Atlassian account email and API token.",
   "supported_questions": "- List all spaces in my Confluence instance\n- Show me the most recently created pages\n- List all blog posts\n- Show me details for a specific page\n- List all groups in Confluence\n- Show me recent audit log entries\n- Get details about a specific space\n- Show me blog post details\n- Find pages created in the last 7 days\n- What spaces have the most pages?\n- Show me all pages in a specific space\n- Find blog posts by a specific author\n- What audit events happened this week?",

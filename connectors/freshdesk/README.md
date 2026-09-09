@@ -397,7 +397,8 @@ from airbyte_agent_sdk.connectors.freshdesk.models import FreshdeskAuthConfig
 connector = FreshdeskConnector(
     auth_config=FreshdeskAuthConfig(
         api_key="<Your Freshdesk API key (found in Profile Settings)>"
-    )
+    ),
+    subdomain="<Your Freshdesk subdomain (e.g., "acme" for acme.freshdesk.com)>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -415,7 +416,8 @@ from airbyte_agent_sdk.connectors.freshdesk.models import FreshdeskAuthConfig
 connector = FreshdeskConnector(
     auth_config=FreshdeskAuthConfig(
         api_key="<Your Freshdesk API key (found in Profile Settings)>"
-    )
+    ),
+    subdomain="<Your Freshdesk subdomain (e.g., "acme" for acme.freshdesk.com)>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -440,7 +442,8 @@ from airbyte_agent_sdk.connectors.freshdesk.models import FreshdeskAuthConfig
 connector = FreshdeskConnector(
     auth_config=FreshdeskAuthConfig(
         api_key="<Your Freshdesk API key (found in Profile Settings)>"
-    )
+    ),
+    subdomain="<Your Freshdesk subdomain (e.g., "acme" for acme.freshdesk.com)>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -460,7 +463,8 @@ from airbyte_agent_sdk.connectors.freshdesk.models import FreshdeskAuthConfig
 connector = FreshdeskConnector(
     auth_config=FreshdeskAuthConfig(
         api_key="<Your Freshdesk API key (found in Profile Settings)>"
-    )
+    ),
+    subdomain="<Your Freshdesk subdomain (e.g., "acme" for acme.freshdesk.com)>"
 )
 
 mcp = FastMCP("Freshdesk Agent")
@@ -483,7 +487,8 @@ from airbyte_agent_sdk.connectors.freshdesk.models import FreshdeskAuthConfig
 connector = FreshdeskConnector(
     auth_config=FreshdeskAuthConfig(
         api_key="<Your Freshdesk API key (found in Profile Settings)>"
-    )
+    ),
+    subdomain="<Your Freshdesk subdomain (e.g., "acme" for acme.freshdesk.com)>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -504,7 +509,8 @@ from airbyte_agent_sdk.connectors.freshdesk.models import FreshdeskAuthConfig
 connector = FreshdeskConnector(
     auth_config=FreshdeskAuthConfig(
         api_key="<Your Freshdesk API key (found in Profile Settings)>"
-    )
+    ),
+    subdomain="<Your Freshdesk subdomain (e.g., "acme" for acme.freshdesk.com)>"
 )
 
 @tool
@@ -526,7 +532,8 @@ from airbyte_agent_sdk.connectors.freshdesk.models import FreshdeskAuthConfig
 connector = FreshdeskConnector(
     auth_config=FreshdeskAuthConfig(
         api_key="<Your Freshdesk API key (found in Profile Settings)>"
-    )
+    ),
+    subdomain="<Your Freshdesk subdomain (e.g., "acme" for acme.freshdesk.com)>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -551,7 +558,8 @@ from airbyte_agent_sdk.connectors.freshdesk.models import FreshdeskAuthConfig
 connector = FreshdeskConnector(
     auth_config=FreshdeskAuthConfig(
         api_key="<Your Freshdesk API key (found in Profile Settings)>"
-    )
+    ),
+    subdomain="<Your Freshdesk subdomain (e.g., "acme" for acme.freshdesk.com)>"
 )
 
 mcp = FastMCP("Freshdesk Agent")

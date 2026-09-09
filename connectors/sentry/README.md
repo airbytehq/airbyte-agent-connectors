@@ -386,7 +386,8 @@ from airbyte_agent_sdk.connectors.sentry.models import SentryAuthConfig
 connector = SentryConnector(
     auth_config=SentryAuthConfig(
         auth_token="<Sentry authentication token. Log into Sentry and create one at Settings > Account > API > Auth Tokens.>"
-    )
+    ),
+    hostname="<Host name of Sentry API server. For self-hosted instances, specify your host name here. Otherwise, leave as sentry.io.>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -404,7 +405,8 @@ from airbyte_agent_sdk.connectors.sentry.models import SentryAuthConfig
 connector = SentryConnector(
     auth_config=SentryAuthConfig(
         auth_token="<Sentry authentication token. Log into Sentry and create one at Settings > Account > API > Auth Tokens.>"
-    )
+    ),
+    hostname="<Host name of Sentry API server. For self-hosted instances, specify your host name here. Otherwise, leave as sentry.io.>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -429,7 +431,8 @@ from airbyte_agent_sdk.connectors.sentry.models import SentryAuthConfig
 connector = SentryConnector(
     auth_config=SentryAuthConfig(
         auth_token="<Sentry authentication token. Log into Sentry and create one at Settings > Account > API > Auth Tokens.>"
-    )
+    ),
+    hostname="<Host name of Sentry API server. For self-hosted instances, specify your host name here. Otherwise, leave as sentry.io.>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -449,7 +452,8 @@ from airbyte_agent_sdk.connectors.sentry.models import SentryAuthConfig
 connector = SentryConnector(
     auth_config=SentryAuthConfig(
         auth_token="<Sentry authentication token. Log into Sentry and create one at Settings > Account > API > Auth Tokens.>"
-    )
+    ),
+    hostname="<Host name of Sentry API server. For self-hosted instances, specify your host name here. Otherwise, leave as sentry.io.>"
 )
 
 mcp = FastMCP("Sentry Agent")
@@ -472,7 +476,8 @@ from airbyte_agent_sdk.connectors.sentry.models import SentryAuthConfig
 connector = SentryConnector(
     auth_config=SentryAuthConfig(
         auth_token="<Sentry authentication token. Log into Sentry and create one at Settings > Account > API > Auth Tokens.>"
-    )
+    ),
+    hostname="<Host name of Sentry API server. For self-hosted instances, specify your host name here. Otherwise, leave as sentry.io.>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -493,7 +498,8 @@ from airbyte_agent_sdk.connectors.sentry.models import SentryAuthConfig
 connector = SentryConnector(
     auth_config=SentryAuthConfig(
         auth_token="<Sentry authentication token. Log into Sentry and create one at Settings > Account > API > Auth Tokens.>"
-    )
+    ),
+    hostname="<Host name of Sentry API server. For self-hosted instances, specify your host name here. Otherwise, leave as sentry.io.>"
 )
 
 @tool
@@ -515,7 +521,8 @@ from airbyte_agent_sdk.connectors.sentry.models import SentryAuthConfig
 connector = SentryConnector(
     auth_config=SentryAuthConfig(
         auth_token="<Sentry authentication token. Log into Sentry and create one at Settings > Account > API > Auth Tokens.>"
-    )
+    ),
+    hostname="<Host name of Sentry API server. For self-hosted instances, specify your host name here. Otherwise, leave as sentry.io.>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -540,7 +547,8 @@ from airbyte_agent_sdk.connectors.sentry.models import SentryAuthConfig
 connector = SentryConnector(
     auth_config=SentryAuthConfig(
         auth_token="<Sentry authentication token. Log into Sentry and create one at Settings > Account > API > Auth Tokens.>"
-    )
+    ),
+    hostname="<Host name of Sentry API server. For self-hosted instances, specify your host name here. Otherwise, leave as sentry.io.>"
 )
 
 mcp = FastMCP("Sentry Agent")

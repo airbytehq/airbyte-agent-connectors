@@ -49,6 +49,13 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [
+    {
+      "name": "region",
+      "default": "na",
+      "description": "The seller's marketplace region. This determines both the API endpoint and the marketplace ID used for queries. Select the country code where you sell:\nNorth America (NA endpoint): US (Amazon.com), CA (Amazon.ca), MX (Amazon.com.mx), BR (Amazon.com.br)\nEurope (EU endpoint): DE (Amazon.de), FR (Amazon.fr), IT (Amazon.it), ES (Amazon.es), UK/GB (Amazon.co.uk), NL (Amazon.nl), SE (Amazon.se), PL (Amazon.pl), BE (Amazon.com.be), TR (Amazon.com.tr), EG (Amazon.eg), SA (Amazon.sa), AE (Amazon.ae), IN (Amazon.in), ZA (Amazon.co.za)\nFar East (FE endpoint): JP (Amazon.co.jp), AU (Amazon.com.au), SG (Amazon.sg)\nThe region is automatically mapped to the correct API endpoint (na/eu/fe) and marketplace ID. You only need to specify your country code."
+    }
+  ],
   "replication_config": {
     "type_name": "AmazonSellerPartnerReplicationConfig",
     "title": "Replication Configuration",

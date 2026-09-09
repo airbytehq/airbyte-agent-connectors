@@ -382,7 +382,8 @@ from airbyte_agent_sdk.connectors.sentry.models import SentryAuthConfig
 connector = SentryConnector(
     auth_config=SentryAuthConfig(
         auth_token="<Sentry authentication token. Log into Sentry and create one at Settings > Account > API > Auth Tokens.>"
-    )
+    ),
+    hostname="<Host name of Sentry API server. For self-hosted instances, specify your host name here. Otherwise, leave as sentry.io.>"
 )
 ```
 

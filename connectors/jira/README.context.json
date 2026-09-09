@@ -72,6 +72,13 @@
     ],
     "is_multi_auth": true
   },
+  "server_variables": [
+    {
+      "name": "subdomain",
+      "default": "{subdomain}",
+      "description": "Your Jira Cloud subdomain"
+    }
+  ],
   "replication_config": null,
   "custom_description": "Connector for Jira API",
   "supported_questions": "- Show me all open issues in my Jira instance\n- List recent issues created in the last 7 days\n- List all projects in my Jira instance\n- Show me details for the most recently updated issue\n- List all users in my Jira instance\n- Show me comments on the most recent issue\n- Show me worklogs from the last 7 days\n- Assign a recent issue to a teammate\n- Unassign a recent issue\n- Create a new task called 'Sample task' in a project\n- Create a bug with high priority\n- Update the summary of a recent issue to 'Updated summary'\n- Change the priority of a recent issue to high\n- Add a comment to a recent issue saying 'Please investigate'\n- Update my most recent comment\n- Delete a test issue\n- Remove my most recent comment\n- Transition {issue_key} to In Progress\n- Move {issue_key} to Done\n- What transitions are available for {issue_key}?\n- Log 2 hours of work on {issue_key}\n- Log 30 minutes on {issue_key} with a comment about what I did\n- Link {issue_key_1} as blocking {issue_key_2}\n- Create a 'relates to' link between {issue_key_1} and {issue_key_2}\n- What issues are assigned to {team_member} this week?\n- Find all high priority bugs in our current sprint\n- Show me overdue issues across all projects\n- What projects have the most issues?\n- Search for users named {user_name}",

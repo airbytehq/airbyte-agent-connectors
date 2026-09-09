@@ -232,7 +232,7 @@ class ZendeskSupportConnector:
 
     connector_name = "zendesk-support"
     connector_version = "0.1.20"
-    sdk_version = "0.1.339"
+    sdk_version = "0.1.340"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -358,7 +358,7 @@ class ZendeskSupportConnector:
                 Example: lambda tokens: save_to_database(tokens)            subdomain: Your Zendesk subdomain
         Examples:
             # Local mode (direct API calls)
-            connector = ZendeskSupportConnector(auth_config=ZendeskSupportAuthConfig(access_token="...", refresh_token="..."))
+            connector = ZendeskSupportConnector(auth_config=ZendeskSupportAuthConfig(access_token="...", refresh_token="..."), subdomain="...")
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = ZendeskSupportConnector(
                 auth_config=AirbyteAuthConfig(

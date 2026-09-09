@@ -384,7 +384,8 @@ connector = WoocommerceConnector(
     auth_config=WoocommerceAuthConfig(
         api_key="<WooCommerce REST API consumer key (starts with ck_)>",
         api_secret="<WooCommerce REST API consumer secret (starts with cs_)>"
-    )
+    ),
+    shop="<The WooCommerce store domain (e.g., mystore.com)>"
 )
 ```
 

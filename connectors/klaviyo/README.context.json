@@ -28,6 +28,7 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [],
   "replication_config": null,
   "custom_description": "Klaviyo is a marketing automation platform that helps businesses build customer relationships\nthrough personalized email, SMS, and push notifications. This connector provides access to\nKlaviyo's core entities including profiles, lists, campaigns, events, metrics, flows, and\nemail templates for marketing analytics and customer engagement insights.\n",
   "supported_questions": "- List all profiles in my Klaviyo account\n- Show me details for a recent profile\n- Show me all email lists\n- Show me details for a recent email list\n- What campaigns have been created?\n- Show me details for a recent campaign\n- Show me all email campaigns\n- List all events for tracking customer actions\n- Show me all metrics (event types)\n- Show me details for a recent metric\n- What automated flows are configured?\n- Show me details for a recent flow\n- List all email templates\n- Show me details for a recent email template",

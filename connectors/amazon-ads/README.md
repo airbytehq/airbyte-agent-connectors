@@ -406,7 +406,12 @@ connector = AmazonAdsConnector(
         client_id="<The client ID of your Amazon Ads API application>",
         client_secret="<The client secret of your Amazon Ads API application>",
         refresh_token="<The refresh token obtained from the OAuth authorization flow>"
-    )
+    ),
+    region="<The Amazon Ads API endpoint URL based on region:
+- NA (North America): https://advertising-api.amazon.com
+- EU (Europe): https://advertising-api-eu.amazon.com
+- FE (Far East): https://advertising-api-fe.amazon.com
+>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -426,7 +431,12 @@ connector = AmazonAdsConnector(
         client_id="<The client ID of your Amazon Ads API application>",
         client_secret="<The client secret of your Amazon Ads API application>",
         refresh_token="<The refresh token obtained from the OAuth authorization flow>"
-    )
+    ),
+    region="<The Amazon Ads API endpoint URL based on region:
+- NA (North America): https://advertising-api.amazon.com
+- EU (Europe): https://advertising-api-eu.amazon.com
+- FE (Far East): https://advertising-api-fe.amazon.com
+>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -453,7 +463,12 @@ connector = AmazonAdsConnector(
         client_id="<The client ID of your Amazon Ads API application>",
         client_secret="<The client secret of your Amazon Ads API application>",
         refresh_token="<The refresh token obtained from the OAuth authorization flow>"
-    )
+    ),
+    region="<The Amazon Ads API endpoint URL based on region:
+- NA (North America): https://advertising-api.amazon.com
+- EU (Europe): https://advertising-api-eu.amazon.com
+- FE (Far East): https://advertising-api-fe.amazon.com
+>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -475,7 +490,12 @@ connector = AmazonAdsConnector(
         client_id="<The client ID of your Amazon Ads API application>",
         client_secret="<The client secret of your Amazon Ads API application>",
         refresh_token="<The refresh token obtained from the OAuth authorization flow>"
-    )
+    ),
+    region="<The Amazon Ads API endpoint URL based on region:
+- NA (North America): https://advertising-api.amazon.com
+- EU (Europe): https://advertising-api-eu.amazon.com
+- FE (Far East): https://advertising-api-fe.amazon.com
+>"
 )
 
 mcp = FastMCP("Amazon-Ads Agent")
@@ -500,7 +520,12 @@ connector = AmazonAdsConnector(
         client_id="<The client ID of your Amazon Ads API application>",
         client_secret="<The client secret of your Amazon Ads API application>",
         refresh_token="<The refresh token obtained from the OAuth authorization flow>"
-    )
+    ),
+    region="<The Amazon Ads API endpoint URL based on region:
+- NA (North America): https://advertising-api.amazon.com
+- EU (Europe): https://advertising-api-eu.amazon.com
+- FE (Far East): https://advertising-api-fe.amazon.com
+>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -523,7 +548,12 @@ connector = AmazonAdsConnector(
         client_id="<The client ID of your Amazon Ads API application>",
         client_secret="<The client secret of your Amazon Ads API application>",
         refresh_token="<The refresh token obtained from the OAuth authorization flow>"
-    )
+    ),
+    region="<The Amazon Ads API endpoint URL based on region:
+- NA (North America): https://advertising-api.amazon.com
+- EU (Europe): https://advertising-api-eu.amazon.com
+- FE (Far East): https://advertising-api-fe.amazon.com
+>"
 )
 
 @tool
@@ -547,7 +577,12 @@ connector = AmazonAdsConnector(
         client_id="<The client ID of your Amazon Ads API application>",
         client_secret="<The client secret of your Amazon Ads API application>",
         refresh_token="<The refresh token obtained from the OAuth authorization flow>"
-    )
+    ),
+    region="<The Amazon Ads API endpoint URL based on region:
+- NA (North America): https://advertising-api.amazon.com
+- EU (Europe): https://advertising-api-eu.amazon.com
+- FE (Far East): https://advertising-api-fe.amazon.com
+>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -574,7 +609,12 @@ connector = AmazonAdsConnector(
         client_id="<The client ID of your Amazon Ads API application>",
         client_secret="<The client secret of your Amazon Ads API application>",
         refresh_token="<The refresh token obtained from the OAuth authorization flow>"
-    )
+    ),
+    region="<The Amazon Ads API endpoint URL based on region:
+- NA (North America): https://advertising-api.amazon.com
+- EU (Europe): https://advertising-api-eu.amazon.com
+- FE (Far East): https://advertising-api-fe.amazon.com
+>"
 )
 
 mcp = FastMCP("Amazon-Ads Agent")

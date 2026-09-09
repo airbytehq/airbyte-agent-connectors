@@ -155,15 +155,22 @@ from {{ package_name }} import {{ class_name }}{{ auth_import }}
 connector = {{ class_name }}(
     auth_config={{ auth_class }}(
 {% for field in example_option.fields %}        {{ field.name }}="<{{ field.description or field.name }}>"{{ "," if not loop.last else "" }}
-{% endfor %}    )
-)
+{% endfor %}    ){{ "," if server_variables else "" }}
+{% for var in server_variables %}    {{ var.name }}="<{{ var.description or var.name }}>"{{ "," if not loop.last else "" }}
+{% endfor %})
 {%- endset %}
 {{ framework_usage_blocks(class_name, connector_name, package_name, oss_init_lines) }}
 {% else %}
 {%- set oss_init_lines -%}
 from {{ package_name }} import {{ class_name }}
 
+{% if server_variables %}
+connector = {{ class_name }}(
+{% for var in server_variables %}    {{ var.name }}="<{{ var.description or var.name }}>"{{ "," if not loop.last else "" }}
+{% endfor %})
+{% else %}
 connector = {{ class_name }}()
+{% endif %}
 {%- endset %}
 {{ framework_usage_blocks(class_name, connector_name, package_name, oss_init_lines) }}
 {% endif %}

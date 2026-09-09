@@ -161,7 +161,7 @@ class GitlabConnector:
 
     connector_name = "gitlab"
     connector_version = "1.0.4"
-    sdk_version = "0.1.339"
+    sdk_version = "0.1.340"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -250,7 +250,7 @@ class GitlabConnector:
                 Example: lambda tokens: save_to_database(tokens)            api_url: GitLab instance hostname
         Examples:
             # Local mode (direct API calls)
-            connector = GitlabConnector(auth_config=GitlabAuthConfig(access_token="..."))
+            connector = GitlabConnector(auth_config=GitlabAuthConfig(access_token="..."), api_url="...")
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = GitlabConnector(
                 auth_config=AirbyteAuthConfig(

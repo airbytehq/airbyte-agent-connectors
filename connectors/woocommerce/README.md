@@ -409,7 +409,8 @@ connector = WoocommerceConnector(
     auth_config=WoocommerceAuthConfig(
         api_key="<WooCommerce REST API consumer key (starts with ck_)>",
         api_secret="<WooCommerce REST API consumer secret (starts with cs_)>"
-    )
+    ),
+    shop="<The WooCommerce store domain (e.g., mystore.com)>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -428,7 +429,8 @@ connector = WoocommerceConnector(
     auth_config=WoocommerceAuthConfig(
         api_key="<WooCommerce REST API consumer key (starts with ck_)>",
         api_secret="<WooCommerce REST API consumer secret (starts with cs_)>"
-    )
+    ),
+    shop="<The WooCommerce store domain (e.g., mystore.com)>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -454,7 +456,8 @@ connector = WoocommerceConnector(
     auth_config=WoocommerceAuthConfig(
         api_key="<WooCommerce REST API consumer key (starts with ck_)>",
         api_secret="<WooCommerce REST API consumer secret (starts with cs_)>"
-    )
+    ),
+    shop="<The WooCommerce store domain (e.g., mystore.com)>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -475,7 +478,8 @@ connector = WoocommerceConnector(
     auth_config=WoocommerceAuthConfig(
         api_key="<WooCommerce REST API consumer key (starts with ck_)>",
         api_secret="<WooCommerce REST API consumer secret (starts with cs_)>"
-    )
+    ),
+    shop="<The WooCommerce store domain (e.g., mystore.com)>"
 )
 
 mcp = FastMCP("Woocommerce Agent")
@@ -499,7 +503,8 @@ connector = WoocommerceConnector(
     auth_config=WoocommerceAuthConfig(
         api_key="<WooCommerce REST API consumer key (starts with ck_)>",
         api_secret="<WooCommerce REST API consumer secret (starts with cs_)>"
-    )
+    ),
+    shop="<The WooCommerce store domain (e.g., mystore.com)>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -521,7 +526,8 @@ connector = WoocommerceConnector(
     auth_config=WoocommerceAuthConfig(
         api_key="<WooCommerce REST API consumer key (starts with ck_)>",
         api_secret="<WooCommerce REST API consumer secret (starts with cs_)>"
-    )
+    ),
+    shop="<The WooCommerce store domain (e.g., mystore.com)>"
 )
 
 @tool
@@ -544,7 +550,8 @@ connector = WoocommerceConnector(
     auth_config=WoocommerceAuthConfig(
         api_key="<WooCommerce REST API consumer key (starts with ck_)>",
         api_secret="<WooCommerce REST API consumer secret (starts with cs_)>"
-    )
+    ),
+    shop="<The WooCommerce store domain (e.g., mystore.com)>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -570,7 +577,8 @@ connector = WoocommerceConnector(
     auth_config=WoocommerceAuthConfig(
         api_key="<WooCommerce REST API consumer key (starts with ck_)>",
         api_secret="<WooCommerce REST API consumer secret (starts with cs_)>"
-    )
+    ),
+    shop="<The WooCommerce store domain (e.g., mystore.com)>"
 )
 
 mcp = FastMCP("Woocommerce Agent")

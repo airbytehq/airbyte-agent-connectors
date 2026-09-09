@@ -130,7 +130,7 @@ class JiraConnector:
 
     connector_name = "jira"
     connector_version = "1.2.0"
-    sdk_version = "0.1.339"
+    sdk_version = "0.1.340"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -210,7 +210,7 @@ class JiraConnector:
                 Example: lambda tokens: save_to_database(tokens)            subdomain: Your Jira Cloud subdomain
         Examples:
             # Local mode (direct API calls)
-            connector = JiraConnector(auth_config=JiraAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))
+            connector = JiraConnector(auth_config=JiraAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."), subdomain="...")
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = JiraConnector(
                 auth_config=AirbyteAuthConfig(

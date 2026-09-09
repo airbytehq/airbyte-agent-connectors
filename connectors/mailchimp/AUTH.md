@@ -371,7 +371,8 @@ from airbyte_agent_sdk.connectors.mailchimp.models import MailchimpAuthConfig
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
         api_key="<Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.>"
-    )
+    ),
+    data_center="<The data center for your Mailchimp account (e.g., us1, us2, us6)>"
 )
 ```
 

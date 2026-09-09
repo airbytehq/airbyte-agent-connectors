@@ -49,6 +49,7 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [],
   "replication_config": null,
   "custom_description": "Greenhouse is an applicant tracking system (ATS) that helps companies manage their\nhiring process via the Harvest v3 API with OAuth 2.0 authentication. This connector\nprovides access to candidates, applications, jobs, offers, users, departments,\noffices, job posts, sources, and interviews for recruiting analytics and talent\nacquisition insights.\n",
   "supported_questions": "- List all open jobs\n- Show me recent interviews\n- Show me recent job offers\n- List recent applications\n- Show me candidates from {company} who applied last month\n- What are the top 5 sources for our job applications this quarter?\n- Analyze the interview schedules for our engineering candidates this week\n- Compare the number of applications across different offices\n- Identify candidates who have multiple applications in our system\n- Summarize the candidate pipeline for our latest job posting\n- Find the most active departments in recruiting this month",

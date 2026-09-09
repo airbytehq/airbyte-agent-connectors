@@ -408,7 +408,8 @@ connector = SalesforceConnector(
         refresh_token="<OAuth refresh token for automatic token renewal>",
         client_id="<Connected App Consumer Key>",
         client_secret="<Connected App Consumer Secret>"
-    )
+    ),
+    instance_url="<Your Salesforce instance URL (e.g., https://na1.salesforce.com)>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -428,7 +429,8 @@ connector = SalesforceConnector(
         refresh_token="<OAuth refresh token for automatic token renewal>",
         client_id="<Connected App Consumer Key>",
         client_secret="<Connected App Consumer Secret>"
-    )
+    ),
+    instance_url="<Your Salesforce instance URL (e.g., https://na1.salesforce.com)>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -455,7 +457,8 @@ connector = SalesforceConnector(
         refresh_token="<OAuth refresh token for automatic token renewal>",
         client_id="<Connected App Consumer Key>",
         client_secret="<Connected App Consumer Secret>"
-    )
+    ),
+    instance_url="<Your Salesforce instance URL (e.g., https://na1.salesforce.com)>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -477,7 +480,8 @@ connector = SalesforceConnector(
         refresh_token="<OAuth refresh token for automatic token renewal>",
         client_id="<Connected App Consumer Key>",
         client_secret="<Connected App Consumer Secret>"
-    )
+    ),
+    instance_url="<Your Salesforce instance URL (e.g., https://na1.salesforce.com)>"
 )
 
 mcp = FastMCP("Salesforce Agent")
@@ -502,7 +506,8 @@ connector = SalesforceConnector(
         refresh_token="<OAuth refresh token for automatic token renewal>",
         client_id="<Connected App Consumer Key>",
         client_secret="<Connected App Consumer Secret>"
-    )
+    ),
+    instance_url="<Your Salesforce instance URL (e.g., https://na1.salesforce.com)>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -525,7 +530,8 @@ connector = SalesforceConnector(
         refresh_token="<OAuth refresh token for automatic token renewal>",
         client_id="<Connected App Consumer Key>",
         client_secret="<Connected App Consumer Secret>"
-    )
+    ),
+    instance_url="<Your Salesforce instance URL (e.g., https://na1.salesforce.com)>"
 )
 
 @tool
@@ -549,7 +555,8 @@ connector = SalesforceConnector(
         refresh_token="<OAuth refresh token for automatic token renewal>",
         client_id="<Connected App Consumer Key>",
         client_secret="<Connected App Consumer Secret>"
-    )
+    ),
+    instance_url="<Your Salesforce instance URL (e.g., https://na1.salesforce.com)>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -576,7 +583,8 @@ connector = SalesforceConnector(
         refresh_token="<OAuth refresh token for automatic token renewal>",
         client_id="<Connected App Consumer Key>",
         client_secret="<Connected App Consumer Secret>"
-    )
+    ),
+    instance_url="<Your Salesforce instance URL (e.g., https://na1.salesforce.com)>"
 )
 
 mcp = FastMCP("Salesforce Agent")

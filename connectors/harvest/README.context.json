@@ -72,6 +72,7 @@
     ],
     "is_multi_auth": true
   },
+  "server_variables": [],
   "replication_config": {
     "type_name": "HarvestReplicationConfig",
     "title": "Replication Configuration",

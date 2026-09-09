@@ -28,6 +28,13 @@
     ],
     "is_multi_auth": false
   },
+  "server_variables": [
+    {
+      "name": "subdomain",
+      "default": "your-subdomain",
+      "description": "Your Freshdesk subdomain (e.g., \"acme\" for acme.freshdesk.com)"
+    }
+  ],
   "replication_config": null,
   "custom_description": "Connector for the Freshdesk customer support platform API (v2). Provides read access to helpdesk data including tickets, contacts, agents, groups, companies, roles, satisfaction ratings, surveys, time entries, and ticket fields. Freshdesk is a cloud-based customer support solution that enables companies to manage customer conversations across email, phone, chat, and social media.\n",
   "supported_questions": "- List all open tickets in Freshdesk\n- Show me all agents in the support team\n- List all groups configured in Freshdesk\n- Get the details of ticket #26\n- Show me all companies in Freshdesk\n- List all roles defined in the helpdesk\n- Show me the ticket fields and their options\n- List time entries for tickets\n- What are the high priority tickets from last week?\n- Which tickets have breached their SLA due date?\n- Show me tickets assigned to agent {agent_name}\n- Find all tickets from company {company_name}\n- How many tickets were created this month by status?\n- What are the satisfaction ratings for resolved tickets?",

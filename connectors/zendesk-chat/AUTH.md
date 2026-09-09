@@ -389,7 +389,8 @@ from airbyte_agent_sdk.connectors.zendesk_chat.models import ZendeskChatAuthConf
 connector = ZendeskChatConnector(
     auth_config=ZendeskChatAuthConfig(
         access_token="<Your Zendesk Chat OAuth 2.0 access token>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 ```
 

@@ -414,7 +414,8 @@ from airbyte_agent_sdk.connectors.zendesk_chat.models import ZendeskChatAuthConf
 connector = ZendeskChatConnector(
     auth_config=ZendeskChatAuthConfig(
         access_token="<Your Zendesk Chat OAuth 2.0 access token>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 tools = build_connector_tools(connector, framework="pydantic_ai")
@@ -432,7 +433,8 @@ from airbyte_agent_sdk.connectors.zendesk_chat.models import ZendeskChatAuthConf
 connector = ZendeskChatConnector(
     auth_config=ZendeskChatAuthConfig(
         access_token="<Your Zendesk Chat OAuth 2.0 access token>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 tools = build_connector_tools(connector, framework="langchain")
@@ -457,7 +459,8 @@ from airbyte_agent_sdk.connectors.zendesk_chat.models import ZendeskChatAuthConf
 connector = ZendeskChatConnector(
     auth_config=ZendeskChatAuthConfig(
         access_token="<Your Zendesk Chat OAuth 2.0 access token>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 tools = build_connector_tools(connector, framework="openai_agents")
@@ -477,7 +480,8 @@ from airbyte_agent_sdk.connectors.zendesk_chat.models import ZendeskChatAuthConf
 connector = ZendeskChatConnector(
     auth_config=ZendeskChatAuthConfig(
         access_token="<Your Zendesk Chat OAuth 2.0 access token>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 mcp = FastMCP("Zendesk-Chat Agent")
@@ -500,7 +504,8 @@ from airbyte_agent_sdk.connectors.zendesk_chat.models import ZendeskChatAuthConf
 connector = ZendeskChatConnector(
     auth_config=ZendeskChatAuthConfig(
         access_token="<Your Zendesk Chat OAuth 2.0 access token>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 agent = Agent("openai:gpt-4o")
@@ -521,7 +526,8 @@ from airbyte_agent_sdk.connectors.zendesk_chat.models import ZendeskChatAuthConf
 connector = ZendeskChatConnector(
     auth_config=ZendeskChatAuthConfig(
         access_token="<Your Zendesk Chat OAuth 2.0 access token>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 @tool
@@ -543,7 +549,8 @@ from airbyte_agent_sdk.connectors.zendesk_chat.models import ZendeskChatAuthConf
 connector = ZendeskChatConnector(
     auth_config=ZendeskChatAuthConfig(
         access_token="<Your Zendesk Chat OAuth 2.0 access token>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
@@ -568,7 +575,8 @@ from airbyte_agent_sdk.connectors.zendesk_chat.models import ZendeskChatAuthConf
 connector = ZendeskChatConnector(
     auth_config=ZendeskChatAuthConfig(
         access_token="<Your Zendesk Chat OAuth 2.0 access token>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)>"
 )
 
 mcp = FastMCP("Zendesk-Chat Agent")

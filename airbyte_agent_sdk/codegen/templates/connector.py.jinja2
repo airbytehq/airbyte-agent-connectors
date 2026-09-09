@@ -160,7 +160,7 @@ class {{ class_name }}:
 
         Examples:
             # Local mode (direct API calls)
-{% if auth_config %}            connector = {{ class_name }}(auth_config={{ auth_config.type_name }}({% for field in auth_config.options[0].fields %}{{ field.name }}="..."{% if not loop.last %}, {% endif %}{% endfor %}))
+{% if auth_config %}            connector = {{ class_name }}(auth_config={{ auth_config.type_name }}({% for field in auth_config.options[0].fields %}{{ field.name }}="..."{% if not loop.last %}, {% endif %}{% endfor %}){% for var in server_variables %}, {{ var.name }}="..."{% endfor %})
 {% endif %}
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = {{ class_name }}(

@@ -58,6 +58,7 @@
     ],
     "is_multi_auth": true
   },
+  "server_variables": [],
   "replication_config": null,
   "custom_description": "Notion is an all-in-one workspace for notes, docs, wikis, projects, and collaboration.\nThis connector provides read and write access to Notion workspaces including users, pages, data sources,\nblocks, and comments through the Notion REST API (version 2025-09-03). It enables querying\nworkspace structure, page content, data source schemas, and collaboration data, as well as\ncreating and updating pages, appending and updating blocks, and creating comments.\n",
   "supported_questions": "- List all users in my Notion workspace\n- Show me all pages in my Notion workspace\n- What data sources exist in my Notion workspace?\n- Get the details of a specific page by ID\n- List child blocks of a specific page\n- Show me comments on a specific page\n- What is the schema of a specific data source?\n- Who are the bot users in my workspace?\n- Create a new page titled 'Meeting Notes' under page X\n- Update the icon of page X to a rocket emoji\n- Add a paragraph block saying 'Hello World' to page X\n- Mark the to-do block as completed\n- Add a comment to page X saying 'Looks good!'\n- Archive page X\n- Update the title of data source X to 'Project Tracker'\n- Find pages created in the last week\n- List data sources that have been recently edited\n- Show me all archived pages",

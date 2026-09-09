@@ -65,6 +65,13 @@
     ],
     "is_multi_auth": true
   },
+  "server_variables": [
+    {
+      "name": "api_url",
+      "default": "gitlab.com",
+      "description": "GitLab instance hostname"
+    }
+  ],
   "replication_config": {
     "type_name": "GitlabReplicationConfig",
     "title": "Replication Configuration",

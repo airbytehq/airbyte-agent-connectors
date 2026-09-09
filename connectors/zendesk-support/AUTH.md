@@ -410,7 +410,8 @@ connector = ZendeskSupportConnector(
     auth_config=ZendeskSupportOauth20AuthConfig(
         access_token="<OAuth 2.0 access token>",
         refresh_token="<OAuth 2.0 refresh token (optional)>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain>"
 )
 ```
 
@@ -433,7 +434,8 @@ connector = ZendeskSupportConnector(
     auth_config=ZendeskSupportApiTokenAuthConfig(
         email="<Your Zendesk account email address>",
         api_token="<Your Zendesk API token from Admin Center>"
-    )
+    ),
+    subdomain="<Your Zendesk subdomain>"
 )
 ```
 
